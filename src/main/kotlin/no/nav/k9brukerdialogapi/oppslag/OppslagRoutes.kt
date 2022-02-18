@@ -6,7 +6,7 @@ import no.nav.k9brukerdialogapi.OPPSLAG_URL
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.oppslag.søker.søkerApis
 
-fun Route.oppslagRoute(
+fun Route.oppslagRoutes(
     idTokenProvider: IdTokenProvider,
     søkerService: SøkerService
 ){
