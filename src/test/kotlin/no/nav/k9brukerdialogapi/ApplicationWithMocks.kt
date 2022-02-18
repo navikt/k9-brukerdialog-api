@@ -3,7 +3,7 @@ package no.nav.k9brukerdialogapi
 import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.testsupport.asArguments
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
-import no.nav.k9brukerdialogapi.wiremock.k9EttersendingApiConfig
+import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
@@ -23,7 +23,7 @@ class ApplicationWithMocks {
                 .withAzureSupport()
                 .withNaisStsSupport()
                 .withLoginServiceSupport()
-                .k9EttersendingApiConfig()
+                .k9BrukerdialogApiConfig()
                 .build()
                 .stubOppslagHealth()
                 .stubK9Mellomlagring()

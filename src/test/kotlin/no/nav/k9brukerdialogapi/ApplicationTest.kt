@@ -9,10 +9,11 @@ import no.nav.helse.TestUtils.Companion.getAuthCookie
 import no.nav.helse.TestUtils.Companion.getTokenDingsToken
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
-import no.nav.k9brukerdialogapi.wiremock.k9EttersendingApiConfig
-import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
+import no.nav.k9brukerdialogapi.wiremock.*
+import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
+import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.skyscreamer.jsonassert.JSONAssert
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ApplicationTest {
@@ -34,10 +36,11 @@ class ApplicationTest {
             .withNaisStsSupport()
             .withLoginServiceSupport()
             .withTokendingsSupport()
-            .k9EttersendingApiConfig()
+            .k9BrukerdialogApiConfig()
             .build()
             .stubOppslagHealth()
             .stubK9OppslagSoker()
+            .stubK9OppslagBarn()
             .stubK9Mellomlagring()
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
@@ -131,7 +134,7 @@ class ApplicationTest {
                     "myndig": true
                 }
             """.trimIndent(),
-            cookie = getAuthCookie(gyldigFødselsnummerA)
+            cookie = cookie
         )
     }
 
@@ -206,8 +209,60 @@ class ApplicationTest {
     }
 
     @Test
+    fun `Hente barn og eksplisit sjekke at identitetsnummer ikke blir med ved get kall`() {
+        val respons = requestAndAssert(
+            httpMethod = HttpMethod.Get,
+            path = OPPSLAG_URL+BARN_URL,
+            expectedCode = HttpStatusCode.OK,
+            cookie = cookie,
+            //language=json
+            expectedResponse = """
+                {
+                  "barn": [
+                    {
+                      "fødselsdato": "2000-08-27",
+                      "fornavn": "BARN",
+                      "mellomnavn": "EN",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000001"
+                    },
+                    {
+                      "fødselsdato": "2001-04-10",
+                      "fornavn": "BARN",
+                      "mellomnavn": "TO",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000002"
+                    }
+                  ]
+                }
+            """.trimIndent()
+        )
+
+        val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
+
+        assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
+        assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
+    }
+
+    @Test
+    fun `Feil ved henting av barn skal returnere tom liste`() {
+        wireMockServer.stubK9OppslagBarn(simulerFeil = true)
+        requestAndAssert(
+            httpMethod = HttpMethod.Get,
+            path = OPPSLAG_URL+BARN_URL,
+            expectedCode = HttpStatusCode.OK,
+            expectedResponse = """
+            {
+                "barn": []
+            }
+            """.trimIndent(),
+            cookie = getAuthCookie("26104500284")
+        )
+        wireMockServer.stubK9OppslagBarn()
+    }
+
+    @Test
     fun `Test håndtering av vedlegg`() {
-        val cookie = getAuthCookie(gyldigFødselsnummerA)
         val jpeg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
 
         with(engine) {
@@ -242,7 +297,7 @@ class ApplicationTest {
     @Test
     fun `Test opplasting av ikke støttet vedleggformat`() {
         engine.handleRequestUploadImage(
-            cookie = getAuthCookie(gyldigFødselsnummerA),
+            cookie = cookie,
             vedlegg = "jwkset.json".fromResources().readBytes(),
             contentType = "application/json",
             fileName = "jwkset.json",
@@ -253,7 +308,7 @@ class ApplicationTest {
     @Test
     fun `Test opplasting av for stort vedlegg`() {
         engine.handleRequestUploadImage(
-            cookie = getAuthCookie(gyldigFødselsnummerA),
+            cookie = cookie,
             vedlegg = ByteArray(8 * 1024 * 1024 + 10),
             contentType = "image/png",
             fileName = "big_picture.png",
@@ -269,7 +324,8 @@ class ApplicationTest {
         expectedCode: HttpStatusCode,
         jwtToken: String? = null,
         cookie: Cookie? = null
-    ) {
+    ) : String? {
+        val respons: String?
         with(engine) {
             handleRequest(httpMethod, path) {
                 if (cookie != null) addHeader(HttpHeaders.Cookie, cookie.toString())
@@ -281,6 +337,7 @@ class ApplicationTest {
             }.apply {
                 logger.info("Response Entity = ${response.content}")
                 logger.info("Expected Entity = $expectedResponse")
+                respons = response.content
                 assertEquals(expectedCode, response.status())
                 if (expectedResponse != null) {
                     JSONAssert.assertEquals(expectedResponse, response.content!!, true)
@@ -290,6 +347,7 @@ class ApplicationTest {
                 }
             }
         }
+        return respons
     }
 
 }

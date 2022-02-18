@@ -5,7 +5,7 @@ import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import java.time.LocalDate
 
 internal object EttersendingUtils {
-    internal val objectMapper = jacksonObjectMapper().k9EttersendingKonfiguert()
+    internal val objectMapper = jacksonObjectMapper().k9BrukerdialogKonfiguert()
 
     val søker = Søker(
         aktørId = "12345",

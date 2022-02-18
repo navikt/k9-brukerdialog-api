@@ -34,7 +34,7 @@
 
 # 9. Distribusjon av tjenesten (deployment)
 Distribusjon av tjenesten er gjort med bruk av Github Actions.
-[K9-Ettersending-API CI / CD](https://github.com/navikt/k9-brukerdialog-api/actions)
+[K9-Brukerdialog-API CI / CD](https://github.com/navikt/k9-brukerdialog-api/actions)
 
 Push til dev-* brancher vil teste, bygge og deploye til dev/staging miljø.
 Push/merge til master branche vil teste, bygge og deploye til produksjonsmiljø.
