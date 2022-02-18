@@ -10,10 +10,11 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 internal const val k9OppslagPath = "/k9-selvbetjening-oppslag-mock"
 private const val k9MellomlagringPath = "/k9-mellomlagring-mock"
 
-internal fun WireMockBuilder.k9EttersendingApiConfig() = wireMockConfiguration {
+internal fun WireMockBuilder.k9BrukerdialogApiConfig() = wireMockConfiguration {
     it
         .extensions(SokerResponseTransformer())
         .extensions(K9MellomlagringResponseTransformer())
+        .extensions(BarnResponseTransformer())
 }
 
 
@@ -35,6 +36,25 @@ internal fun WireMockServer.stubK9OppslagSoker(
             .willReturn(
                 responseBody?.let { responseBuilder.withBody(it) }
                     ?: responseBuilder.withTransformers("k9-oppslag-soker")
+            )
+    )
+    return this
+}
+
+internal fun WireMockServer.stubK9OppslagBarn(simulerFeil: Boolean = false): WireMockServer {
+    WireMock.stubFor(
+        WireMock.get(WireMock.urlPathMatching("$k9OppslagPath/.*"))
+            .withHeader(HttpHeaders.Authorization, AnythingPattern())
+            .withQueryParam("a", equalTo("barn[].aktør_id"))
+            .withQueryParam("a", equalTo("barn[].fornavn"))
+            .withQueryParam("a", equalTo("barn[].mellomnavn"))
+            .withQueryParam("a", equalTo("barn[].etternavn"))
+            .withQueryParam("a", equalTo("barn[].fødselsdato"))
+            .willReturn(
+                WireMock.aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(if (simulerFeil) 500 else 200)
+                    .withTransformers("k9-oppslag-barn")
             )
     )
     return this

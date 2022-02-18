@@ -25,6 +25,8 @@ import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.systemauth.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnGateway
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.oppslagRoutes
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerGateway
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
@@ -111,6 +113,17 @@ fun Application.k9BrukerdialogApi() {
             søkerGateway = sokerGateway
         )
 
+        val barnGateway = BarnGateway(
+            baseUrl = configuration.getK9OppslagUrl(),
+            accessTokenClient = tokenxClient,
+            k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+        )
+
+        val barnSøkerService = BarnService(
+            barnGateway = barnGateway,
+            cache = configuration.cache()
+        )
+
         val kafkaProducer = KafkaProducer(
             kafkaConfig = configuration.getKafkaConfig()
         )
@@ -124,7 +137,8 @@ fun Application.k9BrukerdialogApi() {
         authenticate(*issuers.allIssuers()) {
             oppslagRoutes(
                 idTokenProvider = idTokenProvider,
-                søkerService = søkerService
+                søkerService = søkerService,
+                barnservice = barnSøkerService
             )
 
             vedleggApis(
@@ -185,7 +199,7 @@ fun Application.k9BrukerdialogApi() {
     }
 }
 
-internal fun ObjectMapper.k9EttersendingKonfiguert() = dusseldorfConfigured().apply {
+internal fun ObjectMapper.k9BrukerdialogKonfiguert() = dusseldorfConfigured().apply {
     configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
 }
 

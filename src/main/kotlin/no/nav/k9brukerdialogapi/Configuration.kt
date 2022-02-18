@@ -1,5 +1,7 @@
 package no.nav.k9brukerdialogapi
 
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import io.ktor.config.*
 import no.nav.helse.dusseldorf.ktor.auth.EnforceEqualsOrContains
 import no.nav.helse.dusseldorf.ktor.auth.issuers
@@ -10,6 +12,7 @@ import no.nav.helse.dusseldorf.ktor.core.getRequiredList
 import no.nav.helse.dusseldorf.ktor.core.getRequiredString
 import no.nav.k9brukerdialogapi.kafka.KafkaConfig
 import java.net.URI
+import java.time.Duration
 
 data class Configuration(val config : ApplicationConfig) {
 
@@ -70,4 +73,15 @@ data class Configuration(val config : ApplicationConfig) {
             keyStore = keyStore
         )
     }
+
+    internal fun<K, V>cache(
+        expiry: Duration = Duration.ofMinutes(config.getRequiredString("nav.cache.barn.expiry_in_minutes", secret = false).toLong())
+    ) : Cache<K, V> {
+        val maxSize = config.getRequiredString("nav.cache.barn.max_size", secret = false).toLong()
+        return Caffeine.newBuilder()
+            .expireAfterWrite(expiry)
+            .maximumSize(maxSize)
+            .build()
+    }
+
 }
