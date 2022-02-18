@@ -1,12 +1,13 @@
-package no.nav.helse
+package no.nav.k9brukerdialogapi.oppslag
 
-import no.nav.k9brukerdialogapi.soker.Søker
+import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class SokerTest {
+class SøkerTest {
+
     @Test
     fun `En person som fyller 18 i morgen kan ikke søke`() {
         val soker = Søker(

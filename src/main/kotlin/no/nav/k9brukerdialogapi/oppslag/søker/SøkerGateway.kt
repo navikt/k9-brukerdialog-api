@@ -1,52 +1,44 @@
-package no.nav.k9brukerdialogapi.soker
+package no.nav.k9brukerdialogapi.oppslag.søker
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
-import io.ktor.http.*
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
-import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.Retry
 import no.nav.helse.dusseldorf.ktor.metrics.Operation
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.CallId
-import no.nav.k9brukerdialogapi.general.oppslag.K9OppslagGateway
-import no.nav.k9brukerdialogapi.general.oppslag.throwable
 import no.nav.k9brukerdialogapi.k9SelvbetjeningOppslagKonfigurert
+import no.nav.k9brukerdialogapi.oppslag.genererOppslagHttpRequest
+import no.nav.k9brukerdialogapi.oppslag.throwable
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.time.Duration
-import java.time.LocalDate
 
 class SøkerGateway(
-    baseUrl: URI,
+    private val baseUrl: URI,
     private val accessTokenClient: CachedAccessTokenClient,
     private val k9SelvbetjeningOppslagTokenxAudience: Set<String>,
-) : K9OppslagGateway(baseUrl) {
-
-    private companion object {
-        private val logger: Logger = LoggerFactory.getLogger("nav.SokerGateway")
-        private const val HENTE_SOKER_OPERATION = "hente-soker"
-        private val objectMapper = jacksonObjectMapper().k9SelvbetjeningOppslagKonfigurert()
-        private val attributter = Pair("a", listOf("aktør_id", "fornavn", "mellomnavn", "etternavn", "fødselsdato"))
-    }
+) {
+    private val logger: Logger = LoggerFactory.getLogger(SøkerGateway::class.java)
+    private val HENTE_SOKER_OPERATION = "hente-soker"
+    private val objectMapper = jacksonObjectMapper().k9SelvbetjeningOppslagKonfigurert()
+    private val attributter = Pair("a", listOf("aktør_id", "fornavn", "mellomnavn", "etternavn", "fødselsdato"))
 
     suspend fun hentSøker(
         idToken: IdToken,
         callId: CallId
-    ): SokerOppslagRespons {
-        val sokerUrl = Url.buildURL(
-            baseUrl = baseUrl,
-            pathParts = listOf("meg"),
-            queryParameters = mapOf(
-                attributter
-            )
-        ).toString()
+    ): Søker {
         val exchangeToken = IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
         logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
 
-        val httpRequest = generateHttpRequest(exchangeToken, sokerUrl, callId)
+        val httpRequest = genererOppslagHttpRequest(
+            baseUrl = baseUrl,
+            attributter = attributter,
+            idToken = idToken,
+            callId = callId
+        )
 
         val oppslagRespons = Retry.retry(
             operation = HENTE_SOKER_OPERATION,
@@ -61,7 +53,7 @@ class SøkerGateway(
             ) { httpRequest.awaitStringResponseResult() }
 
             result.fold(
-                { success -> objectMapper.readValue<SokerOppslagRespons>(success) },
+                { success -> objectMapper.readValue<SøkerOppslagRespons>(success) },
                 { error ->
                     throw error.throwable(
                         request = request,
@@ -71,14 +63,6 @@ class SøkerGateway(
                 }
             )
         }
-        return oppslagRespons
+        return oppslagRespons.tilSøker(idToken.getNorskIdentifikasjonsnummer())
     }
-
-    data class SokerOppslagRespons(
-        val aktør_id: String,
-        val fornavn: String,
-        val mellomnavn: String?,
-        val etternavn: String,
-        val fødselsdato: LocalDate
-    )
 }

@@ -43,9 +43,9 @@ class ApplicationTest {
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
 
-        private val gyldigFodselsnummerA = "02119970078"
-        private val cookie = getAuthCookie(gyldigFodselsnummerA)
-        private val tokenXToken = getTokenDingsToken(fnr = gyldigFodselsnummerA)
+        private val gyldigFødselsnummerA = "02119970078"
+        private val cookie = getAuthCookie(gyldigFødselsnummerA)
+        private val tokenXToken = getTokenDingsToken(fnr = gyldigFødselsnummerA)
 
         // Se https://github.com/navikt/dusseldorf-ktor#f%C3%B8dselsnummer
         private val myndigDato = "1999-11-02"
@@ -114,44 +114,44 @@ class ApplicationTest {
         }
     }
 
-    fun expectedGetSokerJson(
-        fodselsnummer: String,
-        fodselsdato: String = "1999-11-02",
-        myndig: Boolean = true
-    ) = """
-            {
-                "etternavn": "MORSEN",
-                "fornavn": "MOR",
-                "mellomnavn": "HEISANN",
-                "fødselsnummer": "$fodselsnummer",
-                "aktørId": "12345",
-                "fødselsdato": "$fodselsdato",
-                "myndig": $myndig
-            }
-        """.trimIndent()
-
     @Test
-    fun `Hente søker med loginservice token`() {
+    fun `Hente søker med loginservice token som cookie`() {
         requestAndAssert(
             httpMethod = HttpMethod.Get,
-            path = SØKER_URL,
+            path = OPPSLAG_URL+SØKER_URL,
             expectedCode = HttpStatusCode.OK,
-            expectedResponse = expectedGetSokerJson(
-                fodselsnummer = gyldigFodselsnummerA,
-                fodselsdato = myndigDato,
-                myndig = true
-            ),
-            cookie = getAuthCookie(gyldigFodselsnummerA)
+            expectedResponse = """
+                {
+                    "etternavn": "MORSEN",
+                    "fornavn": "MOR",
+                    "mellomnavn": "HEISANN",
+                    "fødselsnummer": "$gyldigFødselsnummerA",
+                    "aktørId": "12345",
+                    "fødselsdato": "1999-11-02",
+                    "myndig": true
+                }
+            """.trimIndent(),
+            cookie = getAuthCookie(gyldigFødselsnummerA)
         )
     }
 
     @Test
-    fun `Hente søker med tokenX token`() {
+    fun `Hente søker med tokenX token som authorization header`() {
         requestAndAssert(
             httpMethod = HttpMethod.Get,
-            path = SØKER_URL,
+            path = OPPSLAG_URL+SØKER_URL,
             expectedCode = HttpStatusCode.OK,
-            expectedResponse = expectedGetSokerJson(gyldigFodselsnummerA),
+            expectedResponse = """
+                {
+                    "etternavn": "MORSEN",
+                    "fornavn": "MOR",
+                    "mellomnavn": "HEISANN",
+                    "fødselsnummer": "$gyldigFødselsnummerA",
+                    "aktørId": "12345",
+                    "fødselsdato": "1999-11-02",
+                    "myndig": true
+                }
+            """.trimIndent(),
             jwtToken = tokenXToken
         )
     }
@@ -175,7 +175,7 @@ class ApplicationTest {
 
         requestAndAssert(
             httpMethod = HttpMethod.Get,
-            path = SØKER_URL,
+            path = OPPSLAG_URL+SØKER_URL,
             expectedCode = HttpStatusCode.fromValue(451),
             expectedResponse =
             //language=json
@@ -184,7 +184,7 @@ class ApplicationTest {
                 "type": "/problem-details/tilgangskontroll-feil",
                 "title": "tilgangskontroll-feil",
                 "status": 451,
-                "instance": "/soker",
+                "instance": "/oppslag/soker",
                 "detail": "Tilgang nektet."
             }
             """.trimIndent(),
@@ -198,8 +198,8 @@ class ApplicationTest {
     fun `Hente søker med tilgangsnivå 3`() {
         requestAndAssert(
             httpMethod = HttpMethod.Get,
-            path = SØKER_URL,
-            cookie = getAuthCookie(fnr = gyldigFodselsnummerA, level = 3),
+            path = OPPSLAG_URL+SØKER_URL,
+            cookie = getAuthCookie(fnr = gyldigFødselsnummerA, level = 3),
             expectedCode = HttpStatusCode.Forbidden,
             expectedResponse = null
         )
@@ -207,7 +207,7 @@ class ApplicationTest {
 
     @Test
     fun `Test håndtering av vedlegg`() {
-        val cookie = getAuthCookie(gyldigFodselsnummerA)
+        val cookie = getAuthCookie(gyldigFødselsnummerA)
         val jpeg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
 
         with(engine) {
@@ -242,7 +242,7 @@ class ApplicationTest {
     @Test
     fun `Test opplasting av ikke støttet vedleggformat`() {
         engine.handleRequestUploadImage(
-            cookie = getAuthCookie(gyldigFodselsnummerA),
+            cookie = getAuthCookie(gyldigFødselsnummerA),
             vedlegg = "jwkset.json".fromResources().readBytes(),
             contentType = "application/json",
             fileName = "jwkset.json",
@@ -253,7 +253,7 @@ class ApplicationTest {
     @Test
     fun `Test opplasting av for stort vedlegg`() {
         engine.handleRequestUploadImage(
-            cookie = getAuthCookie(gyldigFodselsnummerA),
+            cookie = getAuthCookie(gyldigFødselsnummerA),
             vedlegg = ByteArray(8 * 1024 * 1024 + 10),
             contentType = "image/png",
             fileName = "big_picture.png",

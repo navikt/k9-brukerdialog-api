@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.general.oppslag
+package no.nav.k9brukerdialogapi.oppslag
 
 import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.core.Request

@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import no.nav.k9brukerdialogapi.soker.Søker
+import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import java.time.LocalDate
 
 internal object EttersendingUtils {

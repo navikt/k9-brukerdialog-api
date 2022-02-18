@@ -25,9 +25,10 @@ import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.systemauth.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
-import no.nav.k9brukerdialogapi.soker.SøkerGateway
-import no.nav.k9brukerdialogapi.soker.SøkerService
-import no.nav.k9brukerdialogapi.soker.søkerApis
+import no.nav.k9brukerdialogapi.oppslag.oppslagRoute
+import no.nav.k9brukerdialogapi.oppslag.søker.SøkerGateway
+import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
+import no.nav.k9brukerdialogapi.oppslag.søker.søkerApis
 import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
@@ -122,10 +123,9 @@ fun Application.k9BrukerdialogApi() {
         }
 
         authenticate(*issuers.allIssuers()) {
-
-            søkerApis(
-                søkerService = søkerService,
-                idTokenProvider = idTokenProvider
+            oppslagRoute(
+                idTokenProvider = idTokenProvider,
+                søkerService = søkerService
             )
 
             vedleggApis(

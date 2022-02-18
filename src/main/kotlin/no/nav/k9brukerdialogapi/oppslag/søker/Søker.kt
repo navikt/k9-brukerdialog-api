@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.soker
+package no.nav.k9brukerdialogapi.oppslag.søker
 
 import java.time.LocalDate
 import java.time.ZoneId
@@ -21,4 +21,21 @@ data class Søker (
     val etternavn: String? = null,
     val myndig: Boolean = erMyndig(fødselsdato)
 )
+
+data class SøkerOppslagRespons(
+    val aktør_id: String,
+    val fornavn: String,
+    val mellomnavn: String?,
+    val etternavn: String,
+    val fødselsdato: LocalDate
+) {
+    fun tilSøker(fødselsnummer: String) = Søker(
+        aktørId = aktør_id,
+        fødselsnummer = fødselsnummer,
+        fødselsdato = fødselsdato,
+        fornavn = fornavn,
+        mellomnavn = mellomnavn,
+        etternavn = etternavn
+    )
+}
 
