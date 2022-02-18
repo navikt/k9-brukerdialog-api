@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val mainClass = "no.nav.k9.AppKt"
+val mainClass = "no.nav.k9brukerdialogapi.AppKt"
 val dusseldorfKtorVersion = "3.1.6.7-3fd207a"
 val ktorVersion = ext.get("ktorVersion").toString()
 val k9FormatVersion = "5.7.2"
@@ -37,7 +37,7 @@ dependencies {
     implementation ( "no.nav.helse:dusseldorf-oauth2-client:$dusseldorfKtorVersion")
 
     // K9-format
-    implementation ( "no.nav.k9:ettersendelse:$k9FormatVersion")
+    implementation ( "no.nav.k9:k9-format:$k9FormatVersion")
 
     // kafka
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
