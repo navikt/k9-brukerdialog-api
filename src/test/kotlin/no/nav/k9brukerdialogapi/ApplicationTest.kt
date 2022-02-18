@@ -13,6 +13,7 @@ import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
+import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.skyscreamer.jsonassert.JSONAssert
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ApplicationTest {
@@ -207,33 +209,39 @@ class ApplicationTest {
     }
 
     @Test
-    fun `Hente barn`(){
-        requestAndAssert(
+    fun `Hente barn og eksplisit sjekke at identitetsnummer ikke blir med ved get kall`() {
+        val respons = requestAndAssert(
             httpMethod = HttpMethod.Get,
             path = OPPSLAG_URL+BARN_URL,
             expectedCode = HttpStatusCode.OK,
+            cookie = cookie,
+            //language=json
             expectedResponse = """
-            {
-              "barn": [
                 {
-                  "fødselsdato": "2000-08-27",
-                  "fornavn": "BARN",
-                  "mellomnavn": "EN",
-                  "etternavn": "BARNESEN",
-                  "aktørId": "1000000000001"
-                },
-                {
-                  "fødselsdato": "2001-04-10",
-                  "fornavn": "BARN",
-                  "mellomnavn": "TO",
-                  "etternavn": "BARNESEN",
-                  "aktørId": "1000000000002"
+                  "barn": [
+                    {
+                      "fødselsdato": "2000-08-27",
+                      "fornavn": "BARN",
+                      "mellomnavn": "EN",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000001"
+                    },
+                    {
+                      "fødselsdato": "2001-04-10",
+                      "fornavn": "BARN",
+                      "mellomnavn": "TO",
+                      "etternavn": "BARNESEN",
+                      "aktørId": "1000000000002"
+                    }
+                  ]
                 }
-              ]
-            }
-            """.trimIndent(),
-            jwtToken = tokenXToken
+            """.trimIndent()
         )
+
+        val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
+
+        assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
+        assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
     }
 
     @Test
@@ -248,7 +256,7 @@ class ApplicationTest {
                 "barn": []
             }
             """.trimIndent(),
-            cookie = cookie
+            cookie = getAuthCookie("26104500284")
         )
         wireMockServer.stubK9OppslagBarn()
     }
@@ -316,7 +324,8 @@ class ApplicationTest {
         expectedCode: HttpStatusCode,
         jwtToken: String? = null,
         cookie: Cookie? = null
-    ) {
+    ) : String? {
+        val respons: String?
         with(engine) {
             handleRequest(httpMethod, path) {
                 if (cookie != null) addHeader(HttpHeaders.Cookie, cookie.toString())
@@ -328,6 +337,7 @@ class ApplicationTest {
             }.apply {
                 logger.info("Response Entity = ${response.content}")
                 logger.info("Expected Entity = $expectedResponse")
+                respons = response.content
                 assertEquals(expectedCode, response.status())
                 if (expectedResponse != null) {
                     JSONAssert.assertEquals(expectedResponse, response.content!!, true)
@@ -337,6 +347,7 @@ class ApplicationTest {
                 }
             }
         }
+        return respons
     }
 
 }
