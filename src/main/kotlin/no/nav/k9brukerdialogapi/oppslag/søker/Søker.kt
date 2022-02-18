@@ -1,0 +1,41 @@
+package no.nav.k9brukerdialogapi.oppslag.søker
+
+import java.time.LocalDate
+import java.time.ZoneId
+
+private val ZONE_ID = ZoneId.of("Europe/Oslo")
+private const val MYNDIG_ALDER = 18L
+
+private fun erMyndig(fodselsdato: LocalDate) : Boolean {
+    val myndighetsDato = fodselsdato.plusYears(MYNDIG_ALDER)
+    val dagensDato = LocalDate.now(ZONE_ID)
+    return myndighetsDato.isBefore(dagensDato) || myndighetsDato.isEqual(dagensDato)
+}
+
+data class Søker (
+    val aktørId: String,
+    val fødselsdato: LocalDate,
+    val fødselsnummer: String,
+    val fornavn: String? = null,
+    val mellomnavn: String? = null,
+    val etternavn: String? = null,
+    val myndig: Boolean = erMyndig(fødselsdato)
+)
+
+data class SøkerOppslagRespons(
+    val aktør_id: String,
+    val fornavn: String,
+    val mellomnavn: String?,
+    val etternavn: String,
+    val fødselsdato: LocalDate
+) {
+    fun tilSøker(fødselsnummer: String) = Søker(
+        aktørId = aktør_id,
+        fødselsnummer = fødselsnummer,
+        fødselsdato = fødselsdato,
+        fornavn = fornavn,
+        mellomnavn = mellomnavn,
+        etternavn = etternavn
+    )
+}
+
