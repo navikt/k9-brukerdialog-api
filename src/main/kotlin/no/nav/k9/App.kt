@@ -26,8 +26,6 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
-import no.nav.k9.ettersending.EttersendingService
-import no.nav.k9.ettersending.ettersendingApis
 import no.nav.k9.general.systemauth.AccessTokenClientResolver
 import no.nav.k9.kafka.KafkaProducer
 import no.nav.k9.soker.SøkerGateway
@@ -42,9 +40,9 @@ import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-private val logger: Logger = LoggerFactory.getLogger("nav.k9EttersendingApi")
+private val logger: Logger = LoggerFactory.getLogger("nav.k9BrukerdialogApi")
 
-fun Application.k9EttersendingApi() {
+fun Application.k9BrukerdialogApi() {
     val appId = environment.config.id()
     logProxyProperties()
     DefaultExports.initialize()
@@ -136,15 +134,6 @@ fun Application.k9EttersendingApi() {
             vedleggApis(
                 vedleggService = vedleggService,
                 idTokenProvider = idTokenProvider
-            )
-
-            ettersendingApis(
-                idTokenProvider = idTokenProvider,
-                ettersendingService = EttersendingService(
-                    søkerService = søkerService,
-                    vedleggService = vedleggService,
-                    kafkaProducer = kafkaProducer
-                )
             )
         }
 

@@ -1,1 +1,1 @@
-rootProject.name = "k9-ettersending-api"
+rootProject.name = "k9-brukerdialog-api"

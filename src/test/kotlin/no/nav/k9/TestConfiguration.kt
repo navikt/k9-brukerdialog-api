@@ -34,12 +34,12 @@ object TestConfiguration {
         if (wireMockServer != null) {
             // Clients
             map["nav.auth.clients.0.alias"] = "azure-v2"
-            map["nav.auth.clients.0.client_id"] = "k9-ettersending-api"
+            map["nav.auth.clients.0.client_id"] = "k9-brukerdialog-api"
             map["nav.auth.clients.0.private_key_jwk"] = ClientCredentials.ClientC.privateKeyJwk
             map["nav.auth.clients.0.discovery_endpoint"] = wireMockServer.getAzureV2WellKnownUrl()
 
             map["nav.auth.clients.1.alias"] = "tokenx"
-            map["nav.auth.clients.1.client_id"] = "k9-ettersending-api"
+            map["nav.auth.clients.1.client_id"] = "k9-brukerdialog-api"
             map["nav.auth.clients.1.private_key_jwk"] = ClientCredentials.ClientC.privateKeyJwk
             map["nav.auth.clients.1.discovery_endpoint"] = wireMockServer.getTokendingsWellKnownUrl()
 

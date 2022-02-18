@@ -4,11 +4,7 @@ import no.nav.helse.dusseldorf.ktor.health.HealthCheck
 import no.nav.helse.dusseldorf.ktor.health.Healthy
 import no.nav.helse.dusseldorf.ktor.health.Result
 import no.nav.helse.dusseldorf.ktor.health.UnHealthy
-import no.nav.k9.ettersending.KomplettEttersending
-import no.nav.k9.general.formaterStatuslogging
-import no.nav.k9.somJson
 import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.Serializer
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -27,7 +23,7 @@ class KafkaProducer(
         ETTERSENDING_MOTTATT_TOPIC.keySerializer(),
         ETTERSENDING_MOTTATT_TOPIC.valueSerializer
     )
-
+    /*
     internal fun produserKafkaMelding(
         komplettEttersending: KomplettEttersending,
         metadata: Metadata
@@ -50,7 +46,7 @@ class KafkaProducer(
             )
         )
     }
-
+    */
     internal fun stop() = producer.close()
 
     override suspend fun check(): Result {

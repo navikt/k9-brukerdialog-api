@@ -1,5 +1,5 @@
 {
-  "app": "k9-ettersending-api",
+  "app": "k9-brukerdialog-api",
   "cluster": "prod-gcp",
   "namespace": "dusseldorf",
   "team": "dusseldorf",
@@ -8,7 +8,7 @@
   "tenant": "nav.no",
   "kafka-pool": "nav-prod",
   "ingresses": [
-    "https://k9-ettersending-api.nav.no"
+    "https://k9-brukerdialog-api.nav.no"
   ],
   "externalHosts": [
     "api-gw.oera.no",
@@ -28,6 +28,6 @@
     "K9_MELLOMLAGRING_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-mellomlagring"
   },
   "slack-channel": "sif-alerts",
-  "slack-notify-type": "<!channel> | k9-ettersending-api | ",
-  "app-alert-ingress": "https://k9-ettersending-api.nav.no"
+  "slack-notify-type": "<!channel> | k9-brukerdialog-api | ",
+  "app-alert-ingress": "https://k9-brukerdialog-api.nav.no"
 }

@@ -47,7 +47,7 @@ class K9MellomlagringGateway(
         private const val LAGRE_VEDLEGG_OPERATION = "lagre-vedlegg"
         private const val PERSISTER_VEDLEGG = "persister-vedlegg"
         private const val FJERNE_HOLD_PÅ_PERSISTERT_VEDLEGG = "fjerne-hold-på-persistert-vedlegg"
-        private const val TJENESTE = "k9-ettersending-api"
+        private const val TJENESTE = "k9-brukerdialog-api"
     }
 
     private val cachedAccessTokenClient = CachedAccessTokenClient(accessTokenClient)

@@ -55,7 +55,7 @@ class SøkerGateway(
             logger = logger
         ) {
             val (request, _, result) = Operation.monitored(
-                app = "k9-ettersending-api",
+                app = "k9-brukerdialog-api",
                 operation = HENTE_SOKER_OPERATION,
                 resultResolver = { 200 == it.second.statusCode }
             ) { httpRequest.awaitStringResponseResult() }
