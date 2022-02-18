@@ -139,7 +139,7 @@ fun Application.k9BrukerdialogApi() {
 
         val healthService = HealthService(
             healthChecks = setOf(
-                kafkaProducer,
+                kafkaProducer,/* //TODO 18/02/2022 - Legge til helsesjekk
                 HttpRequestHealthCheck(
                     mapOf(
                         Url.buildURL(
@@ -147,7 +147,7 @@ fun Application.k9BrukerdialogApi() {
                             pathParts = listOf("health")
                         ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK)
                     )
-                )
+                )*/
             )
         )
 
