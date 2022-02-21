@@ -25,6 +25,8 @@ import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.systemauth.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
+import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverGateway
+import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverService
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnGateway
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.oppslagRoutes
@@ -124,6 +126,10 @@ fun Application.k9BrukerdialogApi() {
             cache = configuration.cache()
         )
 
+        val arbeidsgiverService = ArbeidsgiverService(
+            arbeidsgivereGateway = ArbeidsgiverGateway(configuration.getK9OppslagUrl())
+        )
+
         val kafkaProducer = KafkaProducer(
             kafkaConfig = configuration.getKafkaConfig()
         )
@@ -138,7 +144,8 @@ fun Application.k9BrukerdialogApi() {
             oppslagRoutes(
                 idTokenProvider = idTokenProvider,
                 søkerService = søkerService,
-                barnservice = barnSøkerService
+                barnservice = barnSøkerService,
+                arbeidsgiverService = arbeidsgiverService
             )
 
             vedleggApis(
@@ -207,5 +214,6 @@ internal fun ObjectMapper.k9SelvbetjeningOppslagKonfigurert(): ObjectMapper {
     return dusseldorfConfigured().apply {
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         registerModule(JavaTimeModule())
+        propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
     }
 }

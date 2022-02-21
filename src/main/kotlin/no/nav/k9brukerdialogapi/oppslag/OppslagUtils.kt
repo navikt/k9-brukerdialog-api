@@ -9,15 +9,16 @@ import no.nav.k9brukerdialogapi.general.CallId
 import java.net.URI
 
 fun genererOppslagHttpRequest(
+    pathParts: String,
     baseUrl: URI,
-    attributter: Pair<String, List<String>>,
+    attributter: List<Pair<String, List<String>>>,
     idToken: IdToken,
     callId: CallId
 ): Request {
     return Url.buildURL(
         baseUrl = baseUrl,
-        pathParts = listOf("meg"),
-        queryParameters = mapOf(attributter)
+        pathParts = listOf(pathParts),
+        queryParameters = attributter.toMap()
     ).toString()
         .httpGet()
         .header(

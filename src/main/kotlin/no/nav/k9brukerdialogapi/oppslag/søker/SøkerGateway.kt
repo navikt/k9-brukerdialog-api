@@ -35,7 +35,8 @@ class SøkerGateway(
 
         val httpRequest = genererOppslagHttpRequest(
             baseUrl = baseUrl,
-            attributter = attributter,
+            pathParts = "meg",
+            attributter = listOf(attributter),
             idToken = idToken,
             callId = callId
         )
