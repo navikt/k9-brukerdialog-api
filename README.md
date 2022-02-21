@@ -1,6 +1,6 @@
 # K9 Brukerdialog API
 
-API som undersøttter søknadsprosessen for flere ytelser i folketrygdloven kapittel 9.
+API som understøtter søknadsprosessen for flere ytelser i folketrygdloven kapittel 9.
 
 Foreløpig støtte for følgende ytelser:
 
