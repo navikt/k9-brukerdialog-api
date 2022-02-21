@@ -38,6 +38,8 @@ dependencies {
 
     // K9-format
     implementation ( "no.nav.k9:k9-format:$k9FormatVersion")
+    implementation ("no.nav.k9:soknad:$k9FormatVersion")
+
 
     // kafka
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")

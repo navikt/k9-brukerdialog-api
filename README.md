@@ -20,6 +20,19 @@ Foreløpig støtte for følgende ytelser:
   GET /oppslag/barn
 ```
 
+#### Arbeidsgivere
+
+```http
+  GET /oppslag/arbeidsgiver
+```
+
+| Parameter | Type     | Beskrivelse                |
+| :-------- | :------- | :------------------------- |
+| `fra_og_med` | `string` | **Påbudt**. Periode fra og med for ansettelseforhold |
+| `til_og_med` | `string` | **Påbudt** Periode til og med for ansettelseforhold |
+| `frilansoppdrag` | `boolean` | **Valgfri** Må settes til true dersom man ønsker oppslag av frilansoppdrag|
+| `private_arbeidsgivere` | `boolean` | **Valgfri**  Må settes til true dersom man ønsker oppslag av private arbeidsgivere|
+
 
 
 ## Drift og støtte

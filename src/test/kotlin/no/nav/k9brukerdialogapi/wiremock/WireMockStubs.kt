@@ -15,6 +15,7 @@ internal fun WireMockBuilder.k9BrukerdialogApiConfig() = wireMockConfiguration {
         .extensions(SokerResponseTransformer())
         .extensions(K9MellomlagringResponseTransformer())
         .extensions(BarnResponseTransformer())
+        .extensions(ArbeidsgivereResponseTransformer())
 }
 
 
@@ -55,6 +56,24 @@ internal fun WireMockServer.stubK9OppslagBarn(simulerFeil: Boolean = false): Wir
                     .withHeader("Content-Type", "application/json")
                     .withStatus(if (simulerFeil) 500 else 200)
                     .withTransformers("k9-oppslag-barn")
+            )
+    )
+    return this
+}
+
+internal fun WireMockServer.stubK9OppslagArbeidsgivere(simulerFeil: Boolean = false): WireMockServer {
+    WireMock.stubFor(
+        WireMock.get(WireMock.urlPathMatching("$k9OppslagPath/meg.*"))
+            .withHeader(HttpHeaders.Authorization, AnythingPattern())
+            .withQueryParam("a", equalTo("arbeidsgivere[].organisasjoner[].organisasjonsnummer"))
+            .withQueryParam("a", equalTo("arbeidsgivere[].organisasjoner[].navn"))
+            .withQueryParam("fom", AnythingPattern()) // vurder regex som validerer dato-format
+            .withQueryParam("tom", AnythingPattern()) // vurder regex som validerer dato-format
+            .willReturn(
+                WireMock.aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(if (simulerFeil) 500 else 200)
+                    .withTransformers("k9-oppslag-arbeidsgivere")
             )
     )
     return this
