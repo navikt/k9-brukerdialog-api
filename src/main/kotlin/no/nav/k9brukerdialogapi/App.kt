@@ -14,6 +14,9 @@ import io.ktor.metrics.micrometer.*
 import io.ktor.routing.*
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.helse.dusseldorf.ktor.auth.*
+import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthCheck
+import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthConfig
+import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.*
 import no.nav.helse.dusseldorf.ktor.health.HealthReporter
 import no.nav.helse.dusseldorf.ktor.health.HealthRoute
@@ -94,7 +97,6 @@ fun Application.k9BrukerdialogApi() {
     }
 
     install(Routing) {
-
         val k9MellomlagringGateway = K9MellomlagringGateway(
             baseUrl = configuration.getK9MellomlagringUrl(),
             accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,
@@ -156,7 +158,7 @@ fun Application.k9BrukerdialogApi() {
 
         val healthService = HealthService(
             healthChecks = setOf(
-                kafkaProducer,/* //TODO 18/02/2022 - Legge til helsesjekk
+                kafkaProducer,
                 HttpRequestHealthCheck(
                     mapOf(
                         Url.buildURL(
@@ -164,7 +166,7 @@ fun Application.k9BrukerdialogApi() {
                             pathParts = listOf("health")
                         ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK)
                     )
-                )*/
+                )
             )
         )
 
