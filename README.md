@@ -34,6 +34,20 @@ Foreløpig støtte for følgende ytelser:
 | `private_arbeidsgivere` | `boolean` | **Valgfri**  Må settes til true dersom man ønsker oppslag av private arbeidsgivere|
 
 
+## Vedlegg
+
+### Lagre vedlegg
+```http
+  POST /vedlegg
+```
+### Hente vedlegg
+```http
+  GET /vedlegg/{vedleggId}
+```
+### Slette vedlegg
+```http
+  DELETE /vedlegg/{vedleggId}
+```
 
 ## Drift og støtte
 
