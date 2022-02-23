@@ -10,8 +10,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URL
 
-private val logger: Logger = LoggerFactory.getLogger("nav.VedleggService")
-
 class VedleggService(
     private val k9MellomlagringGateway: K9MellomlagringGateway
 ) {
@@ -19,30 +17,23 @@ class VedleggService(
         vedlegg: Vedlegg,
         idToken: IdToken,
         callId: CallId
-    ): String {
-
-        return k9MellomlagringGateway.lagreVedlegg(
-            vedlegg = vedlegg,
-            idToken = idToken,
-            callId = callId
-        )
-
-    }
+    ): String = k9MellomlagringGateway.lagreVedlegg(
+        vedlegg = vedlegg,
+        idToken = idToken,
+        callId = callId
+    )
 
     suspend fun hentVedlegg(
         vedleggId: String,
         idToken: IdToken,
         callId: CallId,
         eier: DokumentEier
-    ): Vedlegg? {
-
-        return k9MellomlagringGateway.hentVedlegg(
-            vedleggId = vedleggId,
-            idToken = idToken,
-            callId = callId,
-            eier = eier
-        )
-    }
+    ): Vedlegg? = k9MellomlagringGateway.hentVedlegg(
+        vedleggId = vedleggId,
+        idToken = idToken,
+        callId = callId,
+        eier = eier
+    )
 
     suspend fun hentVedlegg(
         vedleggUrls: List<URL>,
@@ -73,14 +64,12 @@ class VedleggService(
         idToken: IdToken,
         callId: CallId,
         eier: DokumentEier
-    ): Boolean {
-        return k9MellomlagringGateway.slettVedlegg(
-            vedleggId = vedleggId,
-            idToken = idToken,
-            callId = callId,
-            eier = eier
-        )
-    }
+    ): Boolean = k9MellomlagringGateway.slettVedlegg(
+        vedleggId = vedleggId,
+        idToken = idToken,
+        callId = callId,
+        eier = eier
+    )
 
     internal suspend fun persisterVedlegg(
         vedleggsUrls: List<URL>,

@@ -2,6 +2,8 @@ package no.nav.k9brukerdialogapi.vedlegg
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
+data class VedleggId(val value: String)
+
 data class Vedlegg(
     val content: ByteArray,
     val contentType: String,

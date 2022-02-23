@@ -94,7 +94,6 @@ fun Application.k9BrukerdialogApi() {
     }
 
     install(Routing) {
-
         val k9MellomlagringGateway = K9MellomlagringGateway(
             baseUrl = configuration.getK9MellomlagringUrl(),
             accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,

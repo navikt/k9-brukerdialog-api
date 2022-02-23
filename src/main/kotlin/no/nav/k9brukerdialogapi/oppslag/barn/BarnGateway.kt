@@ -39,8 +39,7 @@ class BarnGateway(
         idToken: IdToken,
         callId: CallId
     ): List<BarnOppslagRespons> {
-        val exchangeToken =
-            IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
+        val exchangeToken = IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
         logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
 
         val httpRequest = genererOppslagHttpRequest(
