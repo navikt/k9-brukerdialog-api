@@ -9,8 +9,3 @@ data class CallId(val value : String)
 fun ApplicationCall.getCallId() : CallId {
     return CallId(callId!!)
 }
-
-fun ApplicationCall.getMetadata() = Metadata(
-    version = 1,
-    correlationId = getCallId().value
-)

@@ -26,7 +26,7 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
-import no.nav.k9brukerdialogapi.general.systemauth.AccessTokenClientResolver
+import no.nav.k9brukerdialogapi.general.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverGateway
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverService

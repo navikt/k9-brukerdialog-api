@@ -6,8 +6,6 @@ import com.github.tomakehurst.wiremock.extension.ResponseTransformer
 import com.github.tomakehurst.wiremock.http.Request
 import com.github.tomakehurst.wiremock.http.Response
 import no.nav.helse.TestUtils
-import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.frilansoppdragQueryName
-import no.nav.k9brukerdialogapi.somJson
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
