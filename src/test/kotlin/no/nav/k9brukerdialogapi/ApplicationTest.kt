@@ -411,7 +411,7 @@ class ApplicationTest {
     inner class OmsorgspengerUtvidetRettTest{
         @Test
         fun `Innsending av gyldig søknad`() {
-            val søknad = gyldigSøknad.somJson()
+            val søknad = SøknadUtils.gyldigOmsorgspengerUtvidetRettSøknad.somJson()
             requestAndAssert(
                 httpMethod = HttpMethod.Post,
                 path = OMSORGSPENGER_UTVIDET_RETT_URL + INNSENDING_URL,
@@ -425,7 +425,7 @@ class ApplicationTest {
 
         @Test
         fun `Innsending av ugyldig søknad som får valideringsfeil`() {
-            val søknad = gyldigSøknad.copy(
+            val søknad = SøknadUtils.gyldigOmsorgspengerUtvidetRettSøknad.copy(
                 barn = Barn(navn = "Navnesen", norskIdentifikator = "123"),
                 harForståttRettigheterOgPlikter = false,
                 harBekreftetOpplysninger = false

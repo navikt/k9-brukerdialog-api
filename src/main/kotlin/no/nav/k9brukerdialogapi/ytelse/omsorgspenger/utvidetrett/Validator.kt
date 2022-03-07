@@ -12,6 +12,18 @@ fun Søknad.valider(){
 
     valideringsfeil.addAll(barn.valider())
 
+    if(sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()){
+        valideringsfeil.add(
+            Violation(
+                parameterName = "sammeAdresse og samværsavtale",
+                parameterType = ParameterType.ENTITY,
+                reason = "Dersom sammeAdresse er false kan ikke samværsavtale være null eller tom.",
+                invalidValue = "sammeAdresse=$sammeAdresse, samværsavtale=$samværsavtale"
+
+            )
+        )
+    }
+
     if (!harBekreftetOpplysninger) {
         valideringsfeil.add(
             Violation(
