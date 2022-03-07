@@ -13,6 +13,7 @@ import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
+import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Barn
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -402,6 +403,65 @@ class ApplicationTest {
         )
     }
 
+
+    @Test
+    fun `OMSORGSPENGER_UTVIDET_RETT - Innsending av gyldig søknad`(){
+        val søknad = gyldigSøknad.somJson()
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = OMSORGSPENGER_UTVIDET_RETT_URL+INNSENDING_URL,
+            expectedCode = HttpStatusCode.Accepted,
+            jwtToken = tokenXToken,
+            expectedResponse = null,
+            requestEntity = søknad
+        )
+        hentOgAssertSøknad(søknad = JSONObject(søknad))
+    }
+
+    @Test
+    fun `OMSORGSPENGER_UTVIDET_RETT - Innsending av ugyldig søknad som får valideringsfeil`(){
+        val søknad = gyldigSøknad.copy(
+            barn = Barn(navn = "Navnesen", norskIdentifikator = "123"),
+            harForståttRettigheterOgPlikter = false,
+            harBekreftetOpplysninger = false
+        ).somJson()
+
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = OMSORGSPENGER_UTVIDET_RETT_URL+INNSENDING_URL,
+            expectedCode = HttpStatusCode.BadRequest,
+            jwtToken = tokenXToken,
+            expectedResponse = """
+            {
+              "detail": "Requesten inneholder ugyldige paramtere.",
+              "instance": "about:blank",
+              "type": "/problem-details/invalid-request-parameters",
+              "title": "invalid-request-parameters",
+              "invalid_parameters": [
+                {
+                  "type": "entity",
+                  "name": "barn.norskIdentifikator",
+                  "reason": "Ikke gyldig norskIdentifikator.",
+                  "invalid_value": "123"
+                }, {
+                  "name": "harBekreftetOpplysninger",
+                  "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                  "invalid_value": false,
+                  "type": "entity"
+                }, {
+                  "name": "harForståttRettigheterOgPlikter",
+                  "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                  "invalid_value": false,
+                  "type": "entity"
+                }
+              ],
+              "status": 400
+            }
+            """.trimIndent(),
+            requestEntity = søknad
+        )
+    }
+
     private fun requestAndAssert(
         httpMethod: HttpMethod,
         path: String,
@@ -436,4 +496,26 @@ class ApplicationTest {
         return respons
     }
 
+    private fun hentOgAssertSøknad(søknad: JSONObject){
+        val hentet = kafkaKonsumer.hentOmsorgspengerUtvidetRettSøknad(søknad.getString("søknadId"))
+        assertGyldigSøknad(søknad, hentet.data)
+    }
+
+    private fun assertGyldigSøknad(
+        søknadSendtInn: JSONObject,
+        søknadFraTopic: JSONObject
+    ) {
+        assertTrue(søknadFraTopic.has("søker"))
+        assertTrue(søknadFraTopic.has("mottatt"))
+        assertTrue(søknadFraTopic.has("k9FormatSøknad"))
+        assertTrue(søknadFraTopic.getJSONObject("barn").has("norskIdentifikator"))
+
+        assertEquals(søknadSendtInn.getString("søknadId"), søknadFraTopic.getString("søknadId"))
+        assertEquals(søknadSendtInn.getString("relasjonTilBarnet"), søknadFraTopic.getString("relasjonTilBarnet"))
+
+        assertEquals(
+            søknadSendtInn.getJSONObject("barn").getString("navn"),
+            søknadFraTopic.getJSONObject("barn").getString("navn")
+        )
+    }
 }

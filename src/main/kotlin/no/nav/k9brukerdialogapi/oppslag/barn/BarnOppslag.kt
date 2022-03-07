@@ -12,6 +12,8 @@ data class BarnOppslag(
     @JsonIgnore var identitetsnummer: String
 )
 
+fun List<BarnOppslag>.hentNorskIdentifikatorForBarn(aktørId: String?) = find { it.aktørId == aktørId }?.identitetsnummer
+
 data class BarnOppslagRespons(
     val identitetsnummer: String,
     val fødselsdato: LocalDate,

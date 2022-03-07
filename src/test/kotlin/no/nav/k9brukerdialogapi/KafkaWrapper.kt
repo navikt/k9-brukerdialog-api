@@ -26,7 +26,8 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.MOTTATT_ETTERSENDING_TOPIC
+                Topics.MOTTATT_ETTERSENDING_TOPIC,
+                Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
             )
         )
         return kafkaEnvironment
@@ -39,7 +40,7 @@ private fun KafkaEnvironment.testConsumerProperties() : MutableMap<String, Any>?
         put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
         put(SaslConfigs.SASL_MECHANISM, "PLAIN")
         put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";")
-        put(ConsumerConfig.GROUP_ID_CONFIG, "omsorgsdager-melding-api")
+        put(ConsumerConfig.GROUP_ID_CONFIG, "k9-brukerdialogapi")
     }
 }
 
@@ -49,8 +50,27 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
         StringDeserializer(),
         EttersendingOutgoingDeserialiser()
     )
-    consumer.subscribe(listOf(Topics.MOTTATT_ETTERSENDING_TOPIC))
+    consumer.subscribe(listOf(Topics.MOTTATT_ETTERSENDING_TOPIC, Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC))
     return consumer
+}
+
+internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerUtvidetRettSøknad(
+    søknadId: String,
+    maxWaitInSeconds: Long = 20,
+) : TopicEntry<JSONObject> {
+    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
+    while (System.currentTimeMillis() < end) {
+        seekToBeginning(assignment())
+        val entries = poll(Duration.ofSeconds(1))
+            .records(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC)
+            .filter { it.key() == søknadId }
+
+        if (entries.isNotEmpty()) {
+            assertEquals(1, entries.size)
+            return entries.first().value()
+        }
+    }
+    throw IllegalStateException("Fant ikke opprettet oppgave for melding med søknadsId $søknadId etter $maxWaitInSeconds sekunder.")
 }
 
 internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentEttersending(
@@ -86,5 +106,4 @@ private class EttersendingOutgoingDeserialiser : Deserializer<TopicEntry<JSONObj
         )
     }
     override fun close() {}
-
 }

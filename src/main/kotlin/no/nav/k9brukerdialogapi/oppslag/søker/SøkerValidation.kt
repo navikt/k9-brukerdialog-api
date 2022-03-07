@@ -4,7 +4,7 @@ import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 
-internal fun Søker.validate() {
+internal fun Søker.valider() {
     if (!myndig) {
         throw Throwblem(DefaultProblemDetails(
             title = "unauthorized",
