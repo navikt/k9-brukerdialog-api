@@ -10,13 +10,11 @@ import no.nav.helse.TestUtils.Companion.getTokenDingsToken
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.wiremock.*
-import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
-import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
-import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
 import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Barn
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Nested
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -49,12 +47,9 @@ class ApplicationTest {
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
 
         private val gyldigFødselsnummerA = "02119970078"
+        private const val ikkeMyndigFnr = "12125012345"
         private val cookie = getAuthCookie(gyldigFødselsnummerA)
         private val tokenXToken = getTokenDingsToken(fnr = gyldigFødselsnummerA)
-
-        // Se https://github.com/navikt/dusseldorf-ktor#f%C3%B8dselsnummer
-        private val myndigDato = "1999-11-02"
-        private const val ikkeMyndigFnr = "12125012345"
 
         fun getConfig(): ApplicationConfig {
 
@@ -70,11 +65,7 @@ class ApplicationTest {
             return HoconApplicationConfig(mergedConfig)
         }
 
-
-        val engine = TestApplicationEngine(createTestEnvironment {
-            config = getConfig()
-        })
-
+        val engine = TestApplicationEngine(createTestEnvironment { config = getConfig() })
 
         @BeforeAll
         @JvmStatic
@@ -119,13 +110,37 @@ class ApplicationTest {
         }
     }
 
-    @Test
-    fun `Hente søker med loginservice token som cookie`() {
-        requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = OPPSLAG_URL+SØKER_URL,
-            expectedCode = HttpStatusCode.OK,
-            expectedResponse = """
+    @Nested
+    inner class SøkerOppslagTest{
+
+        @Test
+        fun `Hente søker med loginservice token som cookie`() {
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL+SØKER_URL,
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = """
+                    {
+                        "etternavn": "MORSEN",
+                        "fornavn": "MOR",
+                        "mellomnavn": "HEISANN",
+                        "fødselsnummer": "$gyldigFødselsnummerA",
+                        "aktørId": "12345",
+                        "fødselsdato": "1999-11-02",
+                        "myndig": true
+                    }
+                """.trimIndent(),
+                cookie = cookie
+            )
+        }
+
+        @Test
+        fun `Hente søker med tokenX token som authorization header`() {
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL + SØKER_URL,
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = """
                 {
                     "etternavn": "MORSEN",
                     "fornavn": "MOR",
@@ -136,38 +151,17 @@ class ApplicationTest {
                     "myndig": true
                 }
             """.trimIndent(),
-            cookie = cookie
-        )
-    }
+                jwtToken = tokenXToken
+            )
+        }
 
-    @Test
-    fun `Hente søker med tokenX token som authorization header`() {
-        requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = OPPSLAG_URL+SØKER_URL,
-            expectedCode = HttpStatusCode.OK,
-            expectedResponse = """
-                {
-                    "etternavn": "MORSEN",
-                    "fornavn": "MOR",
-                    "mellomnavn": "HEISANN",
-                    "fødselsnummer": "$gyldigFødselsnummerA",
-                    "aktørId": "12345",
-                    "fødselsdato": "1999-11-02",
-                    "myndig": true
-                }
-            """.trimIndent(),
-            jwtToken = tokenXToken
-        )
-    }
-
-    @Test
-    fun `Hente søker som ikke er myndig`() {
-        wireMockServer.stubK9OppslagSoker(
-            statusCode = HttpStatusCode.fromValue(451),
-            responseBody =
-            //language=json
-            """
+        @Test
+        fun `Hente søker som ikke er myndig`() {
+            wireMockServer.stubK9OppslagSoker(
+                statusCode = HttpStatusCode.fromValue(451),
+                responseBody =
+                //language=json
+                """
             {
                 "detail": "Policy decision: DENY - Reason: (NAV-bruker er i live AND NAV-bruker er ikke myndig)",
                 "instance": "/meg",
@@ -176,15 +170,15 @@ class ApplicationTest {
                 "status": 451
             }
             """.trimIndent()
-        )
+            )
 
-        requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = OPPSLAG_URL+SØKER_URL,
-            expectedCode = HttpStatusCode.fromValue(451),
-            expectedResponse =
-            //language=json
-            """
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL + SØKER_URL,
+                expectedCode = HttpStatusCode.fromValue(451),
+                expectedResponse =
+                //language=json
+                """
             {
                 "type": "/problem-details/tilgangskontroll-feil",
                 "title": "tilgangskontroll-feil",
@@ -193,32 +187,35 @@ class ApplicationTest {
                 "detail": "Tilgang nektet."
             }
             """.trimIndent(),
-            cookie = getAuthCookie(ikkeMyndigFnr)
-        )
+                cookie = getAuthCookie(ikkeMyndigFnr)
+            )
 
-        wireMockServer.stubK9OppslagSoker() // reset til default mapping
+            wireMockServer.stubK9OppslagSoker() // reset til default mapping
+        }
+
+        @Test
+        fun `Hente søker med tilgangsnivå 3`() {
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL + SØKER_URL,
+                cookie = getAuthCookie(fnr = gyldigFødselsnummerA, level = 3),
+                expectedCode = HttpStatusCode.Forbidden,
+                expectedResponse = null
+            )
+        }
     }
 
-    @Test
-    fun `Hente søker med tilgangsnivå 3`() {
-        requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = OPPSLAG_URL+SØKER_URL,
-            cookie = getAuthCookie(fnr = gyldigFødselsnummerA, level = 3),
-            expectedCode = HttpStatusCode.Forbidden,
-            expectedResponse = null
-        )
-    }
-
-    @Test
-    fun `Hente barn og eksplisit sjekke at identitetsnummer ikke blir med ved get kall`() {
-        val respons = requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = OPPSLAG_URL+BARN_URL,
-            expectedCode = HttpStatusCode.OK,
-            cookie = cookie,
-            //language=json
-            expectedResponse = """
+    @Nested
+    inner class BarnOppslagTest {
+        @Test
+        fun `Hente barn og eksplisit sjekke at identitetsnummer ikke blir med ved get kall`() {
+            val respons = requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL+BARN_URL,
+                expectedCode = HttpStatusCode.OK,
+                cookie = cookie,
+                //language=json
+                expectedResponse = """
                 {
                   "barn": [
                     {
@@ -238,39 +235,42 @@ class ApplicationTest {
                   ]
                 }
             """.trimIndent()
-        )
+            )
 
-        val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
+            val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
 
-        assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
-        assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
-    }
+            assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
+            assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
+        }
 
-    @Test
-    fun `Feil ved henting av barn skal returnere tom liste`() {
-        wireMockServer.stubK9OppslagBarn(simulerFeil = true)
-        requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = OPPSLAG_URL+BARN_URL,
-            expectedCode = HttpStatusCode.OK,
-            expectedResponse = """
+        @Test
+        fun `Feil ved henting av barn skal returnere tom liste`() {
+            wireMockServer.stubK9OppslagBarn(simulerFeil = true)
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL+BARN_URL,
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = """
             {
                 "barn": []
             }
             """.trimIndent(),
-            cookie = getAuthCookie("26104500284")
-        )
-        wireMockServer.stubK9OppslagBarn()
+                cookie = getAuthCookie("26104500284")
+            )
+            wireMockServer.stubK9OppslagBarn()
+        }
     }
 
-    @Test
-    fun `Oppslag av alle arbeidsgiver inkludert private og frilansoppdrag`(){
-        requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30&frilansoppdrag=true&private_arbeidsgivere=true",
-            expectedCode = HttpStatusCode.OK,
-            //language=json
-            expectedResponse = """
+    @Nested
+    inner class ArbeidsgiverOppslagTest{
+        @Test
+        fun `Oppslag av alle arbeidsgiver inkludert private og frilansoppdrag`(){
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30&frilansoppdrag=true&private_arbeidsgivere=true",
+                expectedCode = HttpStatusCode.OK,
+                //language=json
+                expectedResponse = """
             {
               "organisasjoner": [
                 {
@@ -313,18 +313,18 @@ class ApplicationTest {
               ]
             }
             """.trimIndent(),
-            cookie = cookie
-        )
-    }
-    
-    @Test
-    fun `Oppslag av arbeidsgivere uten private og frilansoppdrag`(){
-        requestAndAssert(
-            httpMethod = HttpMethod.Get,
-            path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30",
-            expectedCode = HttpStatusCode.OK,
-            //language=json
-            expectedResponse = """
+                cookie = cookie
+            )
+        }
+
+        @Test
+        fun `Oppslag av arbeidsgivere uten private og frilansoppdrag`(){
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30",
+                expectedCode = HttpStatusCode.OK,
+                //language=json
+                expectedResponse = """
             {
               "organisasjoner": [
                 {
@@ -344,94 +344,99 @@ class ApplicationTest {
               "frilansoppdrag": null
             }
             """.trimIndent(),
-            cookie = cookie
-        )
+                cookie = cookie
+            )
+        }
     }
 
-    @Test
-    fun `Test håndtering av vedlegg`() {
-        val jpeg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
+    @Nested
+    inner class VedleggTest{
+        @Test
+        fun `Test håndtering av vedlegg`() {
+            val jpeg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
 
-        with(engine) {
-            // LASTER OPP VEDLEGG
-            val url = handleRequestUploadImage(
-                cookie = cookie,
-                vedlegg = jpeg
-            )
-            val path = Url(url).fullPath
-            // HENTER OPPLASTET VEDLEGG
-            handleRequest(HttpMethod.Get, path) {
-                addHeader("Cookie", cookie.toString())
-            }.apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertTrue(Arrays.equals(jpeg, response.byteContent))
-                // SLETTER OPPLASTET VEDLEGG
-                handleRequest(HttpMethod.Delete, path) {
+            with(engine) {
+                // LASTER OPP VEDLEGG
+                val url = handleRequestUploadImage(
+                    cookie = cookie,
+                    vedlegg = jpeg
+                )
+                val path = Url(url).fullPath
+                // HENTER OPPLASTET VEDLEGG
+                handleRequest(HttpMethod.Get, path) {
                     addHeader("Cookie", cookie.toString())
                 }.apply {
-                    assertEquals(HttpStatusCode.NoContent, response.status())
-                    // VERIFISERER AT VEDLEGG ER SLETTET
-                    handleRequest(HttpMethod.Get, path) {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    assertTrue(Arrays.equals(jpeg, response.byteContent))
+                    // SLETTER OPPLASTET VEDLEGG
+                    handleRequest(HttpMethod.Delete, path) {
                         addHeader("Cookie", cookie.toString())
                     }.apply {
-                        assertEquals(HttpStatusCode.NotFound, response.status())
+                        assertEquals(HttpStatusCode.NoContent, response.status())
+                        // VERIFISERER AT VEDLEGG ER SLETTET
+                        handleRequest(HttpMethod.Get, path) {
+                            addHeader("Cookie", cookie.toString())
+                        }.apply {
+                            assertEquals(HttpStatusCode.NotFound, response.status())
+                        }
                     }
                 }
             }
         }
+
+        @Test
+        fun `Test opplasting av ikke støttet vedleggformat`() {
+            engine.handleRequestUploadImage(
+                cookie = cookie,
+                vedlegg = "jwkset.json".fromResources().readBytes(),
+                contentType = "application/json",
+                fileName = "jwkset.json",
+                expectedCode = HttpStatusCode.BadRequest
+            )
+        }
+
+        @Test
+        fun `Test opplasting av for stort vedlegg`() {
+            engine.handleRequestUploadImage(
+                cookie = cookie,
+                vedlegg = ByteArray(8 * 1024 * 1024 + 10),
+                contentType = "image/png",
+                fileName = "big_picture.png",
+                expectedCode = HttpStatusCode.PayloadTooLarge
+            )
+        }
     }
 
-    @Test
-    fun `Test opplasting av ikke støttet vedleggformat`() {
-        engine.handleRequestUploadImage(
-            cookie = cookie,
-            vedlegg = "jwkset.json".fromResources().readBytes(),
-            contentType = "application/json",
-            fileName = "jwkset.json",
-            expectedCode = HttpStatusCode.BadRequest
-        )
-    }
+    @Nested
+    inner class OmsorgspengerUtvidetRettTest{
+        @Test
+        fun `Innsending av gyldig søknad`() {
+            val søknad = gyldigSøknad.somJson()
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = OMSORGSPENGER_UTVIDET_RETT_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.Accepted,
+                jwtToken = tokenXToken,
+                expectedResponse = null,
+                requestEntity = søknad
+            )
+            hentOgAssertSøknad(søknad = JSONObject(søknad))
+        }
 
-    @Test
-    fun `Test opplasting av for stort vedlegg`() {
-        engine.handleRequestUploadImage(
-            cookie = cookie,
-            vedlegg = ByteArray(8 * 1024 * 1024 + 10),
-            contentType = "image/png",
-            fileName = "big_picture.png",
-            expectedCode = HttpStatusCode.PayloadTooLarge
-        )
-    }
+        @Test
+        fun `Innsending av ugyldig søknad som får valideringsfeil`() {
+            val søknad = gyldigSøknad.copy(
+                barn = Barn(navn = "Navnesen", norskIdentifikator = "123"),
+                harForståttRettigheterOgPlikter = false,
+                harBekreftetOpplysninger = false
+            ).somJson()
 
-
-    @Test
-    fun `OMSORGSPENGER_UTVIDET_RETT - Innsending av gyldig søknad`(){
-        val søknad = gyldigSøknad.somJson()
-        requestAndAssert(
-            httpMethod = HttpMethod.Post,
-            path = OMSORGSPENGER_UTVIDET_RETT_URL+INNSENDING_URL,
-            expectedCode = HttpStatusCode.Accepted,
-            jwtToken = tokenXToken,
-            expectedResponse = null,
-            requestEntity = søknad
-        )
-        hentOgAssertSøknad(søknad = JSONObject(søknad))
-    }
-
-    @Test
-    fun `OMSORGSPENGER_UTVIDET_RETT - Innsending av ugyldig søknad som får valideringsfeil`(){
-        val søknad = gyldigSøknad.copy(
-            barn = Barn(navn = "Navnesen", norskIdentifikator = "123"),
-            harForståttRettigheterOgPlikter = false,
-            harBekreftetOpplysninger = false
-        ).somJson()
-
-        requestAndAssert(
-            httpMethod = HttpMethod.Post,
-            path = OMSORGSPENGER_UTVIDET_RETT_URL+INNSENDING_URL,
-            expectedCode = HttpStatusCode.BadRequest,
-            jwtToken = tokenXToken,
-            expectedResponse = """
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = OMSORGSPENGER_UTVIDET_RETT_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.BadRequest,
+                jwtToken = tokenXToken,
+                expectedResponse = """
             {
               "detail": "Requesten inneholder ugyldige paramtere.",
               "instance": "about:blank",
@@ -458,8 +463,9 @@ class ApplicationTest {
               "status": 400
             }
             """.trimIndent(),
-            requestEntity = søknad
-        )
+                requestEntity = søknad
+            )
+        }
     }
 
     private fun requestAndAssert(
