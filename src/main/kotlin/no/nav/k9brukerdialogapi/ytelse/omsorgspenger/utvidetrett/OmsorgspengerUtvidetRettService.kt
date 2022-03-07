@@ -8,12 +8,15 @@ import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.oppslag.søker.valider
+import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.valider
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
+import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.KomplettSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.k9format.tilK9Format
+import org.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -43,7 +46,7 @@ class OmsorgspengerUtvidetRettService(
 
         val komplettSøknad = søknad.tilKomplettSøknad(søker, k9Format)
         try {
-            kafkaProdusent.produserKafkaMelding(metadata, komplettSøknad, OMSORGSPENGER_UTVIDET_RETT)
+            kafkaProdusent.produserKafkaMelding(metadata, JSONObject(komplettSøknad.somJson()), OMSORGSPENGER_UTVIDET_RETT)
         } catch (e: Exception) {
             logger.info("Feilet ved å legge melding på Kafka.")
             if(søknad.legeerklæring.isNotEmpty()){

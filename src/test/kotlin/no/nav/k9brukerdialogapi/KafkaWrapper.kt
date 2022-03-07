@@ -26,7 +26,6 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.MOTTATT_ETTERSENDING_TOPIC,
                 Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
             )
         )
@@ -48,9 +47,9 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
     val consumer = KafkaConsumer(
         testConsumerProperties(),
         StringDeserializer(),
-        EttersendingOutgoingDeserialiser()
+        OutgoingDeserialiser()
     )
-    consumer.subscribe(listOf(Topics.MOTTATT_ETTERSENDING_TOPIC, Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC))
+    consumer.subscribe(listOf(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC))
     return consumer
 }
 
@@ -73,26 +72,7 @@ internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerUtvi
     throw IllegalStateException("Fant ikke opprettet oppgave for melding med søknadsId $søknadId etter $maxWaitInSeconds sekunder.")
 }
 
-internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentEttersending(
-    søknadId: String,
-    maxWaitInSeconds: Long = 20,
-) : TopicEntry<JSONObject> {
-    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
-    while (System.currentTimeMillis() < end) {
-        seekToBeginning(assignment())
-        val entries = poll(Duration.ofSeconds(1))
-            .records(Topics.MOTTATT_ETTERSENDING_TOPIC)
-            .filter { it.key() == søknadId }
-
-        if (entries.isNotEmpty()) {
-            assertEquals(1, entries.size)
-            return entries.first().value()
-        }
-    }
-    throw IllegalStateException("Fant ikke opprettet oppgave for melding med søknadsId $søknadId etter $maxWaitInSeconds sekunder.")
-}
-
-private class EttersendingOutgoingDeserialiser : Deserializer<TopicEntry<JSONObject>> {
+private class OutgoingDeserialiser : Deserializer<TopicEntry<JSONObject>> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
     override fun deserialize(topic: String, data: ByteArray): TopicEntry<JSONObject> {
         val json = JSONObject(String(data))

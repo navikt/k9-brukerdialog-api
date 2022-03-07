@@ -21,21 +21,18 @@ class KafkaProducer(
 ) : HealthCheck {
     private val NAME = "KafkaProducer"
     private val logger = LoggerFactory.getLogger(KafkaProducer::class.java)
-    private val ETTERSENDING_MOTTATT_TOPIC = TopicUse(
-        name = Topics.MOTTATT_ETTERSENDING_TOPIC,
-        valueSerializer = SøknadSerializer()
-    )
+
     private val OMSORGSPENGER_UTVIDET_RETT_TOPIC = TopicUse(
         name = Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC,
         valueSerializer = SøknadSerializer()
     )
     private val producer = KafkaProducer(
         kafkaConfig.producer(NAME),
-        ETTERSENDING_MOTTATT_TOPIC.keySerializer(),
-        ETTERSENDING_MOTTATT_TOPIC.valueSerializer
+        OMSORGSPENGER_UTVIDET_RETT_TOPIC.keySerializer(),
+        OMSORGSPENGER_UTVIDET_RETT_TOPIC.valueSerializer
     )
 
-    internal fun produserKafkaMelding(metadata: Metadata, komplettSøknad: KomplettSøknad, ytelse: Ytelse) {
+    internal fun produserKafkaMelding(metadata: Metadata, komplettSøknadSomJson: JSONObject, ytelse: Ytelse) {
         if (metadata.version != 1) throw IllegalStateException("Kan ikke legge melding med versjon ${metadata.version} til prosessering.")
 
         val topic = when(ytelse){
@@ -45,21 +42,20 @@ class KafkaProducer(
         val recordMetaData = producer.send(
             ProducerRecord(
                 topic.name,
-                komplettSøknad.søknadId,
+                komplettSøknadSomJson.getString("søknadId"),
                 TopicEntry(
                     metadata = metadata,
-                    data = JSONObject(komplettSøknad.somJson())
+                    data = komplettSøknadSomJson
                 )
             )
         ).get()
-        logger.info(formaterStatuslogging(Ytelse.OMSORGSPENGER_UTVIDET_RETT, komplettSøknad.søknadId, "sendes til topic ${ETTERSENDING_MOTTATT_TOPIC.name} med offset '${recordMetaData.offset()}' til partition '${recordMetaData.partition()}'"))
+        logger.info(formaterStatuslogging(ytelse, komplettSøknadSomJson.getString("søknadId"), "sendes til topic ${topic.name} med offset '${recordMetaData.offset()}' til partition '${recordMetaData.partition()}'"))
     }
 
     internal fun stop() = producer.close()
 
     override suspend fun check(): Result { // Håndtere slik at man gir bedring tilbakemelding på spesifikk topic som feiler
         return try {
-            producer.partitionsFor(ETTERSENDING_MOTTATT_TOPIC.name)
             producer.partitionsFor(OMSORGSPENGER_UTVIDET_RETT_TOPIC.name)
             Healthy(NAME, "Tilkobling til Kafka OK!")
         } catch (cause: Throwable) {
