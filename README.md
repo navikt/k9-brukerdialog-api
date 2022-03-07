@@ -4,7 +4,7 @@ API som understøtter søknadsprosessen for flere ytelser i folketrygdloven kapi
 
 Foreløpig støtte for følgende ytelser:
 
-*
+* Omsorgspenger utvidet rett (Brukes ikke enda)
 
 ## Oppslag
 

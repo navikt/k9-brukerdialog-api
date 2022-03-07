@@ -10,6 +10,7 @@ import no.nav.helse.dusseldorf.testsupport.jws.Tokendings
 
 class TestUtils {
     companion object {
+
         fun getIdentFromIdToken(request: Request?): String {
             val idToken = IdToken(request!!.getHeader(HttpHeaders.Authorization).substringAfter("Bearer "))
             return idToken.getNorskIdentifikasjonsnummer()

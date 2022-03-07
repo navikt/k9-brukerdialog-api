@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.general.systemauth
+package no.nav.k9brukerdialogapi.general
 
 import com.nimbusds.jose.jwk.JWK
 import no.nav.helse.dusseldorf.ktor.auth.Client

@@ -26,7 +26,7 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
-import no.nav.k9brukerdialogapi.general.systemauth.AccessTokenClientResolver
+import no.nav.k9brukerdialogapi.general.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverGateway
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverService
@@ -38,6 +38,8 @@ import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
+import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettService
+import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.ytelseRoutes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -123,7 +125,7 @@ fun Application.k9BrukerdialogApi() {
             k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
         )
 
-        val barnSøkerService = BarnService(
+        val barnService = BarnService(
             barnGateway = barnGateway,
             cache = configuration.cache()
         )
@@ -143,10 +145,15 @@ fun Application.k9BrukerdialogApi() {
         }
 
         authenticate(*issuers.allIssuers()) {
+            ytelseRoutes(
+                idTokenProvider = idTokenProvider,
+                omsorgspengerUtvidetRettService = OmsorgspengerUtvidetRettService(søkerService, barnService, vedleggService, kafkaProducer)
+            )
+
             oppslagRoutes(
                 idTokenProvider = idTokenProvider,
                 søkerService = søkerService,
-                barnservice = barnSøkerService,
+                barnservice = barnService,
                 arbeidsgiverService = arbeidsgiverService
             )
 

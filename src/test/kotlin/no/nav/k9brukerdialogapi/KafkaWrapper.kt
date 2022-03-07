@@ -26,7 +26,7 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.MOTTATT_ETTERSENDING_TOPIC
+                Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
             )
         )
         return kafkaEnvironment
@@ -39,7 +39,7 @@ private fun KafkaEnvironment.testConsumerProperties() : MutableMap<String, Any>?
         put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
         put(SaslConfigs.SASL_MECHANISM, "PLAIN")
         put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";")
-        put(ConsumerConfig.GROUP_ID_CONFIG, "omsorgsdager-melding-api")
+        put(ConsumerConfig.GROUP_ID_CONFIG, "k9-brukerdialogapi")
     }
 }
 
@@ -47,13 +47,13 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
     val consumer = KafkaConsumer(
         testConsumerProperties(),
         StringDeserializer(),
-        EttersendingOutgoingDeserialiser()
+        OutgoingDeserialiser()
     )
-    consumer.subscribe(listOf(Topics.MOTTATT_ETTERSENDING_TOPIC))
+    consumer.subscribe(listOf(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC))
     return consumer
 }
 
-internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentEttersending(
+internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerUtvidetRettSøknad(
     søknadId: String,
     maxWaitInSeconds: Long = 20,
 ) : TopicEntry<JSONObject> {
@@ -61,7 +61,7 @@ internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentEttersending(
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
-            .records(Topics.MOTTATT_ETTERSENDING_TOPIC)
+            .records(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC)
             .filter { it.key() == søknadId }
 
         if (entries.isNotEmpty()) {
@@ -72,7 +72,7 @@ internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentEttersending(
     throw IllegalStateException("Fant ikke opprettet oppgave for melding med søknadsId $søknadId etter $maxWaitInSeconds sekunder.")
 }
 
-private class EttersendingOutgoingDeserialiser : Deserializer<TopicEntry<JSONObject>> {
+private class OutgoingDeserialiser : Deserializer<TopicEntry<JSONObject>> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
     override fun deserialize(topic: String, data: ByteArray): TopicEntry<JSONObject> {
         val json = JSONObject(String(data))
@@ -86,5 +86,4 @@ private class EttersendingOutgoingDeserialiser : Deserializer<TopicEntry<JSONObj
         )
     }
     override fun close() {}
-
 }
