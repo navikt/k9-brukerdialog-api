@@ -12,10 +12,8 @@ import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.valider
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.KomplettSøknad
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTVIDET_RETT
 import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Søknad
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.k9format.tilK9Format
 import org.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
