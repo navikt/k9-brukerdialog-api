@@ -42,6 +42,11 @@ data class Configuration(val config : ApplicationConfig) {
         )
     }
 
+    internal fun getRedisPort() = config.getRequiredString("nav.redis.port", secret = false).toInt()
+    internal fun getRedisHost() = config.getRequiredString("nav.redis.host", secret = false)
+    internal fun getStoragePassphrase(): String = config.getRequiredString("nav.storage.passphrase", secret = true)
+    internal fun getSoknadMellomlagringTidTimer() = config.getRequiredString("nav.mellomlagring.søknad_tid_timer", false)
+
     internal fun getK9OppslagUrl() = URI(config.getRequiredString("nav.gateways.k9_oppslag_url", secret = false))
     internal fun getK9SelvbetjeningOppslagTokenxAudience(): Set<String> = getScopesFor("k9_selvbetjening_oppslag_tokenx_audience")
 

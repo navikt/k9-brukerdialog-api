@@ -26,8 +26,12 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
+import no.nav.helse.redis.RedisConfig
+import no.nav.helse.redis.RedisStore
 import no.nav.k9brukerdialogapi.general.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
+import no.nav.k9brukerdialogapi.mellomlagring.MellomlagringService
+import no.nav.k9brukerdialogapi.mellomlagring.mellomlagringApis
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverGateway
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverService
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnGateway
@@ -99,43 +103,48 @@ fun Application.k9BrukerdialogApi() {
     }
 
     install(Routing) {
-        val k9MellomlagringGateway = K9MellomlagringGateway(
-            baseUrl = configuration.getK9MellomlagringUrl(),
-            accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,
-            exchangeTokenClient = tokenxClient,
-            k9MellomlagringScope = configuration.getK9MellomlagringScopes(),
-            k9MellomlagringTokenxAudience = configuration.getK9MellomlagringTokenxAudience()
-        )
-
-        val vedleggService = VedleggService(k9MellomlagringGateway = k9MellomlagringGateway)
-
-        val sokerGateway = SøkerGateway(
-            baseUrl = configuration.getK9OppslagUrl(),
-            accessTokenClient = tokenxClient,
-            k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+        val vedleggService = VedleggService(
+            K9MellomlagringGateway(
+                baseUrl = configuration.getK9MellomlagringUrl(),
+                accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,
+                exchangeTokenClient = tokenxClient,
+                k9MellomlagringScope = configuration.getK9MellomlagringScopes(),
+                k9MellomlagringTokenxAudience = configuration.getK9MellomlagringTokenxAudience()
+            )
         )
 
         val søkerService = SøkerService(
-            søkerGateway = sokerGateway
-        )
-
-        val barnGateway = BarnGateway(
-            baseUrl = configuration.getK9OppslagUrl(),
-            accessTokenClient = tokenxClient,
-            k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+            SøkerGateway(
+                baseUrl = configuration.getK9OppslagUrl(),
+                accessTokenClient = tokenxClient,
+                k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+            )
         )
 
         val barnService = BarnService(
-            barnGateway = barnGateway,
+            barnGateway = BarnGateway(
+                baseUrl = configuration.getK9OppslagUrl(),
+                accessTokenClient = tokenxClient,
+                k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+            ),
             cache = configuration.cache()
         )
 
-        val arbeidsgiverService = ArbeidsgiverService(
-            arbeidsgivereGateway = ArbeidsgiverGateway(configuration.getK9OppslagUrl())
+        val arbeidsgiverService = ArbeidsgiverService(ArbeidsgiverGateway(configuration.getK9OppslagUrl()))
+
+        val kafkaProducer = KafkaProducer(configuration.getKafkaConfig())
+
+        val redis = RedisStore(
+            RedisConfig.redisClient(
+                redisPort = configuration.getRedisPort(),
+                redisHost = configuration.getRedisHost()
+            )
         )
 
-        val kafkaProducer = KafkaProducer(
-            kafkaConfig = configuration.getKafkaConfig()
+        val mellomlagringService = MellomlagringService(
+            redisStore = redis,
+            passphrase = configuration.getStoragePassphrase(),
+            mellomlagretTidTimer = configuration.getSoknadMellomlagringTidTimer()
         )
 
         environment.monitor.subscribe(ApplicationStopping) {
@@ -159,6 +168,11 @@ fun Application.k9BrukerdialogApi() {
 
             vedleggApis(
                 vedleggService = vedleggService,
+                idTokenProvider = idTokenProvider
+            )
+
+            mellomlagringApis(
+                mellomlagringService = mellomlagringService,
                 idTokenProvider = idTokenProvider
             )
         }

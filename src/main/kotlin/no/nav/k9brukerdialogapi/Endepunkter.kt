@@ -8,6 +8,8 @@ const val ARBEIDSGIVER_URL = "/arbeidsgiver"
 const val VEDLEGGID_URL = "/{vedleggId}"
 const val VEDLEGG_URL = "/vedlegg"
 
+const val MELLOMLAGRING_URL = "/mellomlagring/{ytelse}"
+
 const val INNSENDING_URL = "/innsending"
 const val VALIDERING_RUL = "/valider"
 
