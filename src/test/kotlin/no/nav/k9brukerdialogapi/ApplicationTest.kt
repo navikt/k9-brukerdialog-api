@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi
 
+import com.github.fppt.jedismock.RedisServer
 import com.github.tomakehurst.wiremock.http.Cookie
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
@@ -51,13 +52,17 @@ class ApplicationTest {
         private val cookie = getAuthCookie(gyldigFødselsnummerA)
         private val tokenXToken = getTokenDingsToken(fnr = gyldigFødselsnummerA)
 
+        val redisServer: RedisServer = RedisServer
+            .newRedisServer().apply { start() }
+
         fun getConfig(): ApplicationConfig {
 
             val fileConfig = ConfigFactory.load()
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment
+                    kafkaEnvironment = kafkaEnvironment,
+                    redisServer = redisServer
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
@@ -78,6 +83,7 @@ class ApplicationTest {
         fun tearDown() {
             logger.info("Tearing down")
             wireMockServer.stop()
+            redisServer.stop()
             logger.info("Tear down complete")
         }
     }
@@ -201,6 +207,85 @@ class ApplicationTest {
                 cookie = getAuthCookie(fnr = gyldigFødselsnummerA, level = 3),
                 expectedCode = HttpStatusCode.Forbidden,
                 expectedResponse = null
+            )
+        }
+    }
+
+    @Nested
+    inner class MellomlagringTest {
+
+        @Test
+        fun `Test flyt av mellomlagring`() {
+            // Legge til mellomlagring
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                expectedCode = HttpStatusCode.NoContent,
+                cookie = cookie,
+                expectedResponse = null,
+                requestEntity = """
+                    {
+                        "testdata": "test mellomlagring 123"
+                    }
+                """.trimIndent()
+            )
+
+            // Hente mellomlagring
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                expectedCode = HttpStatusCode.OK,
+                cookie = cookie,
+                expectedResponse = """
+                    {
+                        "testdata": "test mellomlagring 123"
+                    }
+                """.trimIndent()
+            )
+
+            // Oppdatere mellomlagring
+            requestAndAssert(
+                httpMethod = HttpMethod.Put,
+                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                expectedCode = HttpStatusCode.NoContent,
+                cookie = cookie,
+                expectedResponse = null,
+                requestEntity = """
+                    {
+                        "testdata": "test oppdatert mellomlagring 123"
+                    }
+                """.trimIndent()
+            )
+
+            // Hente oppdatert mellomlagring
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                expectedCode = HttpStatusCode.OK,
+                cookie = cookie,
+                expectedResponse = """
+                    {
+                        "testdata": "test oppdatert mellomlagring 123"
+                    }
+                """.trimIndent()
+            )
+
+            // Slette mellomlagring
+            requestAndAssert(
+                httpMethod = HttpMethod.Delete,
+                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                expectedCode = HttpStatusCode.Accepted,
+                cookie = cookie,
+                expectedResponse = null
+            )
+
+            // Hente mellomlagring som skal være slettet
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                expectedCode = HttpStatusCode.OK,
+                cookie = cookie,
+                expectedResponse = "{}"
             )
         }
     }
@@ -493,7 +578,6 @@ class ApplicationTest {
                 assertEquals(expectedCode, response.status())
                 if (expectedResponse != null) {
                     JSONAssert.assertEquals(expectedResponse, response.content!!, true)
-                    //assertNotNull(response.headers["problem-details"])
                 } else {
                     assertEquals(expectedResponse, response.content)
                 }

@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.k9format
+package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett
 
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer

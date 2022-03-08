@@ -51,6 +51,7 @@ spec:
   accessPolicy:
     outbound:
       rules:
+        - application: {{app}}-redis
         - application: k9-mellomlagring
       external:
       {{#each externalHosts as |host|}}
@@ -63,3 +64,5 @@ spec:
   {{/each}}
   envFrom:
     - configmap: loginservice-idporten
+    - secret: {{app}}
+

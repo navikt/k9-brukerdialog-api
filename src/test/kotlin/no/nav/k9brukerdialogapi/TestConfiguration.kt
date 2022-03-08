@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi
 
+import com.github.fppt.jedismock.RedisServer
 import com.github.tomakehurst.wiremock.WireMockServer
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.jws.ClientCredentials
@@ -19,7 +20,8 @@ object TestConfiguration {
         port : Int = 8080,
         k9OppslagUrl: String? = wireMockServer?.getK9OppslagUrl(),
         k9MellomlagringUrl : String? = wireMockServer?.getK9MellomlagringUrl(),
-        corsAdresses : String = "http://localhost:8080"
+        corsAdresses : String = "http://localhost:8080",
+        redisServer: RedisServer
     ) : Map<String, String> {
 
         val map = mutableMapOf(
@@ -43,8 +45,6 @@ object TestConfiguration {
             map["nav.auth.clients.1.private_key_jwk"] = ClientCredentials.ClientC.privateKeyJwk
             map["nav.auth.clients.1.discovery_endpoint"] = wireMockServer.getTokendingsWellKnownUrl()
 
-
-
             // Issuers
             map["nav.auth.issuers.0.alias"] = "login-service-v1"
             map["nav.auth.issuers.0.discovery_endpoint"] = wireMockServer.getLoginServiceV1WellKnownUrl()
@@ -60,6 +60,11 @@ object TestConfiguration {
             map["nav.auth.scopes.k9_mellomlagring_tokenx_audience"] = "dev-gcp:dusseldorf:k9-mellomlagring"
             map["nav.auth.scopes.k9_selvbetjening_oppslag_tokenx_audience"] = "dev-fss:dusseldorf:k9-selvbetjening-oppslag"
         }
+
+        map["nav.redis.host"] = "localhost"
+        map["nav.redis.port"] = "${redisServer.bindPort}"
+        map["nav.storage.passphrase"] = "verySecret"
+        map["nav.mellomlagring.søknad_tid_timer"] = "1"
 
         // Kafka
         kafkaEnvironment?.let {
