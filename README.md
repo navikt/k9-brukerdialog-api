@@ -10,19 +10,19 @@ Foreløpig støtte for følgende ytelser:
 
 #### Søker
 
-```http
+```
   GET /oppslag/soker
 ```
 
 #### Barn
 
-```http
+```
   GET /oppslag/barn
 ```
 
 #### Arbeidsgivere
 
-```http
+```
   GET /oppslag/arbeidsgiver
 ```
 
@@ -39,34 +39,34 @@ Mellomlagring (skjemadata fra frontend) gjøres i en Redis instans og lagres i 7
 hvilken ytelse det gjelder som route parameter.
 
 ### Legge til mellomlagring 
-```http
+```
   POST /mellomlagring/{ytelse}
 ```
 ### Oppdatere mellomlagring 
-```http
-  put /mellomlagring/{ytelse}
+```
+  PUT /mellomlagring/{ytelse}
 ```
 ### Hente mellomlagring 
-```http
-  get /mellomlagring/{ytelse}
+```
+  GET /mellomlagring/{ytelse}
 ```
 ### Slette mellomlagring 
-```http
-  delete /mellomlagring/{ytelse}
+```
+  DELETE /mellomlagring/{ytelse}
 ```
 
 ## Vedlegg
 
 ### Lagre vedlegg
-```http
+```
   POST /vedlegg
 ```
 ### Hente vedlegg
-```http
+```
   GET /vedlegg/{vedleggId}
 ```
 ### Slette vedlegg
-```http
+```
   DELETE /vedlegg/{vedleggId}
 ```
 
