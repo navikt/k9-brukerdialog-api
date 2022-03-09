@@ -522,31 +522,31 @@ class ApplicationTest {
                 expectedCode = HttpStatusCode.BadRequest,
                 jwtToken = tokenXToken,
                 expectedResponse = """
-            {
-              "detail": "Requesten inneholder ugyldige paramtere.",
-              "instance": "about:blank",
-              "type": "/problem-details/invalid-request-parameters",
-              "title": "invalid-request-parameters",
-              "invalid_parameters": [
                 {
-                  "type": "entity",
-                  "name": "barn.norskIdentifikator",
-                  "reason": "Ikke gyldig norskIdentifikator.",
-                  "invalid_value": "123"
-                }, {
-                  "name": "harBekreftetOpplysninger",
-                  "reason": "Opplysningene må bekreftes for å sende inn søknad.",
-                  "invalid_value": false,
-                  "type": "entity"
-                }, {
-                  "name": "harForståttRettigheterOgPlikter",
-                  "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                  "invalid_value": false,
-                  "type": "entity"
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "barn.norskIdentifikator",
+                      "reason": "Ikke gyldig norskIdentifikator.",
+                      "invalid_value": "123"
+                    }, {
+                      "name": "harBekreftetOpplysninger",
+                      "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                      "invalid_value": false,
+                      "type": "entity"
+                    }, {
+                      "name": "harForståttRettigheterOgPlikter",
+                      "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                      "invalid_value": false,
+                      "type": "entity"
+                    }
+                  ],
+                  "status": 400
                 }
-              ],
-              "status": 400
-            }
             """.trimIndent(),
                 requestEntity = søknad
             )

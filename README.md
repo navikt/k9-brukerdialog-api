@@ -34,6 +34,27 @@ Foreløpig støtte for følgende ytelser:
 | `private_arbeidsgivere` | `boolean` | **Valgfri**  Må settes til true dersom man ønsker oppslag av private arbeidsgivere|
 
 
+## Mellomlagring
+Mellomlagring (skjemadata fra frontend) gjøres i en Redis instans og lagres i 72 timer om gangen. Man må spesifisere
+hvilken ytelse det gjelder som route parameter.
+
+### Legge til mellomlagring 
+```http
+  POST /mellomlagring/{ytelse}
+```
+### Oppdatere mellomlagring 
+```http
+  put /mellomlagring/{ytelse}
+```
+### Hente mellomlagring 
+```http
+  get /mellomlagring/{ytelse}
+```
+### Slette mellomlagring 
+```http
+  delete /mellomlagring/{ytelse}
+```
+
 ## Vedlegg
 
 ### Lagre vedlegg
