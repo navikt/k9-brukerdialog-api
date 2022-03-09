@@ -28,10 +28,10 @@ Foreløpig støtte for følgende ytelser:
 
 | Parameter | Type     | Beskrivelse                |
 | :-------- | :------- | :------------------------- |
-| `fra_og_med` | `string` | **Påbudt**. Periode fra og med for ansettelseforhold |
-| `til_og_med` | `string` | **Påbudt** Periode til og med for ansettelseforhold |
-| `frilansoppdrag` | `boolean` | **Valgfri** Må settes til true dersom man ønsker oppslag av frilansoppdrag|
-| `private_arbeidsgivere` | `boolean` | **Valgfri**  Må settes til true dersom man ønsker oppslag av private arbeidsgivere|
+| `fra_og_med` | `string` | **Påbudt**. Periode fra og med for ansettelseforhold. Eks fra_og_med=2021-01-01 |
+| `til_og_med` | `string` | **Påbudt** Periode til og med for ansettelseforhold. Eks til_og_med=2021-01-02 |
+| `frilansoppdrag` | `boolean` | **Valgfri** Må settes til true dersom man ønsker oppslag av frilansoppdrag.|
+| `private_arbeidsgivere` | `boolean` | **Valgfri**  Må settes til true dersom man ønsker oppslag av private arbeidsgivere.|
 
 
 ## Mellomlagring
