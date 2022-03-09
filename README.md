@@ -1,6 +1,6 @@
 # K9 Brukerdialog API
 
-API som understøtter søknadsprosessen for flere ytelser i folketrygdloven kapittel 9.
+API som understøtter søknadsprosessen for ytelser i folketrygdloven kapittel 9.
 
 Foreløpig støtte for følgende ytelser:
 
@@ -36,7 +36,7 @@ Foreløpig støtte for følgende ytelser:
 
 ## Mellomlagring
 Mellomlagring (skjemadata fra frontend) gjøres i en Redis instans og lagres i 72 timer om gangen. Man må spesifisere
-hvilken ytelse det gjelder som route parameter.
+hvilken [ytelse](src/main/kotlin/no/nav/k9brukerdialogapi/ytelse/Ytelse.kt) det gjelder som route parameter. 
 
 ### Legge til mellomlagring 
 ```
@@ -74,8 +74,8 @@ hvilken ytelse det gjelder som route parameter.
 
 ## Alarmer
 Vi bruker [nais-alerts](https://doc.nais.io/observability/alerts) for å sette opp alarmer. Disse finner man konfigurert i [nais/alerterator.yml](nais/alerterator.yml).
-## Henvendelser
 
+## Henvendelser
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
 
 Interne henvendelser kan sendes via Slack i kanalen #sif-brukerdialog

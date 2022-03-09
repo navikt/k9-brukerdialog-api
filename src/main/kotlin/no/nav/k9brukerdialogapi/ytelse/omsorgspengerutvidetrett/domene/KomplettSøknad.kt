@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene
+package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker

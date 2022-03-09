@@ -9,7 +9,7 @@ class MellomlagringService(
     private val passphrase: String,
     private val mellomlagretTidTimer: String
 ) {
-    private fun genererKey(ytelse: Ytelse, fnr: String) = ytelse.toString() +"_"+ fnr
+    private fun genererKey(ytelse: Ytelse, fnr: String) = "${ytelse}_$fnr"
 
     fun getMellomlagring(
         ytelse: Ytelse,

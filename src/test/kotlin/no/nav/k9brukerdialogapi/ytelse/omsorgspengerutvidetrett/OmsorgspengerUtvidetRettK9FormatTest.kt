@@ -1,10 +1,10 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett
+package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett
 
 import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.SøkerBarnRelasjon
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.ZoneId

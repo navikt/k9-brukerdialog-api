@@ -11,7 +11,7 @@ import no.nav.helse.TestUtils.Companion.getTokenDingsToken
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.wiremock.*
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

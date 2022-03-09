@@ -24,6 +24,7 @@ class ApplicationWithMocks {
                 .withAzureSupport()
                 .withNaisStsSupport()
                 .withLoginServiceSupport()
+                .withTokendingsSupport()
                 .k9BrukerdialogApiConfig()
                 .build()
                 .stubOppslagHealth()
@@ -32,11 +33,13 @@ class ApplicationWithMocks {
 
             val redisServer: RedisServer = RedisServer
                 .newRedisServer().apply { start() }
+            val kafkaEnvironment = KafkaWrapper.bootstrap()
 
             val testArgs = TestConfiguration.asMap(
                 port = 8082,
                 wireMockServer = wireMockServer,
-                redisServer = redisServer
+                redisServer = redisServer,
+                kafkaEnvironment = kafkaEnvironment
             ).asArguments()
 
             Runtime.getRuntime().addShutdownHook(object : Thread() {

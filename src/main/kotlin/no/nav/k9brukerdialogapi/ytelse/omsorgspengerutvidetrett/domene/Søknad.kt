@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene
+package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag

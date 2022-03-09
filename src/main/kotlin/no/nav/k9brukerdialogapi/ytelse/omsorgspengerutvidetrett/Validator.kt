@@ -1,9 +1,9 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett
+package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett
 
 import no.nav.helse.dusseldorf.ktor.core.*
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 
 fun Søknad.valider(){
     val valideringsfeil = mutableSetOf<Violation>()

@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett
+package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett
 
 import io.ktor.application.*
 import io.ktor.http.*
@@ -12,11 +12,11 @@ import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettApis.kt")
+private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettApis.kt")
 
 fun Route.omsorgspengerUtvidetRettApis(
     omsorgspengerUtvidetRettService: OmsorgspengerUtvidetRettService,

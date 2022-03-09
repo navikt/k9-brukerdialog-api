@@ -1,8 +1,8 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett
+package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
 import org.junit.jupiter.api.Assertions
 import kotlin.test.Test
 import kotlin.test.assertTrue

@@ -11,6 +11,7 @@ import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.jackson.*
 import io.ktor.metrics.micrometer.*
+import io.ktor.request.*
 import io.ktor.routing.*
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.helse.dusseldorf.ktor.auth.*
@@ -42,8 +43,9 @@ import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.OmsorgspengerUtvidetRettService
-import no.nav.k9brukerdialogapi.ytelse.omsorgspenger.utvidetrett.ytelseRoutes
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
+import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -224,6 +226,13 @@ fun Application.k9BrukerdialogApi() {
                 idTokenProvider.getIdToken(call).getId()
             } catch (cause: Throwable) {
                 null
+            }
+        }
+        mdc("ytelse") { call ->
+            val urlPath = call.request.path()
+            when {
+                urlPath.contains(OMSORGSPENGER_UTVIDET_RETT_URL) -> Ytelse.OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
+                else -> null
             }
         }
     }

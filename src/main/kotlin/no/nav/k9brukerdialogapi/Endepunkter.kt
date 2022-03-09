@@ -11,6 +11,6 @@ const val VEDLEGG_URL = "/vedlegg"
 const val MELLOMLAGRING_URL = "/mellomlagring/{ytelse}"
 
 const val INNSENDING_URL = "/innsending"
-const val VALIDERING_RUL = "/valider"
+const val VALIDERING_URL = "/valider"
 
 const val OMSORGSPENGER_UTVIDET_RETT_URL = "/omsorgspenger-utvidet-rett"
