@@ -4,7 +4,7 @@ API som understøtter søknadsprosessen for ytelser i folketrygdloven kapittel 9
 
 Foreløpig støtte for følgende ytelser:
 
-* Omsorgspenger utvidet rett (Brukes ikke enda)
+* Omsorgspenger utvidet rett (Prodsatt)
 
 ## Oppslag
 
@@ -74,6 +74,9 @@ hvilken [ytelse](src/main/kotlin/no/nav/k9brukerdialogapi/ytelse/Ytelse.kt) det 
 
 ## Alarmer
 Vi bruker [nais-alerts](https://doc.nais.io/observability/alerts) for å sette opp alarmer. Disse finner man konfigurert i [nais/alerterator.yml](nais/alerterator.yml).
+
+## Grafana
+https://grafana.nais.io/d/qVOaNvfnk/k9-brukerdialog-api
 
 ## Henvendelser
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
