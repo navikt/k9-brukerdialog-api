@@ -132,8 +132,7 @@ class ApplicationTest {
                         "mellomnavn": "HEISANN",
                         "fødselsnummer": "$gyldigFødselsnummerA",
                         "aktørId": "12345",
-                        "fødselsdato": "1999-11-02",
-                        "myndig": true
+                        "fødselsdato": "1999-11-02"
                     }
                 """.trimIndent(),
                 cookie = cookie
@@ -153,8 +152,7 @@ class ApplicationTest {
                     "mellomnavn": "HEISANN",
                     "fødselsnummer": "$gyldigFødselsnummerA",
                     "aktørId": "12345",
-                    "fødselsdato": "1999-11-02",
-                    "myndig": true
+                    "fødselsdato": "1999-11-02"
                 }
             """.trimIndent(),
                 jwtToken = tokenXToken

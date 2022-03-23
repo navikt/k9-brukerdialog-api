@@ -1,5 +1,7 @@
 package no.nav.k9brukerdialogapi
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
@@ -70,6 +72,7 @@ fun Application.k9BrukerdialogApi() {
             dusseldorfConfigured()
                 .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
                 .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
+                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         }
     }
 
