@@ -1,6 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.helse.dusseldorf.ktor.core.ParameterType
+import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
+import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import java.net.URL
@@ -37,12 +41,48 @@ data class Søknad(
         k9FormatSøknad = k9Format
     )
 
+    fun valider() = mutableSetOf<Violation>().apply {
+        addAll(barn.valider())
+
+        if(sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()){
+            add(
+                Violation(
+                    parameterName = "sammeAdresse og samværsavtale",
+                    parameterType = ParameterType.ENTITY,
+                    reason = "Dersom sammeAdresse er false kan ikke samværsavtale være null eller tom.",
+                    invalidValue = "sammeAdresse=$sammeAdresse, samværsavtale=$samværsavtale"
+
+                )
+            )
+        }
+
+        if (!harBekreftetOpplysninger) {
+            add(
+                Violation(
+                    parameterName = "harBekreftetOpplysninger",
+                    parameterType = ParameterType.ENTITY,
+                    reason = "Opplysningene må bekreftes for å sende inn søknad."
+                )
+            )
+        }
+
+        if (!harForståttRettigheterOgPlikter) {
+            add(
+                Violation(
+                    parameterName = "harForståttRettigheterOgPlikter",
+                    parameterType = ParameterType.ENTITY,
+                    reason = "Må ha forstått rettigheter og plikter for å sende inn søknad."
+                )
+            )
+        }
+
+        if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
+    }
 }
 
 enum class SøkerBarnRelasjon() {
-    @JsonAlias("mor") MOR(),
-    @JsonAlias("far") FAR(),
-    @JsonAlias("adoptivforelder") ADOPTIVFORELDER(),
-    @JsonAlias("fosterforelder") FOSTERFORELDER()
+    @JsonAlias("mor") MOR,
+    @JsonAlias("far") FAR,
+    @JsonAlias("fosterforelder") FOSTERFORELDER,
+    @JsonAlias("adoptivforelder") ADOPTIVFORELDER
 }
-

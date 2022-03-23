@@ -536,12 +536,12 @@ class ApplicationTest {
                     }, {
                       "name": "harBekreftetOpplysninger",
                       "reason": "Opplysningene må bekreftes for å sende inn søknad.",
-                      "invalid_value": false,
+                      "invalid_value": null,
                       "type": "entity"
                     }, {
                       "name": "harForståttRettigheterOgPlikter",
                       "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                      "invalid_value": false,
+                      "invalid_value": null,
                       "type": "entity"
                     }
                   ],
