@@ -1,5 +1,7 @@
 package no.nav.k9brukerdialogapi
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -8,6 +10,7 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 
 val objectMapper: ObjectMapper = jacksonObjectMapper().dusseldorfConfigured()
     .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
+    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
     .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
 
 fun ObjectMapper.k9MellomlagringKonfigurert(): ObjectMapper {

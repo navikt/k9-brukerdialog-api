@@ -1,8 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import com.fasterxml.jackson.annotation.JsonAlias
-import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
-import no.nav.k9brukerdialogapi.oppslag.barn.hentNorskIdentifikatorForBarn
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import java.net.URL
@@ -23,12 +21,6 @@ data class Søknad(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean
 ) {
-    infix fun oppdaterBarnsNorskIdentifikatorFra(listeOverBarnOppslag: List<BarnOppslag>) {
-        if(barn.manglerNorskIdentifikator()){
-            barn oppdaterNorskIdentifikatorMed listeOverBarnOppslag.hentNorskIdentifikatorForBarn(barn.aktørId)
-        }
-    }
-
     fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
         språk = språk,
         søknadId = søknadId,
