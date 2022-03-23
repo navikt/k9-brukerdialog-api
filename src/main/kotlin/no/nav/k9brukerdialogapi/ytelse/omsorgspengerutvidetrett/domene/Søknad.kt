@@ -36,6 +36,7 @@ data class Søknad(
         harBekreftetOpplysninger = harBekreftetOpplysninger,
         k9FormatSøknad = k9Format
     )
+
 }
 
 enum class SøkerBarnRelasjon() {

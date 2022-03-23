@@ -6,18 +6,18 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 
-data class KomplettSøknad(
-    val språk: String,
-    val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-    val søknadId: String = UUID.randomUUID().toString(),
-    var barn: Barn,
-    val søker: Søker,
-    val sammeAdresse: Boolean?,
-    var legeerklæringVedleggId: List<String>,
-    var samværsavtaleVedleggId: List<String>,
-    val relasjonTilBarnet: SøkerBarnRelasjon? = null,
-    val kroniskEllerFunksjonshemming: Boolean,
-    val k9FormatSøknad: Søknad,
-    val harForståttRettigheterOgPlikter: Boolean,
-    val harBekreftetOpplysninger: Boolean
+class KomplettSøknad(
+    private val språk: String,
+    private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+    private val søknadId: String = UUID.randomUUID().toString(),
+    private var barn: Barn,
+    private val søker: Søker,
+    private val sammeAdresse: Boolean?,
+    private var legeerklæringVedleggId: List<String>,
+    private var samværsavtaleVedleggId: List<String>,
+    private val relasjonTilBarnet: SøkerBarnRelasjon? = null,
+    private val kroniskEllerFunksjonshemming: Boolean,
+    private val k9FormatSøknad: Søknad,
+    private val harForståttRettigheterOgPlikter: Boolean,
+    private val harBekreftetOpplysninger: Boolean
 )
