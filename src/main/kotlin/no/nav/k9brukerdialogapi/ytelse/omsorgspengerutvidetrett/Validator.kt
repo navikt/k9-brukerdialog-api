@@ -1,8 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett
 
-import no.nav.helse.dusseldorf.ktor.core.*
+import no.nav.helse.dusseldorf.ktor.core.ParameterType
+import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
+import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 
 fun Søknad.valider(){
@@ -48,34 +50,6 @@ fun Søknad.valider(){
     }
 
     if (valideringsfeil.isNotEmpty()) throw Throwblem(ValidationProblemDetails(valideringsfeil))
-}
-
-fun Barn. valider(): MutableSet<Violation> {
-    val valideringsfeil = mutableSetOf<Violation>()
-
-    if (norskIdentifikator.isNullOrBlank() || (!norskIdentifikator!!.erGyldigFodselsnummer())) {
-        valideringsfeil.add(
-            Violation(
-                parameterName = "barn.norskIdentifikator",
-                parameterType = ParameterType.ENTITY,
-                reason = "Ikke gyldig norskIdentifikator.",
-                invalidValue = norskIdentifikator
-            )
-        )
-    }
-
-    if (navn.isBlank() || (navn.length > 100)) {
-        valideringsfeil.add(
-            Violation(
-                parameterName = "barn.navn",
-                parameterType = ParameterType.ENTITY,
-                reason = "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.",
-                invalidValue = navn
-            )
-        )
-    }
-
-    return valideringsfeil
 }
 
 fun validerK9Format(k9Format: no.nav.k9.søknad.Søknad) {

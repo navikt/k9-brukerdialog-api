@@ -21,19 +21,6 @@ class OmsorgspengerUtvidetRettValideringTest {
     }
 
     @Test
-    fun `Forvent feil dersom barn mangler norskIdentifikator`(){
-        val feil = Assertions.assertThrows(Throwblem::class.java){
-            gyldigSøknad.copy(
-                barn = Barn(
-                    norskIdentifikator = null,
-                    navn = "Barn Barnsen"
-                )
-            ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Ikke gyldig norskIdentifikator."))
-    }
-
-    @Test
     fun `Forvent feil dersom sammeAdresse er false og mangler samværsavtale`(){
         val feil = Assertions.assertThrows(Throwblem::class.java){
             gyldigSøknad.copy(

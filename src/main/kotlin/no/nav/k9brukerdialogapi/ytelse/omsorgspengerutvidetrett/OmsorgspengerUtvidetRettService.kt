@@ -60,9 +60,9 @@ class OmsorgspengerUtvidetRettService(
     }
 
     private suspend fun håndterBarn(søknad: Søknad, idToken: IdToken, callId: CallId) {
-        if (søknad.barn.norskIdentifikator.isNullOrBlank()) {
+        if (søknad.barn.manglerIdentifikator()) {
             logger.info(formaterStatuslogging(OMSORGSPENGER_UTVIDET_RETT, søknad.søknadId, "oppdaterer id på barn."))
-            søknad oppdaterBarnsNorskIdentifikatorFra barnService.hentBarn(idToken, callId)
+            søknad.barn.leggTilIdentifikatorHvisMangler(barnService.hentBarn(idToken, callId))
         }
     }
 
