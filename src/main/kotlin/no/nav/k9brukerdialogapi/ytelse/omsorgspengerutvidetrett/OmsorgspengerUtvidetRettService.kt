@@ -13,7 +13,6 @@ import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.valider
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTVIDET_RETT
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn.Companion.leggTilIdentifikatorPåBarnSomMangler
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 import org.json.JSONObject
 import org.slf4j.Logger
@@ -63,7 +62,7 @@ class OmsorgspengerUtvidetRettService(
     private suspend fun håndterBarn(søknad: Søknad, idToken: IdToken, callId: CallId) {
         if (søknad.barn.manglerIdentifikator()) {
             logger.info(formaterStatuslogging(OMSORGSPENGER_UTVIDET_RETT, søknad.søknadId, "oppdaterer id på barn."))
-            leggTilIdentifikatorPåBarnSomMangler(søknad.barn, barnService.hentBarn(idToken, callId))
+            søknad.barn.leggTilIdentifikatorHvisMangler(barnService.hentBarn(idToken, callId))
         }
     }
 

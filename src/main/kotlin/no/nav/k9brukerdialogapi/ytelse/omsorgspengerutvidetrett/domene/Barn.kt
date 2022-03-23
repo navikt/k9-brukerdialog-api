@@ -16,10 +16,9 @@ class Barn(
     private val aktørId: String? = null,
     private val navn: String
 ) {
-    companion object{
-        fun leggTilIdentifikatorPåBarnSomMangler(barn: Barn, barnFraOppslag: List<BarnOppslag>){
-            if(barn.manglerIdentifikator()) barn.norskIdentifikator = barnFraOppslag.find { it.aktørId == barn.aktørId }?.identitetsnummer
-        }
+
+    fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
+        if(manglerIdentifikator()) norskIdentifikator = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
     fun manglerIdentifikator(): Boolean = norskIdentifikator.isNullOrBlank()

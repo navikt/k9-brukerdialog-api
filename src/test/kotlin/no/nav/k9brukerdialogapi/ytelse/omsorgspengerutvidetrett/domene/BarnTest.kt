@@ -2,7 +2,6 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn.Companion.leggTilIdentifikatorPåBarnSomMangler
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
@@ -27,7 +26,7 @@ class BarnTest {
         )
         val barn = Barn(navn = "Barn uten identifikator", aktørId = "123")
         assertTrue(barn.manglerIdentifikator())
-        leggTilIdentifikatorPåBarnSomMangler(barn, barnFraOppslag)
+        barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
         assertFalse(barn.manglerIdentifikator())
     }
 
