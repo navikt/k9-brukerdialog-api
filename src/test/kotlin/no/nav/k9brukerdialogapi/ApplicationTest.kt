@@ -12,6 +12,8 @@ import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -494,7 +496,22 @@ class ApplicationTest {
     inner class OmsorgspengerUtvidetRettTest{
         @Test
         fun `Innsending av gyldig søknad`() {
-            val søknad = SøknadUtils.gyldigOmsorgspengerUtvidetRettSøknad.somJson()
+            val søknad = Søknad(
+                språk = "nb",
+                kroniskEllerFunksjonshemming = true,
+                barn = Barn(
+                    norskIdentifikator = null,
+                    fødselsdato = null,
+                    aktørId = "1000000000001",
+                    navn = "Barn Barnesen"
+                ),
+                relasjonTilBarnet = SøkerBarnRelasjon.FAR,
+                sammeAdresse = true,
+                legeerklæring = listOf(),
+                samværsavtale = listOf(),
+                harBekreftetOpplysninger = true,
+                harForståttRettigheterOgPlikter = true
+            ).somJson()
             requestAndAssert(
                 httpMethod = HttpMethod.Post,
                 path = OMSORGSPENGER_UTVIDET_RETT_URL + INNSENDING_URL,
@@ -508,10 +525,19 @@ class ApplicationTest {
 
         @Test
         fun `Innsending av ugyldig søknad som får valideringsfeil`() {
-            val søknad = SøknadUtils.gyldigOmsorgspengerUtvidetRettSøknad.copy(
-                barn = Barn(navn = "Navnesen", norskIdentifikator = "123"),
-                harForståttRettigheterOgPlikter = false,
-                harBekreftetOpplysninger = false
+            val søknad = Søknad(
+                språk = "nb",
+                kroniskEllerFunksjonshemming = true,
+                barn = Barn(
+                    norskIdentifikator = "123",
+                    navn = "Barn Barnesen"
+                ),
+                relasjonTilBarnet = SøkerBarnRelasjon.FAR,
+                sammeAdresse = true,
+                legeerklæring = listOf(),
+                samværsavtale = listOf(),
+                harBekreftetOpplysninger = false,
+                harForståttRettigheterOgPlikter = false
             ).somJson()
 
             requestAndAssert(

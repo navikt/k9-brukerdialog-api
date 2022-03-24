@@ -18,7 +18,7 @@ import no.nav.k9.søknad.Søknad as K9Søknad
 
 private val k9FormatVersjon = Versjon.of("1.0.0")
 
-data class Søknad(
+class Søknad(
     val språk: String,
     val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     val søknadId: String = UUID.randomUUID().toString(),
