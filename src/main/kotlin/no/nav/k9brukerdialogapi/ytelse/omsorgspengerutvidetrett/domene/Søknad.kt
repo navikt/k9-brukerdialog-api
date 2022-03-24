@@ -5,12 +5,18 @@ import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
+import no.nav.k9.søknad.felles.Versjon
+import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
+import no.nav.k9.søknad.Søknad as K9Søknad
+
+private val k9FormatVersjon = Versjon.of("1.0.0")
 
 data class Søknad(
     val språk: String,
@@ -25,6 +31,18 @@ data class Søknad(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean
 ) {
+
+    fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
+        SøknadId.of(søknadId),
+        k9FormatVersjon,
+        mottatt,
+        søker.somK9Søker(),
+        OmsorgspengerKroniskSyktBarn(
+            barn.somK9Barn(),
+            kroniskEllerFunksjonshemming
+        )
+    )
+
     fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
         språk = språk,
         søknadId = søknadId,
