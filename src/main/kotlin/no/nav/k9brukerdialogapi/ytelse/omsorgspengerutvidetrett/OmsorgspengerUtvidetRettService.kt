@@ -7,7 +7,6 @@ import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
-import no.nav.k9brukerdialogapi.oppslag.søker.valider
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
@@ -38,7 +37,7 @@ class OmsorgspengerUtvidetRettService(
         validerK9Format(k9Format)
         søknad.valider()
 
-        val dokumentEier = DokumentEier(søker.fødselsnummer)
+        val dokumentEier = søker.somDokumentEier()
         validerVedlegg(søknad, idToken, callId, dokumentEier)
         persisterVedlegg(søknad, callId, dokumentEier)
 

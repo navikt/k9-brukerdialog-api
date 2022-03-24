@@ -15,7 +15,7 @@ class SøkerTest {
             fødselsnummer = "29099012345",
             fødselsdato = LocalDate.now().minusYears(18).plusDays(1)
         )
-        assertFalse(soker.myndig)
+        assertFalse(soker.erMyndig())
     }
 
     @Test
@@ -25,6 +25,6 @@ class SøkerTest {
             fødselsnummer = "29099012345",
             fødselsdato = LocalDate.now().minusYears(18)
         )
-        assertTrue(soker.myndig)
+        assertTrue(soker.erMyndig())
     }
 }
