@@ -1,31 +1,56 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
-import com.fasterxml.jackson.annotation.JsonAlias
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
+import no.nav.k9.søknad.felles.Versjon
+import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
+import no.nav.k9.søknad.Søknad as K9Søknad
 
-data class Søknad(
-    val språk: String,
-    val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+
+class Søknad(
     val søknadId: String = UUID.randomUUID().toString(),
-    var barn: Barn,
-    val sammeAdresse: Boolean?,
-    val legeerklæring: List<URL> = listOf(),
-    val samværsavtale: List<URL>? = null,
-    val relasjonTilBarnet: SøkerBarnRelasjon? = null,
-    val kroniskEllerFunksjonshemming: Boolean,
-    val harForståttRettigheterOgPlikter: Boolean,
-    val harBekreftetOpplysninger: Boolean
+    private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+    private val språk: String,
+    private var barn: Barn,
+    private val sammeAdresse: Boolean?,
+    internal val legeerklæring: List<URL> = listOf(),
+    internal val samværsavtale: List<URL>? = null,
+    private val relasjonTilBarnet: SøkerBarnRelasjon? = null,
+    private val kroniskEllerFunksjonshemming: Boolean,
+    private val harForståttRettigheterOgPlikter: Boolean,
+    private val harBekreftetOpplysninger: Boolean
 ) {
-    fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
+
+    companion object {
+        private val k9FormatVersjon = Versjon.of("1.0.0")
+    }
+
+    fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
+        if (barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
+    }
+
+    fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
+        SøknadId.of(søknadId),
+        k9FormatVersjon,
+        mottatt,
+        søker.somK9Søker(),
+        OmsorgspengerKroniskSyktBarn(
+            barn.somK9Barn(),
+            kroniskEllerFunksjonshemming
+        )
+    )
+
+    fun tilKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
         språk = språk,
         søknadId = søknadId,
         mottatt = mottatt,
@@ -44,7 +69,7 @@ data class Søknad(
     fun valider() = mutableSetOf<Violation>().apply {
         addAll(barn.valider())
 
-        if(sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()){
+        if (sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()) {
             add(
                 Violation(
                     parameterName = "sammeAdresse og samværsavtale",
@@ -78,11 +103,4 @@ data class Søknad(
 
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
-}
-
-enum class SøkerBarnRelasjon() {
-    @JsonAlias("mor") MOR,
-    @JsonAlias("far") FAR,
-    @JsonAlias("fosterforelder") FOSTERFORELDER,
-    @JsonAlias("adoptivforelder") ADOPTIVFORELDER
 }

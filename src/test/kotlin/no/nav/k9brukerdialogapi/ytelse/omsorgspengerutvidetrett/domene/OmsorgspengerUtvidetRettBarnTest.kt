@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class BarnTest {
+class OmsorgspengerUtvidetRettBarnTest {
 
     @Test
     fun `Oppdatering av identifikator på barn som mangler`() {
