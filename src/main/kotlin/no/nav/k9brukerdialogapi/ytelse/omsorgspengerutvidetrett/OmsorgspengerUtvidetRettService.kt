@@ -39,9 +39,12 @@ class OmsorgspengerUtvidetRettService(
         søknad.validerVedlegg(vedleggService, idToken, callId, dokumentEier)
         søknad.persisterVedlegg(vedleggService, callId, dokumentEier)
 
-        val komplettSøknad = søknad.tilKomplettSøknad(søker, k9Format)
         try {
-            kafkaProdusent.produserKafkaMelding(metadata, JSONObject(komplettSøknad.somJson()), OMSORGSPENGER_UTVIDET_RETT)
+            kafkaProdusent.produserKafkaMelding(
+                metadata,
+                JSONObject(søknad.tilKomplettSøknad(søker, k9Format).somJson()),
+                OMSORGSPENGER_UTVIDET_RETT
+            )
         } catch (e: Exception) {
             logger.info("Feilet ved å legge melding på Kafka.")
             søknad.fjernHoldPåPersisterteVedlegg(vedleggService, callId, dokumentEier)
