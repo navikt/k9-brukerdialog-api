@@ -1,6 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
-import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
@@ -8,9 +8,14 @@ import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
+import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
+import no.nav.k9brukerdialogapi.vedlegg.VedleggService
+import no.nav.k9brukerdialogapi.vedlegg.valider
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
+import org.slf4j.LoggerFactory
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -18,23 +23,24 @@ import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
 
 private val k9FormatVersjon = Versjon.of("1.0.0")
+private val logger = LoggerFactory.getLogger(Søknad::class.java)
 
 class Søknad(
-    private val språk: String,
-    val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     val søknadId: String = UUID.randomUUID().toString(),
+    private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+    private val språk: String,
     private var barn: Barn,
     private val sammeAdresse: Boolean?,
-    val legeerklæring: List<URL> = listOf(),
-    val samværsavtale: List<URL>? = null,
+    private val legeerklæring: List<URL> = listOf(),
+    private val samværsavtale: List<URL>? = null,
     private val relasjonTilBarnet: SøkerBarnRelasjon? = null,
     private val kroniskEllerFunksjonshemming: Boolean,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
 ) {
-    fun barnManglerIdentifikator() = barn.manglerIdentifikator()
-
-    fun leggTilIdentifikatorPåBarn(barnFraOppslag: List<BarnOppslag>) = barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
+    fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>){
+        if(barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
+    }
 
     fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
         SøknadId.of(søknadId),
@@ -47,7 +53,7 @@ class Søknad(
         )
     )
 
-    fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
+    fun tilKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
         språk = språk,
         søknadId = søknadId,
         mottatt = mottatt,
@@ -62,6 +68,32 @@ class Søknad(
         harBekreftetOpplysninger = harBekreftetOpplysninger,
         k9FormatSøknad = k9Format
     )
+
+    suspend fun validerVedlegg(vedleggService: VedleggService, idToken: IdToken, callId: CallId, dokumentEier: DokumentEier){
+        logger.info("Validerer vedlegg")
+        if(legeerklæring.isNotEmpty()){
+            vedleggService.hentVedlegg(legeerklæring, idToken, callId, dokumentEier).valider("legeerklæring", legeerklæring)
+        }
+        if(samværsavtale != null && samværsavtale.isNotEmpty()){
+            vedleggService.hentVedlegg(samværsavtale, idToken, callId, dokumentEier).valider("samværsavtale", legeerklæring)
+        }
+    }
+
+    suspend fun persisterVedlegg(vedleggService: VedleggService, callId: CallId, dokumentEier: DokumentEier){
+        logger.info("Persisterer vedlegg")
+        if(legeerklæring.isNotEmpty()) vedleggService.persisterVedlegg(legeerklæring, callId, dokumentEier)
+        if(samværsavtale != null && samværsavtale.isNotEmpty()){
+            vedleggService.persisterVedlegg(samværsavtale, callId, dokumentEier)
+        }
+    }
+
+    suspend fun fjernHoldPåPersisterteVedlegg(vedleggService: VedleggService,  callId: CallId, dokumentEier: DokumentEier){
+        logger.info("Fjerner hold på persisterte vedlegg.")
+        if(legeerklæring.isNotEmpty()) vedleggService.fjernHoldPåPersistertVedlegg(legeerklæring, callId, dokumentEier)
+        if(samværsavtale != null && samværsavtale.isNotEmpty()){
+            vedleggService.fjernHoldPåPersistertVedlegg(samværsavtale, callId, dokumentEier)
+        }
+    }
 
     fun valider() = mutableSetOf<Violation>().apply {
         addAll(barn.valider())
@@ -100,11 +132,4 @@ class Søknad(
 
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
-}
-
-enum class SøkerBarnRelasjon() {
-    @JsonAlias("mor") MOR,
-    @JsonAlias("far") FAR,
-    @JsonAlias("fosterforelder") FOSTERFORELDER,
-    @JsonAlias("adoptivforelder") ADOPTIVFORELDER
 }
