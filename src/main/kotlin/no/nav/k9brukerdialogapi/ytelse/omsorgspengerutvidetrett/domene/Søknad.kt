@@ -8,6 +8,7 @@ import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import java.net.URL
@@ -19,18 +20,21 @@ import no.nav.k9.søknad.Søknad as K9Søknad
 private val k9FormatVersjon = Versjon.of("1.0.0")
 
 class Søknad(
-    val språk: String,
+    private val språk: String,
     val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     val søknadId: String = UUID.randomUUID().toString(),
-    var barn: Barn,
-    val sammeAdresse: Boolean?,
+    private var barn: Barn,
+    private val sammeAdresse: Boolean?,
     val legeerklæring: List<URL> = listOf(),
     val samværsavtale: List<URL>? = null,
-    val relasjonTilBarnet: SøkerBarnRelasjon? = null,
-    val kroniskEllerFunksjonshemming: Boolean,
-    val harForståttRettigheterOgPlikter: Boolean,
-    val harBekreftetOpplysninger: Boolean
+    private val relasjonTilBarnet: SøkerBarnRelasjon? = null,
+    private val kroniskEllerFunksjonshemming: Boolean,
+    private val harForståttRettigheterOgPlikter: Boolean,
+    private val harBekreftetOpplysninger: Boolean
 ) {
+    fun barnManglerIdentifikator() = barn.manglerIdentifikator()
+
+    fun leggTilIdentifikatorPåBarn(barnFraOppslag: List<BarnOppslag>) = barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
 
     fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
         SøknadId.of(søknadId),
