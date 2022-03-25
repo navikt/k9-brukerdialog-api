@@ -38,7 +38,8 @@ class OmsorgspengerUtvidetRettService(
         søknad.valider()
 
         val dokumentEier = søker.somDokumentEier()
-        håndterVedlegg(søknad, idToken, callId, dokumentEier)
+        validerVedlegg(søknad, idToken, callId, dokumentEier)
+        persisterVedlegg(søknad, callId, dokumentEier)
 
         try {
             kafkaProdusent.produserKafkaMelding(
@@ -53,7 +54,17 @@ class OmsorgspengerUtvidetRettService(
         }
     }
 
-    suspend fun håndterVedlegg(søknad: Søknad, idToken: IdToken, callId: CallId, dokumentEier: DokumentEier) {
+    suspend fun persisterVedlegg(søknad: Søknad, callId: CallId, dokumentEier: DokumentEier){
+        logger.info("Persisterer vedlegg")
+        if(søknad.legeerklæring.isNotEmpty()) {
+            vedleggService.persisterVedlegg(søknad.legeerklæring, callId, dokumentEier)
+        }
+        if (søknad.samværsavtale != null && søknad.samværsavtale.isNotEmpty()) {
+            vedleggService.persisterVedlegg(søknad.samværsavtale, callId, dokumentEier)
+        }
+    }
+
+    suspend fun validerVedlegg(søknad: Søknad, idToken: IdToken, callId: CallId, dokumentEier: DokumentEier) {
         logger.info("Validerer vedlegg")
         if(søknad.legeerklæring.isNotEmpty()) {
             vedleggService.hentVedlegg(søknad.legeerklæring, idToken, callId, dokumentEier)
@@ -62,14 +73,6 @@ class OmsorgspengerUtvidetRettService(
         if (søknad.samværsavtale != null && søknad.samværsavtale.isNotEmpty()) {
             vedleggService.hentVedlegg(søknad.samværsavtale, idToken, callId, dokumentEier)
                 .valider("samværsavtale", søknad.samværsavtale)
-        }
-
-        logger.info("Persisterer vedlegg")
-        if(søknad.legeerklæring.isNotEmpty()) {
-            vedleggService.persisterVedlegg(søknad.legeerklæring, callId, dokumentEier)
-        }
-        if (søknad.samværsavtale != null && søknad.samværsavtale.isNotEmpty()) {
-            vedleggService.persisterVedlegg(søknad.samværsavtale, callId, dokumentEier)
         }
     }
 
