@@ -22,8 +22,6 @@ import java.time.ZonedDateTime
 import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
 
-private val k9FormatVersjon = Versjon.of("1.0.0")
-private val logger = LoggerFactory.getLogger(Søknad::class.java)
 
 class Søknad(
     val søknadId: String = UUID.randomUUID().toString(),
@@ -38,8 +36,14 @@ class Søknad(
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
 ) {
-    fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>){
-        if(barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(Søknad::class.java)
+        private val k9FormatVersjon = Versjon.of("1.0.0")
+    }
+
+    fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
+        if (barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
     }
 
     fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
@@ -71,26 +75,28 @@ class Søknad(
 
     suspend fun validerVedlegg(vedleggService: VedleggService, idToken: IdToken, callId: CallId, dokumentEier: DokumentEier){
         logger.info("Validerer vedlegg")
-        if(legeerklæring.isNotEmpty()){
-            vedleggService.hentVedlegg(legeerklæring, idToken, callId, dokumentEier).valider("legeerklæring", legeerklæring)
+        if (legeerklæring.isNotEmpty()) {
+            vedleggService.hentVedlegg(legeerklæring, idToken, callId, dokumentEier)
+                .valider("legeerklæring", legeerklæring)
         }
-        if(samværsavtale != null && samværsavtale.isNotEmpty()){
-            vedleggService.hentVedlegg(samværsavtale, idToken, callId, dokumentEier).valider("samværsavtale", legeerklæring)
+        if (samværsavtale != null && samværsavtale.isNotEmpty()) {
+            vedleggService.hentVedlegg(samværsavtale, idToken, callId, dokumentEier)
+                .valider("samværsavtale", legeerklæring)
         }
     }
 
-    suspend fun persisterVedlegg(vedleggService: VedleggService, callId: CallId, dokumentEier: DokumentEier){
+    suspend fun persisterVedlegg(vedleggService: VedleggService, callId: CallId, dokumentEier: DokumentEier) {
         logger.info("Persisterer vedlegg")
-        if(legeerklæring.isNotEmpty()) vedleggService.persisterVedlegg(legeerklæring, callId, dokumentEier)
-        if(samværsavtale != null && samværsavtale.isNotEmpty()){
+        if (legeerklæring.isNotEmpty()) vedleggService.persisterVedlegg(legeerklæring, callId, dokumentEier)
+        if (samværsavtale != null && samværsavtale.isNotEmpty()) {
             vedleggService.persisterVedlegg(samværsavtale, callId, dokumentEier)
         }
     }
 
     suspend fun fjernHoldPåPersisterteVedlegg(vedleggService: VedleggService,  callId: CallId, dokumentEier: DokumentEier){
         logger.info("Fjerner hold på persisterte vedlegg.")
-        if(legeerklæring.isNotEmpty()) vedleggService.fjernHoldPåPersistertVedlegg(legeerklæring, callId, dokumentEier)
-        if(samværsavtale != null && samværsavtale.isNotEmpty()){
+        if (legeerklæring.isNotEmpty()) vedleggService.fjernHoldPåPersistertVedlegg(legeerklæring, callId, dokumentEier)
+        if (samværsavtale != null && samværsavtale.isNotEmpty()) {
             vedleggService.fjernHoldPåPersistertVedlegg(samværsavtale, callId, dokumentEier)
         }
     }
@@ -98,7 +104,7 @@ class Søknad(
     fun valider() = mutableSetOf<Violation>().apply {
         addAll(barn.valider())
 
-        if(sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()){
+        if (sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()) {
             add(
                 Violation(
                     parameterName = "sammeAdresse og samværsavtale",
