@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*

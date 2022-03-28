@@ -2,7 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 
 import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import java.time.ZonedDateTime
 
 class KomplettSøknad(

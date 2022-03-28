@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.somJson
@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class OmsorgspengerUtvidetRettBarnTest {
+class BarnTest {
 
     @Test
     fun `Barn equals test`(){

@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.somJson
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.skyscreamer.jsonassert.JSONAssert

@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi
 
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 import java.time.LocalDate

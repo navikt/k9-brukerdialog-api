@@ -9,7 +9,7 @@ import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerMidlertidigAlene
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*

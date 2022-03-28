@@ -12,9 +12,9 @@ import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.wiremock.*
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
 import org.json.JSONObject

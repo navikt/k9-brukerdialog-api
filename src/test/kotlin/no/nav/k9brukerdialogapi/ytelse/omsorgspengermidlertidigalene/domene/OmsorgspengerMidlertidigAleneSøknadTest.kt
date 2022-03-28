@@ -3,7 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import org.junit.jupiter.api.Assertions
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
@@ -54,7 +54,8 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                     periodeFraOgMed = LocalDate.parse("2020-01-01"),
                     periodeTilOgMed = LocalDate.parse("2020-10-01")
                 ),
-                barn = listOf(Barn(
+                barn = listOf(
+                    Barn(
                     navn = "Ole Dole",
                     norskIdentifikator = "25058118020",
                     aktørId = null)
@@ -82,7 +83,8 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                     periodeFraOgMed = LocalDate.parse("2020-01-01"),
                     periodeTilOgMed = LocalDate.parse("2020-10-01")
                 ),
-                barn = listOf(Barn(
+                barn = listOf(
+                    Barn(
                     navn = "Ole Dole",
                     norskIdentifikator = "25058118020",
                     aktørId = null)
@@ -109,7 +111,8 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                 periodeFraOgMed = LocalDate.parse("2020-01-01"),
                 periodeTilOgMed = LocalDate.parse("2020-10-01")
             ),
-            barn = listOf(Barn(
+            barn = listOf(
+                Barn(
                     navn = "Ole Dole",
                     norskIdentifikator = "25058118020",
                     aktørId = null)

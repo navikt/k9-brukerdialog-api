@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
@@ -19,15 +19,15 @@ class Barn(
     private val navn: String
 ) {
 
-    internal fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
+    fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
         if(manglerIdentifikator()) norskIdentifikator = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
-    internal fun manglerIdentifikator(): Boolean = norskIdentifikator.isNullOrBlank()
+    fun manglerIdentifikator(): Boolean = norskIdentifikator.isNullOrBlank()
 
-    internal fun somK9Barn(): K9Barn = K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentifikator))
+    fun somK9Barn(): K9Barn = K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentifikator))
 
-    internal fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
+    fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
         if (manglerIdentifikator() || (!norskIdentifikator!!.erGyldigFodselsnummer())) {
             add(
                 Violation(
