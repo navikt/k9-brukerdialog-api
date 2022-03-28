@@ -14,3 +14,4 @@ const val INNSENDING_URL = "/innsending"
 const val VALIDERING_URL = "/valider"
 
 const val OMSORGSPENGER_UTVIDET_RETT_URL = "/omsorgspenger-utvidet-rett"
+const val OMSORGSPENGER_MIDLERTIDIG_ALENE_URL = "/omsorgspenger-midlertidig-alene"

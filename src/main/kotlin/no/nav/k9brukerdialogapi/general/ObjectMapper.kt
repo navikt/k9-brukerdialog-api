@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.KomplettSøknad
+import org.json.JSONObject
 
 val objectMapper: ObjectMapper = jacksonObjectMapper().dusseldorfConfigured()
     .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
@@ -21,3 +24,5 @@ fun ObjectMapper.k9MellomlagringKonfigurert(): ObjectMapper {
 }
 
 fun Any.somJson() = objectMapper.writeValueAsString(this)
+fun JSONObject.somOmsorgspengerMidlertidigAleneKomplettSøknad(): KomplettSøknad = objectMapper.readValue(this.toString())
+fun JSONObject.somOmsorgspengerUtvidetRettKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.KomplettSøknad = objectMapper.readValue(this.toString())

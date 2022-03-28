@@ -7,6 +7,7 @@ import org.json.JSONObject
 
 object Topics {
     const val OMSORGSPENGER_UTVIDET_RETT_TOPIC = "dusseldorf.privat-omsorgspengesoknad-mottatt-v2"
+    const val OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC = "dusseldorf.privat-omsorgspenger-midlertidig-alene-mottatt"
 }
 
 data class TopicEntry<V>(
@@ -21,12 +22,18 @@ data class TopicUse<V>(
     internal fun keySerializer() = StringSerializer()
 }
 
-fun hentTopicUseForYtelse(ytelse: Ytelse) = when(ytelse){
+internal fun hentTopicUseForYtelse(ytelse: Ytelse) = when(ytelse){
     Ytelse.OMSORGSPENGER_UTVIDET_RETT -> OMSORGSPENGER_UTVIDET_RETT_TOPIC_USE
+    Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC_USE
 }
 
-val OMSORGSPENGER_UTVIDET_RETT_TOPIC_USE = TopicUse(
+internal val OMSORGSPENGER_UTVIDET_RETT_TOPIC_USE = TopicUse(
     name = Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC,
+    valueSerializer = SøknadSerializer()
+)
+
+internal val OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC_USE = TopicUse(
+    name = Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC,
     valueSerializer = SøknadSerializer()
 )
 

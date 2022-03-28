@@ -26,7 +26,8 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+                Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC,
+                Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
             )
         )
         return kafkaEnvironment
@@ -49,7 +50,7 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
         StringDeserializer(),
         OutgoingDeserialiser()
     )
-    consumer.subscribe(listOf(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC))
+    consumer.subscribe(listOf(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC, Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC))
     return consumer
 }
 
@@ -62,6 +63,25 @@ internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerUtvi
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
             .records(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC)
+            .filter { it.key() == søknadId }
+
+        if (entries.isNotEmpty()) {
+            assertEquals(1, entries.size)
+            return entries.first().value()
+        }
+    }
+    throw IllegalStateException("Fant ikke opprettet oppgave for melding med søknadsId $søknadId etter $maxWaitInSeconds sekunder.")
+}
+
+internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerMidlertidigAleneSøknad(
+    søknadId: String,
+    maxWaitInSeconds: Long = 20,
+) : TopicEntry<JSONObject> {
+    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
+    while (System.currentTimeMillis() < end) {
+        seekToBeginning(assignment())
+        val entries = poll(Duration.ofSeconds(1))
+            .records(Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC)
             .filter { it.key() == søknadId }
 
         if (entries.isNotEmpty()) {

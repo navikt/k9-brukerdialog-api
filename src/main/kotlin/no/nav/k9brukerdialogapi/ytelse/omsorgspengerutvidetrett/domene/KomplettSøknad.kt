@@ -20,4 +20,12 @@ class KomplettSøknad(
     private val k9FormatSøknad: Søknad,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
-)
+){
+    override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
+
+    private fun equals(other: KomplettSøknad) =
+            this.søknadId == other.søknadId &&
+            this.relasjonTilBarnet == other.relasjonTilBarnet &&
+            this.legeerklæringVedleggId == other.legeerklæringVedleggId &&
+            this.k9FormatSøknad.søknadId == other.k9FormatSøknad.søknadId
+}

@@ -46,6 +46,7 @@ import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.OmsorgspengerMidlertidigAleneService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
 import org.slf4j.Logger
@@ -161,7 +162,8 @@ fun Application.k9BrukerdialogApi() {
         authenticate(*issuers.allIssuers()) {
             ytelseRoutes(
                 idTokenProvider = idTokenProvider,
-                omsorgspengerUtvidetRettService = OmsorgspengerUtvidetRettService(søkerService, barnService, vedleggService, kafkaProducer)
+                omsorgspengerUtvidetRettService = OmsorgspengerUtvidetRettService(søkerService, barnService, vedleggService, kafkaProducer),
+                omsorgspengerMidlertidigAleneService = OmsorgspengerMidlertidigAleneService(søkerService, barnService, kafkaProducer)
             )
 
             oppslagRoutes(

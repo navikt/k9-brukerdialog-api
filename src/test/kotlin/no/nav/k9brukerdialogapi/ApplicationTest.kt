@@ -10,7 +10,10 @@ import no.nav.helse.TestUtils.Companion.getAuthCookie
 import no.nav.helse.TestUtils.Companion.getTokenDingsToken
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.wiremock.*
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
@@ -21,11 +24,13 @@ import org.junit.jupiter.api.Nested
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.time.LocalDate
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Søknad as OmsorgspengerMidlertidigAleneSøknad
 
 class ApplicationTest {
 
@@ -511,16 +516,19 @@ class ApplicationTest {
                 samværsavtale = listOf(),
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
-            ).somJson()
+            )
             requestAndAssert(
                 httpMethod = HttpMethod.Post,
                 path = OMSORGSPENGER_UTVIDET_RETT_URL + INNSENDING_URL,
                 expectedCode = HttpStatusCode.Accepted,
                 jwtToken = tokenXToken,
-                expectedResponse = null,
-                requestEntity = søknad
+                requestEntity = søknad.somJson()
             )
-            hentOgAssertSøknad(søknad = JSONObject(søknad))
+            val hentet = kafkaKonsumer.hentOmsorgspengerUtvidetRettSøknad(søknad.søknadId)
+            assertEquals(
+                søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
+                hentet.data.somOmsorgspengerUtvidetRettKomplettSøknad()
+            )
         }
 
         @Test
@@ -577,11 +585,122 @@ class ApplicationTest {
         }
     }
 
+    @Nested
+    inner class OmsorgspengerMidlertidigAleneTest{
+        @Test
+        fun `Innsending av gyldig søknad`() {
+            val søknad = OmsorgspengerMidlertidigAleneSøknad(
+                id = "123456789",
+                språk = "nb",
+                annenForelder = AnnenForelder(
+                    navn = "Berit",
+                    fnr = "02119970078",
+                    situasjon = Situasjon.FENGSEL,
+                    situasjonBeskrivelse = "Sitter i fengsel..",
+                    periodeOver6Måneder = false,
+                    periodeFraOgMed = LocalDate.parse("2020-01-01"),
+                    periodeTilOgMed = LocalDate.parse("2020-10-01")
+                ),
+                barn = listOf(
+                    Barn(
+                        navn = "Ole Dole",
+                        norskIdentifikator = "25058118020",
+                        aktørId = null
+                    )
+                ),
+                harBekreftetOpplysninger = true,
+                harForståttRettigheterOgPlikter = true
+            )
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = OMSORGSPENGER_MIDLERTIDIG_ALENE_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.Accepted,
+                jwtToken = tokenXToken,
+                expectedResponse = null,
+                requestEntity = søknad.somJson()
+            )
+            val hentet = kafkaKonsumer.hentOmsorgspengerMidlertidigAleneSøknad(søknad.søknadId)
+            assertEquals(
+                søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
+                hentet.data.somOmsorgspengerMidlertidigAleneKomplettSøknad()
+            )
+        }
+
+        @Test
+        fun `Innsending av ugyldig søknad som får valideringsfeil`() {
+            val søknad = OmsorgspengerMidlertidigAleneSøknad(
+                id = "123456789",
+                språk = "nb",
+                annenForelder = AnnenForelder(
+                    navn = "Berit",
+                    fnr = "ikke gyldig",
+                    situasjon = Situasjon.FENGSEL,
+                    situasjonBeskrivelse = "Sitter i fengsel..",
+                    periodeOver6Måneder = false,
+                    periodeFraOgMed = LocalDate.parse("2020-01-01"),
+                    periodeTilOgMed = null
+                ),
+                barn = listOf(
+                    Barn(
+                        navn = "Ole Dole",
+                        norskIdentifikator = "ikke gyldig",
+                        aktørId = null
+                    )
+                ),
+                harBekreftetOpplysninger = false,
+                harForståttRettigheterOgPlikter = true
+            ).somJson()
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = OMSORGSPENGER_MIDLERTIDIG_ALENE_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.BadRequest,
+                jwtToken = tokenXToken,
+                expectedResponse = """
+                    {
+                      "type": "/problem-details/invalid-request-parameters",
+                      "title": "invalid-request-parameters",
+                      "status": 400,
+                      "detail": "Requesten inneholder ugyldige paramtere.",
+                      "instance": "about:blank",
+                      "invalid_parameters": [
+                        {
+                          "type": "entity",
+                          "name": "AnnenForelder.fnr",
+                          "reason": "Fødselsnummer på annen forelder må være gyldig norsk identifikator",
+                          "invalid_value": "ikke gyldig"
+                        },
+                        {
+                          "type": "entity",
+                          "name": "AnnenForelder.periodeTilOgMed",
+                          "reason": "periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL",
+                          "invalid_value": null
+                        },
+                        {
+                          "type": "entity",
+                          "name": "barn.norskIdentifikator",
+                          "reason": "Ikke gyldig norskIdentifikator.",
+                          "invalid_value": "ikke gyldig"
+                        },
+                        {
+                          "type": "entity",
+                          "name": "harBekreftetOpplysninger",
+                          "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                          "invalid_value": null
+                        }
+                      ]
+                    }
+            """.trimIndent(),
+                requestEntity = søknad
+            )
+        }
+    }
+
     private fun requestAndAssert(
         httpMethod: HttpMethod,
         path: String,
         requestEntity: String? = null,
-        expectedResponse: String?,
+        expectedResponse: String? = null,
         expectedCode: HttpStatusCode,
         jwtToken: String? = null,
         cookie: Cookie? = null
@@ -608,28 +727,5 @@ class ApplicationTest {
             }
         }
         return respons
-    }
-
-    private fun hentOgAssertSøknad(søknad: JSONObject){
-        val hentet = kafkaKonsumer.hentOmsorgspengerUtvidetRettSøknad(søknad.getString("søknadId"))
-        assertGyldigSøknad(søknad, hentet.data)
-    }
-
-    private fun assertGyldigSøknad(
-        søknadSendtInn: JSONObject,
-        søknadFraTopic: JSONObject
-    ) {
-        assertTrue(søknadFraTopic.has("søker"))
-        assertTrue(søknadFraTopic.has("mottatt"))
-        assertTrue(søknadFraTopic.has("k9FormatSøknad"))
-        assertTrue(søknadFraTopic.getJSONObject("barn").has("norskIdentifikator"))
-
-        assertEquals(søknadSendtInn.getString("søknadId"), søknadFraTopic.getString("søknadId"))
-        assertEquals(søknadSendtInn.getString("relasjonTilBarnet"), søknadFraTopic.getString("relasjonTilBarnet"))
-
-        assertEquals(
-            søknadSendtInn.getJSONObject("barn").getString("navn"),
-            søknadFraTopic.getJSONObject("barn").getString("navn")
-        )
     }
 }
