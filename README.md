@@ -7,7 +7,7 @@ Foreløpig støtte for følgende ytelser:
 | Ytelse | I produksjon | Frontend repo |
 |---|--| --|
 | Omsorgspenger utvidet rett | Ja | https://github.com/navikt/omsorgspengesoknad |
-| Omsorgspenger midlertidig alene | Ja | https://github.com/navikt/omsorgspenger-midlertidig-alene-dialog |
+| Omsorgspenger midlertidig alene | Nei | https://github.com/navikt/omsorgspenger-midlertidig-alene-dialog |
 | | | |
 
 ## Oppslag
