@@ -1,8 +1,8 @@
 package no.nav.k9brukerdialogapi.kafka
 
+import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.common.serialization.Serializer
-import org.apache.kafka.common.serialization.StringSerializer
 import org.json.JSONObject
 
 object Topics {
@@ -15,29 +15,12 @@ data class TopicEntry<V>(
     val data: V
 )
 
-data class TopicUse<V>(
-    val name: String,
-    val valueSerializer : Serializer<TopicEntry<V>>
-) {
-    internal fun keySerializer() = StringSerializer()
+internal fun hentTopicForYtelse(ytelse: Ytelse) = when(ytelse){
+    Ytelse.OMSORGSPENGER_UTVIDET_RETT -> Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+    Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 }
 
-internal fun hentTopicUseForYtelse(ytelse: Ytelse) = when(ytelse){
-    Ytelse.OMSORGSPENGER_UTVIDET_RETT -> OMSORGSPENGER_UTVIDET_RETT_TOPIC_USE
-    Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC_USE
-}
-
-internal val OMSORGSPENGER_UTVIDET_RETT_TOPIC_USE = TopicUse(
-    name = Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC,
-    valueSerializer = SøknadSerializer()
-)
-
-internal val OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC_USE = TopicUse(
-    name = Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC,
-    valueSerializer = SøknadSerializer()
-)
-
-private class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {
+internal class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {
     override fun serialize(topic: String, data: TopicEntry<JSONObject>): ByteArray {
         val metadata = JSONObject()
             .put("correlationId", data.metadata.correlationId)
