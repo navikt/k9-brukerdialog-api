@@ -5,6 +5,8 @@ import no.nav.common.KafkaEnvironment
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.kafka.TopicEntry
 import no.nav.k9brukerdialogapi.kafka.Topics
+import no.nav.k9brukerdialogapi.kafka.hentTopicForYtelse
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -26,7 +28,8 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+                Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC,
+                Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
             )
         )
         return kafkaEnvironment
@@ -49,19 +52,21 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
         StringDeserializer(),
         OutgoingDeserialiser()
     )
-    consumer.subscribe(listOf(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC))
+    consumer.subscribe(listOf(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC, Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC))
     return consumer
 }
 
-internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerUtvidetRettSøknad(
+
+internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentSøknad(
     søknadId: String,
+    ytelse: Ytelse,
     maxWaitInSeconds: Long = 20,
 ) : TopicEntry<JSONObject> {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
-            .records(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC)
+            .records(hentTopicForYtelse(ytelse))
             .filter { it.key() == søknadId }
 
         if (entries.isNotEmpty()) {

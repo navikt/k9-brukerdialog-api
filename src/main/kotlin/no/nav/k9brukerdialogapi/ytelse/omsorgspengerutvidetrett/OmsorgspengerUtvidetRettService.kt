@@ -24,9 +24,10 @@ class OmsorgspengerUtvidetRettService(
     private val kafkaProdusent: KafkaProducer
 ) {
     private val logger: Logger = LoggerFactory.getLogger(OmsorgspengerUtvidetRettService::class.java)
+    private val YTELSE = OMSORGSPENGER_UTVIDET_RETT
 
     suspend fun registrer(søknad: Søknad, callId: CallId, metadata: Metadata, idToken: IdToken) {
-        logger.info(formaterStatuslogging(OMSORGSPENGER_UTVIDET_RETT, søknad.søknadId, "registreres."))
+        logger.info(formaterStatuslogging(YTELSE, søknad.søknadId, "registreres."))
 
         val søker = søkerService.hentSøker(idToken, callId)
         søker.valider()
@@ -45,7 +46,7 @@ class OmsorgspengerUtvidetRettService(
             kafkaProdusent.produserKafkaMelding(
                 metadata,
                 JSONObject(søknad.tilKomplettSøknad(søker, k9Format).somJson()),
-                OMSORGSPENGER_UTVIDET_RETT
+                YTELSE
             )
         } catch (e: Exception) {
             logger.info("Feilet ved å legge melding på Kafka.")

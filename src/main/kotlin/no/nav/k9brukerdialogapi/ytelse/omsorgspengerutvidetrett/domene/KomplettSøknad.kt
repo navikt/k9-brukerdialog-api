@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
@@ -20,4 +21,10 @@ class KomplettSøknad(
     private val k9FormatSøknad: Søknad,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
-)
+){
+    override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
+
+    private fun equals(other: KomplettSøknad) =
+            this.søknadId == other.søknadId &&
+            this.k9FormatSøknad.søknadId == other.k9FormatSøknad.søknadId
+}

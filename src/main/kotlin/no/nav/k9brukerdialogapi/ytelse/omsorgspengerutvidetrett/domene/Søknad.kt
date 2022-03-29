@@ -10,6 +10,7 @@ import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKronis
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime

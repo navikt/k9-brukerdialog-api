@@ -46,7 +46,6 @@ import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -161,7 +160,10 @@ fun Application.k9BrukerdialogApi() {
         authenticate(*issuers.allIssuers()) {
             ytelseRoutes(
                 idTokenProvider = idTokenProvider,
-                omsorgspengerUtvidetRettService = OmsorgspengerUtvidetRettService(søkerService, barnService, vedleggService, kafkaProducer)
+                kafkaProdusent = kafkaProducer,
+                søkerService = søkerService,
+                barnService = barnService,
+                vedleggService = vedleggService
             )
 
             oppslagRoutes(
@@ -235,6 +237,7 @@ fun Application.k9BrukerdialogApi() {
             val urlPath = call.request.path()
             when {
                 urlPath.contains(OMSORGSPENGER_UTVIDET_RETT_URL) -> Ytelse.OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
+                urlPath.contains(OMSORGSPENGER_MIDLERTIDIG_ALENE_URL) -> Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()
                 else -> null
             }
         }

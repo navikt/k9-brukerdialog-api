@@ -1,5 +1,6 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Violation
@@ -10,6 +11,7 @@ import java.time.LocalDate
 import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
 
 class Barn(
+    @JsonAlias("identitetsnummer") // Alias frem til omsorgspenger-midlertidig-alene frontend endrer feltnavn.
     private var norskIdentifikator: String? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
     private val fødselsdato: LocalDate? = null,
@@ -50,4 +52,9 @@ class Barn(
     }
 
     override fun toString() = "Barn(aktoerId=${aktørId}, navn=${navn}, fodselsdato=${fødselsdato}"
+
+    override fun equals(other: Any?) = this === other || (other is Barn && this.equals(other))
+
+    private fun equals(other: Barn) =
+        this.aktørId == other.aktørId && this.norskIdentifikator == other.norskIdentifikator
 }
