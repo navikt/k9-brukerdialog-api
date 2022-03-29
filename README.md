@@ -2,12 +2,12 @@
 
 API som understøtter søknadsprosessen for ytelser i folketrygdloven kapittel 9.
 
-Foreløpig støtte for følgende ytelser:
+Støtte for følgende ytelser:
 
 | Ytelse | I produksjon | Frontend repo |
 |---|--| --|
 | Omsorgspenger utvidet rett | Ja | https://github.com/navikt/omsorgspengesoknad |
-| Omsorgspenger midlertidig alene | Nei | https://github.com/navikt/omsorgspenger-midlertidig-alene-dialog |
+| Omsorgspenger midlertidig alene | Ja | https://github.com/navikt/omsorgspenger-midlertidig-alene-dialog |
 | | | |
 
 ## Oppslag
