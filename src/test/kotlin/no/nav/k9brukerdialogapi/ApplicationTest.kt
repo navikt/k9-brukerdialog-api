@@ -12,6 +12,7 @@ import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.wiremock.*
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
@@ -524,7 +525,7 @@ class ApplicationTest {
                 jwtToken = tokenXToken,
                 requestEntity = søknad.somJson()
             )
-            val hentet = kafkaKonsumer.hentOmsorgspengerUtvidetRettSøknad(søknad.søknadId)
+            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_UTVIDET_RETT)
             assertEquals(
                 søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
                 hentet.data.somOmsorgspengerUtvidetRettKomplettSøknad()
@@ -619,7 +620,7 @@ class ApplicationTest {
                 expectedResponse = null,
                 requestEntity = søknad.somJson()
             )
-            val hentet = kafkaKonsumer.hentOmsorgspengerMidlertidigAleneSøknad(søknad.søknadId)
+            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE)
             assertEquals(
                 søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
                 hentet.data.somOmsorgspengerMidlertidigAleneKomplettSøknad()

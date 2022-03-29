@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.kafka
 
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.common.serialization.Serializer
 import org.json.JSONObject
@@ -16,7 +17,7 @@ data class TopicEntry<V>(
 )
 
 internal fun hentTopicForYtelse(ytelse: Ytelse) = when(ytelse){
-    Ytelse.OMSORGSPENGER_UTVIDET_RETT -> Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+    Ytelse.OMSORGSPENGER_UTVIDET_RETT -> OMSORGSPENGER_UTVIDET_RETT_TOPIC
     Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 }
 

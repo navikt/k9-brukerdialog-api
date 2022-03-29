@@ -5,6 +5,8 @@ import no.nav.common.KafkaEnvironment
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.kafka.TopicEntry
 import no.nav.k9brukerdialogapi.kafka.Topics
+import no.nav.k9brukerdialogapi.kafka.hentTopicForYtelse
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -54,34 +56,17 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
     return consumer
 }
 
-internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerUtvidetRettSøknad(
+
+internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentSøknad(
     søknadId: String,
+    ytelse: Ytelse,
     maxWaitInSeconds: Long = 20,
 ) : TopicEntry<JSONObject> {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
-            .records(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC)
-            .filter { it.key() == søknadId }
-
-        if (entries.isNotEmpty()) {
-            assertEquals(1, entries.size)
-            return entries.first().value()
-        }
-    }
-    throw IllegalStateException("Fant ikke opprettet oppgave for melding med søknadsId $søknadId etter $maxWaitInSeconds sekunder.")
-}
-
-internal fun KafkaConsumer<String, TopicEntry<JSONObject>>.hentOmsorgspengerMidlertidigAleneSøknad(
-    søknadId: String,
-    maxWaitInSeconds: Long = 20,
-) : TopicEntry<JSONObject> {
-    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
-    while (System.currentTimeMillis() < end) {
-        seekToBeginning(assignment())
-        val entries = poll(Duration.ofSeconds(1))
-            .records(Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC)
+            .records(hentTopicForYtelse(ytelse))
             .filter { it.key() == søknadId }
 
         if (entries.isNotEmpty()) {
