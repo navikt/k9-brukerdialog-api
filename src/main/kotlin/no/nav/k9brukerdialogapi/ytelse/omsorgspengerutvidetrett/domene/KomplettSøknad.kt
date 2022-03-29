@@ -26,7 +26,5 @@ class KomplettSøknad(
 
     private fun equals(other: KomplettSøknad) =
             this.søknadId == other.søknadId &&
-            this.relasjonTilBarnet == other.relasjonTilBarnet &&
-            this.legeerklæringVedleggId == other.legeerklæringVedleggId &&
             this.k9FormatSøknad.søknadId == other.k9FormatSøknad.søknadId
 }

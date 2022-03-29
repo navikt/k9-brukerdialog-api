@@ -19,9 +19,8 @@ class KomplettSøknad(
 ){
     override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
 
-    private fun equals(other: KomplettSøknad) = this.id == other.id &&
+    private fun equals(other: KomplettSøknad) =
+            this.id == other.id &&
             this.søknadId == other.søknadId &&
-            this.barn == other.barn &&
-            this.annenForelder == other.annenForelder &&
             this.k9Format.søknadId == other.k9Format.søknadId
 }

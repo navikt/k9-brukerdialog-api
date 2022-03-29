@@ -55,8 +55,6 @@ class Barn(
 
     override fun equals(other: Any?) = this === other || (other is Barn && this.equals(other))
 
-    private fun equals(other: Barn) = this.aktørId == other.aktørId &&
-            this.navn == other.navn &&
-            this.fødselsdato == other.fødselsdato &&
-            this.norskIdentifikator == other.norskIdentifikator
+    private fun equals(other: Barn) =
+        this.aktørId == other.aktørId && this.norskIdentifikator == other.norskIdentifikator
 }
