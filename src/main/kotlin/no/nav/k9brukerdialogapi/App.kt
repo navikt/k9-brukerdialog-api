@@ -237,6 +237,7 @@ fun Application.k9BrukerdialogApi() {
             val urlPath = call.request.path()
             when {
                 urlPath.contains(OMSORGSPENGER_UTVIDET_RETT_URL) -> Ytelse.OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
+                urlPath.contains(OMSORGSPENGER_MIDLERTIDIG_ALENE_URL) -> Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()
                 else -> null
             }
         }
