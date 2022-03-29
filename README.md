@@ -10,6 +10,9 @@ Støtte for følgende ytelser:
 | Omsorgspenger midlertidig alene | Ja | https://github.com/navikt/omsorgspenger-midlertidig-alene-dialog |
 | | | |
 
+###Grafana
+https://grafana.nais.io/d/qVOaNvfnk/k9-brukerdialog-api
+
 ## Oppslag
 
 #### Søker
