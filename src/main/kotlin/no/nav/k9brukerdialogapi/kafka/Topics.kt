@@ -19,6 +19,7 @@ data class TopicEntry<V>(
 internal fun hentTopicForYtelse(ytelse: Ytelse) = when(ytelse){
     Ytelse.OMSORGSPENGER_UTVIDET_RETT -> OMSORGSPENGER_UTVIDET_RETT_TOPIC
     Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
+    Ytelse.ETTERSENDELSE -> null
 }
 
 internal class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {

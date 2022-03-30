@@ -5,10 +5,9 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.ettersendelse.Ettersendelse
+import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
-import no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene.Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE
-import no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene.Søknadstype.PLEIEPENGER_SYKT_BARN
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -52,7 +51,7 @@ class Søknad(
             )
         }
 
-        if((søknadstype == PLEIEPENGER_LIVETS_SLUTTFASE || søknadstype == PLEIEPENGER_SYKT_BARN) && beskrivelse.isNullOrBlank()){
+        if(søknadstype.gjelderPleiepenger() && beskrivelse.isNullOrBlank()){
             add(
                 Violation(
                     parameterName = "beskrivelse",
@@ -86,4 +85,10 @@ class Søknad(
 
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
+
+    fun somK9Format(søker: Søker) = Ettersendelse.builder()
+            .søknadId(SøknadId(søknadId))
+            .mottattDato(mottatt)
+            .søker(søker.somK9Søker())
+            .ytelse(søknadstype.somK9Ytelse())
 }

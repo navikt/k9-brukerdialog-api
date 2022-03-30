@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersendelse
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene.Søknadstype
 import org.junit.jupiter.api.Assertions
@@ -9,6 +10,19 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class EttersendelseSøknadTest {
+
+    @Test
+    fun `K9Format blir som forventet`(){
+        val søknad = Søknad(
+            språk = "nb",
+            vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+            søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
+            beskrivelse = "Pleiepenger .....",
+            harBekreftetOpplysninger = true,
+            harForståttRettigheterOgPlikter = true
+        ).somK9Format(søker)
+    }
+
     @Test
     fun `Gyldig søknad gir ingen valideringsfeil`() {
         Søknad(
