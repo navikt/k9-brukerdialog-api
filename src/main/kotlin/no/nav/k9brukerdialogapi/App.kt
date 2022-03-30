@@ -45,7 +45,8 @@ import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
-import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTVIDET_RETT
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -234,10 +235,10 @@ fun Application.k9BrukerdialogApi() {
             }
         }
         mdc("ytelse") { call ->
-            val urlPath = call.request.path()
+            val request = call.request.uri
             when {
-                urlPath.contains(OMSORGSPENGER_UTVIDET_RETT_URL) -> Ytelse.OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
-                urlPath.contains(OMSORGSPENGER_MIDLERTIDIG_ALENE_URL) -> Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()
+                request.contains(OMSORGSPENGER_UTVIDET_RETT_URL.removePrefix("/")) -> OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
+                request.contains(OMSORGSPENGER_MIDLERTIDIG_ALENE_URL.removePrefix("/")) -> OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()
                 else -> null
             }
         }
