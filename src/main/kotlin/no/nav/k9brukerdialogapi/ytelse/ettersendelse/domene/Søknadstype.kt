@@ -14,11 +14,11 @@ enum class Søknadstype {
     fun gjelderPleiepenger(): Boolean = this == PLEIEPENGER_SYKT_BARN || this == PLEIEPENGER_LIVETS_SLUTTFASE
 
     fun somK9Ytelse() = when(this){
-        Søknadstype.OMP_UTV_KS -> Ytelse.OMP_UTV_KS
-        Søknadstype.OMP_UTV_MA -> Ytelse.OMP_UTV_MA
-        Søknadstype.PLEIEPENGER_SYKT_BARN -> Ytelse.PLEIEPENGER_SYKT_BARN
-        Søknadstype.OMP_UT_SNF, Søknadstype.OMP_UT_ARBEIDSTAKER -> Ytelse.OMP_UT
-        Søknadstype.OMP_DELE_DAGER -> Ytelse.OMP_DELE_DAGER
-        Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE -> Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
+        OMP_UTV_KS -> Ytelse.OMP_UTV_KS
+        OMP_UTV_MA -> Ytelse.OMP_UTV_MA
+        PLEIEPENGER_SYKT_BARN -> Ytelse.PLEIEPENGER_SYKT_BARN
+        OMP_UT_SNF, OMP_UT_ARBEIDSTAKER -> Ytelse.OMP_UT
+        OMP_DELE_DAGER -> Ytelse.OMP_DELE_DAGER
+        PLEIEPENGER_LIVETS_SLUTTFASE -> Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
     }
 }
