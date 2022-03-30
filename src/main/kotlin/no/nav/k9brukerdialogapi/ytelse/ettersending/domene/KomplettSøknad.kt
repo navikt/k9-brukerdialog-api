@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene
+package no.nav.k9brukerdialogapi.ytelse.ettersending.domene
 
 import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
@@ -22,5 +22,6 @@ class KomplettSøknad(
 
     private fun equals(other: KomplettSøknad) = this.søknadId == other.søknadId
             && this.k9Format.søknadId == other.k9Format.søknadId
+            && this.titler == other.titler
 
 }

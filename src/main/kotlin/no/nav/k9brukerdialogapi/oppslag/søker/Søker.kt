@@ -17,6 +17,12 @@ class Søker (
     private val mellomnavn: String? = null,
     private val etternavn: String? = null
 ) {
+    /*
+    init {
+        require(erMyndig()) { "Søker må være myndig for å søke." }
+    }
+    */
+
     fun erMyndig(): Boolean {
         val attenÅrSiden = LocalDate.now().minusYears(MYNDIG_ALDER)
         return fødselsdato.isBefore(attenÅrSiden) || fødselsdato.isEqual(attenÅrSiden)

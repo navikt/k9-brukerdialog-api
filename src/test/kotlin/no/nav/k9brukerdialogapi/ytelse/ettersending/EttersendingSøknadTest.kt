@@ -1,26 +1,45 @@
-package no.nav.k9brukerdialogapi.ytelse.ettersendelse
+package no.nav.k9brukerdialogapi.ytelse.ettersending
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
-import no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene.Søknad
-import no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene.Søknadstype
+import no.nav.k9brukerdialogapi.somJson
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import org.junit.jupiter.api.Assertions
+import org.skyscreamer.jsonassert.JSONAssert
 import java.net.URL
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class EttersendelseSøknadTest {
+class EttersendingSøknadTest {
 
     @Test
-    fun `K9Format blir som forventet`(){
+    fun `Mapping av K9Format blir som forventet`(){
         val søknad = Søknad(
             språk = "nb",
+            mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
             vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
             søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
             beskrivelse = "Pleiepenger .....",
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
-        ).somK9Format(søker)
+        )
+        val forventetK9Format = """
+            {
+              "søknadId": "${søknad.søknadId}",
+              "versjon": "0.0.1",
+              "mottattDato": "2020-01-02T03:04:05.000Z",
+              "søker": {
+                "norskIdentitetsnummer": "26104500284"
+              },
+              "ytelse": "PLEIEPENGER_LIVETS_SLUTTFASE"
+            }
+        """.trimIndent()
+        val faktiskK9Format = søknad.somK9Format(søker).somJson()
+        JSONAssert.assertEquals(forventetK9Format, faktiskK9Format, true)
+
     }
 
     @Test

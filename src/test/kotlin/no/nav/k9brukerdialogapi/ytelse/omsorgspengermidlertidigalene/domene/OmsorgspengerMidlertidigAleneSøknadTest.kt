@@ -19,7 +19,6 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
         val feil = Assertions.assertThrows(Throwblem::class.java) {
             Søknad(
                 id = "123456789",
-                mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
                 språk = "nb",
                 annenForelder = AnnenForelder(
                     navn = "Berit",
@@ -43,7 +42,6 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
         val feil = Assertions.assertThrows(Throwblem::class.java) {
             Søknad(
                 id = "123456789",
-                mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
                 språk = "nb",
                 annenForelder = AnnenForelder(
                     navn = "Berit",
@@ -72,7 +70,6 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
         val feil = Assertions.assertThrows(Throwblem::class.java) {
             Søknad(
                 id = "123456789",
-                mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
                 språk = "nb",
                 annenForelder = AnnenForelder(
                     navn = "Berit",

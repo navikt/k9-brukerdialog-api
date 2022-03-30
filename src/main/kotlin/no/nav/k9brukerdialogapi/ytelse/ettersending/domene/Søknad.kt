@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.ettersendelse.domene
+package no.nav.k9brukerdialogapi.ytelse.ettersending.domene
 
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
@@ -14,15 +14,17 @@ import java.time.ZonedDateTime
 import java.util.*
 
 class Søknad(
+    internal val søknadId: String = UUID.randomUUID().toString(),
     private val språk: String,
-    private val søknadId: String = UUID.randomUUID().toString(),
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-    private val vedlegg: List<URL>,
+    internal val vedlegg: List<URL>,
     private val beskrivelse: String? = null,
     private val søknadstype: Søknadstype,
     private val harBekreftetOpplysninger: Boolean,
     private val harForståttRettigheterOgPlikter: Boolean
 ) {
+
+
 
     internal fun somKomplettSøknad(søker: Søker, k9Format: Ettersendelse, titler: List<String>) =
         KomplettSøknad(
@@ -38,6 +40,13 @@ class Søknad(
             titler = titler,
             k9Format = k9Format
         )
+
+    fun somK9Format(søker: Søker) = Ettersendelse.builder()
+        .søknadId(SøknadId(søknadId))
+        .mottattDato(mottatt)
+        .søker(søker.somK9Søker())
+        .ytelse(søknadstype.somK9Ytelse())
+        .build()
 
     internal fun valider() = mutableSetOf<Violation>().apply {
         if(vedlegg.isEmpty()){
@@ -86,9 +95,4 @@ class Søknad(
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    fun somK9Format(søker: Søker) = Ettersendelse.builder()
-            .søknadId(SøknadId(søknadId))
-            .mottattDato(mottatt)
-            .søker(søker.somK9Søker())
-            .ytelse(søknadstype.somK9Ytelse())
 }

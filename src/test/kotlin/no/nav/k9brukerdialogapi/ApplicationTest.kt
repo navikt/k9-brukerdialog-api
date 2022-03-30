@@ -13,6 +13,7 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Nested
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URL
 import java.time.LocalDate
 import java.util.*
 import kotlin.test.Test
@@ -696,6 +698,80 @@ class ApplicationTest {
             )
         }
     }
+
+    @Nested
+    inner class EttersendingTest{
+        @Test
+        fun `Innsending av gyldig søknad`() {
+            val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
+            val søknad = no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad(
+                språk = "nb",
+                vedlegg = setOf<URL>(vedlegg).toList(),
+                beskrivelse = "Sykt barn...",
+                søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,
+                harBekreftetOpplysninger = true,
+                harForståttRettigheterOgPlikter = true
+            )
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = ETTERSENDING_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.Accepted,
+                jwtToken = tokenXToken,
+                expectedResponse = null,
+                requestEntity = søknad.somJson()
+            )
+            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.ETTERSENDING)
+            assertEquals(
+                søknad.somKomplettSøknad(søker, søknad.somK9Format(søker), listOf("nav-logo.png")),
+                hentet.data.somEttersendingKomplettSøknad()
+            )
+        }
+
+        @Test
+        fun `Innsending av ugyldig søknad som får valideringsfeil`() {
+            val søknad = no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad(
+                språk = "nb",
+                vedlegg = listOf(),
+                søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,
+                beskrivelse = null,
+                harBekreftetOpplysninger = true,
+                harForståttRettigheterOgPlikter = true
+            )
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = ETTERSENDING_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.BadRequest,
+                jwtToken = tokenXToken,
+                expectedResponse = """
+                    {
+                      "detail": "Requesten inneholder ugyldige paramtere.",
+                      "instance": "about:blank",
+                      "type": "/problem-details/invalid-request-parameters",
+                      "title": "invalid-request-parameters",
+                      "invalid_parameters": [
+                        {
+                          "name": "vedlegg",
+                          "reason": "Liste over vedlegg kan ikke være tom.",
+                          "invalid_value": [],
+                          "type": "entity"
+                        },
+                        {
+                          "type": "entity",
+                          "name": "beskrivelse",
+                          "invalid_value" : null,
+                          "reason": "Beskrivelse kan ikke være tom, null eller blank dersom det gjelder pleiepenger."
+                        }
+                      ],
+                      "status": 400
+                    }
+            """.trimIndent(),
+                requestEntity = søknad.somJson()
+            )
+        }
+    }
+
+
 
     private fun requestAndAssert(
         httpMethod: HttpMethod,
