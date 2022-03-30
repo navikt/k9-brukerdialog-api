@@ -237,8 +237,8 @@ fun Application.k9BrukerdialogApi() {
         mdc("ytelse") { call ->
             val request = call.request.uri
             when {
-                request.contains(OMSORGSPENGER_UTVIDET_RETT.name.lowercase()) -> OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
-                request.contains(OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()) -> OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()
+                request.contains(OMSORGSPENGER_UTVIDET_RETT_URL.removePrefix("/")) -> OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
+                request.contains(OMSORGSPENGER_MIDLERTIDIG_ALENE_URL.removePrefix("/")) -> OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()
                 else -> null
             }
         }
