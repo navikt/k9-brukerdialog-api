@@ -24,8 +24,6 @@ class Søknad(
     private val harForståttRettigheterOgPlikter: Boolean
 ) {
 
-
-
     internal fun somKomplettSøknad(søker: Søker, k9Format: Ettersendelse, titler: List<String>) =
         KomplettSøknad(
             søker = søker,
