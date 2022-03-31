@@ -4,7 +4,7 @@ import io.prometheus.client.Counter
 
 val mottatteSøknaderPerYtelseCounter = Counter.build()
     .help("Teller antall mottatte søknader per ytelse")
-    .name("mottatteSøknaderPerYtelseCounter")
+    .name("mottatte_soknader_per_ytelse_counter")
     .labelNames("ytelse")
     .register()
 
