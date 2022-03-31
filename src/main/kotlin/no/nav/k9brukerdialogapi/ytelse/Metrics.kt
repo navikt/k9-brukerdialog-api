@@ -8,4 +8,4 @@ val mottatteSøknaderPerYtelseCounter = Counter.build()
     .labelNames("ytelse")
     .register()
 
-fun registrerMottattSøknad(ytelse: Ytelse) = mottatteSøknaderPerYtelseCounter.labels("ytelse", ytelse.name).inc()
+fun registrerMottattSøknad(ytelse: Ytelse) = mottatteSøknaderPerYtelseCounter.labels(ytelse.name).inc()
