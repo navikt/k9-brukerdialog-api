@@ -37,7 +37,7 @@ class SøkerGateway(
             baseUrl = baseUrl,
             pathParts = "meg",
             attributter = listOf(attributter),
-            idToken = idToken,
+            idToken = exchangeToken,
             callId = callId
         )
 

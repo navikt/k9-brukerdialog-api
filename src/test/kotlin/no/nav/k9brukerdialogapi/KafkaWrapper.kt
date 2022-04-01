@@ -4,7 +4,9 @@ import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.kafka.TopicEntry
-import no.nav.k9brukerdialogapi.kafka.Topics
+import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.kafka.hentTopicForYtelse
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.clients.CommonClientConfigs
@@ -28,8 +30,9 @@ object KafkaWrapper {
             withSchemaRegistry = false,
             withSecurity = true,
             topicNames= listOf(
-                Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC,
-                Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
+                OMSORGSPENGER_UTVIDET_RETT_TOPIC,
+                OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC,
+                ETTERSENDING_TOPIC
             )
         )
         return kafkaEnvironment
@@ -52,7 +55,7 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
         StringDeserializer(),
         OutgoingDeserialiser()
     )
-    consumer.subscribe(listOf(Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC, Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC))
+    consumer.subscribe(listOf(OMSORGSPENGER_UTVIDET_RETT_TOPIC, OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC, ETTERSENDING_TOPIC))
     return consumer
 }
 

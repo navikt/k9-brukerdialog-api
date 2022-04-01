@@ -49,6 +49,11 @@ spec:
   tokenx:
     enabled: true
   accessPolicy:
+    inbound:
+      rules:
+        - application: omsorgspengesoknad
+        - application: ekstra-omsorgsdager-andre-forelder-ikke-tilsyn
+        - application: sif-ettersending
     outbound:
       rules:
         - application: {{app}}-redis

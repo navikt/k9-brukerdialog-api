@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett
 
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.general.CallId
+import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.kafka.Metadata
@@ -85,5 +86,3 @@ class OmsorgspengerUtvidetRettService(
         }
     }
 }
-
-class MeldingRegistreringFeiletException(s: String) : Throwable(s)

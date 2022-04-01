@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.kafka
 
+import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -9,6 +10,7 @@ import org.json.JSONObject
 object Topics {
     const val OMSORGSPENGER_UTVIDET_RETT_TOPIC = "dusseldorf.privat-omsorgspengesoknad-mottatt-v2"
     const val OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC = "dusseldorf.privat-omsorgspenger-midlertidig-alene-mottatt"
+    const val ETTERSENDING_TOPIC = "dusseldorf.privat-k9-ettersending-mottatt-v2"
 }
 
 data class TopicEntry<V>(
@@ -19,6 +21,7 @@ data class TopicEntry<V>(
 internal fun hentTopicForYtelse(ytelse: Ytelse) = when(ytelse){
     Ytelse.OMSORGSPENGER_UTVIDET_RETT -> OMSORGSPENGER_UTVIDET_RETT_TOPIC
     Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
+    Ytelse.ETTERSENDING -> ETTERSENDING_TOPIC
 }
 
 internal class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {

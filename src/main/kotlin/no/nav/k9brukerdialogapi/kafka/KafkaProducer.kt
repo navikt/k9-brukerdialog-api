@@ -5,6 +5,7 @@ import no.nav.helse.dusseldorf.ktor.health.Healthy
 import no.nav.helse.dusseldorf.ktor.health.Result
 import no.nav.helse.dusseldorf.ktor.health.UnHealthy
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
+import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -47,6 +48,7 @@ class KafkaProducer(
         return try {
             producer.partitionsFor(OMSORGSPENGER_UTVIDET_RETT_TOPIC)
             producer.partitionsFor(OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC)
+            producer.partitionsFor(ETTERSENDING_TOPIC)
             Healthy(NAME, "Tilkobling til Kafka OK!")
         } catch (cause: Throwable) {
             logger.error("Feil ved tilkobling til Kafka", cause)
