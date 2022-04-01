@@ -19,7 +19,7 @@ class Søker (
 ) {
     /*
     init {
-        require(erMyndig()) { "Søker må være myndig for å søke." }
+        require(erMyndig()) { "Søker må være myndig for å søke." } //Kan erstatte valideringsjekk
     }
     */
 
