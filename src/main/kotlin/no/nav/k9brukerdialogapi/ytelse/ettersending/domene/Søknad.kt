@@ -19,7 +19,7 @@ class Søknad(
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     internal val vedlegg: List<URL>,
     private val beskrivelse: String? = null,
-    private val søknadstype: Søknadstype,
+    internal val søknadstype: Søknadstype,
     private val harBekreftetOpplysninger: Boolean,
     private val harForståttRettigheterOgPlikter: Boolean
 ) {
