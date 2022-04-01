@@ -27,6 +27,7 @@ fun Route.ettersendingApis(
         post(INNSENDING_URL){
             val søknad =  call.receive<Søknad>()
             logger.info(formaterStatuslogging(ETTERSENDING, søknad.søknadId, "mottatt."))
+            logger.info("Ettersending for ytelse ${søknad.søknadstype}")
             ettersendingService.registrer(søknad, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
             registrerMottattSøknad(ETTERSENDING)
             call.respond(HttpStatusCode.Accepted)
