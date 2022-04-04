@@ -8,12 +8,12 @@ Støtte for følgende ytelser:
 | --- | -- | -- | -- |
 | Omsorgspenger utvidet rett | Ja | https://github.com/navikt/omsorgspengesoknad-prosessering | https://github.com/navikt/omsorgspengesoknad |
 | Omsorgspenger midlertidig alene | Ja | https://github.com/navikt/omsorgspenger-midlertidig-alene-prosessering | https://github.com/navikt/omsorgspenger-midlertidig-alene-dialog |
-| Ettersending | Nei | https://github.com/navikt/k9-ettersending-prosessering | https://github.com/navikt/sif-ettersending |
+| Ettersending | Ja | https://github.com/navikt/k9-ettersending-prosessering | https://github.com/navikt/sif-ettersending |
 | | | | |
 
 
 ### Grafana
-https://grafana.nais.io/d/qVOaNvfnk/k9-brukerdialog-api
+https://grafana.nais.io/d/fUOECBs7k/k9-brukerdialog-api?orgId=1
 
 ## Oppslag
 
