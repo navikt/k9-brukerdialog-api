@@ -38,14 +38,14 @@ class KafkaProducer(
 
     internal fun produserKafkaMelding(metadata: Metadata, komplettSøknadSomJson: JSONObject, ytelse: Ytelse) {
         beginTransaction()
-        leggMeldingPåTopic(metadata, komplettSøknadSomJson, hentTopicForYtelse(ytelse), ytelse)
+        leggMeldingPåTopic(metadata, komplettSøknadSomJson, ytelse)
         commitTransaction()
     }
 
     internal fun produserKafkaMeldinger(metadata: Metadata, komplettSøknadSomJson: List<JSONObject>, ytelse: Ytelse){
         try {
             beginTransaction()
-            komplettSøknadSomJson.forEach { leggMeldingPåTopic(metadata, it, hentTopicForYtelse(ytelse), ytelse) }
+            komplettSøknadSomJson.forEach { leggMeldingPåTopic(metadata, it, ytelse) }
             commitTransaction()
         } catch (e: Exception) {
             logger.info("Feilet med produsering av kafkamelding")
@@ -54,7 +54,8 @@ class KafkaProducer(
         }
     }
 
-    private fun leggMeldingPåTopic(metadata: Metadata, komplettSøknadSomJson: JSONObject, topic: String, ytelse: Ytelse) {
+    private fun leggMeldingPåTopic(metadata: Metadata, komplettSøknadSomJson: JSONObject, ytelse: Ytelse) {
+        val topic = hentTopicForYtelse(ytelse)
         val recordMetaData = produsent.send(
             ProducerRecord(
                 topic,
