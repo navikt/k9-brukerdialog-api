@@ -48,7 +48,7 @@ class KafkaProducer(
             komplettSøknadSomJson.forEach { sendMeldingTilTopic(metadata, it, ytelse) }
             commitTransaction()
         } catch (e: Exception) {
-            logger.info("Feilet med produsering av kafkamelding")
+            logger.error("Feilet med produsering av kafkamelding")
             abortTransaction()
             throw e
         }
