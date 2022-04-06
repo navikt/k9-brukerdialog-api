@@ -27,7 +27,7 @@ class Søknad(
 ) {
     internal fun gjelderFlereBarn() = barn.size > 1
 
-    internal fun barnManglerIdentitetsnummer() = barn.any { it.manglerIdentifikator() }
+    internal fun manglerIdentidifaktorPåBarn() = barn.any { it.manglerIdentifikator() }
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
         barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
