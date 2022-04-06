@@ -800,7 +800,7 @@ class ApplicationTest {
             )
             val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, OMSORGSDAGER_ALENEOMSORG)
             assertEquals(
-                søknad.somKomplettSøknad(søker, søknad.somK9Format(søker)),
+                søknad.somKomplettSøknad(søker),
                 hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
             )
         }

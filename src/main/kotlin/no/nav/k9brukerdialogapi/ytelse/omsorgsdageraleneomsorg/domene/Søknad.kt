@@ -11,6 +11,7 @@ import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerAleneO
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.validerK9Format
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
@@ -24,6 +25,7 @@ class Søknad(
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
 ) {
+    internal fun gjelderFlereBarn() = barn.size > 1
 
     internal fun barnManglerIdentitetsnummer() = barn.any { it.manglerIdentifikator() }
 
@@ -79,9 +81,9 @@ class Søknad(
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    internal fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad): KomplettSøknad {
+    internal fun somKomplettSøknad(søker: Søker): KomplettSøknad {
         require(barn.size == 1) { "Søknad etter splitt kan kun inneholdet et barn" }
-
+        val k9Format = this.somK9Format(søker).also { validerK9Format(it) }
         return KomplettSøknad(
             mottatt = mottatt,
             søker = søker,
@@ -93,6 +95,4 @@ class Søknad(
             harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter
         )
     }
-
-    internal fun gjelderFlereBarn() = barn.size > 1
 }

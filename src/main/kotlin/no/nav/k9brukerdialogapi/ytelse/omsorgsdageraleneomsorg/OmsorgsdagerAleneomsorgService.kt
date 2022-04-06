@@ -23,39 +23,31 @@ class OmsorgsdagerAleneomsorgService(
     private val logger: Logger = LoggerFactory.getLogger(OmsorgsdagerAleneomsorgService::class.java)
     private val YTELSE = Ytelse.OMSORGSDAGER_ALENEOMSORG
 
-    suspend fun registrer(søknad: Søknad, callId: CallId, metadata: Metadata, idToken: IdToken) {
+    internal suspend fun registrer(søknad: Søknad, callId: CallId, metadata: Metadata, idToken: IdToken) {
         logger.info(formaterStatuslogging(YTELSE, søknad.søknadId, "registreres."))
 
         val søker = søkerService.hentSøker(idToken, callId).also { it.valider() }
-
         søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
-
         søknad.valider()
 
-        if (søknad.gjelderFlereBarn()) registrerFlereSøknader(metadata, søknad, søker)
-        else registrerEnSøknad(metadata, søknad, søker)
+        if (søknad.gjelderFlereBarn()) registrerSøknadMedFlereBarn(metadata, søknad, søker)
+        else registrerSøknad(metadata, søknad, søker)
     }
 
-    private fun registrerFlereSøknader(metadata: Metadata, søknad: Søknad, søker: Søker) {
-        val søknader = søknad.splittTilEgenSøknadPerBarn().also {
-            it.forEach{søknad -> søknad.valider() }
-        }
+    private fun registrerSøknadMedFlereBarn(metadata: Metadata, søknad: Søknad, søker: Søker) {
+        val søknader = søknad.splittTilEgenSøknadPerBarn()
+        søknader.forEach { it.valider() }
         logger.info("SøknadId:${søknad.søknadId} splittet ut til ${søknader.map { it.søknadId }}")
 
-        val komplettSøknaderSomJSONObject = søknader.map {
-            val k9Format = it.somK9Format(søker).also { validerK9Format(it) }
-            val komplettSøknad = it.somKomplettSøknad(søker, k9Format)
-            JSONObject(komplettSøknad.somJson())
-        }
+        val komplettSøknad = søknader.map { it.somKomplettSøknad(søker) }
 
-        kafkaProdusent.produserKafkaMeldinger(metadata, komplettSøknaderSomJSONObject, YTELSE)
+        kafkaProdusent.produserKafkaMeldinger(metadata, komplettSøknad.map { JSONObject(it.somJson()) }, YTELSE)
     }
 
-    private fun registrerEnSøknad(metadata: Metadata, søknad: Søknad, søker: Søker) {
-        val k9Format = søknad.somK9Format(søker).also { validerK9Format(it) }
+    private fun registrerSøknad(metadata: Metadata, søknad: Søknad, søker: Søker) {
         kafkaProdusent.produserKafkaMelding(
             metadata,
-            JSONObject(søknad.somKomplettSøknad(søker, k9Format).somJson()),
+            JSONObject(søknad.somKomplettSøknad(søker).somJson()),
             YTELSE
         )
     }
