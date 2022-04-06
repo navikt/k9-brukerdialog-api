@@ -20,16 +20,41 @@ class KafkaProducer(
 ) : HealthCheck {
     private val NAME = "KafkaProducer"
     private val logger = LoggerFactory.getLogger(KafkaProducer::class.java)
-    private val producer = KafkaProducer(
+    private val produsent = KafkaProducer(
         kafkaConfig.producer(NAME),
         StringSerializer(),
         SøknadSerializer()
     )
 
-    internal fun produserKafkaMelding(metadata: Metadata, komplettSøknadSomJson: JSONObject, ytelse: Ytelse) {
-        val topic = hentTopicForYtelse(ytelse)
+    init {
+        produsent.initTransactions()
+    }
 
-        val recordMetaData = producer.send(
+    private fun beginTransaction() = produsent.beginTransaction()
+    private fun abortTransaction() = produsent.abortTransaction()
+    private fun commitTransaction() = produsent.commitTransaction()
+    internal fun close() = produsent.close()
+
+    internal fun produserKafkaMelding(metadata: Metadata, komplettSøknadSomJson: JSONObject, ytelse: Ytelse) {
+        beginTransaction()
+        leggMeldingPåTopic(metadata, komplettSøknadSomJson, hentTopicForYtelse(ytelse), ytelse)
+        commitTransaction()
+    }
+
+    internal fun produserKafkaMeldinger(metadata: Metadata, komplettSøknadSomJson: List<JSONObject>, ytelse: Ytelse){
+        try {
+            beginTransaction()
+            komplettSøknadSomJson.forEach { leggMeldingPåTopic(metadata, it, hentTopicForYtelse(ytelse), ytelse) }
+            commitTransaction()
+        } catch (e: Exception) {
+            logger.info("Feilet med produsering av kafkamelding")
+            abortTransaction()
+            throw e
+        }
+    }
+
+    private fun leggMeldingPåTopic(metadata: Metadata, komplettSøknadSomJson: JSONObject, topic: String, ytelse: Ytelse) {
+        val recordMetaData = produsent.send(
             ProducerRecord(
                 topic,
                 komplettSøknadSomJson.getString("søknadId"),
@@ -42,13 +67,11 @@ class KafkaProducer(
         logger.info(formaterStatuslogging(ytelse, komplettSøknadSomJson.getString("søknadId"), "sendes til topic ${topic} med offset '${recordMetaData.offset()}' til partition '${recordMetaData.partition()}'"))
     }
 
-    internal fun stop() = producer.close()
-
     override suspend fun check(): Result { // Håndtere slik at man gir bedring tilbakemelding på spesifikk topic som feiler
         return try {
-            producer.partitionsFor(OMSORGSPENGER_UTVIDET_RETT_TOPIC)
-            producer.partitionsFor(OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC)
-            producer.partitionsFor(ETTERSENDING_TOPIC)
+            produsent.partitionsFor(OMSORGSPENGER_UTVIDET_RETT_TOPIC)
+            produsent.partitionsFor(OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC)
+            produsent.partitionsFor(ETTERSENDING_TOPIC)
             Healthy(NAME, "Tilkobling til Kafka OK!")
         } catch (cause: Throwable) {
             logger.error("Feil ved tilkobling til Kafka", cause)

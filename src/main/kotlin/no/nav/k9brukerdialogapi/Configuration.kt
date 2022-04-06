@@ -70,10 +70,13 @@ data class Configuration(val config : ApplicationConfig) {
             }
         }
 
+        val transactionalId = config.getRequiredString("nav.kafka.transactionalId", false)
+
         KafkaConfig(
             bootstrapServers = bootstrapServers,
             trustStore = trustStore,
-            keyStore = keyStore
+            keyStore = keyStore,
+            transactionalId = transactionalId
         )
     }
 

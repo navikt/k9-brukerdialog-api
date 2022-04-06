@@ -5,7 +5,7 @@ import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.net.URL
 import java.time.ZoneId
@@ -56,7 +56,7 @@ class EttersendingSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom søknadstype er PP og beskrivelse er null`(){
-        val feil: String = Assertions.assertThrows(Throwblem::class.java){
+        val feil: String = assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(),
@@ -71,7 +71,7 @@ class EttersendingSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom vedlegg er tom liste`(){
-        val feil: String = Assertions.assertThrows(Throwblem::class.java){
+        val feil: String = assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(),
@@ -85,7 +85,7 @@ class EttersendingSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`(){
-        val feil: String = Assertions.assertThrows(Throwblem::class.java){
+        val feil: String = assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
@@ -99,7 +99,7 @@ class EttersendingSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`(){
-        val feil: String = Assertions.assertThrows(Throwblem::class.java){
+        val feil: String = assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),

@@ -5,7 +5,7 @@ import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -34,7 +34,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
 
     @Test
     fun `Forvent valideringsfeil dersom sammeAdresse er false og mangler samværsavtale`(){
-        val feil = Assertions.assertThrows(Throwblem::class.java) {
+        val feil = assertThrows<Throwblem> {
             Søknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
@@ -54,7 +54,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`(){
-        val feil: String = Assertions.assertThrows(Throwblem::class.java){
+        val feil: String = assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
@@ -73,7 +73,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`(){
-        val feil: String = Assertions.assertThrows(Throwblem::class.java){
+        val feil: String = assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
@@ -135,5 +135,4 @@ class OmsorgspengerUtvidetRettSøknadTest {
         )
         JSONAssert.assertEquals(forventetK9Format, faktiskK9Format, true)
     }
-
 }

@@ -10,6 +10,7 @@ import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerMidler
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
@@ -63,6 +64,7 @@ class Søknad(
     }
 
     internal fun valider() = mutableSetOf<Violation>().apply {
+        addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
         addAll(annenForelder.valider())
         barn.forEach { addAll(it.valider()) }
 
@@ -73,26 +75,6 @@ class Søknad(
                     parameterType = ParameterType.ENTITY,
                     reason = "Listen over barn kan ikke være tom",
                     invalidValue = barn
-                )
-            )
-        }
-
-        if (!harForståttRettigheterOgPlikter) {
-            add(
-                Violation(
-                    parameterName = "harForståttRettigheterOgPlikter",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Må ha forstått rettigheter og plikter for å sende inn søknad."
-                )
-            )
-        }
-
-        if (!harBekreftetOpplysninger) {
-            add(
-                Violation(
-                    parameterName = "harBekreftetOpplysninger",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Opplysningene må bekreftes for å sende inn søknad."
                 )
             )
         }

@@ -12,9 +12,10 @@ import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.wiremock.*
-import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
@@ -33,6 +34,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Barn as OmsorgsdagerAleneomsorgBarn
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad as OmsorgsdagerAleneomsorgSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Søknad as OmsorgspengerMidlertidigAleneSøknad
 
 class ApplicationTest {
@@ -527,7 +530,7 @@ class ApplicationTest {
                 jwtToken = tokenXToken,
                 requestEntity = søknad.somJson()
             )
-            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_UTVIDET_RETT)
+            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, OMSORGSPENGER_UTVIDET_RETT)
             assertEquals(
                 søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
                 hentet.data.somOmsorgspengerUtvidetRettKomplettSøknad()
@@ -564,20 +567,20 @@ class ApplicationTest {
                   "title": "invalid-request-parameters",
                   "invalid_parameters": [
                     {
-                      "type": "entity",
-                      "name": "barn.norskIdentifikator",
-                      "reason": "Ikke gyldig norskIdentifikator.",
-                      "invalid_value": "123"
+                      "name": "harForståttRettigheterOgPlikter",
+                      "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
+                      "invalid_value": null,
+                      "type": "entity"
                     }, {
                       "name": "harBekreftetOpplysninger",
                       "reason": "Opplysningene må bekreftes for å sende inn søknad.",
                       "invalid_value": null,
                       "type": "entity"
                     }, {
-                      "name": "harForståttRettigheterOgPlikter",
-                      "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                      "invalid_value": null,
-                      "type": "entity"
+                      "type": "entity",
+                      "name": "barn.norskIdentifikator",
+                      "reason": "Ikke gyldig norskIdentifikator.",
+                      "invalid_value": "123"
                     }
                   ],
                   "status": 400
@@ -622,7 +625,7 @@ class ApplicationTest {
                 expectedResponse = null,
                 requestEntity = søknad.somJson()
             )
-            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE)
+            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, OMSORGSPENGER_MIDLERTIDIG_ALENE)
             assertEquals(
                 søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
                 hentet.data.somOmsorgspengerMidlertidigAleneKomplettSøknad()
@@ -669,6 +672,11 @@ class ApplicationTest {
                       "invalid_parameters": [
                         {
                           "type": "entity",
+                          "name": "harBekreftetOpplysninger",
+                          "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                          "invalid_value": null
+                        }, {
+                          "type": "entity",
                           "name": "AnnenForelder.fnr",
                           "reason": "Fødselsnummer på annen forelder må være gyldig norsk identifikator",
                           "invalid_value": "ikke gyldig"
@@ -684,12 +692,6 @@ class ApplicationTest {
                           "name": "barn.norskIdentifikator",
                           "reason": "Ikke gyldig norskIdentifikator.",
                           "invalid_value": "ikke gyldig"
-                        },
-                        {
-                          "type": "entity",
-                          "name": "harBekreftetOpplysninger",
-                          "reason": "Opplysningene må bekreftes for å sende inn søknad.",
-                          "invalid_value": null
                         }
                       ]
                     }
@@ -720,7 +722,7 @@ class ApplicationTest {
                 expectedResponse = null,
                 requestEntity = søknad.somJson()
             )
-            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.ETTERSENDING)
+            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, ETTERSENDING)
             assertEquals(
                 søknad.somKomplettSøknad(søker, søknad.somK9Format(søker), listOf("nav-logo.png")),
                 hentet.data.somEttersendingKomplettSøknad()
@@ -771,6 +773,38 @@ class ApplicationTest {
         }
     }
 
+    @Nested
+    inner class OmsorgsdagerAleneomsorgTest{
+        @Test
+        fun `Innsending av gyldig søknad`() {
+            val søknad = OmsorgsdagerAleneomsorgSøknad(
+                barn = listOf(
+                    OmsorgsdagerAleneomsorgBarn(
+                        navn = "Barn1",
+                        aktørId = "123",
+                        identitetsnummer = "25058118020",
+                        tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
+                    )
+                ),
+                språk = "nb",
+                harForståttRettigheterOgPlikter = true,
+                harBekreftetOpplysninger = true
+            )
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.Accepted,
+                jwtToken = tokenXToken,
+                expectedResponse = null,
+                requestEntity = søknad.somJson()
+            )
+            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, OMSORGSDAGER_ALENEOMSORG)
+            assertEquals(
+                søknad.somKomplettSøknad(søker, søknad.somK9Format(søker)),
+                hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
+            )
+        }
+    }
 
 
     private fun requestAndAssert(

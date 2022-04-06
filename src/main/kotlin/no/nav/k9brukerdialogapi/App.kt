@@ -153,7 +153,7 @@ fun Application.k9BrukerdialogApi() {
 
         environment.monitor.subscribe(ApplicationStopping) {
             logger.info("Stopper Kafka Producer.")
-            kafkaProducer.stop()
+            kafkaProducer.close()
             logger.info("Kafka Producer Stoppet.")
         }
 
@@ -239,6 +239,7 @@ fun Application.k9BrukerdialogApi() {
                 request.contains(OMSORGSPENGER_UTVIDET_RETT_URL.removePrefix("/")) -> OMSORGSPENGER_UTVIDET_RETT.name.lowercase()
                 request.contains(OMSORGSPENGER_MIDLERTIDIG_ALENE_URL.removePrefix("/")) -> OMSORGSPENGER_MIDLERTIDIG_ALENE.name.lowercase()
                 request.contains(ETTERSENDING_URL.removePrefix("/")) -> ETTERSENDING.name.lowercase()
+                request.contains(OMSORGSDAGER_ALENEOMSORG_URL.removePrefix("/")) -> OMSORGSDAGER_ALENEOMSORG.name.lowercase()
                 else -> null
             }
         }
