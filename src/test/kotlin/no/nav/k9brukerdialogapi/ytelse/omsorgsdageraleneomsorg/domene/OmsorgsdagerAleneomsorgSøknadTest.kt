@@ -36,7 +36,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         )
-        assertTrue(søknad.manglerIdentidifaktorPåBarn())
+        assertTrue(søknad.manglerIdentifikatorPåBarn())
         val barnFraOppslag = listOf(
             BarnOppslag(
                 fødselsdato = LocalDate.now(),
@@ -56,7 +56,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
             )
         )
         søknad.leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag)
-        assertFalse(søknad.manglerIdentidifaktorPåBarn())
+        assertFalse(søknad.manglerIdentifikatorPåBarn())
     }
 
     @Test
