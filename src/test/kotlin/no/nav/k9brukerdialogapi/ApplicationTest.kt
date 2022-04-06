@@ -804,6 +804,72 @@ class ApplicationTest {
                 hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
             )
         }
+
+        @Test
+        fun `Innsending av ugyldig søknad gir valideringsfeil`() {
+            val søknad = OmsorgsdagerAleneomsorgSøknad(
+                barn = listOf(
+                    OmsorgsdagerAleneomsorgBarn(
+                        navn = " ",
+                        aktørId = "123",
+                        identitetsnummer = null,
+                        tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,
+                        dato = null
+                    )
+                ),
+                språk = "nb",
+                harForståttRettigheterOgPlikter = false,
+                harBekreftetOpplysninger = false
+            )
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
+                expectedCode = HttpStatusCode.BadRequest,
+                jwtToken = tokenXToken,
+                requestEntity = søknad.somJson(),
+                expectedResponse = """
+                    {
+                      "detail": "Requesten inneholder ugyldige paramtere.",
+                      "instance": "about:blank",
+                      "type": "/problem-details/invalid-request-parameters",
+                      "title": "invalid-request-parameters",
+                      "invalid_parameters": [
+                        {
+                          "type": "entity",
+                          "name": "harForståttRettigheterOgPlikter",
+                          "invalid_value" : null,
+                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad."
+                        },
+                        {
+                          "type": "entity",
+                          "name": "harBekreftetOpplysninger",
+                          "invalid_value" : null,
+                          "reason": "Opplysningene må bekreftes for å sende inn søknad."
+                        },
+                        {
+                          "type": "entity",
+                          "name": "barn.identitetsnummer",
+                          "invalid_value" : null,
+                          "reason": "Ikke gyldig identitetsnummer."
+                        },
+                        {
+                          "name": "barn.navn",
+                          "reason": "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.",
+                          "invalid_value": " ",
+                          "type": "entity"
+                        },
+                        {
+                          "type": "entity",
+                          "name": "barn.dato",
+                          "invalid_value" : null,
+                          "reason": "Barn.dato kan ikke være tom dersom tidspunktForAleneomsorg er SISTE_2_ÅRENE"
+                        }
+                      ],
+                      "status": 400
+                    }
+                """.trimIndent()
+            )
+        }
     }
 
 

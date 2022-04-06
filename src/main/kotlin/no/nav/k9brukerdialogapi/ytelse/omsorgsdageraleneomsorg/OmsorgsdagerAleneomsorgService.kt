@@ -31,16 +31,19 @@ class OmsorgsdagerAleneomsorgService(
         søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
 
         søknad.valider()
+
         if (søknad.gjelderFlereBarn()) registrerFlereSøknader(metadata, søknad, søker)
         else registrerEnSøknad(metadata, søknad, søker)
     }
 
     private fun registrerFlereSøknader(metadata: Metadata, søknad: Søknad, søker: Søker) {
-        val søknader = søknad.splittTilEgenSøknadPerBarn()
+        val søknader = søknad.splittTilEgenSøknadPerBarn().also {
+            it.forEach{søknad -> søknad.valider() }
+        }
         logger.info("SøknadId:${søknad.søknadId} splittet ut til ${søknader.map { it.søknadId }}")
 
         val komplettSøknaderSomJSONObject = søknader.map {
-            val k9Format = it.somK9Format(søker)
+            val k9Format = it.somK9Format(søker).also { validerK9Format(it) }
             val komplettSøknad = it.somKomplettSøknad(søker, k9Format)
             JSONObject(komplettSøknad.somJson())
         }
