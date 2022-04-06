@@ -15,7 +15,6 @@ import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
@@ -34,8 +33,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Barn as OmsorgsdagerAleneomsorgBarn
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad as OmsorgsdagerAleneomsorgSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Søknad as OmsorgspengerMidlertidigAleneSøknad
 
 class ApplicationTest {
@@ -773,107 +770,7 @@ class ApplicationTest {
         }
     }
 
-    @Nested
-    inner class OmsorgsdagerAleneomsorgTest{
-        @Test
-        fun `Innsending av gyldig søknad`() {
-            val søknad = OmsorgsdagerAleneomsorgSøknad(
-                barn = listOf(
-                    OmsorgsdagerAleneomsorgBarn(
-                        navn = "Barn1",
-                        aktørId = "123",
-                        identitetsnummer = "25058118020",
-                        tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-                    )
-                ),
-                språk = "nb",
-                harForståttRettigheterOgPlikter = true,
-                harBekreftetOpplysninger = true
-            )
-            requestAndAssert(
-                httpMethod = HttpMethod.Post,
-                path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
-                expectedCode = HttpStatusCode.Accepted,
-                jwtToken = tokenXToken,
-                expectedResponse = null,
-                requestEntity = søknad.somJson()
-            )
-            val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, OMSORGSDAGER_ALENEOMSORG)
-            assertEquals(
-                søknad.somKomplettSøknad(søker),
-                hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
-            )
-        }
-
-        @Test
-        fun `Innsending av ugyldig søknad gir valideringsfeil`() {
-            val søknad = OmsorgsdagerAleneomsorgSøknad(
-                barn = listOf(
-                    OmsorgsdagerAleneomsorgBarn(
-                        navn = " ",
-                        aktørId = "123",
-                        identitetsnummer = null,
-                        tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,
-                        dato = null
-                    )
-                ),
-                språk = "nb",
-                harForståttRettigheterOgPlikter = false,
-                harBekreftetOpplysninger = false
-            )
-            requestAndAssert(
-                httpMethod = HttpMethod.Post,
-                path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
-                expectedCode = HttpStatusCode.BadRequest,
-                jwtToken = tokenXToken,
-                requestEntity = søknad.somJson(),
-                expectedResponse = """
-                    {
-                      "detail": "Requesten inneholder ugyldige paramtere.",
-                      "instance": "about:blank",
-                      "type": "/problem-details/invalid-request-parameters",
-                      "title": "invalid-request-parameters",
-                      "invalid_parameters": [
-                        {
-                          "type": "entity",
-                          "name": "harForståttRettigheterOgPlikter",
-                          "invalid_value" : null,
-                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad."
-                        },
-                        {
-                          "type": "entity",
-                          "name": "harBekreftetOpplysninger",
-                          "invalid_value" : null,
-                          "reason": "Opplysningene må bekreftes for å sende inn søknad."
-                        },
-                        {
-                          "type": "entity",
-                          "name": "barn.identitetsnummer",
-                          "invalid_value" : null,
-                          "reason": "Ikke gyldig identitetsnummer."
-                        },
-                        {
-                          "name": "barn.navn",
-                          "reason": "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.",
-                          "invalid_value": " ",
-                          "type": "entity"
-                        },
-                        {
-                          "type": "entity",
-                          "name": "barn.dato",
-                          "invalid_value" : null,
-                          "reason": "Barn.dato kan ikke være tom dersom tidspunktForAleneomsorg er SISTE_2_ÅRENE"
-                        }
-                      ],
-                      "status": 400
-                    }
-                """.trimIndent()
-            )
-        }
-    }
-
-
-    private fun requestAndAssert(
+    fun requestAndAssert(
         httpMethod: HttpMethod,
         path: String,
         requestEntity: String? = null,
