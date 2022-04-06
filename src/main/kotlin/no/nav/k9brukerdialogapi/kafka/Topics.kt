@@ -13,7 +13,7 @@ object Topics {
     const val OMSORGSPENGER_UTVIDET_RETT_TOPIC = "dusseldorf.privat-omsorgspengesoknad-mottatt-v2"
     const val OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC = "dusseldorf.privat-omsorgspenger-midlertidig-alene-mottatt"
     const val ETTERSENDING_TOPIC = "dusseldorf.privat-k9-ettersending-mottatt-v2"
-    const val OMSORGSDAGER_ALENEOMSORG_TOPIC = "privat-omsorgsdager-aleneomsorg-mottatt"
+    const val OMSORGSDAGER_ALENEOMSORG_TOPIC = "dusseldorf.privat-omsorgsdager-aleneomsorg-mottatt"
 }
 
 data class TopicEntry<V>(
