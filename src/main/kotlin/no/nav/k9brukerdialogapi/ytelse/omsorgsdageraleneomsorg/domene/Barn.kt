@@ -15,20 +15,20 @@ class Barn(
     private val tidspunktForAleneomsorg: TidspunktForAleneomsorg,
     private val dato: LocalDate? = null
 ) {
-    fun manglerIdentifikator() = identitetsnummer.isNullOrBlank()
+    internal fun manglerIdentifikator() = identitetsnummer.isNullOrBlank()
 
-    fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
+    internal fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
         if(manglerIdentifikator()) identitetsnummer = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
-    fun somK9Barn() =  K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
+    internal fun somK9Barn() =  K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
 
-    fun k9PeriodeFraOgMed() = when (tidspunktForAleneomsorg) {
+    internal fun k9PeriodeFraOgMed() = when (tidspunktForAleneomsorg) {
         TidspunktForAleneomsorg.SISTE_2_ÅRENE -> dato
         TidspunktForAleneomsorg.TIDLIGERE -> LocalDate.parse("${LocalDate.now().year.minus(1)}-01-01")
     }
 
-    fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
+    internal fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
         if (manglerIdentifikator() || (!identitetsnummer!!.erGyldigFodselsnummer())) {
             add(
                 Violation(

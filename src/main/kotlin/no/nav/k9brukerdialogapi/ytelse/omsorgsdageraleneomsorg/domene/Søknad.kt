@@ -25,13 +25,13 @@ class Søknad(
     private val harBekreftetOpplysninger: Boolean
 ) {
 
-    fun barnManglerIdentitetsnummer() = barn.any { it.manglerIdentifikator() }
+    internal fun barnManglerIdentitetsnummer() = barn.any { it.manglerIdentifikator() }
 
-    fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
+    internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
         barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
-    fun splittTilEgenSøknadPerBarn(): List<Søknad> {
+    internal fun splittTilEgenSøknadPerBarn(): List<Søknad> {
         return barn.map {
             Søknad(
                 mottatt = this.mottatt,
@@ -43,7 +43,7 @@ class Søknad(
         }
     }
 
-    fun somK9Format(søker: Søker): K9Søknad {
+    internal fun somK9Format(søker: Søker): K9Søknad {
         // Innsendt søknad blir splittet opp i 1 søknad per barn. Derfor skal det kun være et barn i lista.
         require(barn.size == 1) { "Søknad etter splitt kan kun inneholdet et barn" }
 
@@ -61,7 +61,7 @@ class Søknad(
             )
     }
 
-    fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
+    internal fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
         addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
         barn.forEach { addAll(it.valider()) }
 
@@ -79,7 +79,7 @@ class Søknad(
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad): KomplettSøknad {
+    internal fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad): KomplettSøknad {
         require(barn.size == 1) { "Søknad etter splitt kan kun inneholdet et barn" }
 
         return KomplettSøknad(
@@ -94,5 +94,5 @@ class Søknad(
         )
     }
 
-    fun gjelderFlereBarn() = barn.size > 1
+    internal fun gjelderFlereBarn() = barn.size > 1
 }
