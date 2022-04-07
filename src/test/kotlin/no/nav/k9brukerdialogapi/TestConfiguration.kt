@@ -69,6 +69,8 @@ object TestConfiguration {
         // Kafka
         kafkaEnvironment?.let {
             map["nav.kafka.bootstrap_servers"] = it.brokersURL
+            map["nav.kafka.transactionalId"] = "k9-brukerdialog-api"
+
         }
 
         return map.toMap()

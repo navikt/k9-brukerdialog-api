@@ -50,7 +50,7 @@ class OmsorgspengerUtvidetRettService(
                 YTELSE
             )
         } catch (e: Exception) {
-            logger.info("Feilet ved å legge melding på Kafka.")
+            logger.error("Feilet ved å legge melding på Kafka.")
             fjernHoldPåPersisterteVedlegg(søknad, callId, dokumentEier)
             throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }

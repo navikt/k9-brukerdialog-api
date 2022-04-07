@@ -11,6 +11,7 @@ import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -68,6 +69,7 @@ class Søknad(
     )
 
     fun valider() = mutableSetOf<Violation>().apply {
+        addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
         addAll(barn.valider())
 
         if (sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()) {
@@ -78,26 +80,6 @@ class Søknad(
                     reason = "Dersom sammeAdresse er false kan ikke samværsavtale være null eller tom.",
                     invalidValue = "sammeAdresse=$sammeAdresse, samværsavtale=$samværsavtale"
 
-                )
-            )
-        }
-
-        if (!harBekreftetOpplysninger) {
-            add(
-                Violation(
-                    parameterName = "harBekreftetOpplysninger",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Opplysningene må bekreftes for å sende inn søknad."
-                )
-            )
-        }
-
-        if (!harForståttRettigheterOgPlikter) {
-            add(
-                Violation(
-                    parameterName = "harForståttRettigheterOgPlikter",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Må ha forstått rettigheter og plikter for å sende inn søknad."
                 )
             )
         }

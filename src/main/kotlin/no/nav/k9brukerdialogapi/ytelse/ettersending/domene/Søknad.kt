@@ -8,6 +8,7 @@ import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -69,28 +70,7 @@ class Søknad(
             )
         }
 
-        if (!harForståttRettigheterOgPlikter) {
-            add(
-                Violation(
-                    parameterName = "harForståttRettigheterOgPlikter",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Må ha forstått rettigheter og plikter for å sende inn søknad."
-                )
-            )
-        }
-
-        if (!harBekreftetOpplysninger) {
-            add(
-                Violation(
-                    parameterName = "harBekreftetOpplysninger",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Opplysningene må bekreftes for å sende inn søknad."
-                )
-            )
-        }
-
-
+        addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
-
 }

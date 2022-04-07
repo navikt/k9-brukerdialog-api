@@ -17,9 +17,11 @@ class KafkaConfig(
     bootstrapServers: String,
     trustStore: Pair<String, String>?,
     keyStore: Pair<String, String>?,
+    transactionalId: String
 ) {
     private val producer = Properties().apply {
         put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+        put("transactional.id", transactionalId)
         if(trustStore == null || keyStore == null) medCredentials(Pair("srvkafkaclient", "kafkaclient")) //For å skille mellom test/miljø
         medTrustStore(trustStore)
         medKeyStore(keyStore)

@@ -3,10 +3,14 @@ package no.nav.helse
 import com.github.tomakehurst.wiremock.http.Cookie
 import com.github.tomakehurst.wiremock.http.Request
 import io.ktor.http.*
+import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.testsupport.jws.IDPorten
 import no.nav.helse.dusseldorf.testsupport.jws.LoginService
 import no.nav.helse.dusseldorf.testsupport.jws.Tokendings
+import org.skyscreamer.jsonassert.JSONAssert
+import org.slf4j.Logger
+import kotlin.test.assertEquals
 
 class TestUtils {
     companion object {
@@ -59,6 +63,41 @@ class TestUtils {
                     subjectToken = IDPorten.generateIdToken(fnr = fnr, level = level, overridingClaims = overridingClaims)
                 )
             )
+        }
+
+        fun requestAndAssert(
+            httpMethod: HttpMethod,
+            path: String,
+            requestEntity: String? = null,
+            expectedResponse: String? = null,
+            expectedCode: HttpStatusCode,
+            jwtToken: String? = null,
+            cookie: Cookie? = null,
+            logger: Logger,
+            engine: TestApplicationEngine
+        ) : String? {
+            val respons: String?
+            with(engine) {
+                handleRequest(httpMethod, path) {
+                    if (cookie != null) addHeader(HttpHeaders.Cookie, cookie.toString())
+                    if (jwtToken != null) addHeader(HttpHeaders.Authorization, "Bearer $jwtToken")
+                    logger.info("Request Entity = $requestEntity")
+                    addHeader(HttpHeaders.Accept, "application/json")
+                    if (requestEntity != null) addHeader(HttpHeaders.ContentType, "application/json")
+                    if (requestEntity != null) setBody(requestEntity)
+                }.apply {
+                    logger.info("Response Entity = ${response.content}")
+                    logger.info("Expected Entity = $expectedResponse")
+                    respons = response.content
+                    assertEquals(expectedCode, response.status())
+                    if (expectedResponse != null) {
+                        JSONAssert.assertEquals(expectedResponse, response.content!!, true)
+                    } else {
+                        assertEquals(expectedResponse, response.content)
+                    }
+                }
+            }
+            return respons
         }
     }
 }

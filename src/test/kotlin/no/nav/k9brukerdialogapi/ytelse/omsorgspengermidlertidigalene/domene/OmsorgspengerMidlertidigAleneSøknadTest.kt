@@ -4,7 +4,7 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import java.time.ZoneId
@@ -16,7 +16,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom søknaden mangler barn`() {
-        val feil = Assertions.assertThrows(Throwblem::class.java) {
+        val feil = assertThrows<Throwblem> {
             Søknad(
                 id = "123456789",
                 språk = "nb",
@@ -39,7 +39,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`() {
-        val feil = Assertions.assertThrows(Throwblem::class.java) {
+        val feil = assertThrows<Throwblem> {
             Søknad(
                 id = "123456789",
                 språk = "nb",
@@ -67,7 +67,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`() {
-        val feil = Assertions.assertThrows(Throwblem::class.java) {
+        val feil = assertThrows<Throwblem> {
             Søknad(
                 id = "123456789",
                 språk = "nb",
