@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg
+package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene
 
 import com.github.fppt.jedismock.RedisServer
 import com.typesafe.config.ConfigFactory
@@ -7,13 +7,13 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils
-import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.OmsorgsdagerAleneomsorgTest
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class OmsorgsdagerAleneomsorgTest {
+class OmsorgspengerMidlertidigAleneTest {
 
     private companion object{
         private val logger: Logger = LoggerFactory.getLogger(OmsorgsdagerAleneomsorgTest::class.java)
@@ -94,7 +94,7 @@ class OmsorgsdagerAleneomsorgTest {
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         )
-        requestAndAssert(
+        TestUtils.requestAndAssert(
             httpMethod = HttpMethod.Post,
             path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.Accepted,
@@ -126,7 +126,7 @@ class OmsorgsdagerAleneomsorgTest {
             harForståttRettigheterOgPlikter = false,
             harBekreftetOpplysninger = false
         )
-        requestAndAssert(
+        TestUtils.requestAndAssert(
             engine = engine,
             logger = logger,
             httpMethod = HttpMethod.Post,

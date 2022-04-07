@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg
+package no.nav.k9brukerdialogapi.ytelse.ettersending
 
 import com.github.fppt.jedismock.RedisServer
 import com.typesafe.config.ConfigFactory
@@ -7,27 +7,27 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils
-import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
+import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URL
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class OmsorgsdagerAleneomsorgTest {
+class EttersendingTest {
 
     private companion object{
-        private val logger: Logger = LoggerFactory.getLogger(OmsorgsdagerAleneomsorgTest::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(EttersendingTest::class.java)
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -37,6 +37,7 @@ class OmsorgsdagerAleneomsorgTest {
             .build()
             .stubK9OppslagSoker()
             .stubK9OppslagBarn()
+            .stubK9Mellomlagring()
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
@@ -81,59 +82,50 @@ class OmsorgsdagerAleneomsorgTest {
 
     @Test
     fun `Innsending av gyldig søknad`() {
+        val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
         val søknad = Søknad(
-            barn = listOf(
-                Barn(
-                    navn = "Barn1",
-                    aktørId = "123",
-                    identitetsnummer = "25058118020",
-                    tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-                )
-            ),
             språk = "nb",
-            harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = true
+            vedlegg = setOf<URL>(vedlegg).toList(),
+            beskrivelse = "Sykt barn...",
+            søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,
+            harBekreftetOpplysninger = true,
+            harForståttRettigheterOgPlikter = true
         )
-        requestAndAssert(
+        TestUtils.requestAndAssert(
+            engine = engine,
+            logger = logger,
             httpMethod = HttpMethod.Post,
-            path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
+            path = ETTERSENDING_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
-            requestEntity = søknad.somJson(),
-            engine = engine,
-            logger = logger
+            expectedResponse = null,
+            requestEntity = søknad.somJson()
         )
-        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSDAGER_ALENEOMSORG)
+        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.ETTERSENDING)
         assertEquals(
-            søknad.somKomplettSøknad(SøknadUtils.søker),
-            hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker), listOf("nav-logo.png")),
+            hentet.data.somEttersendingKomplettSøknad()
         )
     }
 
     @Test
-    fun `Innsending av ugyldig søknad gir valideringsfeil`() {
+    fun `Innsending av ugyldig søknad som får valideringsfeil`() {
         val søknad = Søknad(
-            barn = listOf(
-                Barn(
-                    navn = " ",
-                    aktørId = "123",
-                    identitetsnummer = null,
-                    tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,
-                    dato = null
-                )
-            ),
             språk = "nb",
-            harForståttRettigheterOgPlikter = false,
-            harBekreftetOpplysninger = false
+            vedlegg = listOf(),
+            søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,
+            beskrivelse = null,
+            harBekreftetOpplysninger = true,
+            harForståttRettigheterOgPlikter = true
         )
-        requestAndAssert(
+
+        TestUtils.requestAndAssert(
             engine = engine,
             logger = logger,
             httpMethod = HttpMethod.Post,
-            path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
+            path = ETTERSENDING_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.BadRequest,
             jwtToken = tokenXToken,
-            requestEntity = søknad.somJson(),
             expectedResponse = """
                     {
                       "detail": "Requesten inneholder ugyldige paramtere.",
@@ -142,39 +134,23 @@ class OmsorgsdagerAleneomsorgTest {
                       "title": "invalid-request-parameters",
                       "invalid_parameters": [
                         {
-                          "type": "entity",
-                          "name": "harForståttRettigheterOgPlikter",
-                          "invalid_value" : null,
-                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad."
-                        },
-                        {
-                          "type": "entity",
-                          "name": "harBekreftetOpplysninger",
-                          "invalid_value" : null,
-                          "reason": "Opplysningene må bekreftes for å sende inn søknad."
-                        },
-                        {
-                          "type": "entity",
-                          "name": "barn.identitetsnummer",
-                          "invalid_value" : null,
-                          "reason": "Ikke gyldig identitetsnummer."
-                        },
-                        {
-                          "name": "barn.navn",
-                          "reason": "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.",
-                          "invalid_value": " ",
+                          "name": "vedlegg",
+                          "reason": "Liste over vedlegg kan ikke være tom.",
+                          "invalid_value": [],
                           "type": "entity"
                         },
                         {
                           "type": "entity",
-                          "name": "barn.dato",
+                          "name": "beskrivelse",
                           "invalid_value" : null,
-                          "reason": "Barn.dato kan ikke være tom dersom tidspunktForAleneomsorg er SISTE_2_ÅRENE"
+                          "reason": "Beskrivelse kan ikke være tom, null eller blank dersom det gjelder pleiepenger."
                         }
                       ],
                       "status": 400
                     }
-                """.trimIndent()
+            """.trimIndent(),
+            requestEntity = søknad.somJson()
         )
     }
+
 }
