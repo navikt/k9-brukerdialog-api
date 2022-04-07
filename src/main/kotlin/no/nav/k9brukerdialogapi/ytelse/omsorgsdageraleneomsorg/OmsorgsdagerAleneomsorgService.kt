@@ -39,9 +39,9 @@ class OmsorgsdagerAleneomsorgService(
         søknader.forEach { it.valider() }
         logger.info("SøknadId:${søknad.søknadId} splittet ut til ${søknader.map { it.søknadId }}")
 
-        val komplettSøknad = søknader.map { it.somKomplettSøknad(søker) }
+        val komplettSøknader = søknader.map { it.somKomplettSøknad(søker) }
 
-        kafkaProdusent.produserKafkaMeldinger(metadata, komplettSøknad.map { JSONObject(it.somJson()) }, YTELSE)
+        kafkaProdusent.produserKafkaMeldinger(metadata, komplettSøknader.map { JSONObject(it.somJson()) }, YTELSE)
     }
 
     private fun registrerSøknad(metadata: Metadata, søknad: Søknad, søker: Søker) {
