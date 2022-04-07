@@ -25,8 +25,10 @@ class Barn(
 
     internal fun k9PeriodeFraOgMed() = when (tidspunktForAleneomsorg) {
         TidspunktForAleneomsorg.SISTE_2_ÅRENE -> dato
-        TidspunktForAleneomsorg.TIDLIGERE -> LocalDate.parse("${LocalDate.now().year.minus(1)}-01-01")
+        TidspunktForAleneomsorg.TIDLIGERE -> LocalDate.now().minusYears(1).startenAvÅret()
     }
+
+    private fun LocalDate.startenAvÅret() = LocalDate.parse("${year}-01-01")
 
     internal fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
         if (manglerIdentifikator() || (!identitetsnummer!!.erGyldigFodselsnummer())) {
