@@ -53,6 +53,16 @@ class OmsorgsdagerAleneomsorgBarnTest {
         JSONAssert.assertEquals(forventetK9Barn, JSONObject(barn.somK9Barn().somJson()), true)
     }
 
+    @Test
+    fun `Skal kunne opprette barn selv uten aktørId`(){
+        val barn = Barn(
+            navn = "Barn uten identifikator",
+            identitetsnummer = "02119970078" ,
+            tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
+        )
+        val feil = barn.valider()
+        assertTrue(feil.isEmpty())
+    }
 
     @Test
     fun `Forvent valideringsfeil dersom norskIdentifikator er null`(){

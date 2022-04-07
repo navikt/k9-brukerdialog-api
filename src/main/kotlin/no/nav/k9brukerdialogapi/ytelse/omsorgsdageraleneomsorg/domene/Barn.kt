@@ -10,7 +10,7 @@ import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
 
 class Barn(
     private val navn: String,
-    private val aktørId: String,
+    private val aktørId: String? = null,
     private var identitetsnummer: String? = null,
     private val tidspunktForAleneomsorg: TidspunktForAleneomsorg,
     private val dato: LocalDate? = null
