@@ -17,6 +17,7 @@ import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TypeBarn
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
@@ -85,6 +86,7 @@ class OmsorgsdagerAleneomsorgTest {
             barn = listOf(
                 Barn(
                     navn = "Barn1",
+                    type = TypeBarn.FRA_OPPSLAG,
                     aktørId = "123",
                     identitetsnummer = "25058118020",
                     tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
@@ -116,6 +118,7 @@ class OmsorgsdagerAleneomsorgTest {
             barn = listOf(
                 Barn(
                     navn = " ",
+                    type = TypeBarn.FRA_OPPSLAG,
                     aktørId = "123",
                     identitetsnummer = null,
                     tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,

@@ -21,12 +21,14 @@ class OmsorgsdagerAleneomsorgSøknadTest {
             barn = listOf(
                 Barn(
                     navn = "Barn1",
+                    type = TypeBarn.FRA_OPPSLAG,
                     aktørId = "123",
                     identitetsnummer = null,
                     tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
                 ),
                 Barn(
                     navn = "Barn2",
+                    type = TypeBarn.FRA_OPPSLAG,
                     aktørId = "1234",
                     identitetsnummer = null,
                     tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
@@ -61,8 +63,8 @@ class OmsorgsdagerAleneomsorgSøknadTest {
 
     @Test
     fun `Søknad med to barn blir splittet opp i to ulike søknader per barn`(){
-        val barn1 = Barn("Barn1", "123", "12345", TidspunktForAleneomsorg.TIDLIGERE)
-        val barn2 = Barn("Barn2", "321", "54321", TidspunktForAleneomsorg.TIDLIGERE)
+        val barn1 = Barn("Barn1", TypeBarn.FRA_OPPSLAG, "123", "12345", TidspunktForAleneomsorg.TIDLIGERE)
+        val barn2 = Barn("Barn2", TypeBarn.FRA_OPPSLAG, "321", "54321", TidspunktForAleneomsorg.TIDLIGERE)
 
         val søknad = Søknad(
             barn = listOf(barn1, barn2),
@@ -93,6 +95,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
             barn = listOf(
                 Barn(
                     navn = "Barn1",
+                    type = TypeBarn.FRA_OPPSLAG,
                     aktørId = "123",
                     identitetsnummer = "25058118020",
                     tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
@@ -140,6 +143,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
                 barn = listOf(
                     Barn(
                         navn = "Barn1",
+                        type = TypeBarn.FRA_OPPSLAG,
                         aktørId = "123",
                         identitetsnummer = "25058118020",
                         tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE

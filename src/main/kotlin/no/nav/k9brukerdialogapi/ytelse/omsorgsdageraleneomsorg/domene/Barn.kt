@@ -8,12 +8,20 @@ import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
 
+enum class TypeBarn{
+    FRA_OPPSLAG,
+    FOSTERBARN,
+    ANNET
+}
+
 class Barn(
     private val navn: String,
-    private val aktørId: String,
+    private val type: TypeBarn,
+    private val aktørId: String? = null,
     private var identitetsnummer: String? = null,
     private val tidspunktForAleneomsorg: TidspunktForAleneomsorg,
-    private val dato: LocalDate? = null
+    private val dato: LocalDate? = null,
+    private val fødselsdato: LocalDate? = null
 ) {
     internal fun manglerIdentifikator() = identitetsnummer.isNullOrBlank()
 
@@ -60,6 +68,17 @@ class Barn(
                     parameterType = ParameterType.ENTITY,
                     reason = "Barn.dato kan ikke være tom dersom tidspunktForAleneomsorg er ${TidspunktForAleneomsorg.SISTE_2_ÅRENE.name}",
                     invalidValue = dato
+                )
+            )
+        }
+
+        if(type != TypeBarn.FRA_OPPSLAG && fødselsdato == null){
+            add(
+                Violation(
+                    parameterName = "barn.fødselsdato",
+                    parameterType = ParameterType.ENTITY,
+                    reason = "Barn som ikke stammer fra oppslag må ha fødselsdato satt.",
+                    invalidValue = fødselsdato
                 )
             )
         }

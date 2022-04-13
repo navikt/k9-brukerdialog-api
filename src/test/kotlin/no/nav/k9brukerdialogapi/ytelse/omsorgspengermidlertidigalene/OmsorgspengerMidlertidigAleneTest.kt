@@ -9,25 +9,27 @@ import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.OmsorgsdagerAleneomsorgTest
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Søknad
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class OmsorgspengerMidlertidigAleneTest {
 
     private companion object{
-        private val logger: Logger = LoggerFactory.getLogger(OmsorgsdagerAleneomsorgTest::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(OmsorgspengerMidlertidigAleneTest::class.java)
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -82,98 +84,109 @@ class OmsorgspengerMidlertidigAleneTest {
     @Test
     fun `Innsending av gyldig søknad`() {
         val søknad = Søknad(
+            id = "123456789",
+            språk = "nb",
+            annenForelder = AnnenForelder(
+                navn = "Berit",
+                fnr = "02119970078",
+                situasjon = Situasjon.FENGSEL,
+                situasjonBeskrivelse = "Sitter i fengsel..",
+                periodeOver6Måneder = false,
+                periodeFraOgMed = LocalDate.parse("2020-01-01"),
+                periodeTilOgMed = LocalDate.parse("2020-10-01")
+            ),
             barn = listOf(
                 Barn(
-                    navn = "Barn1",
-                    aktørId = "123",
-                    identitetsnummer = "25058118020",
-                    tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
+                    navn = "Ole Dole",
+                    norskIdentifikator = "25058118020",
+                    aktørId = null
                 )
             ),
-            språk = "nb",
-            harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = true
+            harBekreftetOpplysninger = true,
+            harForståttRettigheterOgPlikter = true
         )
         TestUtils.requestAndAssert(
             httpMethod = HttpMethod.Post,
-            path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
+            path = OMSORGSPENGER_MIDLERTIDIG_ALENE_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
             requestEntity = søknad.somJson(),
             engine = engine,
             logger = logger
         )
-        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSDAGER_ALENEOMSORG)
+        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE)
         assertEquals(
-            søknad.somKomplettSøknad(SøknadUtils.søker),
-            hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
+            søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
+            hentet.data.somOmsorgspengerMidlertidigAleneKomplettSøknad()
         )
     }
 
     @Test
     fun `Innsending av ugyldig søknad gir valideringsfeil`() {
         val søknad = Søknad(
+            id = "123456789",
+            språk = "nb",
+            annenForelder = AnnenForelder(
+                navn = "Berit",
+                fnr = "ikke gyldig",
+                situasjon = Situasjon.FENGSEL,
+                situasjonBeskrivelse = "Sitter i fengsel..",
+                periodeOver6Måneder = false,
+                periodeFraOgMed = LocalDate.parse("2020-01-01"),
+                periodeTilOgMed = null
+            ),
             barn = listOf(
                 Barn(
-                    navn = " ",
-                    aktørId = "123",
-                    identitetsnummer = null,
-                    tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,
-                    dato = null
+                    navn = "Ole Dole",
+                    norskIdentifikator = "ikke gyldig",
+                    aktørId = null
                 )
             ),
-            språk = "nb",
-            harForståttRettigheterOgPlikter = false,
-            harBekreftetOpplysninger = false
+            harBekreftetOpplysninger = false,
+            harForståttRettigheterOgPlikter = true
         )
         TestUtils.requestAndAssert(
             engine = engine,
             logger = logger,
             httpMethod = HttpMethod.Post,
-            path = OMSORGSDAGER_ALENEOMSORG_URL + INNSENDING_URL,
+            path = OMSORGSPENGER_MIDLERTIDIG_ALENE_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.BadRequest,
             jwtToken = tokenXToken,
             requestEntity = søknad.somJson(),
             expectedResponse = """
-                    {
-                      "detail": "Requesten inneholder ugyldige paramtere.",
-                      "instance": "about:blank",
-                      "type": "/problem-details/invalid-request-parameters",
-                      "title": "invalid-request-parameters",
-                      "invalid_parameters": [
-                        {
-                          "type": "entity",
-                          "name": "harForståttRettigheterOgPlikter",
-                          "invalid_value" : null,
-                          "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad."
-                        },
-                        {
-                          "type": "entity",
-                          "name": "harBekreftetOpplysninger",
-                          "invalid_value" : null,
-                          "reason": "Opplysningene må bekreftes for å sende inn søknad."
-                        },
-                        {
-                          "type": "entity",
-                          "name": "barn.identitetsnummer",
-                          "invalid_value" : null,
-                          "reason": "Ikke gyldig identitetsnummer."
-                        },
-                        {
-                          "name": "barn.navn",
-                          "reason": "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.",
-                          "invalid_value": " ",
-                          "type": "entity"
-                        },
-                        {
-                          "type": "entity",
-                          "name": "barn.dato",
-                          "invalid_value" : null,
-                          "reason": "Barn.dato kan ikke være tom dersom tidspunktForAleneomsorg er SISTE_2_ÅRENE"
-                        }
-                      ],
-                      "status": 400
-                    }
+            {
+              "detail": "Requesten inneholder ugyldige paramtere.",
+              "instance": "about:blank",
+              "type": "/problem-details/invalid-request-parameters",
+              "title": "invalid-request-parameters",
+              "invalid_parameters": [
+                {
+                  "type": "entity",
+                  "name": "harBekreftetOpplysninger",
+                  "reason": "Opplysningene må bekreftes for å sende inn søknad.",
+                  "invalid_value": null
+                },
+                {
+                  "name": "AnnenForelder.fnr",
+                  "reason": "Fødselsnummer på annen forelder må være gyldig norsk identifikator",
+                  "invalid_value": "ikke gyldig",
+                  "type": "entity"
+                },
+                {
+                  "type": "entity",
+                  "name": "AnnenForelder.periodeTilOgMed",
+                  "reason": "periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL",
+                  "invalid_value": null
+                },
+                {
+                  "name": "barn.norskIdentifikator",
+                  "reason": "Ikke gyldig norskIdentifikator.",
+                  "invalid_value": "ikke gyldig",
+                  "type": "entity"
+                }
+              ],
+              "status": 400
+            }
                 """.trimIndent()
         )
     }

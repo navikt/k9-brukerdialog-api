@@ -26,6 +26,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
         )
         val barn = Barn(
             navn = "Barn uten identifikator",
+            type = TypeBarn.FRA_OPPSLAG,
             aktørId = "123",
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,
             dato = LocalDate.parse("2022-01-01")
@@ -39,6 +40,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
     fun `Barn blir mappet til forventet K9Barn`(){
         val barn = Barn(
             navn = "Barn uten identifikator",
+            type = TypeBarn.FRA_OPPSLAG,
             aktørId = "123",
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
@@ -53,11 +55,24 @@ class OmsorgsdagerAleneomsorgBarnTest {
         JSONAssert.assertEquals(forventetK9Barn, JSONObject(barn.somK9Barn().somJson()), true)
     }
 
+    @Test
+    fun `Skal kunne registrere fosterbarn uten aktørId`(){
+        val barn = Barn(
+            navn = "Barn uten identifikator",
+            type = TypeBarn.FOSTERBARN,
+            fødselsdato = LocalDate.now().minusMonths(4),
+            identitetsnummer = "02119970078" ,
+            tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
+        )
+        val feil = barn.valider()
+        assertTrue(feil.isEmpty())
+    }
 
     @Test
     fun `Forvent valideringsfeil dersom norskIdentifikator er null`(){
         val barn = Barn(
             navn = "Barn uten identifikator",
+            type = TypeBarn.FRA_OPPSLAG,
             aktørId = "123",
             identitetsnummer = null ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
@@ -71,6 +86,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
     fun `Forvent valideringsfeil dersom navn er blank`(){
         val barn = Barn(
             navn = " ",
+            type = TypeBarn.FRA_OPPSLAG,
             aktørId = "123",
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
@@ -82,9 +98,26 @@ class OmsorgsdagerAleneomsorgBarnTest {
     }
 
     @Test
+    fun `Forvent valideringsfeil dersom fødselsdato er null og barnet er fosterbarn`(){
+        val barn = Barn(
+            navn = "Navnesen",
+            type = TypeBarn.FOSTERBARN,
+            fødselsdato = null,
+            aktørId = "123",
+            identitetsnummer = "02119970078" ,
+            tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
+        )
+
+        val feil = barn.valider()
+        assertEquals(feil.first().reason, "Barn som ikke stammer fra oppslag må ha fødselsdato satt.")
+        assertEquals(1, feil.size)
+    }
+
+    @Test
     fun `Skal feile dersom tidspunktForAleneomsorg er siste 2 år, men dato er ikke satt`() {
         val barn = Barn(
             navn = "Barnesen",
+            type = TypeBarn.FRA_OPPSLAG,
             aktørId = "123",
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,
