@@ -11,7 +11,7 @@ val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
 
 plugins {
-    kotlin("jvm") version "1.6.20"
+    kotlin("jvm") version "1.6.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -55,7 +55,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation ("org.skyscreamer:jsonassert:1.5.0")
-    testImplementation("com.github.fppt:jedis-mock:1.0.1")
+    testImplementation("com.github.fppt:jedis-mock:1.0.2")
     testImplementation("io.mockk:mockk:1.12.3")
 }
 
@@ -104,7 +104,7 @@ tasks.withType<ShadowJar> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "7.3.3"
+    gradleVersion = "7.4.2"
 }
 
 tasks.withType<Test> {
