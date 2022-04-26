@@ -24,6 +24,12 @@ fun ObjectMapper.k9MellomlagringKonfigurert(): ObjectMapper {
     }
 }
 
+fun ObjectMapper.k9BrukerdialogCacheKonfigurert(): ObjectMapper {
+    return dusseldorfConfigured().apply {
+        configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
+    }
+}
+
 fun Any.somJson() = objectMapper.writeValueAsString(this)
 fun JSONObject.somOmsorgspengerMidlertidigAleneKomplettSøknad(): KomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgspengerUtvidetRettKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.KomplettSøknad = objectMapper.readValue(this.toString())

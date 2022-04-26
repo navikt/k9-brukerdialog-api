@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi
 
-import com.github.fppt.jedismock.RedisServer
 import com.github.tomakehurst.wiremock.WireMockServer
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.jws.ClientCredentials
@@ -9,6 +8,7 @@ import no.nav.helse.dusseldorf.testsupport.jws.Tokendings
 import no.nav.helse.dusseldorf.testsupport.wiremock.getAzureV2WellKnownUrl
 import no.nav.helse.dusseldorf.testsupport.wiremock.getLoginServiceV1WellKnownUrl
 import no.nav.helse.dusseldorf.testsupport.wiremock.getTokendingsWellKnownUrl
+import no.nav.k9brukerdialogapi.wiremock.getK9BrukerdialogCacheUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9MellomlagringUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9OppslagUrl
 
@@ -20,8 +20,8 @@ object TestConfiguration {
         port : Int = 8080,
         k9OppslagUrl: String? = wireMockServer?.getK9OppslagUrl(),
         k9MellomlagringUrl : String? = wireMockServer?.getK9MellomlagringUrl(),
-        corsAdresses : String = "http://localhost:8080",
-        redisServer: RedisServer
+        k9BrukerdialogCacheUrl : String? = wireMockServer?.getK9BrukerdialogCacheUrl(),
+        corsAdresses : String = "http://localhost:8080"
     ) : Map<String, String> {
 
         val map = mutableMapOf(
@@ -30,6 +30,7 @@ object TestConfiguration {
             Pair("nav.gateways.k9_oppslag_url","$k9OppslagUrl"),
             Pair("nav.gateways.k9_mellomlagring_url", "$k9MellomlagringUrl"),
             Pair("nav.gateways.k9_mellomlagring_ingress","$k9MellomlagringUrl"),
+            Pair("nav.gateways.k9_brukerdialog_cache_url", "$k9BrukerdialogCacheUrl"),
             Pair("nav.cors.addresses", corsAdresses),
         )
 
@@ -59,11 +60,9 @@ object TestConfiguration {
             map["nav.auth.scopes.k9-mellomlagring-client-id"] = "k9-mellomlagring-client-id/.default"
             map["nav.auth.scopes.k9_mellomlagring_tokenx_audience"] = "dev-gcp:dusseldorf:k9-mellomlagring"
             map["nav.auth.scopes.k9_selvbetjening_oppslag_tokenx_audience"] = "dev-fss:dusseldorf:k9-selvbetjening-oppslag"
+            map["nav.auth.scopes.k9-brukerdialog-cache-tokenx-audience"] = "dev-gcp:dusseldorf:k9-brukerdialog-cache"
         }
 
-        map["nav.redis.host"] = "localhost"
-        map["nav.redis.port"] = "${redisServer.bindPort}"
-        map["nav.storage.passphrase"] = "verySecret"
         map["nav.mellomlagring.søknad_tid_timer"] = "1"
 
         // Kafka

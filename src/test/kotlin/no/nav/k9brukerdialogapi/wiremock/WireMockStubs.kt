@@ -9,6 +9,7 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 
 internal const val k9OppslagPath = "/k9-selvbetjening-oppslag-mock"
 private const val k9MellomlagringPath = "/k9-mellomlagring-mock"
+private const val k9BrukerdialogCachePath = "/k9-brukerdialog-cache-mock"
 
 internal fun WireMockBuilder.k9BrukerdialogApiConfig() = wireMockConfiguration {
     it
@@ -16,6 +17,7 @@ internal fun WireMockBuilder.k9BrukerdialogApiConfig() = wireMockConfiguration {
         .extensions(K9MellomlagringResponseTransformer())
         .extensions(BarnResponseTransformer())
         .extensions(ArbeidsgivereResponseTransformer())
+        .extensions(K9BrukerdialogCacheResponseTransformer())
 }
 
 
@@ -104,5 +106,17 @@ internal fun WireMockServer.stubK9Mellomlagring() : WireMockServer{
     return this
 }
 
+internal fun WireMockServer.stubK9BrukerdialogCache(): WireMockServer {
+    WireMock.stubFor(
+        WireMock.any(WireMock.urlMatching(".*$k9BrukerdialogCachePath/api/cache.*"))
+            .willReturn(
+                WireMock.aResponse()
+                    .withTransformers("K9BrukerdialogCacheResponseTransformer")
+            )
+    )
+    return this
+}
+
 internal fun WireMockServer.getK9OppslagUrl() = baseUrl() + k9OppslagPath
 internal fun WireMockServer.getK9MellomlagringUrl() = baseUrl() + k9MellomlagringPath + "/v1/dokument"
+internal fun WireMockServer.getK9BrukerdialogCacheUrl() = baseUrl() + k9BrukerdialogCachePath

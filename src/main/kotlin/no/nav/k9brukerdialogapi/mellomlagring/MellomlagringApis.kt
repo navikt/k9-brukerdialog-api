@@ -7,6 +7,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.MELLOMLAGRING_URL
+import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 
 fun Route.mellomlagringApis(
@@ -15,27 +16,38 @@ fun Route.mellomlagringApis(
 ) {
     route("$MELLOMLAGRING_URL"){
         post{
-            mellomlagringService.setMellomlagring(
-                Ytelse.valueOf(call.parameters["ytelse"]!!),
-                idTokenProvider.getIdToken(call).getNorskIdentifikasjonsnummer(),
-                call.receive<String>()
-            )
-            call.respond(HttpStatusCode.NoContent)
+            try {
+                mellomlagringService.setMellomlagring(
+                    call.getCallId(),
+                    idTokenProvider.getIdToken(call),
+                    Ytelse.valueOf(call.parameters["ytelse"]!!),
+                    call.receive()
+                )
+                call.respond(HttpStatusCode.Created)
+            } catch (e: CacheConflictException){
+                call.respondCacheConflictProblemDetails()
+            }
         }
 
         put{
-            mellomlagringService.updateMellomlagring(
-                Ytelse.valueOf(call.parameters["ytelse"]!!),
-                idTokenProvider.getIdToken(call).getNorskIdentifikasjonsnummer(),
-                call.receive<String>()
-            )
-            call.respond(HttpStatusCode.NoContent)
+            try {
+                mellomlagringService.updateMellomlagring(
+                    call.getCallId(),
+                    idTokenProvider.getIdToken(call),
+                    Ytelse.valueOf(call.parameters["ytelse"]!!),
+                    call.receive()
+                )
+                call.respond(HttpStatusCode.NoContent)
+            } catch (e: CacheNotFoundException) {
+                call.respondCacheNotFoundProblemDetails()
+            }
         }
 
         get{
             val mellomlagring = mellomlagringService.getMellomlagring(
-                Ytelse.valueOf(call.parameters["ytelse"]!!),
-                idTokenProvider.getIdToken(call).getNorskIdentifikasjonsnummer(),
+                call.getCallId(),
+                idTokenProvider.getIdToken(call),
+                Ytelse.valueOf(call.parameters["ytelse"]!!)
             )
             if (mellomlagring != null) {
                 call.respondText(
@@ -54,8 +66,9 @@ fun Route.mellomlagringApis(
 
         delete {
             mellomlagringService.deleteMellomlagring(
-                Ytelse.valueOf(call.parameters["ytelse"]!!),
-                idTokenProvider.getIdToken(call).getNorskIdentifikasjonsnummer(),
+                call.getCallId(),
+                idTokenProvider.getIdToken(call),
+                Ytelse.valueOf(call.parameters["ytelse"]!!)
             )
             call.respond(HttpStatusCode.Accepted)
         }

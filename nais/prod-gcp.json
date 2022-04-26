@@ -17,7 +17,6 @@
     "k9-selvbetjening-oppslag.prod-fss-pub.nais.io"
   ],
   "env": {
-    "REDIS_HOST": "k9-brukerdialog-api-redis",
     "CORS_ADDRESSES": "https://www.nav.no",
     "LOGIN_SERVICE_V1_DISCOVERY_ENDPOINT": "https://login.microsoftonline.com/navnob2c.onmicrosoft.com/discovery/v2.0/.well-known/openid-configuration?p=b2c_1a_idporten",
     "COOKIE_NAME": "selvbetjening-idtoken",
@@ -26,7 +25,9 @@
     "K9_MELLOMLAGRING_SERVICE_DISCOVERY": "http://k9-mellomlagring",
     "K9_MELLOMLAGRING_INGRESS": "https://k9-mellomlagring.intern.nav.no/v1/dokument",
     "K9_MELLOMLAGRING_CLIENT_ID": "19aaf0b2-f40a-4a64-bf7f-fd2dd62f0552/.default",
-    "K9_MELLOMLAGRING_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-mellomlagring"
+    "K9_MELLOMLAGRING_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-mellomlagring",
+    "K9_BRUKERDIALOG_CACHE_URL": "https://k9-brukerdialog-cache.nav.no",
+    "K9_BRUKERDIALOG_CACHE_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-brukerdialog-cache"
   },
   "slack-channel": "sif-alerts",
   "slack-notify-type": "<!channel> | k9-brukerdialog-api | ",
