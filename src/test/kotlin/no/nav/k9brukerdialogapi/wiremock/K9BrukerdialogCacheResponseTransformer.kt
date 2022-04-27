@@ -40,6 +40,7 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
     ): Response {
         return when {
             request == null -> throw IllegalStateException("request == null")
+            request.erHealthCheck() -> Response.Builder.like(response).status(200).build()
 
             request.erLagreCache() -> {
                 val cacheRequest = objectMapper.readValue<CacheRequest>(request.bodyAsString)
@@ -154,4 +155,5 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
     private fun Request.erHenteCache() = method == RequestMethod.GET
     private fun Request.erOppdatereCache() = method == RequestMethod.PUT
     private fun Request.erSletteCache() = method == RequestMethod.DELETE
+    private fun Request.erHealthCheck() = method == RequestMethod.GET && url.substringAfterLast("/") == "health"
 }

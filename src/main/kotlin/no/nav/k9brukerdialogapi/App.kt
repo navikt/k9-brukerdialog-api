@@ -187,6 +187,10 @@ fun Application.k9BrukerdialogApi() {
                         Url.buildURL(
                             baseUrl = configuration.getK9MellomlagringUrl(),
                             pathParts = listOf("health")
+                        ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK),
+                        Url.buildURL(
+                            baseUrl = configuration.getK9BrukerdialogCacheUrl(),
+                            pathParts = listOf("health")
                         ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK)
                     )
                 )
