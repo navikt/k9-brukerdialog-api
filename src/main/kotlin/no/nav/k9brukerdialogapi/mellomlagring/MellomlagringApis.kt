@@ -49,19 +49,11 @@ fun Route.mellomlagringApis(
                 idTokenProvider.getIdToken(call),
                 Ytelse.valueOf(call.parameters["ytelse"]!!)
             )
-            if (mellomlagring != null) {
-                call.respondText(
-                    contentType = ContentType.Application.Json,
-                    text = mellomlagring,
-                    status = HttpStatusCode.OK
-                )
-            } else {
-                call.respondText(
-                    contentType = ContentType.Application.Json,
-                    text = "{}",
-                    status = HttpStatusCode.OK
-                )
-            }
+            call.respondText(
+                contentType = ContentType.Application.Json,
+                text = mellomlagring ?: "{}",
+                status = HttpStatusCode.OK
+            )
         }
 
         delete {
