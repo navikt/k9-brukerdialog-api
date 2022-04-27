@@ -10,10 +10,6 @@ import com.github.kittinunf.fuel.httpPut
 import io.ktor.http.*
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.ktor.client.buildURL
-import no.nav.helse.dusseldorf.ktor.health.HealthCheck
-import no.nav.helse.dusseldorf.ktor.health.Healthy
-import no.nav.helse.dusseldorf.ktor.health.Result
-import no.nav.helse.dusseldorf.ktor.health.UnHealthy
 import no.nav.helse.dusseldorf.ktor.metrics.Operation.Companion.monitored
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.CallId
@@ -21,13 +17,12 @@ import no.nav.k9brukerdialogapi.k9BrukerdialogCacheKonfigurert
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
-import kotlin.reflect.jvm.jvmName
 
 class K9BrukerdialogCacheGateway(
     private val tokenxClient: CachedAccessTokenClient,
     private val k9BrukerdialogCacheTokenxAudience: Set<String>,
     baseUrl: URI
-) : HealthCheck {
+) {
 
     private companion object {
         private val logger: Logger = LoggerFactory.getLogger(K9BrukerdialogCacheGateway::class.java)
@@ -43,17 +38,6 @@ class K9BrukerdialogCacheGateway(
         baseUrl = baseUrl,
         pathParts = listOf("api", "cache")
     )
-
-    override suspend fun check(): Result {
-        val k9BrukerdialogCache = K9BrukerdialogCacheGateway::class.jvmName
-        return try {
-            tokenxClient.getAccessToken(k9BrukerdialogCacheTokenxAudience)
-            Healthy(k9BrukerdialogCache, "Henting av access token for $k9BrukerdialogCacheTokenxAudience.")
-        } catch (cause: Throwable) {
-            logger.error("Feil ved henting av access token for $k9BrukerdialogCacheTokenxAudience", cause)
-            UnHealthy(k9BrukerdialogCache, "Henting av access token for $k9BrukerdialogCacheTokenxAudience.")
-        }
-    }
 
     suspend fun mellomlagreSøknad(
         cacheRequest: CacheRequest,

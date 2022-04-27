@@ -9,7 +9,7 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 
 internal const val k9OppslagPath = "/k9-selvbetjening-oppslag-mock"
 private const val k9MellomlagringPath = "/k9-mellomlagring-mock"
-private const val k9BrukerdialogCachePath = "/k9-brukerdialog-cache-mock"
+internal const val k9BrukerdialogCachePath = "/k9-brukerdialog-cache-mock"
 
 internal fun WireMockBuilder.k9BrukerdialogApiConfig() = wireMockConfiguration {
     it
@@ -82,18 +82,23 @@ internal fun WireMockServer.stubK9OppslagArbeidsgivere(simulerFeil: Boolean = fa
 }
 
 private fun WireMockServer.stubHealthEndpoint(
-    path : String
+    vararg path : String
 ) : WireMockServer{
-    WireMock.stubFor(
-        WireMock.get(WireMock.urlPathMatching(".*$path")).willReturn(
-            WireMock.aResponse()
-                .withStatus(200)
+    path.forEach {
+        WireMock.stubFor(
+            WireMock.get(WireMock.urlPathMatching(".*$it")).willReturn(
+                WireMock.aResponse()
+                    .withStatus(200)
+            )
         )
-    )
+    }
     return this
 }
 
-internal fun WireMockServer.stubOppslagHealth() = stubHealthEndpoint("$k9OppslagPath/health")
+internal fun WireMockServer.stubOppslagHealth() = stubHealthEndpoint(
+    "$k9OppslagPath/health",
+    "$k9BrukerdialogCachePath/health"
+)
 
 internal fun WireMockServer.stubK9Mellomlagring() : WireMockServer{
     WireMock.stubFor(
@@ -108,7 +113,7 @@ internal fun WireMockServer.stubK9Mellomlagring() : WireMockServer{
 
 internal fun WireMockServer.stubK9BrukerdialogCache(): WireMockServer {
     WireMock.stubFor(
-        WireMock.any(WireMock.urlMatching(".*$k9BrukerdialogCachePath/api/cache.*"))
+        WireMock.any(WireMock.urlMatching(".*$k9BrukerdialogCachePath.*"))
             .willReturn(
                 WireMock.aResponse()
                     .withTransformers("K9BrukerdialogCacheResponseTransformer")
