@@ -45,6 +45,7 @@ https://grafana.nais.io/d/fUOECBs7k/k9-brukerdialog-api?orgId=1
 
 
 ## Mellomlagring
+Bruker [k9-brukerdialog-cache](https://github.com/navikt/k9-brukerdialog-cache) for å mellomlagre.
 
 ### Legge til mellomlagring 
 ```

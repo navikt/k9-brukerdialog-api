@@ -284,10 +284,11 @@ class ApplicationTest {
                 path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
-                expectedResponse = """{}""",
+                expectedResponse = """{}""".trimIndent(),
                 engine = engine,
                 logger = logger
             )
+
         }
 
         @Test

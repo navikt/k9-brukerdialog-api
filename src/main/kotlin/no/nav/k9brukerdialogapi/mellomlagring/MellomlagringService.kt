@@ -3,12 +3,16 @@ package no.nav.k9brukerdialogapi.mellomlagring
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 class MellomlagringService(
     private val mellomlagretTidTimer: String,
     private val k9BrukerdialogCacheGateway: K9BrukerdialogCacheGateway
 ) {
-    suspend fun getMellomlagring(
+    private fun genererNøkkelPrefix(ytelse: Ytelse) = "mellomlagring_$ytelse"
+
+    suspend fun hentMellomlagring(
         callId: CallId,
         idToken: IdToken,
         ytelse: Ytelse
@@ -18,29 +22,30 @@ class MellomlagringService(
         callId = callId
     )?.verdi
 
-    suspend fun setMellomlagring(
+    suspend fun settMellomlagring(
         callId: CallId,
         idToken: IdToken,
         ytelse: Ytelse,
         verdi: String,
-    ): CacheResponse {
-        val cacheRequest = CacheRequest.genererCacheRequest(verdi, mellomlagretTidTimer.toLong(), ytelse)
-        return k9BrukerdialogCacheGateway.mellomlagreSøknad(
-            cacheRequest = cacheRequest,
-            idToken = idToken,
-            callId = callId
-        )
-    }
+    ) = k9BrukerdialogCacheGateway.mellomlagreSøknad(
+        cacheRequest = CacheRequest(
+            nøkkelPrefiks = genererNøkkelPrefix(ytelse),
+            verdi = verdi,
+            utløpsdato = ZonedDateTime.now(ZoneOffset.UTC).plusHours(mellomlagretTidTimer.toLong()),
+            opprettet = ZonedDateTime.now(ZoneOffset.UTC),
+            endret = null
+        ),
+        idToken = idToken,
+        callId = callId
+    )
 
-    suspend fun deleteMellomlagring(
+    suspend fun slettMellomlagring(
         callId: CallId,
         idToken: IdToken,
         ytelse: Ytelse
-    ) = k9BrukerdialogCacheGateway.slettMellomlagretSøknad(
-        genererNøkkelPrefix(ytelse), idToken, callId
-    )
+    ) = k9BrukerdialogCacheGateway.slettMellomlagretSøknad(genererNøkkelPrefix(ytelse), idToken, callId)
 
-    suspend fun updateMellomlagring(
+    suspend fun oppdaterMellomlagring(
         callId: CallId,
         idToken: IdToken,
         ytelse: Ytelse,
@@ -51,17 +56,20 @@ class MellomlagringService(
             idToken = idToken,
             callId = callId
         )
-
         return if(eksisterendeMellomlagring != null){
             k9BrukerdialogCacheGateway.oppdaterMellomlagretSøknad(
-                cacheRequest = CacheRequest.genererCacheRequest(verdi, mellomlagretTidTimer.toLong(), ytelse),
+                cacheRequest = CacheRequest(
+                    nøkkelPrefiks = genererNøkkelPrefix(ytelse),
+                    verdi = verdi,
+                    utløpsdato = eksisterendeMellomlagring.utløpsdato,
+                    opprettet = eksisterendeMellomlagring.opprettet,
+                    endret = ZonedDateTime.now()
+
+                ),
                 idToken = idToken,
                 callId = callId
 
             )
-        } else {
-            setMellomlagring(callId, idToken, ytelse, verdi)
-        }
-
+        } else settMellomlagring(callId, idToken, ytelse, verdi)
     }
 }

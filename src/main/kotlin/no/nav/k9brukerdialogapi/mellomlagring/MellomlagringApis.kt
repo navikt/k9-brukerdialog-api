@@ -17,7 +17,7 @@ fun Route.mellomlagringApis(
     route("$MELLOMLAGRING_URL"){
         post{
             try {
-                mellomlagringService.setMellomlagring(
+                mellomlagringService.settMellomlagring(
                     call.getCallId(),
                     idTokenProvider.getIdToken(call),
                     Ytelse.valueOf(call.parameters["ytelse"]!!),
@@ -31,7 +31,7 @@ fun Route.mellomlagringApis(
 
         put{
             try {
-                mellomlagringService.updateMellomlagring(
+                mellomlagringService.oppdaterMellomlagring(
                     call.getCallId(),
                     idTokenProvider.getIdToken(call),
                     Ytelse.valueOf(call.parameters["ytelse"]!!),
@@ -44,7 +44,7 @@ fun Route.mellomlagringApis(
         }
 
         get{
-            val mellomlagring = mellomlagringService.getMellomlagring(
+            val mellomlagring = mellomlagringService.hentMellomlagring(
                 call.getCallId(),
                 idTokenProvider.getIdToken(call),
                 Ytelse.valueOf(call.parameters["ytelse"]!!)
@@ -65,7 +65,7 @@ fun Route.mellomlagringApis(
         }
 
         delete {
-            mellomlagringService.deleteMellomlagring(
+            mellomlagringService.slettMellomlagring(
                 call.getCallId(),
                 idTokenProvider.getIdToken(call),
                 Ytelse.valueOf(call.parameters["ytelse"]!!)
