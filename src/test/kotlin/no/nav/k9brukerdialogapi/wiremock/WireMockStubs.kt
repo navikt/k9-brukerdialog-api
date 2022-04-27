@@ -113,7 +113,7 @@ internal fun WireMockServer.stubK9Mellomlagring() : WireMockServer{
 
 internal fun WireMockServer.stubK9BrukerdialogCache(): WireMockServer {
     WireMock.stubFor(
-        WireMock.any(WireMock.urlMatching(".*$k9BrukerdialogCachePath/api/cache.*"))
+        WireMock.any(WireMock.urlMatching(".*$k9BrukerdialogCachePath.*"))
             .willReturn(
                 WireMock.aResponse()
                     .withTransformers("K9BrukerdialogCacheResponseTransformer")

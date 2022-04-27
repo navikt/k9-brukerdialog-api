@@ -106,14 +106,15 @@ fun Application.k9BrukerdialogApi() {
     }
 
     install(Routing) {
+        val k9MellomlagringGateway = K9MellomlagringGateway(
+            baseUrl = configuration.getK9MellomlagringUrl(),
+            accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,
+            exchangeTokenClient = tokenxClient,
+            k9MellomlagringScope = configuration.getK9MellomlagringScopes(),
+            k9MellomlagringTokenxAudience = configuration.getK9MellomlagringTokenxAudience()
+        )
         val vedleggService = VedleggService(
-            K9MellomlagringGateway(
-                baseUrl = configuration.getK9MellomlagringUrl(),
-                accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,
-                exchangeTokenClient = tokenxClient,
-                k9MellomlagringScope = configuration.getK9MellomlagringScopes(),
-                k9MellomlagringTokenxAudience = configuration.getK9MellomlagringTokenxAudience()
-            )
+            k9MellomlagringGateway
         )
 
         val søkerService = SøkerService(
@@ -189,6 +190,10 @@ fun Application.k9BrukerdialogApi() {
                         Url.buildURL(
                             baseUrl = configuration.getK9MellomlagringUrl(),
                             pathParts = listOf("health")
+                        ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK),
+                        Url.buildURL(
+                            baseUrl = configuration.getK9BrukerdialogCacheUrl(),
+                            pathParts = listOf("actuator", "health")
                         ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK)
                     )
                 )
