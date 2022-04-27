@@ -137,13 +137,15 @@ fun Application.k9BrukerdialogApi() {
 
         val kafkaProducer = KafkaProducer(configuration.getKafkaConfig())
 
+        val k9BrukerdialogCacheGateway = K9BrukerdialogCacheGateway(
+            tokenxClient = tokenxClient,
+            k9BrukerdialogCacheTokenxAudience = configuration.getK9BrukerdialogCacheTokenxAudience(),
+            baseUrl = configuration.getK9BrukerdialogCacheUrl()
+        )
+
         val mellomlagringService = MellomlagringService(
             mellomlagretTidTimer = configuration.getSoknadMellomlagringTidTimer(),
-            k9BrukerdialogCacheGateway = K9BrukerdialogCacheGateway(
-                tokenxClient = tokenxClient,
-                k9BrukerdialogCacheTokenxAudience = configuration.getK9BrukerdialogCacheTokenxAudience(),
-                baseUrl = configuration.getK9BrukerdialogCacheUrl()
-            )
+            k9BrukerdialogCacheGateway = k9BrukerdialogCacheGateway
         )
 
         environment.monitor.subscribe(ApplicationStopping) {
@@ -186,10 +188,6 @@ fun Application.k9BrukerdialogApi() {
                     mapOf(
                         Url.buildURL(
                             baseUrl = configuration.getK9MellomlagringUrl(),
-                            pathParts = listOf("health")
-                        ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK),
-                        Url.buildURL(
-                            baseUrl = configuration.getK9BrukerdialogCacheUrl(),
                             pathParts = listOf("health")
                         ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK)
                     )
