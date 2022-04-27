@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi
 
-import com.github.fppt.jedismock.RedisServer
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
 import io.ktor.http.*
@@ -42,17 +41,15 @@ class ApplicationTest {
             .stubK9OppslagBarn()
             .stubK9Mellomlagring()
             .stubK9OppslagArbeidsgivere()
+            .stubK9BrukerdialogCache()
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
-        private val kafkaKonsumer = kafkaEnvironment.testConsumer()
 
         private val gyldigFødselsnummerA = "02119970078"
+        private val gyldigFodselsnummerB = "02119970079"
         private const val ikkeMyndigFnr = "12125012345"
         private val cookie = getAuthCookie(gyldigFødselsnummerA)
         private val tokenXToken = getTokenDingsToken(fnr = gyldigFødselsnummerA)
-
-        val redisServer: RedisServer = RedisServer
-            .newRedisServer().apply { start() }
 
         fun getConfig(): ApplicationConfig {
 
@@ -60,8 +57,7 @@ class ApplicationTest {
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment,
-                    redisServer = redisServer
+                    kafkaEnvironment = kafkaEnvironment
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
@@ -83,7 +79,6 @@ class ApplicationTest {
         fun tearDown() {
             logger.info("Tearing down")
             wireMockServer.stop()
-            redisServer.stop()
             kafkaEnvironment.tearDown()
             logger.info("Tear down complete")
         }
@@ -222,89 +217,150 @@ class ApplicationTest {
     inner class MellomlagringTest {
 
         @Test
-        fun `Test flyt av mellomlagring`() {
-            // Legge til mellomlagring
+        fun `Sende inn, hente, oppdatere og slette mellomlagring`(){
+            val mellomlagringSøknad = """
+                {
+                    "mellomlagring": "soknad"
+                }
+            """.trimIndent()
+
             requestAndAssert(
-                engine = engine,
-                logger = logger,
                 httpMethod = HttpMethod.Post,
-                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
-                expectedCode = HttpStatusCode.NoContent,
-                cookie = cookie,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = tokenXToken,
+                expectedCode = HttpStatusCode.Created,
                 expectedResponse = null,
-                requestEntity = """
-                    {
-                        "testdata": "test mellomlagring 123"
-                    }
-                """.trimIndent()
+                requestEntity = mellomlagringSøknad,
+                engine = engine,
+                logger = logger
             )
 
-            // Hente mellomlagring
             requestAndAssert(
-                engine = engine,
-                logger = logger,
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
-                cookie = cookie,
-                expectedResponse = """
-                    {
-                        "testdata": "test mellomlagring 123"
-                    }
-                """.trimIndent()
-            )
-
-            // Oppdatere mellomlagring
-            requestAndAssert(
+                expectedResponse = mellomlagringSøknad,
                 engine = engine,
-                logger = logger,
+                logger = logger
+            )
+            val oppdatertMellomlagringSøknad = """
+                {
+                    "mellomlagring": "oppdatert soknad"
+                }
+            """.trimIndent()
+
+            requestAndAssert(
                 httpMethod = HttpMethod.Put,
-                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.NoContent,
-                cookie = cookie,
-                expectedResponse = null,
-                requestEntity = """
-                    {
-                        "testdata": "test oppdatert mellomlagring 123"
-                    }
-                """.trimIndent()
+                requestEntity = oppdatertMellomlagringSøknad,
+                engine = engine,
+                logger = logger
             )
 
-            // Hente oppdatert mellomlagring
             requestAndAssert(
-                engine = engine,
-                logger = logger,
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
-                cookie = cookie,
-                expectedResponse = """
-                    {
-                        "testdata": "test oppdatert mellomlagring 123"
-                    }
-                """.trimIndent()
+                expectedResponse = oppdatertMellomlagringSøknad,
+                engine = engine,
+                logger = logger
             )
 
-            // Slette mellomlagring
             requestAndAssert(
-                engine = engine,
-                logger = logger,
                 httpMethod = HttpMethod.Delete,
-                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.Accepted,
-                cookie = cookie,
-                expectedResponse = null
+                engine = engine,
+                logger = logger
             )
 
-            // Hente mellomlagring som skal være slettet
             requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = tokenXToken,
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = """{}""".trimIndent(),
+                engine = engine,
+                logger = logger
+            )
+
+        }
+
+        @Test
+        fun `gitt mellomlagring ikke eksisterer, forvent tomt objekt`() {
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = getTokenDingsToken(gyldigFodselsnummerB),
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = """{}""",
+                engine = engine,
+                logger = logger
+            )
+        }
+
+        @Test
+        fun `gitt det mellomlagres på en eksisterende nøkkel, forvent konfliktfeil`() {
+            val mellomlagringSøknad = """
+                {
+                    "mellomlagring": "soknad"
+                }
+            """.trimIndent()
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = getTokenDingsToken("02119970080"),
+                expectedCode = HttpStatusCode.Created,
+                expectedResponse = null,
+                requestEntity = mellomlagringSøknad,
+                engine = engine,
+                logger = logger
+            )
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = getTokenDingsToken("02119970080"),
+                expectedCode = HttpStatusCode.Conflict,
+                requestEntity = mellomlagringSøknad,
                 engine = engine,
                 logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSPENGER_UTVIDET_RETT",
-                expectedCode = HttpStatusCode.OK,
-                cookie = cookie,
-                expectedResponse = "{}"
+                expectedResponse = """
+                {
+                  "type": "/problem-details/cache-conflict",
+                  "title": "cache-conflict",
+                  "status": 409,
+                  "detail": "Konflikt ved mellomlagring. Nøkkel eksisterer allerede.",
+                  "instance": "mellomlagring/OMSORGSDAGER_ALENEOMSORG"
+                }
+            """.trimIndent()
+            )
+        }
+
+        @Test
+        fun `gitt sletting av en ikke-eksisterende nøkkel, forvent ingen feil`() {
+            val mellomlagringSøknad = """
+                {
+                    "mellomlagring": "soknad"
+                }
+            """.trimIndent()
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Delete,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = getTokenDingsToken("02119970081"),
+                expectedCode = HttpStatusCode.Accepted,
+                requestEntity = mellomlagringSøknad,
+                expectedResponse = null,
+                engine = engine,
+                logger = logger,
             )
         }
     }

@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene
 
-import com.github.fppt.jedismock.RedisServer
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
 import io.ktor.http.*
@@ -46,16 +45,12 @@ class OmsorgspengerMidlertidigAleneTest {
         private val gyldigFødselsnummerA = "02119970078"
         private val tokenXToken = TestUtils.getTokenDingsToken(fnr = gyldigFødselsnummerA)
 
-        val redisServer: RedisServer = RedisServer
-            .newRedisServer().apply { start() }
-
         fun getConfig(): ApplicationConfig {
             val fileConfig = ConfigFactory.load()
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment,
-                    redisServer = redisServer
+                    kafkaEnvironment = kafkaEnvironment
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
@@ -76,7 +71,6 @@ class OmsorgspengerMidlertidigAleneTest {
         @JvmStatic
         fun tearDown() {
             wireMockServer.stop()
-            redisServer.stop()
             kafkaEnvironment.tearDown()
         }
     }

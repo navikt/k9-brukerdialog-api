@@ -29,10 +29,9 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
-import no.nav.helse.redis.RedisConfig
-import no.nav.helse.redis.RedisStore
 import no.nav.k9brukerdialogapi.general.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
+import no.nav.k9brukerdialogapi.mellomlagring.K9BrukerdialogCacheGateway
 import no.nav.k9brukerdialogapi.mellomlagring.MellomlagringService
 import no.nav.k9brukerdialogapi.mellomlagring.mellomlagringApis
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverGateway
@@ -138,17 +137,13 @@ fun Application.k9BrukerdialogApi() {
 
         val kafkaProducer = KafkaProducer(configuration.getKafkaConfig())
 
-        val redis = RedisStore(
-            RedisConfig.redisClient(
-                redisPort = configuration.getRedisPort(),
-                redisHost = configuration.getRedisHost()
-            )
-        )
-
         val mellomlagringService = MellomlagringService(
-            redisStore = redis,
-            passphrase = configuration.getStoragePassphrase(),
-            mellomlagretTidTimer = configuration.getSoknadMellomlagringTidTimer()
+            mellomlagretTidTimer = configuration.getSoknadMellomlagringTidTimer(),
+            k9BrukerdialogCacheGateway = K9BrukerdialogCacheGateway(
+                tokenxClient = tokenxClient,
+                k9BrukerdialogCacheTokenxAudience = configuration.getK9BrukerdialogCacheTokenxAudience(),
+                baseUrl = configuration.getK9BrukerdialogCacheUrl()
+            )
         )
 
         environment.monitor.subscribe(ApplicationStopping) {

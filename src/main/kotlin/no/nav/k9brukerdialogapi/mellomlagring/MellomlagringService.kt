@@ -1,51 +1,75 @@
 package no.nav.k9brukerdialogapi.mellomlagring
 
-import no.nav.helse.redis.RedisStore
+import no.nav.helse.dusseldorf.ktor.auth.IdToken
+import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import java.util.*
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 class MellomlagringService(
-    private val redisStore: RedisStore,
-    private val passphrase: String,
-    private val mellomlagretTidTimer: String
+    private val mellomlagretTidTimer: String,
+    private val k9BrukerdialogCacheGateway: K9BrukerdialogCacheGateway
 ) {
-    private fun genererKey(ytelse: Ytelse, fnr: String) = "${ytelse}_$fnr"
+    private fun genererNøkkelPrefix(ytelse: Ytelse) = "mellomlagring_$ytelse"
 
-    fun getMellomlagring(
-        ytelse: Ytelse,
-        fnr: String
-    ): String? {
-        val krypto = Krypto(passphrase, fnr)
-        val encrypted = redisStore.get(genererKey(ytelse, fnr)) ?: return null
-        return krypto.decrypt(encrypted)
-    }
+    suspend fun hentMellomlagring(
+        callId: CallId,
+        idToken: IdToken,
+        ytelse: Ytelse
+    ) = k9BrukerdialogCacheGateway.hentMellomlagretSøknad(
+        nøkkelPrefiks = genererNøkkelPrefix(ytelse),
+        idToken = idToken,
+        callId = callId
+    )?.verdi
 
-    fun setMellomlagring(
+    suspend fun settMellomlagring(
+        callId: CallId,
+        idToken: IdToken,
         ytelse: Ytelse,
-        fnr: String,
         verdi: String,
-        expirationDate: Date = Calendar.getInstance().let {
-            it.add(Calendar.HOUR, mellomlagretTidTimer.toInt())
-            it.time
-        }
-    ) {
-        val krypto = Krypto(passphrase, fnr)
-        redisStore.set(genererKey(ytelse, fnr), krypto.encrypt(verdi), expirationDate)
-    }
+    ) = k9BrukerdialogCacheGateway.mellomlagreSøknad(
+        cacheRequest = CacheRequest(
+            nøkkelPrefiks = genererNøkkelPrefix(ytelse),
+            verdi = verdi,
+            utløpsdato = ZonedDateTime.now(ZoneOffset.UTC).plusHours(mellomlagretTidTimer.toLong()),
+            opprettet = ZonedDateTime.now(ZoneOffset.UTC),
+            endret = null
+        ),
+        idToken = idToken,
+        callId = callId
+    )
 
-    fun updateMellomlagring(
+    suspend fun slettMellomlagring(
+        callId: CallId,
+        idToken: IdToken,
+        ytelse: Ytelse
+    ) = k9BrukerdialogCacheGateway.slettMellomlagretSøknad(genererNøkkelPrefix(ytelse), idToken, callId)
+
+    suspend fun oppdaterMellomlagring(
+        callId: CallId,
+        idToken: IdToken,
         ytelse: Ytelse,
-        fnr: String,
-        verdi: String
-    ) {
-        val krypto = Krypto(passphrase, fnr)
-        redisStore.update(genererKey(ytelse, fnr), krypto.encrypt(verdi))
+        verdi: String,
+    ): CacheResponse {
+        val eksisterendeMellomlagring = k9BrukerdialogCacheGateway.hentMellomlagretSøknad(
+            nøkkelPrefiks = genererNøkkelPrefix(ytelse),
+            idToken = idToken,
+            callId = callId
+        )
+        return if(eksisterendeMellomlagring != null){
+            k9BrukerdialogCacheGateway.oppdaterMellomlagretSøknad(
+                cacheRequest = CacheRequest(
+                    nøkkelPrefiks = genererNøkkelPrefix(ytelse),
+                    verdi = verdi,
+                    utløpsdato = eksisterendeMellomlagring.utløpsdato,
+                    opprettet = eksisterendeMellomlagring.opprettet,
+                    endret = ZonedDateTime.now()
+
+                ),
+                idToken = idToken,
+                callId = callId
+
+            )
+        } else settMellomlagring(callId, idToken, ytelse, verdi)
     }
-
-    fun deleteMellomlagring(ytelse: Ytelse, fnr: String) =
-        redisStore.delete(genererKey(ytelse, fnr))
-
-
-    fun getTTLInMs(ytelse: Ytelse, fnr: String): Long =
-        redisStore.getPTTL(genererKey(ytelse, fnr))
 }

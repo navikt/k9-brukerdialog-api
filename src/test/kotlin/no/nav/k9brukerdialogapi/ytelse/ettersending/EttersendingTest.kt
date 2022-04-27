@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending
 
-import com.github.fppt.jedismock.RedisServer
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
 import io.ktor.http.*
@@ -9,10 +8,7 @@ import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
-import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
-import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
-import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
-import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
+import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
@@ -38,6 +34,7 @@ class EttersendingTest {
             .stubK9OppslagSoker()
             .stubK9OppslagBarn()
             .stubK9Mellomlagring()
+            .stubK9BrukerdialogCache()
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
@@ -45,16 +42,12 @@ class EttersendingTest {
         private val gyldigFødselsnummerA = "02119970078"
         private val tokenXToken = TestUtils.getTokenDingsToken(fnr = gyldigFødselsnummerA)
 
-        val redisServer: RedisServer = RedisServer
-            .newRedisServer().apply { start() }
-
         fun getConfig(): ApplicationConfig {
             val fileConfig = ConfigFactory.load()
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment,
-                    redisServer = redisServer
+                    kafkaEnvironment = kafkaEnvironment
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
@@ -75,7 +68,6 @@ class EttersendingTest {
         @JvmStatic
         fun tearDown() {
             wireMockServer.stop()
-            redisServer.stop()
             kafkaEnvironment.tearDown()
         }
     }

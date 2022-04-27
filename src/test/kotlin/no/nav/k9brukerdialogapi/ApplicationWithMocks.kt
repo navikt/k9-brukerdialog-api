@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi
 
-import com.github.fppt.jedismock.RedisServer
 import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.testsupport.asArguments
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
@@ -31,14 +30,11 @@ class ApplicationWithMocks {
                 .stubK9Mellomlagring()
                 .stubK9OppslagSoker()
 
-            val redisServer: RedisServer = RedisServer
-                .newRedisServer().apply { start() }
             val kafkaEnvironment = KafkaWrapper.bootstrap()
 
             val testArgs = TestConfiguration.asMap(
                 port = 8082,
                 wireMockServer = wireMockServer,
-                redisServer = redisServer,
                 kafkaEnvironment = kafkaEnvironment
             ).asArguments()
 

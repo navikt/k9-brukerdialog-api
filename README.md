@@ -45,8 +45,8 @@ https://grafana.nais.io/d/fUOECBs7k/k9-brukerdialog-api?orgId=1
 
 
 ## Mellomlagring
-Mellomlagring (skjemadata fra frontend) gjøres i en Redis instans og lagres i 72 timer om gangen. Man må spesifisere
-hvilken [ytelse](src/main/kotlin/no/nav/k9brukerdialogapi/ytelse/Ytelse.kt) det gjelder som route parameter. 
+Bruker [k9-brukerdialog-cache](https://github.com/navikt/k9-brukerdialog-cache) for å mellomlagre søknad i 72 timer.
+Man må spesifisere hvilken [ytelse](src/main/kotlin/no/nav/k9brukerdialogapi/ytelse/Ytelse.kt) det gjelder som route parameter.
 
 ### Legge til mellomlagring 
 ```
