@@ -57,8 +57,7 @@ class Søknad(
             .medYtelse(
                 OmsorgspengerAleneOmsorg(
                     barn.first().somK9Barn(),
-                    Periode(barn.first().k9PeriodeFraOgMed(), null),
-                    ""
+                    Periode(barn.first().k9PeriodeFraOgMed(), null)
                 )
             )
     }

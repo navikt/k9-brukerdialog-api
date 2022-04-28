@@ -123,8 +123,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
                       "norskIdentitetsnummer": "25058118020",
                       "fødselsdato": null
                     },
-                    "periode": "2021-01-01/..",
-                    "begrunnelse": ""
+                    "periode": "2021-01-01/.."
                   },
                   "språk": "nb",
                   "journalposter": [],
