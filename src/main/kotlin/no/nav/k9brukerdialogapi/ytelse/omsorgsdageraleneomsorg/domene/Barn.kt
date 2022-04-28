@@ -44,8 +44,7 @@ class Barn(
                 Violation(
                     parameterName = "barn.identitetsnummer",
                     parameterType = ParameterType.ENTITY,
-                    reason = "Ikke gyldig identitetsnummer.",
-                    invalidValue = identitetsnummer
+                    reason = "Ikke gyldig identitetsnummer."
                 )
             )
         }
