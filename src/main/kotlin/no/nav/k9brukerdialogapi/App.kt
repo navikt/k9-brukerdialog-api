@@ -16,7 +16,9 @@ import io.ktor.metrics.micrometer.*
 import io.ktor.request.*
 import io.ktor.routing.*
 import io.prometheus.client.hotspot.DefaultExports
-import no.nav.helse.dusseldorf.ktor.auth.*
+import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
+import no.nav.helse.dusseldorf.ktor.auth.IdTokenStatusPages
+import no.nav.helse.dusseldorf.ktor.auth.clients
 import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthCheck
 import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthConfig
 import no.nav.helse.dusseldorf.ktor.client.buildURL
@@ -46,6 +48,8 @@ import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
+import no.nav.security.token.support.ktor.asIssuerProps
+import no.nav.security.token.support.ktor.tokenValidationSupport
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -62,6 +66,9 @@ fun Application.k9BrukerdialogApi() {
     System.setProperty("dusseldorf.ktor.serializeProblemDetailsWithContentNegotiation", "true")
 
     val configuration = Configuration(environment.config)
+    val config = this.environment.config
+    val tokenXIssuer = config.property("no.nav.security.jwt.issuers.0.issuer_name").getString()
+
     val accessTokenClientResolver = AccessTokenClientResolver(environment.config.clients())
     val tokenxClient = CachedAccessTokenClient(accessTokenClientResolver.tokenxClient)
 
@@ -90,13 +97,9 @@ fun Application.k9BrukerdialogApi() {
     }
 
     val idTokenProvider = IdTokenProvider(cookieName = configuration.getCookieName())
-    val issuers = configuration.issuers()
 
     install(Authentication) {
-        multipleJwtIssuers(
-            issuers = issuers,
-            extractHttpAuthHeader = { call -> idTokenProvider.getIdToken(call).somHttpAuthHeader() }
-        )
+        tokenValidationSupport(name = "ValidClaim", config = config)
     }
 
     install(StatusPages) {
@@ -155,7 +158,7 @@ fun Application.k9BrukerdialogApi() {
             logger.info("Kafka Producer Stoppet.")
         }
 
-        authenticate(*issuers.allIssuers()) {
+        authenticate(*config.asIssuerProps().map { it.key }.toTypedArray()) {
             ytelseRoutes(
                 idTokenProvider = idTokenProvider,
                 kafkaProdusent = kafkaProducer,

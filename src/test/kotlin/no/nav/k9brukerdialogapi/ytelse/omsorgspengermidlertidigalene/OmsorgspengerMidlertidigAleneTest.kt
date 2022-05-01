@@ -17,6 +17,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Søknad
+import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
@@ -29,6 +30,7 @@ class OmsorgspengerMidlertidigAleneTest {
 
     private companion object{
         private val logger: Logger = LoggerFactory.getLogger(OmsorgspengerMidlertidigAleneTest::class.java)
+        val mockOAuth2Server = MockOAuth2Server()
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -50,7 +52,8 @@ class OmsorgspengerMidlertidigAleneTest {
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment
+                    kafkaEnvironment = kafkaEnvironment,
+                    mockOAuth2Server = mockOAuth2Server
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)

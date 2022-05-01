@@ -11,6 +11,11 @@ import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.wiremock.*
+import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.security.mock.oauth2.OAuth2Config
+import no.nav.security.mock.oauth2.http.MockWebServerWrapper
+import no.nav.security.mock.oauth2.http.OAuth2HttpServer
+import okhttp3.mockwebserver.MockWebServer
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -28,7 +33,7 @@ class ApplicationTest {
     private companion object {
 
         private val logger: Logger = LoggerFactory.getLogger(ApplicationTest::class.java)
-
+        val mockOAuth2Server = MockOAuth2Server()
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -57,7 +62,8 @@ class ApplicationTest {
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment
+                    kafkaEnvironment = kafkaEnvironment,
+                    mockOAuth2Server = mockOAuth2Server
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
@@ -71,6 +77,7 @@ class ApplicationTest {
         @JvmStatic
         fun buildUp() {
             CollectorRegistry.defaultRegistry.clear()
+            //mockOAuth2Server.start(8091)
             engine.start(wait = true)
         }
 
@@ -80,6 +87,7 @@ class ApplicationTest {
             logger.info("Tearing down")
             wireMockServer.stop()
             kafkaEnvironment.tearDown()
+            mockOAuth2Server.shutdown()
             logger.info("Tear down complete")
         }
     }
