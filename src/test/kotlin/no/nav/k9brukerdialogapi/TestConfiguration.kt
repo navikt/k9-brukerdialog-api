@@ -48,14 +48,14 @@ object TestConfiguration {
             map["nav.auth.clients.1.discovery_endpoint"] = wireMockServer.getTokendingsWellKnownUrl()
 
             // Issuers
-            map["no.nav.security.jwt.issuers.0.issuer_name"] = "tokenx"
-            map["no.nav.security.jwt.issuers.0.discoveryurl"] = "${mockOAuth2Server.wellKnownUrl("tokenx")}"
-            map["no.nav.security.jwt.issuers.0.accepted_audience"] = "aud-localhost"
-            map["no.nav.security.jwt.issuers.0.validation.optional-claims"] = "acr=Level4"
+            map["no.nav.security.jwt.issuers.0.issuer_name"] = "tokendings"
+            map["no.nav.security.jwt.issuers.0.discoveryurl"] = "${mockOAuth2Server.wellKnownUrl("tokendings")}"
+            map["no.nav.security.jwt.issuers.0.accepted_audience"] = "dev-gcp:dusseldorf:k9-brukerdialog-api"
 
             map["no.nav.security.jwt.issuers.1.issuer_name"] = "login-service-v2"
             map["no.nav.security.jwt.issuers.1.discoveryurl"] = "${mockOAuth2Server.wellKnownUrl("login-service-v2")}"
-            map["no.nav.security.jwt.issuers.1.accepted_audience"] = LoginService.V1_0.getAudience()
+            map["no.nav.security.jwt.issuers.1.accepted_audience"] = "dev-gcp:dusseldorf:k9-brukerdialog-api"
+            map["no.nav.security.jwt.issuers.1.cookie_name"] = "selvbetjening-idtoken"
 
             // scopes
             map["nav.auth.scopes.k9-mellomlagring-client-id"] = "k9-mellomlagring-client-id/.default"

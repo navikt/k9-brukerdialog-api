@@ -6,16 +6,11 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils.Companion.getAuthCookie
-import no.nav.helse.TestUtils.Companion.getTokenDingsToken
 import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.security.mock.oauth2.MockOAuth2Server
-import no.nav.security.mock.oauth2.OAuth2Config
-import no.nav.security.mock.oauth2.http.MockWebServerWrapper
-import no.nav.security.mock.oauth2.http.OAuth2HttpServer
-import okhttp3.mockwebserver.MockWebServer
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -33,7 +28,7 @@ class ApplicationTest {
     private companion object {
 
         private val logger: Logger = LoggerFactory.getLogger(ApplicationTest::class.java)
-        val mockOAuth2Server = MockOAuth2Server()
+        val mockOAuth2Server = MockOAuth2Server().apply { start() }
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -53,8 +48,20 @@ class ApplicationTest {
         private val gyldigFødselsnummerA = "02119970078"
         private val gyldigFodselsnummerB = "02119970079"
         private const val ikkeMyndigFnr = "12125012345"
-        private val cookie = getAuthCookie(gyldigFødselsnummerA)
-        private val tokenXToken = getTokenDingsToken(fnr = gyldigFødselsnummerA)
+        private val cookie = getAuthCookie(
+            jwtToken = mockOAuth2Server.issueToken(
+                issuerId = "login-service-v2",
+                subject = gyldigFødselsnummerA,
+                audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+                claims = mapOf("acr" to "Level4")
+            ).serialize()
+        )
+        private val tokenXToken = mockOAuth2Server.issueToken(
+            issuerId = "tokendings",
+            subject = gyldigFødselsnummerA,
+            audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+            claims = mapOf("acr" to "Level4")
+        ).serialize()
 
         fun getConfig(): ApplicationConfig {
 
@@ -77,7 +84,6 @@ class ApplicationTest {
         @JvmStatic
         fun buildUp() {
             CollectorRegistry.defaultRegistry.clear()
-            //mockOAuth2Server.start(8091)
             engine.start(wait = true)
         }
 
@@ -121,7 +127,7 @@ class ApplicationTest {
     }
 
     @Nested
-    inner class SøkerOppslagTest{
+    inner class SøkerOppslagTest {
 
         @Test
         fun `Hente søker med loginservice token som cookie`() {
@@ -129,7 +135,7 @@ class ApplicationTest {
                 engine = engine,
                 logger = logger,
                 httpMethod = HttpMethod.Get,
-                path = OPPSLAG_URL+SØKER_URL,
+                path = OPPSLAG_URL + SØKER_URL,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = """
                     {
@@ -201,146 +207,174 @@ class ApplicationTest {
                 "detail": "Tilgang nektet."
             }
             """.trimIndent(),
-                cookie = getAuthCookie(ikkeMyndigFnr)
+                cookie = getAuthCookie(
+                    jwtToken = mockOAuth2Server.issueToken(
+                        issuerId = "login-service-v2",
+                        subject = ikkeMyndigFnr,
+                        audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+                        claims = mapOf("acr" to "Level4")
+                    ).serialize()
+                )
             )
 
             wireMockServer.stubK9OppslagSoker() // reset til default mapping
+
+            @Test
+            fun `Hente søker med tilgangsnivå 3`() {
+                requestAndAssert(
+                    engine = engine,
+                    logger = logger,
+                    httpMethod = HttpMethod.Get,
+                    path = OPPSLAG_URL + SØKER_URL,
+                    cookie = getAuthCookie(
+                        jwtToken = mockOAuth2Server.issueToken(
+                            issuerId = "login-service-v2",
+                            subject = gyldigFødselsnummerA,
+                            audience = "k9-brukerdialog-api",
+                            claims = mapOf("acr" to "Level3")
+                        ).serialize()
+                    ),
+                    expectedCode = HttpStatusCode.Forbidden,
+                    expectedResponse = null
+                )
+            }
         }
 
-        @Test
-        fun `Hente søker med tilgangsnivå 3`() {
-            requestAndAssert(
-                engine = engine,
-                logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = OPPSLAG_URL + SØKER_URL,
-                cookie = getAuthCookie(fnr = gyldigFødselsnummerA, level = 3),
-                expectedCode = HttpStatusCode.Forbidden,
-                expectedResponse = null
-            )
-        }
-    }
+        @Nested
+        inner class MellomlagringTest {
 
-    @Nested
-    inner class MellomlagringTest {
-
-        @Test
-        fun `Sende inn, hente, oppdatere og slette mellomlagring`(){
-            val mellomlagringSøknad = """
+            @Test
+            fun `Sende inn, hente, oppdatere og slette mellomlagring`() {
+                val mellomlagringSøknad = """
                 {
                     "mellomlagring": "soknad"
                 }
             """.trimIndent()
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Post,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = tokenXToken,
-                expectedCode = HttpStatusCode.Created,
-                expectedResponse = null,
-                requestEntity = mellomlagringSøknad,
-                engine = engine,
-                logger = logger
-            )
+                requestAndAssert(
+                    httpMethod = HttpMethod.Post,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = tokenXToken,
+                    expectedCode = HttpStatusCode.Created,
+                    expectedResponse = null,
+                    requestEntity = mellomlagringSøknad,
+                    engine = engine,
+                    logger = logger
+                )
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = tokenXToken,
-                expectedCode = HttpStatusCode.OK,
-                expectedResponse = mellomlagringSøknad,
-                engine = engine,
-                logger = logger
-            )
-            val oppdatertMellomlagringSøknad = """
+                requestAndAssert(
+                    httpMethod = HttpMethod.Get,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = tokenXToken,
+                    expectedCode = HttpStatusCode.OK,
+                    expectedResponse = mellomlagringSøknad,
+                    engine = engine,
+                    logger = logger
+                )
+                val oppdatertMellomlagringSøknad = """
                 {
                     "mellomlagring": "oppdatert soknad"
                 }
             """.trimIndent()
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Put,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = tokenXToken,
-                expectedCode = HttpStatusCode.NoContent,
-                requestEntity = oppdatertMellomlagringSøknad,
-                engine = engine,
-                logger = logger
-            )
+                requestAndAssert(
+                    httpMethod = HttpMethod.Put,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = tokenXToken,
+                    expectedCode = HttpStatusCode.NoContent,
+                    requestEntity = oppdatertMellomlagringSøknad,
+                    engine = engine,
+                    logger = logger
+                )
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = tokenXToken,
-                expectedCode = HttpStatusCode.OK,
-                expectedResponse = oppdatertMellomlagringSøknad,
-                engine = engine,
-                logger = logger
-            )
+                requestAndAssert(
+                    httpMethod = HttpMethod.Get,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = tokenXToken,
+                    expectedCode = HttpStatusCode.OK,
+                    expectedResponse = oppdatertMellomlagringSøknad,
+                    engine = engine,
+                    logger = logger
+                )
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Delete,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = tokenXToken,
-                expectedCode = HttpStatusCode.Accepted,
-                engine = engine,
-                logger = logger
-            )
+                requestAndAssert(
+                    httpMethod = HttpMethod.Delete,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = tokenXToken,
+                    expectedCode = HttpStatusCode.Accepted,
+                    engine = engine,
+                    logger = logger
+                )
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = tokenXToken,
-                expectedCode = HttpStatusCode.OK,
-                expectedResponse = """{}""".trimIndent(),
-                engine = engine,
-                logger = logger
-            )
+                requestAndAssert(
+                    httpMethod = HttpMethod.Get,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = tokenXToken,
+                    expectedCode = HttpStatusCode.OK,
+                    expectedResponse = """{}""".trimIndent(),
+                    engine = engine,
+                    logger = logger
+                )
 
-        }
+            }
 
-        @Test
-        fun `gitt mellomlagring ikke eksisterer, forvent tomt objekt`() {
+            @Test
+            fun `gitt mellomlagring ikke eksisterer, forvent tomt objekt`() {
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = getTokenDingsToken(gyldigFodselsnummerB),
-                expectedCode = HttpStatusCode.OK,
-                expectedResponse = """{}""",
-                engine = engine,
-                logger = logger
-            )
-        }
+                requestAndAssert(
+                    httpMethod = HttpMethod.Get,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = mockOAuth2Server.issueToken(
+                        issuerId = "tokendings",
+                        subject = gyldigFodselsnummerB,
+                        audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+                        claims = mapOf("acr" to "Level4")
+                    ).serialize(),
+                    expectedCode = HttpStatusCode.OK,
+                    expectedResponse = """{}""",
+                    engine = engine,
+                    logger = logger
+                )
+            }
 
-        @Test
-        fun `gitt det mellomlagres på en eksisterende nøkkel, forvent konfliktfeil`() {
-            val mellomlagringSøknad = """
+            @Test
+            fun `gitt det mellomlagres på en eksisterende nøkkel, forvent konfliktfeil`() {
+                val mellomlagringSøknad = """
                 {
                     "mellomlagring": "soknad"
                 }
             """.trimIndent()
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Post,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = getTokenDingsToken("02119970080"),
-                expectedCode = HttpStatusCode.Created,
-                expectedResponse = null,
-                requestEntity = mellomlagringSøknad,
-                engine = engine,
-                logger = logger
-            )
+                requestAndAssert(
+                    httpMethod = HttpMethod.Post,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = mockOAuth2Server.issueToken(
+                        issuerId = "tokendings",
+                        subject = "02119970080",
+                        audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+                        claims = mapOf("acr" to "Level4")
+                    ).serialize(),
+                    expectedCode = HttpStatusCode.Created,
+                    expectedResponse = null,
+                    requestEntity = mellomlagringSøknad,
+                    engine = engine,
+                    logger = logger
+                )
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Post,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = getTokenDingsToken("02119970080"),
-                expectedCode = HttpStatusCode.Conflict,
-                requestEntity = mellomlagringSøknad,
-                engine = engine,
-                logger = logger,
-                expectedResponse = """
+                requestAndAssert(
+                    httpMethod = HttpMethod.Post,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = mockOAuth2Server.issueToken(
+                        issuerId = "tokendings",
+                        subject = "02119970080",
+                        audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+                        claims = mapOf("acr" to "Level4")
+                    ).serialize(),
+                    expectedCode = HttpStatusCode.Conflict,
+                    requestEntity = mellomlagringSøknad,
+                    engine = engine,
+                    logger = logger,
+                    expectedResponse = """
                 {
                   "type": "/problem-details/cache-conflict",
                   "title": "cache-conflict",
@@ -349,43 +383,48 @@ class ApplicationTest {
                   "instance": "mellomlagring/OMSORGSDAGER_ALENEOMSORG"
                 }
             """.trimIndent()
-            )
-        }
+                )
+            }
 
-        @Test
-        fun `gitt sletting av en ikke-eksisterende nøkkel, forvent ingen feil`() {
-            val mellomlagringSøknad = """
+            @Test
+            fun `gitt sletting av en ikke-eksisterende nøkkel, forvent ingen feil`() {
+                val mellomlagringSøknad = """
                 {
                     "mellomlagring": "soknad"
                 }
             """.trimIndent()
 
-            requestAndAssert(
-                httpMethod = HttpMethod.Delete,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = getTokenDingsToken("02119970081"),
-                expectedCode = HttpStatusCode.Accepted,
-                requestEntity = mellomlagringSøknad,
-                expectedResponse = null,
-                engine = engine,
-                logger = logger,
-            )
+                requestAndAssert(
+                    httpMethod = HttpMethod.Delete,
+                    path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                    jwtToken = mockOAuth2Server.issueToken(
+                        issuerId = "tokendings",
+                        subject = "02119970081",
+                        audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+                        claims = mapOf("acr" to "Level4")
+                    ).serialize(),
+                    expectedCode = HttpStatusCode.Accepted,
+                    requestEntity = mellomlagringSøknad,
+                    expectedResponse = null,
+                    engine = engine,
+                    logger = logger,
+                )
+            }
         }
-    }
 
-    @Nested
-    inner class BarnOppslagTest {
-        @Test
-        fun `Hente barn og eksplisit sjekke at identitetsnummer ikke blir med ved get kall`() {
-            val respons = requestAndAssert(
-                engine = engine,
-                logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = OPPSLAG_URL+BARN_URL,
-                expectedCode = HttpStatusCode.OK,
-                cookie = cookie,
-                //language=json
-                expectedResponse = """
+        @Nested
+        inner class BarnOppslagTest {
+            @Test
+            fun `Hente barn og eksplisit sjekke at identitetsnummer ikke blir med ved get kall`() {
+                val respons = requestAndAssert(
+                    engine = engine,
+                    logger = logger,
+                    httpMethod = HttpMethod.Get,
+                    path = OPPSLAG_URL + BARN_URL,
+                    expectedCode = HttpStatusCode.OK,
+                    cookie = cookie,
+                    //language=json
+                    expectedResponse = """
                 {
                   "barn": [
                     {
@@ -405,46 +444,46 @@ class ApplicationTest {
                   ]
                 }
             """.trimIndent()
-            )
+                )
 
-            val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
+                val responsSomJSONArray = JSONObject(respons).getJSONArray("barn")
 
-            assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
-            assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
-        }
+                assertFalse(responsSomJSONArray.getJSONObject(0).has("identitetsnummer"))
+                assertFalse(responsSomJSONArray.getJSONObject(1).has("identitetsnummer"))
+            }
 
-        @Test
-        fun `Feil ved henting av barn skal returnere tom liste`() {
-            wireMockServer.stubK9OppslagBarn(simulerFeil = true)
-            requestAndAssert(
-                engine = engine,
-                logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = OPPSLAG_URL+BARN_URL,
-                expectedCode = HttpStatusCode.OK,
-                expectedResponse = """
+            @Test
+            fun `Feil ved henting av barn skal returnere tom liste`() {
+                wireMockServer.stubK9OppslagBarn(simulerFeil = true)
+                requestAndAssert(
+                    engine = engine,
+                    logger = logger,
+                    httpMethod = HttpMethod.Get,
+                    path = OPPSLAG_URL + BARN_URL,
+                    expectedCode = HttpStatusCode.OK,
+                    expectedResponse = """
             {
                 "barn": []
             }
             """.trimIndent(),
-                cookie = getAuthCookie("26104500284")
-            )
-            wireMockServer.stubK9OppslagBarn()
+                    cookie = getAuthCookie("26104500284")
+                )
+                wireMockServer.stubK9OppslagBarn()
+            }
         }
-    }
 
-    @Nested
-    inner class ArbeidsgiverOppslagTest{
-        @Test
-        fun `Oppslag av alle arbeidsgiver inkludert private og frilansoppdrag`(){
-            requestAndAssert(
-                engine = engine,
-                logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30&frilansoppdrag=true&private_arbeidsgivere=true",
-                expectedCode = HttpStatusCode.OK,
-                //language=json
-                expectedResponse = """
+        @Nested
+        inner class ArbeidsgiverOppslagTest {
+            @Test
+            fun `Oppslag av alle arbeidsgiver inkludert private og frilansoppdrag`() {
+                requestAndAssert(
+                    engine = engine,
+                    logger = logger,
+                    httpMethod = HttpMethod.Get,
+                    path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30&frilansoppdrag=true&private_arbeidsgivere=true",
+                    expectedCode = HttpStatusCode.OK,
+                    //language=json
+                    expectedResponse = """
             {
               "organisasjoner": [
                 {
@@ -487,20 +526,20 @@ class ApplicationTest {
               ]
             }
             """.trimIndent(),
-                cookie = cookie
-            )
-        }
+                    cookie = cookie
+                )
+            }
 
-        @Test
-        fun `Oppslag av arbeidsgivere uten private og frilansoppdrag`(){
-            requestAndAssert(
-                engine = engine,
-                logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30",
-                expectedCode = HttpStatusCode.OK,
-                //language=json
-                expectedResponse = """
+            @Test
+            fun `Oppslag av arbeidsgivere uten private og frilansoppdrag`() {
+                requestAndAssert(
+                    engine = engine,
+                    logger = logger,
+                    httpMethod = HttpMethod.Get,
+                    path = "$OPPSLAG_URL$ARBEIDSGIVER_URL?fra_og_med=2019-01-01&til_og_med=2019-01-30",
+                    expectedCode = HttpStatusCode.OK,
+                    //language=json
+                    expectedResponse = """
             {
               "organisasjoner": [
                 {
@@ -520,66 +559,67 @@ class ApplicationTest {
               "frilansoppdrag": null
             }
             """.trimIndent(),
-                cookie = cookie
-            )
-        }
-    }
-
-    @Nested
-    inner class VedleggTest{
-        @Test
-        fun `Test håndtering av vedlegg`() {
-            val jpeg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
-
-            with(engine) {
-                // LASTER OPP VEDLEGG
-                val url = handleRequestUploadImage(
-                    cookie = cookie,
-                    vedlegg = jpeg
+                    cookie = cookie
                 )
-                val path = Url(url).fullPath
-                // HENTER OPPLASTET VEDLEGG
-                handleRequest(HttpMethod.Get, path) {
-                    addHeader("Cookie", cookie.toString())
-                }.apply {
-                    assertEquals(HttpStatusCode.OK, response.status())
-                    assertTrue(Arrays.equals(jpeg, response.byteContent))
-                    // SLETTER OPPLASTET VEDLEGG
-                    handleRequest(HttpMethod.Delete, path) {
+            }
+        }
+
+        @Nested
+        inner class VedleggTest {
+            @Test
+            fun `Test håndtering av vedlegg`() {
+                val jpeg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
+
+                with(engine) {
+                    // LASTER OPP VEDLEGG
+                    val url = handleRequestUploadImage(
+                        cookie = cookie,
+                        vedlegg = jpeg
+                    )
+                    val path = Url(url).fullPath
+                    // HENTER OPPLASTET VEDLEGG
+                    handleRequest(HttpMethod.Get, path) {
                         addHeader("Cookie", cookie.toString())
                     }.apply {
-                        assertEquals(HttpStatusCode.NoContent, response.status())
-                        // VERIFISERER AT VEDLEGG ER SLETTET
-                        handleRequest(HttpMethod.Get, path) {
+                        assertEquals(HttpStatusCode.OK, response.status())
+                        assertTrue(Arrays.equals(jpeg, response.byteContent))
+                        // SLETTER OPPLASTET VEDLEGG
+                        handleRequest(HttpMethod.Delete, path) {
                             addHeader("Cookie", cookie.toString())
                         }.apply {
-                            assertEquals(HttpStatusCode.NotFound, response.status())
+                            assertEquals(HttpStatusCode.NoContent, response.status())
+                            // VERIFISERER AT VEDLEGG ER SLETTET
+                            handleRequest(HttpMethod.Get, path) {
+                                addHeader("Cookie", cookie.toString())
+                            }.apply {
+                                assertEquals(HttpStatusCode.NotFound, response.status())
+                            }
                         }
                     }
                 }
             }
-        }
 
-        @Test
-        fun `Test opplasting av ikke støttet vedleggformat`() {
-            engine.handleRequestUploadImage(
-                cookie = cookie,
-                vedlegg = "jwkset.json".fromResources().readBytes(),
-                contentType = "application/json",
-                fileName = "jwkset.json",
-                expectedCode = HttpStatusCode.BadRequest
-            )
-        }
+            @Test
+            fun `Test opplasting av ikke støttet vedleggformat`() {
+                engine.handleRequestUploadImage(
+                    cookie = cookie,
+                    vedlegg = "jwkset.json".fromResources().readBytes(),
+                    contentType = "application/json",
+                    fileName = "jwkset.json",
+                    expectedCode = HttpStatusCode.BadRequest
+                )
+            }
 
-        @Test
-        fun `Test opplasting av for stort vedlegg`() {
-            engine.handleRequestUploadImage(
-                cookie = cookie,
-                vedlegg = ByteArray(8 * 1024 * 1024 + 10),
-                contentType = "image/png",
-                fileName = "big_picture.png",
-                expectedCode = HttpStatusCode.PayloadTooLarge
-            )
+            @Test
+            fun `Test opplasting av for stort vedlegg`() {
+                engine.handleRequestUploadImage(
+                    cookie = cookie,
+                    vedlegg = ByteArray(8 * 1024 * 1024 + 10),
+                    contentType = "image/png",
+                    fileName = "big_picture.png",
+                    expectedCode = HttpStatusCode.PayloadTooLarge
+                )
+            }
         }
     }
 }

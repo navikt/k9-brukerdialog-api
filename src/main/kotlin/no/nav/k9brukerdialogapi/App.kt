@@ -48,6 +48,7 @@ import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
+import no.nav.security.token.support.ktor.RequiredClaims
 import no.nav.security.token.support.ktor.asIssuerProps
 import no.nav.security.token.support.ktor.tokenValidationSupport
 import org.slf4j.Logger
@@ -67,7 +68,7 @@ fun Application.k9BrukerdialogApi() {
 
     val configuration = Configuration(environment.config)
     val config = this.environment.config
-    val tokenXIssuer = config.property("no.nav.security.jwt.issuers.0.issuer_name").getString()
+    val allIssuers = config.asIssuerProps().keys
 
     val accessTokenClientResolver = AccessTokenClientResolver(environment.config.clients())
     val tokenxClient = CachedAccessTokenClient(accessTokenClientResolver.tokenxClient)
@@ -99,7 +100,16 @@ fun Application.k9BrukerdialogApi() {
     val idTokenProvider = IdTokenProvider(cookieName = configuration.getCookieName())
 
     install(Authentication) {
-        tokenValidationSupport(name = "ValidClaim", config = config)
+        allIssuers.map { issuer: String ->
+            tokenValidationSupport(
+                name = issuer,
+                config = config,
+                requiredClaims = RequiredClaims(
+                    issuer = issuer,
+                    claimMap = arrayOf("acr=Level4")
+                )
+            )
+        }
     }
 
     install(StatusPages) {
@@ -158,7 +168,7 @@ fun Application.k9BrukerdialogApi() {
             logger.info("Kafka Producer Stoppet.")
         }
 
-        authenticate(*config.asIssuerProps().map { it.key }.toTypedArray()) {
+        authenticate(*allIssuers.toTypedArray()) {
             ytelseRoutes(
                 idTokenProvider = idTokenProvider,
                 kafkaProdusent = kafkaProducer,

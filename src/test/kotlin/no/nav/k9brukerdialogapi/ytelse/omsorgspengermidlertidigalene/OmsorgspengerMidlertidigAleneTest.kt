@@ -30,7 +30,7 @@ class OmsorgspengerMidlertidigAleneTest {
 
     private companion object{
         private val logger: Logger = LoggerFactory.getLogger(OmsorgspengerMidlertidigAleneTest::class.java)
-        val mockOAuth2Server = MockOAuth2Server()
+        val mockOAuth2Server = MockOAuth2Server().apply { start() }
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -45,7 +45,12 @@ class OmsorgspengerMidlertidigAleneTest {
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
 
         private val gyldigFødselsnummerA = "02119970078"
-        private val tokenXToken = TestUtils.getTokenDingsToken(fnr = gyldigFødselsnummerA)
+        private val tokenXToken = mockOAuth2Server.issueToken(
+            issuerId = "tokendings",
+            subject = gyldigFødselsnummerA,
+            audience = "dev-gcp:duseldorf:k9-brukerdialog-api",
+            claims = mapOf("acr" to "Level4")
+        ).serialize()
 
         fun getConfig(): ApplicationConfig {
             val fileConfig = ConfigFactory.load()

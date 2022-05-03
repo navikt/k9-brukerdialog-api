@@ -5,7 +5,6 @@ import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
-import no.nav.helse.TestUtils
 import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
@@ -29,7 +28,7 @@ class OmsorgspengerUtvidetRettTest {
 
     private companion object{
         private val logger: Logger = LoggerFactory.getLogger(OmsorgspengerUtvidetRettTest::class.java)
-        val mockOAuth2Server = MockOAuth2Server()
+        val mockOAuth2Server = MockOAuth2Server().apply { start() }
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -45,7 +44,12 @@ class OmsorgspengerUtvidetRettTest {
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
 
         private val gyldigFødselsnummerA = "02119970078"
-        private val tokenXToken = TestUtils.getTokenDingsToken(fnr = gyldigFødselsnummerA)
+        private val tokenXToken = mockOAuth2Server.issueToken(
+            issuerId = "tokendings",
+            subject = gyldigFødselsnummerA,
+            audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+            claims = mapOf("acr" to "Level4")
+        ).serialize()
 
         fun getConfig(): ApplicationConfig {
             val fileConfig = ConfigFactory.load()
