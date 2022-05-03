@@ -48,7 +48,7 @@ class OmsorgsdagerAleneomsorgTest {
         private val tokenXToken = mockOAuth2Server.issueToken(
             issuerId = "tokendings",
             subject = gyldigFødselsnummerA,
-            audience = "dev-gcp:duseldorf:k9-brukerdialog-api",
+            audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
             claims = mapOf("acr" to "Level4")
         ).serialize()
 

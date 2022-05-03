@@ -50,7 +50,7 @@ class ApplicationTest {
         private const val ikkeMyndigFnr = "12125012345"
         private val cookie = getAuthCookie(
             jwtToken = mockOAuth2Server.issueToken(
-                issuerId = "login-service-v2",
+                issuerId = "login-service",
                 subject = gyldigFødselsnummerA,
                 audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
                 claims = mapOf("acr" to "Level4")
@@ -209,7 +209,7 @@ class ApplicationTest {
             """.trimIndent(),
                 cookie = getAuthCookie(
                     jwtToken = mockOAuth2Server.issueToken(
-                        issuerId = "login-service-v2",
+                        issuerId = "login-service",
                         subject = ikkeMyndigFnr,
                         audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
                         claims = mapOf("acr" to "Level4")
@@ -462,11 +462,11 @@ class ApplicationTest {
                     path = OPPSLAG_URL + BARN_URL,
                     expectedCode = HttpStatusCode.OK,
                     expectedResponse = """
-            {
-                "barn": []
-            }
-            """.trimIndent(),
-                    cookie = getAuthCookie("26104500284")
+                        {
+                            "barn": []
+                        }
+                        """.trimIndent(),
+                    cookie = cookie
                 )
                 wireMockServer.stubK9OppslagBarn()
             }
