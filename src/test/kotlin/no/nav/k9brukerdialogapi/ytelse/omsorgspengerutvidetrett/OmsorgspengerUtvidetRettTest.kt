@@ -10,7 +10,6 @@ import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
-import no.nav.k9brukerdialogapi.wiremock.stubK9BrukerdialogCache
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -37,7 +36,6 @@ class OmsorgspengerUtvidetRettTest {
             .build()
             .stubK9OppslagSoker()
             .stubK9OppslagBarn()
-            .stubK9BrukerdialogCache()
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
