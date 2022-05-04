@@ -5,6 +5,7 @@ import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
+import no.nav.helse.TestUtils.Companion.issueToken
 import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
@@ -45,12 +46,7 @@ class OmsorgsdagerAleneomsorgTest {
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
 
         private val gyldigFødselsnummerA = "02119970078"
-        private val tokenXToken = mockOAuth2Server.issueToken(
-            issuerId = "tokendings",
-            subject = gyldigFødselsnummerA,
-            audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
-            claims = mapOf("acr" to "Level4")
-        ).serialize()
+        private val tokenXToken = mockOAuth2Server.issueToken(fnr = gyldigFødselsnummerA)
 
         fun getConfig(): ApplicationConfig {
             val fileConfig = ConfigFactory.load()

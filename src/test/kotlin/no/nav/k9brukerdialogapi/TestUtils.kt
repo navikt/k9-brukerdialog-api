@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.http.Request
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
+import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import kotlin.test.assertEquals
@@ -16,11 +17,20 @@ class TestUtils {
             return idToken.getNorskIdentifikasjonsnummer()
         }
 
-        fun getAuthCookie(
-            jwtToken: String,
-            cookieName: String = "selvbetjening-idtoken"
+        fun MockOAuth2Server.issueToken(
+            fnr: String,
+            issuerId: String = "tokendings",
+            audience: String = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+            claims: Map<String, String> = mapOf("acr" to "Level4"),
+            cookieName: String = "selvbetjening-idtoken",
+            somCookie: Boolean = false,
         ): String {
-            return "$cookieName=$jwtToken"
+            val jwtToken =
+                issueToken(issuerId = issuerId, subject = fnr, audience = audience, claims = claims).serialize()
+            return when (somCookie) {
+                false -> jwtToken
+                true -> "$cookieName=$jwtToken"
+            }
         }
 
         fun requestAndAssert(

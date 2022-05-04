@@ -5,7 +5,7 @@ import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
-import no.nav.helse.TestUtils.Companion.getAuthCookie
+import no.nav.helse.TestUtils.Companion.issueToken
 import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
@@ -48,20 +48,14 @@ class ApplicationTest {
         private val gyldigFødselsnummerA = "02119970078"
         private val gyldigFodselsnummerB = "02119970079"
         private const val ikkeMyndigFnr = "12125012345"
-        private val cookie = getAuthCookie(
-            jwtToken = mockOAuth2Server.issueToken(
-                issuerId = "login-service",
-                subject = gyldigFødselsnummerA,
-                audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
-                claims = mapOf("acr" to "Level4")
-            ).serialize()
+
+        private val cookie = mockOAuth2Server.issueToken(
+            issuerId = "login-service",
+            fnr = gyldigFødselsnummerA,
+            somCookie = true
         )
-        private val tokenXToken = mockOAuth2Server.issueToken(
-            issuerId = "tokendings",
-            subject = gyldigFødselsnummerA,
-            audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
-            claims = mapOf("acr" to "Level4")
-        ).serialize()
+
+        private val tokenXToken = mockOAuth2Server.issueToken(fnr = gyldigFødselsnummerA)
 
         fun getConfig(): ApplicationConfig {
 
@@ -196,6 +190,7 @@ class ApplicationTest {
                 httpMethod = HttpMethod.Get,
                 path = OPPSLAG_URL + SØKER_URL,
                 expectedCode = HttpStatusCode.fromValue(451),
+                cookie = mockOAuth2Server.issueToken(issuerId = "login-service", fnr = ikkeMyndigFnr, somCookie = true),
                 expectedResponse =
                 //language=json
                 """
@@ -207,14 +202,6 @@ class ApplicationTest {
                 "detail": "Tilgang nektet."
             }
             """.trimIndent(),
-                cookie = getAuthCookie(
-                    jwtToken = mockOAuth2Server.issueToken(
-                        issuerId = "login-service",
-                        subject = ikkeMyndigFnr,
-                        audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
-                        claims = mapOf("acr" to "Level4")
-                    ).serialize()
-                )
             )
 
             wireMockServer.stubK9OppslagSoker() // reset til default mapping
@@ -226,13 +213,11 @@ class ApplicationTest {
                     logger = logger,
                     httpMethod = HttpMethod.Get,
                     path = OPPSLAG_URL + SØKER_URL,
-                    cookie = getAuthCookie(
-                        jwtToken = mockOAuth2Server.issueToken(
-                            issuerId = "login-service-v2",
-                            subject = gyldigFødselsnummerA,
-                            audience = "k9-brukerdialog-api",
-                            claims = mapOf("acr" to "Level3")
-                        ).serialize()
+                    cookie = mockOAuth2Server.issueToken(
+                        issuerId = "login-service",
+                        fnr = gyldigFødselsnummerA,
+                        claims = mapOf("acr" to "Level3"),
+                        somCookie = true
                     ),
                     expectedCode = HttpStatusCode.Forbidden,
                     expectedResponse = null
@@ -466,13 +451,10 @@ class ApplicationTest {
                             "barn": []
                         }
                         """.trimIndent(),
-                    cookie = getAuthCookie(
-                        jwtToken = mockOAuth2Server.issueToken(
-                            issuerId = "login-service",
-                            subject = "26104500284",
-                            audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
-                            claims = mapOf("acr" to "Level4")
-                        ).serialize()
+                    cookie = mockOAuth2Server.issueToken(
+                        issuerId = "login-service",
+                        fnr = "26104500284",
+                        somCookie = true
                     )
                 )
                 wireMockServer.stubK9OppslagBarn()
