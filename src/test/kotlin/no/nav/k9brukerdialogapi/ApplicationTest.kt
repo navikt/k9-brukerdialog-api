@@ -466,7 +466,14 @@ class ApplicationTest {
                             "barn": []
                         }
                         """.trimIndent(),
-                    cookie = cookie
+                    cookie = getAuthCookie(
+                        jwtToken = mockOAuth2Server.issueToken(
+                            issuerId = "login-service",
+                            subject = "26104500284",
+                            audience = "dev-gcp:dusseldorf:k9-brukerdialog-api",
+                            claims = mapOf("acr" to "Level4")
+                        ).serialize()
+                    )
                 )
                 wireMockServer.stubK9OppslagBarn()
             }
