@@ -57,9 +57,9 @@ import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-private val logger: Logger = LoggerFactory.getLogger("nav.k9BrukerdialogApi")
 
 fun Application.k9BrukerdialogApi() {
+    val logger: Logger = LoggerFactory.getLogger("nav.k9BrukerdialogApi")
     val appId = environment.config.id()
     logProxyProperties()
     DefaultExports.initialize()
@@ -243,7 +243,9 @@ fun Application.k9BrukerdialogApi() {
         logRequests()
         mdc("id_token_jti") { call ->
             try {
-                idTokenProvider.getIdToken(call).getId()
+                val idToken = idTokenProvider.getIdToken(call)
+                logger.info("Issuer [{}]", idToken.issuer())
+                idToken.getId()
             } catch (cause: Throwable) {
                 null
             }
