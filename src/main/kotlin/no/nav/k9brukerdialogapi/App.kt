@@ -100,7 +100,7 @@ fun Application.k9BrukerdialogApi() {
     val idTokenProvider = IdTokenProvider(cookieName = configuration.getCookieName())
 
     install(Authentication) {
-        allIssuers.map { issuer: String ->
+        allIssuers.forEach { issuer: String ->
             tokenValidationSupport(
                 name = issuer,
                 config = config,
