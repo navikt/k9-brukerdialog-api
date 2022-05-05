@@ -41,6 +41,7 @@ fun Route.ytelseRoutes(
         OmsorgsdagerAleneomsorgService(kafkaProdusent, søkerService, barnService)
     )
     omsorgspengerUtbetalingArbeidstakerApi(
-        OmsorgspengerUtbetalingArbeidstakerService(søkerService)
+        idTokenProvider,
+        OmsorgspengerUtbetalingArbeidstakerService(søkerService, vedleggService, kafkaProdusent)
     )
 }

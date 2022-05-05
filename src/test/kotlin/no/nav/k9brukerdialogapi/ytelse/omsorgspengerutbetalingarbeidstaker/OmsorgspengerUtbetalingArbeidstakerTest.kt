@@ -10,6 +10,7 @@ import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
+import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URL
 import java.time.LocalDate
 import kotlin.test.Test
 
@@ -31,6 +33,7 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
             .withTokendingsSupport()
             .k9BrukerdialogApiConfig()
             .build()
+            .stubK9Mellomlagring()
             .stubK9OppslagSoker()
             .stubK9OppslagBarn()
 
@@ -72,9 +75,12 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
 
     @Test
     fun `Innsending av gyldig søknad`() {
+        val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
         val søknad = Søknad(
             språk = "nb",
-            vedlegg = listOf(),
+            vedlegg = listOf(
+                vedlegg
+            ),
             bosteder = listOf(),
             opphold = listOf(),
             bekreftelser = Bekreftelser(
@@ -93,13 +99,13 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                         Utbetalingsperiode(
                             fraOgMed = LocalDate.now().minusDays(4),
                             tilOgMed = LocalDate.now(),
+                            årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
                         )
                     )
                 )
             ),
             hjemmePgaSmittevernhensyn = true,
             hjemmePgaStengtBhgSkole = true
-
         )
         requestAndAssert(
             engine = engine,
