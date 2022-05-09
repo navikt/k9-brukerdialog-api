@@ -21,6 +21,8 @@ import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.EttersendingService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.OmsorgspengerUtbetalingArbeidstakerService
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
@@ -47,8 +49,8 @@ internal class SøknadServiceTest{
     lateinit var vedleggService: VedleggService
 
     lateinit var omsorgspengerUtvidetRettSøknadService: OmsorgspengerUtvidetRettService
-
     lateinit var ettersendingSøknadService: EttersendingService
+    lateinit var omsorgspengerUtbetalingArbeidstakerService: OmsorgspengerUtbetalingArbeidstakerService
 
     @BeforeEach
     internal fun setUp() {
@@ -62,8 +64,13 @@ internal class SøknadServiceTest{
         ettersendingSøknadService = EttersendingService(
             kafkaProducer, søkerService, vedleggService
         )
+        omsorgspengerUtbetalingArbeidstakerService = OmsorgspengerUtbetalingArbeidstakerService(
+            søkerService, vedleggService, kafkaProducer
+        )
         assertNotNull(kafkaProducer)
         assertNotNull(omsorgspengerUtvidetRettSøknadService)
+        assertNotNull(ettersendingSøknadService)
+        assertNotNull(omsorgspengerUtbetalingArbeidstakerService)
     }
 
     @Test
@@ -137,6 +144,63 @@ internal class SøknadServiceTest{
                         correlationId = "123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "ikke-authorized-client", audience = "omsorgsdager-melding-api")),
+                    callId = CallId("abc")
+                )
+            }
+        }
+
+        coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
+    }
+
+    @Test
+    internal fun `Verifiser at søknadservice for omsorgspenger utbetaling arbeidstaker fjerner hold på persistert vedlegg dersom kafka feiler`() {
+        assertThrows<MeldingRegistreringFeiletException> {
+            runBlocking {
+                coEvery {søkerService.hentSøker(any(), any()) } returns Søker(
+                    aktørId = "123",
+                    fødselsdato = LocalDate.parse("2000-01-01"),
+                    fødselsnummer = "02119970078"
+                )
+
+                coEvery { vedleggService.hentVedlegg(vedleggUrls = any(), any(), any(), any()) } returns listOf(Vedlegg("bytearray".toByteArray(), "vedlegg", "vedlegg", DokumentEier("290990123456")))
+
+                every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
+
+                omsorgspengerUtbetalingArbeidstakerService.registrer(
+                    søknad = Søknad(
+                            språk = "nb",
+                            vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+                            bosteder = listOf(),
+                            opphold = listOf(),
+                            bekreftelser = Bekreftelser(
+                                harBekreftetOpplysninger = true,
+                                harForståttRettigheterOgPlikter = true
+                            ),
+                            arbeidsgivere = listOf(
+                                Arbeidsgiver(
+                                    navn = "Kiwi AS",
+                                    organisasjonsnummer = "825905162",
+                                    utbetalingsårsak = Utbetalingsårsak.KONFLIKT_MED_ARBEIDSGIVER,
+                                    konfliktForklaring = "Fordi blablabla",
+                                    harHattFraværHosArbeidsgiver = true,
+                                    arbeidsgiverHarUtbetaltLønn = true,
+                                    perioder = listOf(
+                                        Utbetalingsperiode(
+                                            fraOgMed = LocalDate.now().minusDays(4),
+                                            tilOgMed = LocalDate.now(),
+                                            årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                                        )
+                                    )
+                                )
+                            ),
+                            hjemmePgaSmittevernhensyn = true,
+                            hjemmePgaStengtBhgSkole = true
+                    ),
+                    metadata = Metadata(
+                        version = 1,
+                        correlationId = "123"
+                    ),
+                    idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "omsorgsdager-melding-api")),
                     callId = CallId("abc")
                 )
             }

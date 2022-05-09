@@ -85,6 +85,7 @@ class OmsorgspengerUtbetalingArbeidstakerService(
             logger.error("Feilet ved å legge melding på Kafka.")
             logger.info("Fjerner hold på persisterte vedlegg")
             vedleggService.fjernHoldPåPersistertVedlegg(søknad.vedlegg, callId, søker.somDokumentEier())
+            throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }
     }
 }
