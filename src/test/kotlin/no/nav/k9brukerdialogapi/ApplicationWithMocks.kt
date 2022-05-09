@@ -7,6 +7,7 @@ import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
+import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -17,7 +18,7 @@ class ApplicationWithMocks {
 
         @JvmStatic
         fun main(args: Array<String>) {
-
+            val mockOAuth2Server = MockOAuth2Server()
             val wireMockServer = WireMockBuilder()
                 .withPort(8081)
                 .withAzureSupport()
@@ -33,9 +34,10 @@ class ApplicationWithMocks {
             val kafkaEnvironment = KafkaWrapper.bootstrap()
 
             val testArgs = TestConfiguration.asMap(
-                port = 8082,
                 wireMockServer = wireMockServer,
-                kafkaEnvironment = kafkaEnvironment
+                kafkaEnvironment = kafkaEnvironment,
+                port = 8082,
+                mockOAuth2Server = mockOAuth2Server
             ).asArguments()
 
             Runtime.getRuntime().addShutdownHook(object : Thread() {

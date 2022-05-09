@@ -4,29 +4,30 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.jws.ClientCredentials
 import no.nav.helse.dusseldorf.testsupport.jws.LoginService
-import no.nav.helse.dusseldorf.testsupport.jws.Tokendings
 import no.nav.helse.dusseldorf.testsupport.wiremock.getAzureV2WellKnownUrl
 import no.nav.helse.dusseldorf.testsupport.wiremock.getLoginServiceV1WellKnownUrl
 import no.nav.helse.dusseldorf.testsupport.wiremock.getTokendingsWellKnownUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9BrukerdialogCacheUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9MellomlagringUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9OppslagUrl
+import no.nav.security.mock.oauth2.MockOAuth2Server
 
 object TestConfiguration {
 
     fun asMap(
         wireMockServer: WireMockServer? = null,
         kafkaEnvironment: KafkaEnvironment? = null,
-        port : Int = 8080,
+        port: Int = 8080,
         k9OppslagUrl: String? = wireMockServer?.getK9OppslagUrl(),
-        k9MellomlagringUrl : String? = wireMockServer?.getK9MellomlagringUrl(),
-        k9BrukerdialogCacheUrl : String? = wireMockServer?.getK9BrukerdialogCacheUrl(),
-        corsAdresses : String = "http://localhost:8080"
+        k9MellomlagringUrl: String? = wireMockServer?.getK9MellomlagringUrl(),
+        k9BrukerdialogCacheUrl: String? = wireMockServer?.getK9BrukerdialogCacheUrl(),
+        corsAdresses: String = "http://localhost:8080",
+        mockOAuth2Server: MockOAuth2Server
     ) : Map<String, String> {
 
         val map = mutableMapOf(
             Pair("ktor.deployment.port","$port"),
-            Pair("nav.authorization.cookie_name", "localhost-idtoken"),
+            Pair("nav.authorization.cookie_name", "selvbetjening-idtoken"),
             Pair("nav.gateways.k9_oppslag_url","$k9OppslagUrl"),
             Pair("nav.gateways.k9_mellomlagring_url", "$k9MellomlagringUrl"),
             Pair("nav.gateways.k9_mellomlagring_ingress","$k9MellomlagringUrl"),
@@ -47,14 +48,14 @@ object TestConfiguration {
             map["nav.auth.clients.1.discovery_endpoint"] = wireMockServer.getTokendingsWellKnownUrl()
 
             // Issuers
-            map["nav.auth.issuers.0.alias"] = "login-service-v1"
-            map["nav.auth.issuers.0.discovery_endpoint"] = wireMockServer.getLoginServiceV1WellKnownUrl()
-            map["nav.auth.issuers.1.alias"] = "login-service-v2"
-            map["nav.auth.issuers.1.discovery_endpoint"] = wireMockServer.getLoginServiceV1WellKnownUrl()
-            map["nav.auth.issuers.1.audience"] = LoginService.V1_0.getAudience()
-            map["nav.auth.issuers.2.alias"] = "tokenx"
-            map["nav.auth.issuers.2.discovery_endpoint"] = wireMockServer.getTokendingsWellKnownUrl()
-            map["nav.auth.issuers.2.audience"] = Tokendings.getAudience()
+            map["no.nav.security.jwt.issuers.0.issuer_name"] = "tokendings"
+            map["no.nav.security.jwt.issuers.0.discoveryurl"] = "${mockOAuth2Server.wellKnownUrl("tokendings")}"
+            map["no.nav.security.jwt.issuers.0.accepted_audience"] = "dev-gcp:dusseldorf:k9-brukerdialog-api"
+
+            map["no.nav.security.jwt.issuers.1.issuer_name"] = "login-service"
+            map["no.nav.security.jwt.issuers.1.discoveryurl"] = "${mockOAuth2Server.wellKnownUrl("login-service")}"
+            map["no.nav.security.jwt.issuers.1.accepted_audience"] = "dev-gcp:dusseldorf:k9-brukerdialog-api"
+            map["no.nav.security.jwt.issuers.1.cookie_name"] = "selvbetjening-idtoken"
 
             // scopes
             map["nav.auth.scopes.k9-mellomlagring-client-id"] = "k9-mellomlagring-client-id/.default"

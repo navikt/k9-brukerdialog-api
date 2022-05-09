@@ -4,11 +4,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
 val dusseldorfKtorVersion = "3.1.6.8-f3930ac"
 val ktorVersion = ext.get("ktorVersion").toString()
+val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
+val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
 val k9FormatVersion = "5.8.7"
 val fuelVersion = "2.3.1"
 val lettuceCoreVersion = "6.1.8.RELEASE"
-val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
-val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
+val tokenSupportVersion = "2.0.15"
+val mockOauth2ServerVersion = "0.4.6"
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -32,6 +34,11 @@ dependencies {
     implementation("com.github.kittinunf.fuel:fuel-coroutines:$fuelVersion"){
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
+
+    // NAV
+    implementation ("no.nav.security:token-validation-ktor:$tokenSupportVersion")
+    testImplementation ("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
+
 
     // Client
     implementation ( "no.nav.helse:dusseldorf-ktor-client:$dusseldorfKtorVersion")
