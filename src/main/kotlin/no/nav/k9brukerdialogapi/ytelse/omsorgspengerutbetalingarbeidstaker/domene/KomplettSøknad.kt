@@ -18,4 +18,11 @@ class KomplettSøknad(
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null,
     private val k9Format: Søknad
-)
+) {
+    override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
+
+    private fun equals(other: KomplettSøknad) = this.søknadId == other.søknadId &&
+            this.søker == other.søker &&
+            this.vedleggId == other.vedleggId &&
+            this.k9Format.søknadId == other.k9Format.søknadId
+}

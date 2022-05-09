@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 
 import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.somJson
+import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import java.time.ZoneId
@@ -69,7 +70,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
               "versjon": "1.0.0",
               "mottattDato": "2022-01-02T03:04:05.000Z",
               "søker": {
-                "norskIdentitetsnummer": "26104500284"
+                "norskIdentitetsnummer": "02119970078"
               },
               "ytelse": {
                 "type": "OMP_UT",
@@ -115,5 +116,92 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
             }
         """.trimIndent()
         JSONAssert.assertEquals(forventetK9Format, faktiskK9Format, true)
+    }
+
+    @Test
+    fun `Gyldig søknad gir ingen feil`() {
+        Søknad(
+            språk = "nb",
+            vedlegg = listOf(),
+            bosteder = listOf(),
+            opphold = listOf(),
+            bekreftelser = Bekreftelser(
+                harBekreftetOpplysninger = true,
+                harForståttRettigheterOgPlikter = true
+            ),
+            arbeidsgivere = listOf(
+                Arbeidsgiver(
+                    navn = "Kiwi AS",
+                    organisasjonsnummer = "825905162",
+                    utbetalingsårsak = Utbetalingsårsak.KONFLIKT_MED_ARBEIDSGIVER,
+                    konfliktForklaring = "Fordi blablabla",
+                    harHattFraværHosArbeidsgiver = true,
+                    arbeidsgiverHarUtbetaltLønn = true,
+                    perioder = listOf(
+                        Utbetalingsperiode(
+                            fraOgMed = LocalDate.parse("2022-01-25"),
+                            tilOgMed = LocalDate.parse("2022-01-28"),
+                            årsak = FraværÅrsak.SMITTEVERNHENSYN
+                        )
+                    )
+                )
+            ),
+            hjemmePgaSmittevernhensyn = true,
+            hjemmePgaStengtBhgSkole = true
+        )
+    }
+
+    @Test
+    fun `Søknad uten arbeidsgivere gir feil`() {
+        assertThrows<IllegalArgumentException> {
+            Søknad(
+                språk = "nb",
+                vedlegg = listOf(),
+                bosteder = listOf(),
+                opphold = listOf(),
+                bekreftelser = Bekreftelser(
+                    harBekreftetOpplysninger = true,
+                    harForståttRettigheterOgPlikter = true
+                ),
+                arbeidsgivere = listOf(),
+                hjemmePgaSmittevernhensyn = true,
+                hjemmePgaStengtBhgSkole = true
+            )
+        }
+    }
+
+    @Test
+    fun `Søknad hvor hjemmePgaSmittevernhensyn er null gir feil`() {
+        assertThrows<IllegalArgumentException> {
+            Søknad(
+                språk = "nb",
+                vedlegg = listOf(),
+                bosteder = listOf(),
+                opphold = listOf(),
+                bekreftelser = Bekreftelser(
+                    harBekreftetOpplysninger = true,
+                    harForståttRettigheterOgPlikter = true
+                ),
+                arbeidsgivere = listOf(
+                    Arbeidsgiver(
+                        navn = "Kiwi AS",
+                        organisasjonsnummer = "825905162",
+                        utbetalingsårsak = Utbetalingsårsak.KONFLIKT_MED_ARBEIDSGIVER,
+                        konfliktForklaring = "Fordi blablabla",
+                        harHattFraværHosArbeidsgiver = true,
+                        arbeidsgiverHarUtbetaltLønn = true,
+                        perioder = listOf(
+                            Utbetalingsperiode(
+                                fraOgMed = LocalDate.parse("2022-01-25"),
+                                tilOgMed = LocalDate.parse("2022-01-28"),
+                                årsak = FraværÅrsak.SMITTEVERNHENSYN
+                            )
+                        )
+                    )
+                ),
+                hjemmePgaSmittevernhensyn = null,
+                hjemmePgaStengtBhgSkole = true
+            )
+        }
     }
 }

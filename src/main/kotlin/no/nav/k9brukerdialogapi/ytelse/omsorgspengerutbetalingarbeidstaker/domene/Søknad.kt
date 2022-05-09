@@ -37,7 +37,7 @@ class Søknad(
     internal fun tilKomplettSøknad(
         søker: Søker,
         k9Format: no.nav.k9.søknad.Søknad,
-        titler: List<String>
+        titler: List<String> = listOf()
     ) = KomplettSøknad(
         søknadId = søknadId,
         språk = språk,
@@ -54,7 +54,7 @@ class Søknad(
         k9Format = k9Format
     )
 
-    fun tilK9Format(søker: Søker) = K9Søknad(
+    internal fun tilK9Format(søker: Søker) = K9Søknad(
         SøknadId.of(søknadId),
         k9FormatVersjon,
         mottatt,

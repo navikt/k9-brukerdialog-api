@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker
 
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.general.CallId
+import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.kafka.Metadata
@@ -41,12 +42,27 @@ class OmsorgspengerUtbetalingArbeidstakerService(
         if(søknad.vedlegg.isNotEmpty()){
             registrerSøknadMedVedlegg(søknad, idToken, callId, søker, k9Format, metadata)
         } else {
-            registrerSøknadUtenVedlegg()
+            registrerSøknadUtenVedlegg(søknad, søker, k9Format, metadata)
         }
     }
 
-    private fun registrerSøknadUtenVedlegg() {
-
+    private fun registrerSøknadUtenVedlegg(
+        søknad: Søknad,
+        søker: Søker,
+        k9Format: no.nav.k9.søknad.Søknad,
+        metadata: Metadata
+    ) {
+        val komplettSøknad = søknad.tilKomplettSøknad(søker, k9Format)
+        try {
+            kafkaProdusent.produserKafkaMelding(
+                metadata,
+                JSONObject(komplettSøknad.somJson()),
+                Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
+            )
+        } catch (exception: Exception) {
+            logger.error("Feilet ved å legge melding på Kafka.")
+            throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
+        }
     }
 
     private suspend fun registrerSøknadMedVedlegg(
@@ -57,6 +73,7 @@ class OmsorgspengerUtbetalingArbeidstakerService(
         k9Format: no.nav.k9.søknad.Søknad,
         metadata: Metadata
     ) {
+        logger.info("Validerer ${søknad.vedlegg.size} vedlegg.")
         val vedlegg = vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId, søker.somDokumentEier())
         vedlegg.valider("vedlegg", søknad.vedlegg)
         vedleggService.persisterVedlegg(søknad.vedlegg, callId, søker.somDokumentEier())
@@ -65,7 +82,7 @@ class OmsorgspengerUtbetalingArbeidstakerService(
         try {
             kafkaProdusent.produserKafkaMelding(metadata, JSONObject(komplettSøknad.somJson()), Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER)
         } catch (exception: Exception){
-            logger.info("Feilet ved å legge melding på Kafka.")
+            logger.error("Feilet ved å legge melding på Kafka.")
             logger.info("Fjerner hold på persisterte vedlegg")
             vedleggService.fjernHoldPåPersistertVedlegg(søknad.vedlegg, callId, søker.somDokumentEier())
         }

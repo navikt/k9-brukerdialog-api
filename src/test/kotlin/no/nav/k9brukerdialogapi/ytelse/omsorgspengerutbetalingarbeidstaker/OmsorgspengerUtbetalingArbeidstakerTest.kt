@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory
 import java.net.URL
 import java.time.LocalDate
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class OmsorgspengerUtbetalingArbeidstakerTest {
 
@@ -73,6 +74,7 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
         @JvmStatic
         fun tearDown() {
             wireMockServer.stop()
+            mockOAuth2Server.shutdown()
             kafkaEnvironment.tearDown()
         }
     }
@@ -121,7 +123,10 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
             requestEntity = søknad.somJson()
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER)
-       // println(hentet.data.somJson())
+        assertEquals(
+            søknad.tilKomplettSøknad(SøknadUtils.søker, søknad.tilK9Format(SøknadUtils.søker), listOf("vedlegg1")),
+            hentet.data.somOmsorgspengerUtbetalingArbeidstakerKomplettSøknad()
+        )
     }
 
 }
