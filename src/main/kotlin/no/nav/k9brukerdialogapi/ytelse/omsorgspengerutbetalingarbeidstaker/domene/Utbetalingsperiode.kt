@@ -21,11 +21,11 @@ class Utbetalingsperiode(
     init {
         require(!fraOgMed.isAfter(tilOgMed)) { "fraOgMed kan ikke være etter tilOgMed," }
         if(antallTimerPlanlagt != null){
-            requireNotNull(antallTimerBorte) { "Dersom antallTimerPlanlagt er satt må ikke antallTimerBorte være satt." }
+            requireNotNull(antallTimerBorte) { "Dersom antallTimerPlanlagt er satt må antallTimerBorte være satt." }
             require(antallTimerPlanlagt >= antallTimerBorte) { "antallTimerBorte kan ikke være større enn antallTimerPlanlagt" }
         }
         if(antallTimerBorte != null){
-            requireNotNull(antallTimerPlanlagt) { "Dersom antallTimerBorte er satt må ikke antallTimerPlanlagt være satt." }
+            requireNotNull(antallTimerPlanlagt) { "Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt." }
         }
     }
 
