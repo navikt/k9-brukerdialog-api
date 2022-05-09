@@ -16,7 +16,9 @@ import io.ktor.metrics.micrometer.*
 import io.ktor.request.*
 import io.ktor.routing.*
 import io.prometheus.client.hotspot.DefaultExports
-import no.nav.helse.dusseldorf.ktor.auth.*
+import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
+import no.nav.helse.dusseldorf.ktor.auth.IdTokenStatusPages
+import no.nav.helse.dusseldorf.ktor.auth.clients
 import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthCheck
 import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthConfig
 import no.nav.helse.dusseldorf.ktor.client.buildURL
@@ -46,15 +48,18 @@ import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
+import no.nav.security.token.support.ktor.RequiredClaims
+import no.nav.security.token.support.ktor.asIssuerProps
+import no.nav.security.token.support.ktor.tokenValidationSupport
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-private val logger: Logger = LoggerFactory.getLogger("nav.k9BrukerdialogApi")
 
 fun Application.k9BrukerdialogApi() {
+    val logger: Logger = LoggerFactory.getLogger("nav.k9BrukerdialogApi")
     val appId = environment.config.id()
     logProxyProperties()
     DefaultExports.initialize()
@@ -62,6 +67,9 @@ fun Application.k9BrukerdialogApi() {
     System.setProperty("dusseldorf.ktor.serializeProblemDetailsWithContentNegotiation", "true")
 
     val configuration = Configuration(environment.config)
+    val config = this.environment.config
+    val allIssuers = config.asIssuerProps().keys
+
     val accessTokenClientResolver = AccessTokenClientResolver(environment.config.clients())
     val tokenxClient = CachedAccessTokenClient(accessTokenClientResolver.tokenxClient)
 
@@ -90,13 +98,18 @@ fun Application.k9BrukerdialogApi() {
     }
 
     val idTokenProvider = IdTokenProvider(cookieName = configuration.getCookieName())
-    val issuers = configuration.issuers()
 
     install(Authentication) {
-        multipleJwtIssuers(
-            issuers = issuers,
-            extractHttpAuthHeader = { call -> idTokenProvider.getIdToken(call).somHttpAuthHeader() }
-        )
+        allIssuers.forEach { issuer: String ->
+            tokenValidationSupport(
+                name = issuer,
+                config = config,
+                requiredClaims = RequiredClaims(
+                    issuer = issuer,
+                    claimMap = arrayOf("acr=Level4")
+                )
+            )
+        }
     }
 
     install(StatusPages) {
@@ -155,7 +168,7 @@ fun Application.k9BrukerdialogApi() {
             logger.info("Kafka Producer Stoppet.")
         }
 
-        authenticate(*issuers.allIssuers()) {
+        authenticate(*allIssuers.toTypedArray()) {
             ytelseRoutes(
                 idTokenProvider = idTokenProvider,
                 kafkaProdusent = kafkaProducer,
@@ -230,7 +243,9 @@ fun Application.k9BrukerdialogApi() {
         logRequests()
         mdc("id_token_jti") { call ->
             try {
-                idTokenProvider.getIdToken(call).getId()
+                val idToken = idTokenProvider.getIdToken(call)
+                logger.info("Issuer [{}]", idToken.issuer())
+                idToken.getId()
             } catch (cause: Throwable) {
                 null
             }

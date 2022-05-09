@@ -6,12 +6,14 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils
+import no.nav.helse.TestUtils.Companion.issueToken
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
+import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
@@ -24,6 +26,7 @@ class EttersendingTest {
 
     private companion object{
         private val logger: Logger = LoggerFactory.getLogger(EttersendingTest::class.java)
+        val mockOAuth2Server = MockOAuth2Server().apply { start() }
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()
             .withNaisStsSupport()
@@ -40,14 +43,15 @@ class EttersendingTest {
         private val kafkaKonsumer = kafkaEnvironment.testConsumer()
 
         private val gyldigFødselsnummerA = "02119970078"
-        private val tokenXToken = TestUtils.getTokenDingsToken(fnr = gyldigFødselsnummerA)
+        private val tokenXToken = mockOAuth2Server.issueToken(fnr = gyldigFødselsnummerA)
 
         fun getConfig(): ApplicationConfig {
             val fileConfig = ConfigFactory.load()
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment
+                    kafkaEnvironment = kafkaEnvironment,
+                    mockOAuth2Server = mockOAuth2Server
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
