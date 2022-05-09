@@ -26,12 +26,11 @@ class Søknad(
     private val opphold: List<Opphold>,
     private val bekreftelser: Bekreftelser,
     private val arbeidsgivere: List<Arbeidsgiver>,
-    private val hjemmePgaSmittevernhensyn: Boolean? = null,
+    private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null
 ){
     init {
         require(arbeidsgivere.isNotEmpty()) { "Må ha minst en arbeidsgiver satt." }
-        requireNotNull(hjemmePgaSmittevernhensyn) { "hjemmePgaSmittevernhensyn må være satt, kan ikke være null." }
     }
 
     internal fun tilKomplettSøknad(

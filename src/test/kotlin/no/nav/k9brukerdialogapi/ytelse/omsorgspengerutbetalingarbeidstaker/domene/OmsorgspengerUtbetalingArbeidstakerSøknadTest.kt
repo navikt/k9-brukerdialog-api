@@ -169,39 +169,4 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
             )
         }
     }
-
-    @Test
-    fun `Søknad hvor hjemmePgaSmittevernhensyn er null gir feil`() {
-        assertThrows<IllegalArgumentException> {
-            Søknad(
-                språk = "nb",
-                vedlegg = listOf(),
-                bosteder = listOf(),
-                opphold = listOf(),
-                bekreftelser = Bekreftelser(
-                    harBekreftetOpplysninger = true,
-                    harForståttRettigheterOgPlikter = true
-                ),
-                arbeidsgivere = listOf(
-                    Arbeidsgiver(
-                        navn = "Kiwi AS",
-                        organisasjonsnummer = "825905162",
-                        utbetalingsårsak = Utbetalingsårsak.KONFLIKT_MED_ARBEIDSGIVER,
-                        konfliktForklaring = "Fordi blablabla",
-                        harHattFraværHosArbeidsgiver = true,
-                        arbeidsgiverHarUtbetaltLønn = true,
-                        perioder = listOf(
-                            Utbetalingsperiode(
-                                fraOgMed = LocalDate.parse("2022-01-25"),
-                                tilOgMed = LocalDate.parse("2022-01-28"),
-                                årsak = FraværÅrsak.SMITTEVERNHENSYN
-                            )
-                        )
-                    )
-                ),
-                hjemmePgaSmittevernhensyn = null,
-                hjemmePgaStengtBhgSkole = true
-            )
-        }
-    }
 }
