@@ -72,6 +72,7 @@ class EttersendingTest {
         @JvmStatic
         fun tearDown() {
             wireMockServer.stop()
+            mockOAuth2Server.shutdown()
             kafkaEnvironment.tearDown()
         }
     }
