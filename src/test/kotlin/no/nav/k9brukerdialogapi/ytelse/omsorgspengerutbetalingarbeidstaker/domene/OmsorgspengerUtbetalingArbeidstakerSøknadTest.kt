@@ -167,7 +167,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                 arbeidsgivere = listOf(),
                 hjemmePgaSmittevernhensyn = true,
                 hjemmePgaStengtBhgSkole = true
-            )
+            ).valider()
         }
     }
 }

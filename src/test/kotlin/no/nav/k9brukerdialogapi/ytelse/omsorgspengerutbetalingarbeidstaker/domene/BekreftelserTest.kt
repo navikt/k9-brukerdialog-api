@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.k9brukerdialogapi.general.validerFeil
-import no.nav.k9brukerdialogapi.general.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.validerFeil
+import no.nav.helse.TestUtils.Companion.validerIngenFeil
 import kotlin.test.Test
 
 class BekreftelserTest {

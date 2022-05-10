@@ -5,12 +5,21 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.security.mock.oauth2.MockOAuth2Server
+import org.junit.Assert
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import kotlin.test.assertEquals
 
 class TestUtils {
     companion object {
+
+        internal fun MutableList<String>.validerFeil(antallFeil: Int) {
+            Assert.assertEquals(antallFeil, this.size)
+        }
+
+        internal fun MutableList<String>.validerIngenFeil() {
+            Assert.assertTrue(this.isEmpty())
+        }
 
         fun getIdentFromIdToken(request: Request?): String {
             val idToken = IdToken(request!!.getHeader(HttpHeaders.Authorization).substringAfter("Bearer "))

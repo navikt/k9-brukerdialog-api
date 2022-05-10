@@ -1,10 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
+import no.nav.helse.TestUtils.Companion.validerFeil
+import no.nav.helse.TestUtils.Companion.validerIngenFeil
 import no.nav.k9.søknad.felles.fravær.AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
-import no.nav.k9brukerdialogapi.general.validerFeil
-import no.nav.k9brukerdialogapi.general.validerIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.FraværÅrsak.ORDINÆRT_FRAVÆR
 import org.skyscreamer.jsonassert.JSONAssert
