@@ -1,11 +1,13 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
+import no.nav.k9brukerdialogapi.general.krever
+
 class Bekreftelser(
     val harBekreftetOpplysninger: Boolean? = null,
     val harForståttRettigheterOgPlikter: Boolean? = null
 ){
-    init {
-        requireNotNull(harBekreftetOpplysninger)
-        requireNotNull(harForståttRettigheterOgPlikter)
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        krever(harBekreftetOpplysninger, "$felt.harBekreftetOpplysninger må være true")
+        krever(harForståttRettigheterOgPlikter, "$felt.harForståttRettigheterOgPlikter må være true")
     }
 }

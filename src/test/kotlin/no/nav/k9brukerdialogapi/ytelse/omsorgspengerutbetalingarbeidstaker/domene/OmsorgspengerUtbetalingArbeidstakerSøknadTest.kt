@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
+import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.somJson
 import org.junit.jupiter.api.assertThrows
@@ -153,7 +154,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
 
     @Test
     fun `Søknad uten arbeidsgivere gir feil`() {
-        assertThrows<IllegalArgumentException> {
+        assertThrows<Throwblem> {
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(),

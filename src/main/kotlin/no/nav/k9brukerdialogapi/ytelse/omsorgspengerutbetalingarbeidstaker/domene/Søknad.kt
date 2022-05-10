@@ -1,14 +1,19 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
+import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
+import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
+import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.somK9Fraværsperiode
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Bosteder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Utenlandsopphold
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.valider
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -29,8 +34,19 @@ class Søknad(
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null
 ){
+
     init {
-        require(arbeidsgivere.isNotEmpty()) { "Må ha minst en arbeidsgiver satt." }
+        // valider() Ønsker dette, må utforske hvordan catche slik som i DefaultStatus slik at feilen blir sendt riktig til klienten.
+    }
+
+    internal fun valider() = mutableListOf<String>().apply {
+        krever(arbeidsgivere.isNotEmpty(), "Må ha minst en arbeidsgiver satt.")
+        addAll(bosteder.valider("bosteder"))
+        addAll(opphold.valider("opphold"))
+        addAll(bekreftelser.valider("bekreftelser"))
+        addAll(arbeidsgivere.valider("arbeidsgivere"))
+
+        if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
     internal fun tilKomplettSøknad(
@@ -48,7 +64,7 @@ class Søknad(
         bekreftelser = bekreftelser,
         vedleggId = vedlegg.map { it.vedleggId() },
         titler = titler,
-        hjemmePgaSmittevernhensyn = hjemmePgaSmittevernhensyn!!,
+        hjemmePgaSmittevernhensyn = hjemmePgaSmittevernhensyn,
         hjemmePgaStengtBhgSkole = hjemmePgaStengtBhgSkole,
         k9Format = k9Format
     )
@@ -67,4 +83,19 @@ class Søknad(
             opphold.somK9Utenlandsopphold()
         )
     )
+}
+
+
+data class ValidationProblemDetails(
+    val feil: List<String>
+) : DefaultProblemDetails(
+    title = "invalid-request-parameters",
+    status = 400,
+    detail = "Requesten inneholder ugyldige paramtere."
+) {
+    override fun asMap(): Map<String, Any> {
+        return super.asMap().toMutableMap().apply {
+            put("invalid_parameters", feil)
+        }.toMap()
+    }
 }

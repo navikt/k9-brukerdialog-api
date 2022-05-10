@@ -33,6 +33,8 @@ class OmsorgspengerUtbetalingArbeidstakerService(
     ){
         logger.info(formaterStatuslogging(YTELSE, søknad.søknadId, "registreres."))
 
+        søknad.valider()
+
         val søker = søkerService.hentSøker(idToken, callId)
         søker.valider()
 

@@ -3,6 +3,9 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 import no.nav.k9.søknad.felles.fravær.AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
+import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak.KONFLIKT_MED_ARBEIDSGIVER
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak.NYOPPSTARTET_HOS_ARBEIDSGIVER
 
@@ -16,21 +19,23 @@ class Arbeidsgiver(
     private val arbeidsgiverHarUtbetaltLønn: Boolean? = null,
     private val harHattFraværHosArbeidsgiver: Boolean? = null
 ) {
-    companion object{
-        fun List<Arbeidsgiver>.somK9Fraværsperiode() = this.flatMap { it.somK9Fraværsperiode() }
+    companion object {
+        internal fun List<Arbeidsgiver>.somK9Fraværsperiode() = this.flatMap { it.somK9Fraværsperiode() }
+        internal fun List<Arbeidsgiver>.valider(felt: String) = this.mapIndexed { index, arbeidsgiver ->
+            arbeidsgiver.valider("$felt[$index]")
+        }.flatten()
     }
 
-    init {
-        require(perioder.isNotEmpty()) { "Må inneholde minst en periode." }
-        require(navn.isNotBlank()) { "navn kan ikke være blankt eller tomt." }
-        require(organisasjonsnummer.isNotBlank()) { "organisasjonsnummer kan ikke være blankt eller tomt." }
-        requireNotNull(arbeidsgiverHarUtbetaltLønn) { "arbeidsgiverHarUtbetaltLønn må være satt." }
-        requireNotNull(harHattFraværHosArbeidsgiver) { "harHattFraværHosArbeidsgiver må være satt." }
-        if(utbetalingsårsak == NYOPPSTARTET_HOS_ARBEIDSGIVER){
-            requireNotNull(årsakNyoppstartet) { "årsakNyoppstartet må være satt dersom Utbetalingsårsak=NYOPPSTARTET_HOS_ARBEIDSGIVER." }
-        }
-        if(utbetalingsårsak == KONFLIKT_MED_ARBEIDSGIVER){
-            require(!konfliktForklaring.isNullOrBlank()) { "konfliktForklaring må være satt dersom Utbetalingsårsak=KONFLIKT_MED_ARBEIDSGIVER." }
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        addAll(perioder.valider("$felt.perioder"))
+        krever(perioder.isNotEmpty(), "$felt.periode kan ikke være tom")
+        krever(navn.isNotBlank(), "$felt.navn kan ikke være blankt eller tomt. navn=$navn")
+        krever(organisasjonsnummer.isNotBlank(), "$felt.organisasjonsnummer kan ikke være blankt eller tomt. organisasjonsnummer=$organisasjonsnummer")
+        kreverIkkeNull(arbeidsgiverHarUtbetaltLønn, "$felt.arbeidsgiverHarUtbetaltLønn må være satt")
+        kreverIkkeNull(harHattFraværHosArbeidsgiver, "$felt.harHattFraværHosArbeidsgiver må være satt")
+        when(utbetalingsårsak){
+            NYOPPSTARTET_HOS_ARBEIDSGIVER -> kreverIkkeNull(årsakNyoppstartet, "$felt.årsakNyoppstartet må være satt dersom Utbetalingsårsak=NYOPPSTARTET_HOS_ARBEIDSGIVER")
+            KONFLIKT_MED_ARBEIDSGIVER -> krever(!konfliktForklaring.isNullOrBlank(), "$felt.konfliktForklaring må være satt dersom Utbetalingsårsak=KONFLIKT_MED_ARBEIDSGIVER")
         }
     }
 

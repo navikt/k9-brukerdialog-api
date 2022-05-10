@@ -1,9 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
+import no.nav.k9brukerdialogapi.general.validerFeil
+import no.nav.k9brukerdialogapi.general.validerIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Bosteder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Utenlandsopphold
-import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import kotlin.test.Test
@@ -12,71 +13,62 @@ import kotlin.test.assertEquals
 class BostedOgOppholdTest {
 
     @Test
-    fun `Gyldig bosted gir ingen feil`(){
-            Bosted(
-                fraOgMed = LocalDate.now(),
-                tilOgMed = LocalDate.now().plusDays(2),
-                landkode = "BE",
-                landnavn = "Belgia",
-                erEØSLand = true
-            )
+    fun `Gyldig bosted gir ingen feil`() {
+        Bosted(
+            fraOgMed = LocalDate.now(),
+            tilOgMed = LocalDate.now().plusDays(2),
+            landkode = "BE",
+            landnavn = "Belgia",
+            erEØSLand = true
+        ).valider("test").validerIngenFeil()
     }
 
     @Test
-    fun `Bosted hvor erEØSLand er null gir feil`(){
-        assertThrows<IllegalArgumentException> {
-            Bosted(
-                fraOgMed = LocalDate.now(),
-                tilOgMed = LocalDate.now().plusDays(2),
-                landkode = "BE",
-                landnavn = "Belgia",
-                erEØSLand = null
-            )
-
-        }
+    fun `Bosted hvor erEØSLand er null gir feil`() {
+        Bosted(
+            fraOgMed = LocalDate.now(),
+            tilOgMed = LocalDate.now().plusDays(2),
+            landkode = "BE",
+            landnavn = "Belgia",
+            erEØSLand = null
+        ).valider("test").validerFeil(1)
     }
 
     @Test
-    fun `Bosted hvor fraOgMed er etter tilOgMed gir feil`(){
-        assertThrows<IllegalArgumentException> {
-            Bosted(
-                fraOgMed = LocalDate.now(),
-                tilOgMed = LocalDate.now().minusDays(2),
-                landkode = "BE",
-                landnavn = "Belgia",
-                erEØSLand = true
-            )
-        }
+    fun `Bosted hvor fraOgMed er etter tilOgMed gir feil`() {
+        Bosted(
+            fraOgMed = LocalDate.now(),
+            tilOgMed = LocalDate.now().minusDays(2),
+            landkode = "BE",
+            landnavn = "Belgia",
+            erEØSLand = true
+        ).valider("test").validerFeil(1)
     }
 
     @Test
     fun `Bosted hvor landnavn er blank gir feil`() {
-        assertThrows<IllegalArgumentException> {
-            Bosted(
-                fraOgMed = LocalDate.now(),
-                tilOgMed = LocalDate.now().plusDays(2),
-                landkode = "BE",
-                landnavn = " ",
-                erEØSLand = true
-            )
-        }
+        Bosted(
+            fraOgMed = LocalDate.now(),
+            tilOgMed = LocalDate.now().plusDays(2),
+            landkode = "BE",
+            landnavn = " ",
+            erEØSLand = true
+        ).valider("test").validerFeil(1)
     }
 
     @Test
     fun `Bosted hvor landkode er blank gir feil`() {
-        assertThrows<IllegalArgumentException> {
-            Bosted(
-                fraOgMed = LocalDate.now(),
-                tilOgMed = LocalDate.now().plusDays(2),
-                landkode = " ",
-                landnavn = "Belgia",
-                erEØSLand = true
-            )
-        }
+        Bosted(
+            fraOgMed = LocalDate.now(),
+            tilOgMed = LocalDate.now().plusDays(2),
+            landkode = " ",
+            landnavn = "Belgia",
+            erEØSLand = true
+        ).valider("test").validerFeil(1)
     }
 
     @Test
-    fun `Bosted blir til forventet K9Bosted`(){
+    fun `Bosted blir til forventet K9Bosted`() {
         val bosted = Bosted(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-05"),
@@ -91,7 +83,7 @@ class BostedOgOppholdTest {
     }
 
     @Test
-    fun `Liste med bosteder blir til forventet K9Bosteder`(){
+    fun `Liste med bosteder blir til forventet K9Bosteder`() {
         val bosteder = listOf(
             Bosted(
                 fraOgMed = LocalDate.parse("2022-01-01"),
@@ -126,7 +118,7 @@ class BostedOgOppholdTest {
     }
 
     @Test
-    fun `Opphold blir til forventet K9Utenlandsopphold`(){
+    fun `Opphold blir til forventet K9Utenlandsopphold`() {
         val opphold = Opphold(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-05"),
@@ -141,7 +133,7 @@ class BostedOgOppholdTest {
     }
 
     @Test
-    fun `Liste med opphold blir til forventet K9Utenlandsopphold`(){
+    fun `Liste med opphold blir til forventet K9Utenlandsopphold`() {
         val opphold = listOf(
             Opphold(
                 fraOgMed = LocalDate.parse("2022-01-01"),

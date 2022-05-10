@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import org.junit.jupiter.api.assertThrows
+import no.nav.k9brukerdialogapi.general.validerFeil
+import no.nav.k9brukerdialogapi.general.validerIngenFeil
 import kotlin.test.Test
 
 class BekreftelserTest {
@@ -9,27 +10,23 @@ class BekreftelserTest {
     fun `Feiler ikke om begge er true`() {
         Bekreftelser(
             harBekreftetOpplysninger = true,
+            harForståttRettigheterOgPlikter = true
+        ).valider("test").validerIngenFeil()
+    }
+
+    @Test
+    fun `Feiler om man sender harBekreftetOpplysninger som false`() {
+        Bekreftelser(
+            harBekreftetOpplysninger = false,
+            harForståttRettigheterOgPlikter = true
+        ).valider("test").validerFeil(1)
+    }
+
+    @Test
+    fun `Feiler om man sender harForståttRettigheterOgPlikter som false`() {
+        Bekreftelser(
+            harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = false
-        )
-    }
-
-    @Test
-    fun `Feiler om man sender harBekreftetOpplysninger som null`() {
-        assertThrows<IllegalArgumentException> {
-            Bekreftelser(
-                harBekreftetOpplysninger = null,
-                harForståttRettigheterOgPlikter = true
-            )
-        }
-    }
-
-    @Test
-    fun `Feiler om man sender harForståttRettigheterOgPlikter som null`() {
-        assertThrows<IllegalArgumentException> {
-            Bekreftelser(
-                harBekreftetOpplysninger = true,
-                harForståttRettigheterOgPlikter = null
-            )
-        }
+        ).valider("test").validerFeil(1)
     }
 }

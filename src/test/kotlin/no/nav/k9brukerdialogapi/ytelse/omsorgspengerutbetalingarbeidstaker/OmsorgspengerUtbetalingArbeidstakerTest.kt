@@ -129,4 +129,85 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
         )
     }
 
+    @Test
+    fun `Innsending av ugyldig søknad med flere valideringsfeil`() {
+        val søknad = Søknad(
+            språk = "nb",
+            vedlegg = listOf(),
+            bosteder = listOf(
+                Bosted(
+                    fraOgMed = LocalDate.now(),
+                    tilOgMed = LocalDate.now().minusDays(2),
+                    landkode = "IKKE GYLDIG",
+                    landnavn = " ",
+                    erEØSLand = null
+                )
+            ),
+            opphold = listOf(
+                Opphold(
+                    fraOgMed = LocalDate.now(),
+                    tilOgMed = LocalDate.now().minusDays(2),
+                    landkode = "IKKE GYLDIG",
+                    landnavn = " ",
+                    erEØSLand = null
+                )
+            ),
+            bekreftelser = Bekreftelser(
+                harBekreftetOpplysninger = null,
+                harForståttRettigheterOgPlikter = false
+            ),
+            arbeidsgivere = listOf(
+                Arbeidsgiver(
+                    navn = " ",
+                    organisasjonsnummer = "IKKE GYLDIG",
+                    utbetalingsårsak = Utbetalingsårsak.KONFLIKT_MED_ARBEIDSGIVER,
+                    konfliktForklaring = null,
+                    harHattFraværHosArbeidsgiver = null,
+                    arbeidsgiverHarUtbetaltLønn = null,
+                    perioder = listOf(
+                        Utbetalingsperiode(
+                            fraOgMed = LocalDate.now().minusDays(4),
+                            tilOgMed = LocalDate.now(),
+                            årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                        )
+                    )
+                )
+            ),
+            hjemmePgaSmittevernhensyn = true,
+            hjemmePgaStengtBhgSkole = true
+        )
+        requestAndAssert(
+            engine = engine,
+            logger = logger,
+            httpMethod = HttpMethod.Post,
+            path = OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL + INNSENDING_URL,
+            expectedCode = HttpStatusCode.BadRequest,
+            expectedResponse = """
+                {
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "invalid_parameters": [
+                     "bosteder[0].erEØSLand må være satt",
+                     "bosteder[0].fraOgMed kan ikke være etter tilOgMed",
+                     "bosteder[0].landnavn kan ikke være blankt eller tomt. landnavn= ",
+                     "opphold[0].erEØSLand må være satt",
+                     "opphold[0].fraOgMed kan ikke være etter tilOgMed",
+                     "opphold[0].landnavn kan ikke være blankt eller tomt. landnavn= ",
+                     "bekreftelser.harBekreftetOpplysninger må være true",
+                     "bekreftelser.harForståttRettigheterOgPlikter må være true",
+                     "arbeidsgivere[0].navn kan ikke være blankt eller tomt. navn= ",
+                     "arbeidsgivere[0].arbeidsgiverHarUtbetaltLønn må være satt",
+                     "arbeidsgivere[0].harHattFraværHosArbeidsgiver må være satt",
+                     "arbeidsgivere[0].konfliktForklaring må være satt dersom Utbetalingsårsak=KONFLIKT_MED_ARBEIDSGIVER"
+                  ],
+                  "status": 400
+                }
+            """.trimIndent(),
+            jwtToken = tokenXToken,
+            requestEntity = søknad.somJson()
+        )
+    }
+
 }

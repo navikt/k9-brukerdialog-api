@@ -6,6 +6,8 @@ import no.nav.k9.søknad.felles.fravær.FraværPeriode
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9.søknad.felles.type.Periode
+import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import java.time.Duration
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.fravær.FraværÅrsak as K9FraværÅrsak
@@ -16,16 +18,23 @@ class Utbetalingsperiode(
     private val antallTimerBorte: Duration? = null,
     private val antallTimerPlanlagt: Duration? = null,
     private val årsak: FraværÅrsak
-
 ) {
-    init {
-        require(!fraOgMed.isAfter(tilOgMed)) { "fraOgMed kan ikke være etter tilOgMed," }
-        if(antallTimerPlanlagt != null){
-            requireNotNull(antallTimerBorte) { "Dersom antallTimerPlanlagt er satt må antallTimerBorte være satt." }
-            require(antallTimerPlanlagt >= antallTimerBorte) { "antallTimerBorte kan ikke være større enn antallTimerPlanlagt" }
-        }
+    companion object{
+        internal fun List<Utbetalingsperiode>.valider(felt: String) = this.mapIndexed { index, periode ->
+            periode.valider("$felt[$index]")
+        }.flatten()
+    }
+
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        krever(!fraOgMed.isAfter(tilOgMed),"$felt.fraOgMed kan ikke være etter tilOgMed")
         if(antallTimerBorte != null){
-            requireNotNull(antallTimerPlanlagt) { "Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt." }
+            kreverIkkeNull(antallTimerPlanlagt, "$felt.Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt")
+        }
+        if(antallTimerPlanlagt != null){
+            kreverIkkeNull(antallTimerBorte, "$felt.Dersom antallTimerPlanlagt er satt må antallTimerBorte være satt")
+        }
+        if(antallTimerPlanlagt != null && antallTimerBorte != null) {
+            krever(antallTimerPlanlagt >= antallTimerBorte, "$felt.antallTimerBorte kan ikke være større enn antallTimerPlanlagt")
         }
     }
 
