@@ -21,9 +21,9 @@ class Bosted(
     companion object {
         internal fun List<Bosted>.somK9Bosteder() = Bosteder().medPerioder(this.associate { it.somK9Bosted() })
         internal fun List<Bosted>.somK9Utenlandsopphold() = Utenlandsopphold().medPerioder(this.associate { it.somK9Utenlandsopphold() })
-        internal fun List<Bosted>.valider(felt: String) = this.mapIndexed { index, bosted ->
+        internal fun List<Bosted>.valider(felt: String) = this.flatMapIndexed { index, bosted ->
             bosted.valider("$felt[$index]")
-        }.flatten()
+        }
     }
 
     internal fun somK9Bosted() = Pair(Periode(fraOgMed, tilOgMed), Bosteder.BostedPeriodeInfo().medLand(Landkode.of(landkode)))

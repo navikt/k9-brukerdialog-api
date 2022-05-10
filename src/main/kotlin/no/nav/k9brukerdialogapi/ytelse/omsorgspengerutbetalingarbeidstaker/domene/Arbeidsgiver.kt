@@ -21,9 +21,9 @@ class Arbeidsgiver(
 ) {
     companion object {
         internal fun List<Arbeidsgiver>.somK9Fraværsperiode() = this.flatMap { it.somK9Fraværsperiode() }
-        internal fun List<Arbeidsgiver>.valider(felt: String) = this.mapIndexed { index, arbeidsgiver ->
+        internal fun List<Arbeidsgiver>.valider(felt: String) = this.flatMapIndexed { index, arbeidsgiver ->
             arbeidsgiver.valider("$felt[$index]")
-        }.flatten()
+        }
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {

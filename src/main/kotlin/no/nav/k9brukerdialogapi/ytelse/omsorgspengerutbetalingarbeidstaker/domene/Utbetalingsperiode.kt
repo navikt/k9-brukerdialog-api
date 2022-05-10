@@ -20,9 +20,9 @@ class Utbetalingsperiode(
     private val årsak: FraværÅrsak
 ) {
     companion object{
-        internal fun List<Utbetalingsperiode>.valider(felt: String) = this.mapIndexed { index, periode ->
+        internal fun List<Utbetalingsperiode>.valider(felt: String) = this.flatMapIndexed { index, periode ->
             periode.valider("$felt[$index]")
-        }.flatten()
+        }
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {

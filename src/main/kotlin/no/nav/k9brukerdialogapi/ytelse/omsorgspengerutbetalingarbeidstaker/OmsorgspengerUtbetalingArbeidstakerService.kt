@@ -11,7 +11,7 @@ import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.valider
-import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Søknad
 import org.json.JSONObject
 import org.slf4j.Logger
@@ -23,7 +23,7 @@ class OmsorgspengerUtbetalingArbeidstakerService(
     private val kafkaProdusent: KafkaProducer
 ) {
     private val logger: Logger = LoggerFactory.getLogger(OmsorgspengerUtbetalingArbeidstakerService::class.java)
-    private val YTELSE = Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
+    private val YTELSE = OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
 
     suspend fun registrer(
         søknad: Søknad,
@@ -32,7 +32,6 @@ class OmsorgspengerUtbetalingArbeidstakerService(
         metadata: Metadata
     ){
         logger.info(formaterStatuslogging(YTELSE, søknad.søknadId, "registreres."))
-
         søknad.valider()
 
         val søker = søkerService.hentSøker(idToken, callId)
@@ -59,7 +58,7 @@ class OmsorgspengerUtbetalingArbeidstakerService(
             kafkaProdusent.produserKafkaMelding(
                 metadata,
                 JSONObject(komplettSøknad.somJson()),
-                Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
+                OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
             )
         } catch (exception: Exception) {
             logger.error("Feilet ved å legge melding på Kafka.")
@@ -82,7 +81,7 @@ class OmsorgspengerUtbetalingArbeidstakerService(
         val komplettSøknad = søknad.tilKomplettSøknad(søker, k9Format, vedlegg.map { it.title })
 
         try {
-            kafkaProdusent.produserKafkaMelding(metadata, JSONObject(komplettSøknad.somJson()), Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER)
+            kafkaProdusent.produserKafkaMelding(metadata, JSONObject(komplettSøknad.somJson()), OMSORGSPENGER_UTBETALING_ARBEIDSTAKER)
         } catch (exception: Exception){
             logger.error("Feilet ved å legge melding på Kafka.")
             logger.info("Fjerner hold på persisterte vedlegg")
