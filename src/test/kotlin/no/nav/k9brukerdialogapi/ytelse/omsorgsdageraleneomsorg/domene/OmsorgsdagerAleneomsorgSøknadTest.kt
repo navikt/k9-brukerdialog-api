@@ -115,7 +115,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
                   "versjon": "1.0.0",
                   "mottattDato": "2020-01-02T03:04:05.000Z",
                   "søker": {
-                    "norskIdentitetsnummer": "26104500284"
+                    "norskIdentitetsnummer": "02119970078"
                   },
                   "ytelse": {
                     "type": "OMP_UTV_AO",

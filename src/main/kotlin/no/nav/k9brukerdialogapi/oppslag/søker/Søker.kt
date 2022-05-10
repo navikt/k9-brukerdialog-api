@@ -43,6 +43,9 @@ class Søker (
             )
         }
     }
+
+    override fun equals(other: Any?) = this === other || (other is Søker && this.equals(other))
+    private fun equals(other: Søker) = this.fødselsnummer == other.fødselsnummer && this.fornavn == other.fornavn
 }
 
 data class SøkerOppslagRespons(

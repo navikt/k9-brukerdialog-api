@@ -54,6 +54,8 @@ spec:
         - application: omsorgspengesoknad
         - application: ekstra-omsorgsdager-andre-forelder-ikke-tilsyn
         - application: sif-ettersending
+        - application: omsorgspengerutbetaling-arbeidstaker-soknad
+        - application: omsorgsdager-aleneomsorg-dialog
     outbound:
       rules:
         - application: k9-mellomlagring
