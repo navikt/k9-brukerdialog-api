@@ -34,11 +34,6 @@ class Søknad(
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null
 ){
-
-    init {
-        // valider() Ønsker dette, må utforske hvordan catche slik som i DefaultStatus slik at feilen blir sendt riktig til klienten.
-    }
-
     internal fun valider() = mutableListOf<String>().apply {
         krever(arbeidsgivere.isNotEmpty(), "Må ha minst en arbeidsgiver satt.")
         addAll(bosteder.valider("bosteder"))
