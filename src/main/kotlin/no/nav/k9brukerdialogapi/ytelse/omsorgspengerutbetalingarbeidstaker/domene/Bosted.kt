@@ -28,8 +28,7 @@ class Bosted(
 
     internal fun somK9Bosted() = Pair(Periode(fraOgMed, tilOgMed), Bosteder.BostedPeriodeInfo().medLand(Landkode.of(landkode)))
 
-    internal fun somK9Utenlandsopphold() =
-        Pair(Periode(fraOgMed, tilOgMed), Utenlandsopphold.UtenlandsoppholdPeriodeInfo().medLand(Landkode.of(landkode)))
+    internal fun somK9Utenlandsopphold() = Pair(Periode(fraOgMed, tilOgMed), Utenlandsopphold.UtenlandsoppholdPeriodeInfo().medLand(Landkode.of(landkode)))
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         kreverIkkeNull(erEØSLand, "$felt.erEØSLand må være satt")
