@@ -45,7 +45,7 @@ class ArbeidsgiverGateway(
             logger = logger
         ) {
             val (request, _, result) = Operation.monitored(
-                app = "pleiepengesoknad-api",
+                app = "k9-brukerdialog-api",
                 operation = HENTE_ARBEIDSGIVERE_OPERATION,
                 resultResolver = { 200 == it.second.statusCode }
             ) { httpRequest.awaitStringResponseResult() }
