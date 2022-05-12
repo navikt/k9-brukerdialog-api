@@ -147,7 +147,13 @@ fun Application.k9BrukerdialogApi() {
             cache = configuration.cache()
         )
 
-        val arbeidsgiverService = ArbeidsgiverService(ArbeidsgiverGateway(configuration.getK9OppslagUrl()))
+        val arbeidsgiverService = ArbeidsgiverService(
+            ArbeidsgiverGateway(
+                baseUrl = configuration.getK9OppslagUrl(),
+                accessTokenClient = tokenxClient,
+                k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+            )
+        )
 
         val kafkaProducer = KafkaProducer(configuration.getKafkaConfig())
 
