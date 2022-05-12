@@ -3,25 +3,22 @@ package no.nav.k9brukerdialogapi.oppslag.arbeidsgiver
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
-import io.ktor.http.*
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
-import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.Retry
 import no.nav.helse.dusseldorf.ktor.metrics.Operation
-import no.nav.k9.søknad.felles.type.Organisasjonsnummer
+import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.k9SelvbetjeningOppslagKonfigurert
 import no.nav.k9brukerdialogapi.oppslag.genererOppslagHttpRequest
-import no.nav.k9brukerdialogapi.oppslag.throwable
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.time.Duration
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class ArbeidsgiverGateway(
-    private val baseUrl: URI
+    private val baseUrl: URI,
+    private val accessTokenClient: CachedAccessTokenClient,
+    private val k9SelvbetjeningOppslagTokenxAudience: Set<String>,
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger("nav.ArbeidsgivereGateway")
@@ -33,8 +30,11 @@ class ArbeidsgiverGateway(
         callId: CallId,
         attributter: List<Pair<String, List<String>>>
     ): Arbeidsgivere {
+        val exchangeToken = IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
+        logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
+
         val httpRequest = genererOppslagHttpRequest(
-            baseUrl = baseUrl, idToken = idToken, callId = callId, pathParts = "meg",
+            baseUrl = baseUrl, idToken = exchangeToken, callId = callId, pathParts = "meg",
             attributter = attributter
         )
 
@@ -45,7 +45,7 @@ class ArbeidsgiverGateway(
             logger = logger
         ) {
             val (request, _, result) = Operation.monitored(
-                app = "pleiepengesoknad-api",
+                app = "k9-brukerdialog-api",
                 operation = HENTE_ARBEIDSGIVERE_OPERATION,
                 resultResolver = { 200 == it.second.statusCode }
             ) { httpRequest.awaitStringResponseResult() }
