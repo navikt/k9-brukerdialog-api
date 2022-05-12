@@ -1,14 +1,11 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending.domene
 
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
-import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -24,6 +21,14 @@ class Søknad(
     private val harBekreftetOpplysninger: Boolean,
     private val harForståttRettigheterOgPlikter: Boolean
 ) {
+
+    internal fun valider() = mutableListOf<String>().apply {
+        krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true")
+        krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
+        krever(vedlegg.isNotEmpty(), "Liste over vedlegg kan ikke være tom")
+        if(søknadstype.gjelderPleiepenger()) krever(!beskrivelse.isNullOrBlank(), "beskrivelse må være satt dersom det gjelder pleiepenger")
+        if (isNotEmpty()) throw Throwblem(no.nav.k9brukerdialogapi.general.ValidationProblemDetails(this))
+    }
 
     internal fun somKomplettSøknad(søker: Søker, k9Format: Ettersendelse, titler: List<String>) =
         KomplettSøknad(
@@ -46,31 +51,4 @@ class Søknad(
         .søker(søker.somK9Søker())
         .ytelse(søknadstype.somK9Ytelse())
         .build()
-
-    internal fun valider() = mutableSetOf<Violation>().apply {
-        if(vedlegg.isEmpty()){
-            add(
-                Violation(
-                    parameterName = "vedlegg",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Liste over vedlegg kan ikke være tom.",
-                    invalidValue = vedlegg
-                )
-            )
-        }
-
-        if(søknadstype.gjelderPleiepenger() && beskrivelse.isNullOrBlank()){
-            add(
-                Violation(
-                    parameterName = "beskrivelse",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Beskrivelse kan ikke være tom, null eller blank dersom det gjelder pleiepenger.",
-                    invalidValue = beskrivelse
-                )
-            )
-        }
-
-        addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
-        if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
-    }
 }

@@ -1,11 +1,11 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
+import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
@@ -78,19 +78,4 @@ class Søknad(
             opphold.somK9Utenlandsopphold()
         )
     )
-}
-
-
-data class ValidationProblemDetails(
-    val feil: List<String>
-) : DefaultProblemDetails(
-    title = "invalid-request-parameters",
-    status = 400,
-    detail = "Requesten inneholder ugyldige paramtere."
-) {
-    override fun asMap(): Map<String, Any> {
-        return super.asMap().toMutableMap().apply {
-            put("invalid_parameters", feil)
-        }.toMap()
-    }
 }

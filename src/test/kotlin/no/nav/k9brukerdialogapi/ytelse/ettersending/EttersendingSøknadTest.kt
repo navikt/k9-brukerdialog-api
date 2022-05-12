@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending
 
+import no.nav.helse.TestUtils.Companion.validerIngenFeil
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.somJson
@@ -51,12 +52,12 @@ class EttersendingSøknadTest {
             beskrivelse = "Pleiepenger .....",
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
-        ).valider()
+        ).valider().validerIngenFeil()
     }
 
     @Test
-    fun `Forventer valideringsfeil dersom søknadstype er PP og beskrivelse er null`(){
-        val feil: String = assertThrows<Throwblem>{
+    fun `Forventer valideringsfeil dersom søknadstype er PP og beskrivelse er null`() {
+        assertThrows<Throwblem> {
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(),
@@ -65,13 +66,14 @@ class EttersendingSøknadTest {
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Beskrivelse kan ikke være tom, null eller blank dersom det gjelder pleiepenger."))
+        }.also {
+            assertTrue { it.message.toString().contains("beskrivelse må være satt dersom det gjelder pleiepenger") }
+        }
     }
 
     @Test
     fun `Forventer valideringsfeil dersom vedlegg er tom liste`(){
-        val feil: String = assertThrows<Throwblem>{
+        assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(),
@@ -79,13 +81,14 @@ class EttersendingSøknadTest {
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Liste over vedlegg kan ikke være tom."))
+        }.also {
+            assertTrue(it.message.toString().contains("Liste over vedlegg kan ikke være tom"))
+        }
     }
 
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`(){
-        val feil: String = assertThrows<Throwblem>{
+        assertThrows<Throwblem> {
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
@@ -93,13 +96,14 @@ class EttersendingSøknadTest {
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = false
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Må ha forstått rettigheter og plikter for å sende inn søknad."))
+        }.also {
+            assertTrue(it.message.toString().contains("harForståttRettigheterOgPlikter må være true"))
+        }
     }
 
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`(){
-        val feil: String = assertThrows<Throwblem>{
+        assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
@@ -107,8 +111,9 @@ class EttersendingSøknadTest {
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Opplysningene må bekreftes for å sende inn søknad."))
+        }.also {
+            assertTrue(it.message.toString().contains("harBekreftetOpplysninger må være true"))
+        }
     }
 
 }

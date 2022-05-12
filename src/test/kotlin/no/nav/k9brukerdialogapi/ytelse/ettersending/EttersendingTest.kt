@@ -112,8 +112,8 @@ class EttersendingTest {
             vedlegg = listOf(),
             søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,
             beskrivelse = null,
-            harBekreftetOpplysninger = true,
-            harForståttRettigheterOgPlikter = true
+            harBekreftetOpplysninger = false,
+            harForståttRettigheterOgPlikter = false
         )
 
         TestUtils.requestAndAssert(
@@ -124,27 +124,19 @@ class EttersendingTest {
             expectedCode = HttpStatusCode.BadRequest,
             jwtToken = tokenXToken,
             expectedResponse = """
-                    {
-                      "detail": "Requesten inneholder ugyldige paramtere.",
-                      "instance": "about:blank",
-                      "type": "/problem-details/invalid-request-parameters",
-                      "title": "invalid-request-parameters",
-                      "invalid_parameters": [
-                        {
-                          "name": "vedlegg",
-                          "reason": "Liste over vedlegg kan ikke være tom.",
-                          "invalid_value": [],
-                          "type": "entity"
-                        },
-                        {
-                          "type": "entity",
-                          "name": "beskrivelse",
-                          "invalid_value" : null,
-                          "reason": "Beskrivelse kan ikke være tom, null eller blank dersom det gjelder pleiepenger."
-                        }
-                      ],
-                      "status": 400
-                    }
+                {
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "invalid_parameters": [
+                    "harForståttRettigheterOgPlikter må være true",
+                    "harBekreftetOpplysninger må være true",
+                    "Liste over vedlegg kan ikke være tom",
+                    "beskrivelse må være satt dersom det gjelder pleiepenger"
+                  ],
+                  "status": 400
+                }
             """.trimIndent(),
             requestEntity = søknad.somJson()
         )
