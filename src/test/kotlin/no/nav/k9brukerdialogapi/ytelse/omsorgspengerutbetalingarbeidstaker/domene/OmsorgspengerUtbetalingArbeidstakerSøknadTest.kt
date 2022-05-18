@@ -10,6 +10,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
 
@@ -168,6 +169,8 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                 hjemmePgaSmittevernhensyn = true,
                 hjemmePgaStengtBhgSkole = true
             ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("Må ha minst en arbeidsgiver satt.") }
         }
     }
 }

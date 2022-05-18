@@ -8,13 +8,20 @@ import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.Assert
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class TestUtils {
     companion object {
 
-        internal fun MutableList<String>.validerFeil(antallFeil: Int) {
+        internal fun MutableList<String>.validerFeil(antallFeil: Int, valideringsfeil: List<String> = listOf()) {
             Assert.assertEquals(antallFeil, this.size)
+
+            if(valideringsfeil.isNotEmpty()){
+                valideringsfeil.forEach {
+                    assertContains(this, it)
+                }
+            }
         }
 
         internal fun MutableList<String>.validerIngenFeil() {

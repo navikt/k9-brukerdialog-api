@@ -137,7 +137,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
 
     @Test
     fun `Gir valideringsfeil dersom harBekreftetOpplysninger og harForståttRettigheterOgPlikter er false`(){
-        val feil = assertThrows<Throwblem> {
+        assertThrows<Throwblem> {
             Søknad(
                 barn = listOf(
                     Barn(
@@ -152,21 +152,23 @@ class OmsorgsdagerAleneomsorgSøknadTest {
                 harForståttRettigheterOgPlikter = false,
                 harBekreftetOpplysninger = false
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Må ha forstått rettigheter og plikter for å sende inn søknad."))
-        assertTrue(feil.contains("Opplysningene må bekreftes for å sende inn søknad."))
+        }.also {
+            assertTrue(it.message.toString().contains("harBekreftetOpplysninger må være true"))
+            assertTrue(it.message.toString().contains("harForståttRettigheterOgPlikter må være true"))
+        }
     }
 
     @Test
     fun `Gir valideringsfeil dersom liste med barn er tom`(){
-        val feil = assertThrows<Throwblem> {
+        assertThrows<Throwblem> {
             Søknad(
                 barn = listOf(),
                 språk = "nb",
-                harForståttRettigheterOgPlikter = false,
-                harBekreftetOpplysninger = false
+                harForståttRettigheterOgPlikter = true,
+                harBekreftetOpplysninger = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Må ha forstått rettigheter og plikter for å sende inn søknad."))
+        }.also {
+            assertTrue(it.message.toString().contains("barn kan ikke være en tom liste."))
+        }
     }
 }

@@ -1,10 +1,11 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene
 
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.helse.dusseldorf.ktor.core.erGyldigFodselsnummer
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
+import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg.SISTE_2_ÅRENE
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg.TIDLIGERE
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
 
@@ -24,63 +25,26 @@ class Barn(
     private val fødselsdato: LocalDate? = null
 ) {
     internal fun manglerIdentifikator() = identitetsnummer.isNullOrBlank()
+    internal fun somK9Barn() =  K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
 
     internal fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
         if(manglerIdentifikator()) identitetsnummer = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
-    internal fun somK9Barn() =  K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
-
     internal fun k9PeriodeFraOgMed() = when (tidspunktForAleneomsorg) {
-        TidspunktForAleneomsorg.SISTE_2_ÅRENE -> dato
-        TidspunktForAleneomsorg.TIDLIGERE -> LocalDate.now().minusYears(1).startenAvÅret()
+        SISTE_2_ÅRENE -> dato
+        TIDLIGERE -> LocalDate.now().minusYears(1).startenAvÅret()
     }
 
     private fun LocalDate.startenAvÅret() = LocalDate.parse("${year}-01-01")
 
-    internal fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
-        if (manglerIdentifikator() || (!identitetsnummer!!.erGyldigFodselsnummer())) {
-            add(
-                Violation(
-                    parameterName = "barn.identitetsnummer",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Ikke gyldig identitetsnummer."
-                )
-            )
-        }
-
-        if (navn.isBlank() || (navn.length > 100)) {
-            add(
-                Violation(
-                    parameterName = "barn.navn",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.",
-                    invalidValue = navn
-                )
-            )
-        }
-
-        if(tidspunktForAleneomsorg == TidspunktForAleneomsorg.SISTE_2_ÅRENE && dato == null){
-            add(
-                Violation(
-                    parameterName = "barn.dato",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Barn.dato kan ikke være tom dersom tidspunktForAleneomsorg er ${TidspunktForAleneomsorg.SISTE_2_ÅRENE.name}",
-                    invalidValue = dato
-                )
-            )
-        }
-
-        if(type != TypeBarn.FRA_OPPSLAG && fødselsdato == null){
-            add(
-                Violation(
-                    parameterName = "barn.fødselsdato",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Barn som ikke stammer fra oppslag må ha fødselsdato satt.",
-                    invalidValue = fødselsdato
-                )
-            )
-        }
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt/blankt.")
+        krever(navn.length <= 100, "$felt.navn kan ikke være over 100 tegn.")
+        krever(!manglerIdentifikator(), "$felt.identitetsnummer må være satt.")
+        identitetsnummer?.let { krever(it.erGyldigFodselsnummer(), "$felt.identitetsnummer må være gyldig.")}
+        if(type != TypeBarn.FRA_OPPSLAG) krever(fødselsdato != null, "$felt.fødselsdato må være satt når type!=FRA_OPPSLAG.")
+        if(tidspunktForAleneomsorg == SISTE_2_ÅRENE) krever(dato != null, "$felt.dato må være satt.")
     }
 
     override fun equals(other: Any?) = this === other || other is Barn && this.equals(other)
