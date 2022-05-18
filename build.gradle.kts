@@ -9,8 +9,8 @@ val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fr
 val k9FormatVersion = "5.8.7"
 val fuelVersion = "2.3.1"
 val lettuceCoreVersion = "6.1.8.RELEASE"
-val tokenSupportVersion = "2.0.16"
-val mockOauth2ServerVersion = "0.4.7"
+val tokenSupportVersion = "2.0.20"
+val mockOauth2ServerVersion = "0.4.8"
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -61,7 +61,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation ("org.skyscreamer:jsonassert:1.5.0")
-    testImplementation("io.mockk:mockk:1.12.3")
+    testImplementation("io.mockk:mockk:1.12.4")
 }
 
 repositories {
