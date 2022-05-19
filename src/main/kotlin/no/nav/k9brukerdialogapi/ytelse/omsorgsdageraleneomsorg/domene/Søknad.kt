@@ -1,16 +1,14 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene
 
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
-import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerAleneOmsorg
+import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
+import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.validerK9Format
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -26,7 +24,6 @@ class Søknad(
     private val harBekreftetOpplysninger: Boolean
 ) {
     internal fun gjelderFlereBarn() = barn.size > 1
-
     internal fun manglerIdentifikatorPåBarn() = barn.any { it.manglerIdentifikator() }
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
@@ -62,22 +59,13 @@ class Søknad(
             )
     }
 
-    internal fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
-        addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
-        barn.forEach { addAll(it.valider()) }
+    internal fun valider() = mutableListOf<String>().apply {
+        krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
+        krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true")
+        krever(barn.isNotEmpty(), "barn kan ikke være en tom liste.")
+        barn.forEachIndexed { index, barn -> addAll(barn.valider("barn[$index]")) }
 
-        if (barn.isEmpty()) {
-            add(
-                Violation(
-                    parameterName = "barn",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Listen over barn kan ikke være tom",
-                    invalidValue = barn
-                )
-            )
-        }
-
-        if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
+        if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
     internal fun somKomplettSøknad(søker: Søker): KomplettSøknad {
