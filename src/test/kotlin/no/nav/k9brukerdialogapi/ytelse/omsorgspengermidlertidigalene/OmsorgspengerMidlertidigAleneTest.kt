@@ -166,9 +166,9 @@ class OmsorgspengerMidlertidigAleneTest {
                   "invalid_value": null
                 },
                 {
-                  "name": "AnnenForelder.fnr",
-                  "reason": "Fødselsnummer på annen forelder må være gyldig norsk identifikator",
-                  "invalid_value": "ikke gyldig",
+                  "name": "annenForelder.fnr",
+                  "reason": "Ikke gyldig norskIdentifikator.",
+                  "invalid_value": "ikke g*****",
                   "type": "entity"
                 },
                 {
@@ -180,7 +180,7 @@ class OmsorgspengerMidlertidigAleneTest {
                 {
                   "name": "barn.norskIdentifikator",
                   "reason": "Ikke gyldig norskIdentifikator.",
-                  "invalid_value": "ikke gyldig",
+                  "invalid_value": "ikke g*****",
                   "type": "entity"
                 }
               ],

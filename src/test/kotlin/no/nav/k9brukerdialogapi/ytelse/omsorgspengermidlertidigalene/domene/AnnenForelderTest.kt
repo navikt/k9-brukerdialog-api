@@ -45,7 +45,7 @@ class AnnenForelderTest {
     }
 
     @Test
-    fun `Skal gi valideringsfeile dersom fnr er ugydlig`(){
+    fun `Skal gi valideringsfeile dersom fnr er ugyldig`(){
         val feil = AnnenForelder(
             navn = "Navnesen",
             fnr = "Ikke gyldig",
@@ -54,7 +54,7 @@ class AnnenForelderTest {
             periodeTilOgMed = LocalDate.parse("2021-08-01")
         ).valider()
         assertEquals(1, feil.size)
-        assertEquals("Fødselsnummer på annen forelder må være gyldig norsk identifikator", feil.first().reason)
+        assertEquals("Ikke gyldig norskIdentifikator.", feil.first().reason)
     }
 
     @Test

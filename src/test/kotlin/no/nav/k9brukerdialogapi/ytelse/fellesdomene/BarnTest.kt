@@ -76,6 +76,18 @@ class BarnTest {
             navn = "Barn"
         )
         val feil = barn.valider()
+        assertEquals(feil.first().reason, "Mangler norskIdentifikator.")
+        assertEquals(1, feil.size)
+    }
+
+    @Test
+    fun `Forvent valideringsfeil dersom norskIdentifikator er ugyldig`(){
+        val barn = Barn(
+            norskIdentifikator = "11111111111",
+            aktørId = "123",
+            navn = "Barn"
+        )
+        val feil = barn.valider()
         assertEquals(feil.first().reason, "Ikke gyldig norskIdentifikator.")
         assertEquals(1, feil.size)
     }

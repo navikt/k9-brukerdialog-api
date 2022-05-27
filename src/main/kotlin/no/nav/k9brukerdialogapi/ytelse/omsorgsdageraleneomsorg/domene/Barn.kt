@@ -1,8 +1,8 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene
 
-import no.nav.helse.dusseldorf.ktor.core.erGyldigFodselsnummer
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.general.validerIdentifikator
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg.SISTE_2_ÅRENE
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg.TIDLIGERE
@@ -41,8 +41,7 @@ class Barn(
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt/blankt.")
         krever(navn.length <= 100, "$felt.navn kan ikke være over 100 tegn.")
-        krever(!manglerIdentifikator(), "$felt.identitetsnummer må være satt.")
-        identitetsnummer?.let { krever(it.erGyldigFodselsnummer(), "$felt.identitetsnummer må være gyldig.")}
+        validerIdentifikator(identitetsnummer, "$felt.identitetsnummer")
         if(type != TypeBarn.FRA_OPPSLAG) krever(fødselsdato != null, "$felt.fødselsdato må være satt når type!=FRA_OPPSLAG.")
         if(tidspunktForAleneomsorg == SISTE_2_ÅRENE) krever(dato != null, "$felt.dato må være satt.")
     }
