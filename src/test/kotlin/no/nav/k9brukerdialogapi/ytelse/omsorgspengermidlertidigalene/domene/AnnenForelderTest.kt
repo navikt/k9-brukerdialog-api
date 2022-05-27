@@ -54,7 +54,7 @@ class AnnenForelderTest {
             periodeTilOgMed = LocalDate.parse("2021-08-01")
         ).valider()
         assertEquals(1, feil.size)
-        assertEquals("Ikke gyldig norskIdentifikator.", feil.first().reason)
+        assertEquals("Er ikke gyldig identifikator.", feil.first().reason)
     }
 
     @Test

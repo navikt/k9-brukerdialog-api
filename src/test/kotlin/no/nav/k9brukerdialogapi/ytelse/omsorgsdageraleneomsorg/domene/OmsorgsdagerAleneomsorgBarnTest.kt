@@ -77,6 +77,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
         ).valider("barn").validerFeil(1, listOf("barn.identitetsnummer kan ikke være null eller blank."))
     }
+
     @Test
     fun `Forvent valideringsfeil dersom norskIdentifikator er ugyldig`(){
         Barn(
@@ -85,7 +86,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             aktørId = "123",
             identitetsnummer = "ikke gyldig" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerFeil(1, listOf("barn.identitetsnummer er ikke gyldig identifikator."))
+        ).valider("barn").validerFeil(1, listOf("barn.identitetsnummer er ikke gyldig identifikator. ikke g*****"))
     }
 
     @Test

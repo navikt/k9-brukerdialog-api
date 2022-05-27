@@ -76,7 +76,7 @@ class BarnTest {
             navn = "Barn"
         )
         val feil = barn.valider()
-        assertEquals(feil.first().reason, "Mangler norskIdentifikator.")
+        assertEquals(feil.first().reason, "Kan ikke være null eller blank.")
         assertEquals(1, feil.size)
     }
 
@@ -88,7 +88,7 @@ class BarnTest {
             navn = "Barn"
         )
         val feil = barn.valider()
-        assertEquals(feil.first().reason, "Ikke gyldig norskIdentifikator.")
+        assertEquals(feil.first().reason, "Er ikke gyldig identifikator.")
         assertEquals(1, feil.size)
     }
 
