@@ -147,7 +147,7 @@ class OmsorgsdagerAleneomsorgTest {
                     "harBekreftetOpplysninger må være true",
                     "harForståttRettigheterOgPlikter må være true",
                     "barn[0].navn kan ikke være tomt/blankt.",
-                    "barn[0].identitetsnummer må være satt.",
+                    "barn[0].identitetsnummer kan ikke være null eller blank.",
                     "barn[0].dato må være satt."
                   ],
                   "status": 400

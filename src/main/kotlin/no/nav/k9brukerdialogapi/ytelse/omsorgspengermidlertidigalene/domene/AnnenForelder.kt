@@ -3,9 +3,9 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Violation
-import no.nav.helse.dusseldorf.ktor.core.erGyldigFodselsnummer
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.type.Periode
+import no.nav.k9brukerdialogapi.general.validerIdentifikator
 import java.time.LocalDate
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.AnnenForelder as K9AnnenForelder
 
@@ -35,6 +35,8 @@ class AnnenForelder(
     private fun equals(other: AnnenForelder) = this.fnr == other.fnr && this.navn == other.navn
 
     internal fun valider() = mutableSetOf<Violation>().apply {
+        validerIdentifikator(fnr, "annenForelder.fnr")
+
         if (navn.isNullOrBlank()) {
             add(
                 Violation(
@@ -42,17 +44,6 @@ class AnnenForelder(
                     parameterType = ParameterType.ENTITY,
                     reason = "Navn på annen forelder kan ikke være null, tom eller kun white spaces",
                     invalidValue = navn
-                )
-            )
-        }
-
-        if(!fnr.erGyldigFodselsnummer()){
-            add(
-                Violation(
-                    parameterName = "AnnenForelder.fnr",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Fødselsnummer på annen forelder må være gyldig norsk identifikator",
-                    invalidValue = fnr
                 )
             )
         }

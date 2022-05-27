@@ -127,7 +127,7 @@ class OmsorgspengerMidlertidigAleneTest {
             språk = "nb",
             annenForelder = AnnenForelder(
                 navn = "Berit",
-                fnr = "ikke gyldig",
+                fnr = "11111111111",
                 situasjon = Situasjon.FENGSEL,
                 situasjonBeskrivelse = "Sitter i fengsel..",
                 periodeOver6Måneder = false,
@@ -137,7 +137,7 @@ class OmsorgspengerMidlertidigAleneTest {
             barn = listOf(
                 Barn(
                     navn = "Ole Dole",
-                    norskIdentifikator = "ikke gyldig",
+                    norskIdentifikator = "11111111111",
                     aktørId = null
                 )
             ),
@@ -166,9 +166,9 @@ class OmsorgspengerMidlertidigAleneTest {
                   "invalid_value": null
                 },
                 {
-                  "name": "AnnenForelder.fnr",
-                  "reason": "Fødselsnummer på annen forelder må være gyldig norsk identifikator",
-                  "invalid_value": "ikke gyldig",
+                  "name": "annenForelder.fnr",
+                  "reason": "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
+                  "invalid_value": "111111*****",
                   "type": "entity"
                 },
                 {
@@ -179,8 +179,8 @@ class OmsorgspengerMidlertidigAleneTest {
                 },
                 {
                   "name": "barn.norskIdentifikator",
-                  "reason": "Ikke gyldig norskIdentifikator.",
-                  "invalid_value": "ikke gyldig",
+                  "reason": "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
+                  "invalid_value": "111111*****",
                   "type": "entity"
                 }
               ],

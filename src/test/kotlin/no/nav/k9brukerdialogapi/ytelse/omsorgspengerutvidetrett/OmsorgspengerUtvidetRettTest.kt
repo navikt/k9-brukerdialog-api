@@ -155,8 +155,8 @@ class OmsorgspengerUtvidetRettTest {
                     }, {
                       "type": "entity",
                       "name": "barn.norskIdentifikator",
-                      "reason": "Ikke gyldig norskIdentifikator.",
-                      "invalid_value": "123"
+                      "reason": "Er ikke gyldig identifikator. Forventet at personidentifikator kun var siffer, men var 123****** (3)",
+                      "invalid_value": "123*****"
                     }
                   ],
                   "status": 400

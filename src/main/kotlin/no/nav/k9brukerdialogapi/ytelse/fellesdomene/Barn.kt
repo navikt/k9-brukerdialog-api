@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Violation
-import no.nav.helse.dusseldorf.ktor.core.erGyldigFodselsnummer
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
+import no.nav.k9brukerdialogapi.general.validerIdentifikator
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
@@ -28,16 +28,7 @@ class Barn(
     fun somK9Barn(): K9Barn = K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentifikator))
 
     fun valider(): Set<Violation> = mutableSetOf<Violation>().apply {
-        if (manglerIdentifikator() || (!norskIdentifikator!!.erGyldigFodselsnummer())) {
-            add(
-                Violation(
-                    parameterName = "barn.norskIdentifikator",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Ikke gyldig norskIdentifikator.",
-                    invalidValue = norskIdentifikator
-                )
-            )
-        }
+        validerIdentifikator(norskIdentifikator, "barn.norskIdentifikator")
 
         if (navn.isBlank() || (navn.length > 100)) {
             add(
