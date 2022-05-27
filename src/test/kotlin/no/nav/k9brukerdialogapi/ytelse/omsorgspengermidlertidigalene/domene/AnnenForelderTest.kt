@@ -48,13 +48,13 @@ class AnnenForelderTest {
     fun `Skal gi valideringsfeile dersom fnr er ugyldig`(){
         val feil = AnnenForelder(
             navn = "Navnesen",
-            fnr = "Ikke gyldig",
+            fnr = "11111111111",
             situasjon = Situasjon.FENGSEL,
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = LocalDate.parse("2021-08-01")
         ).valider()
         assertEquals(1, feil.size)
-        assertEquals("Er ikke gyldig identifikator.", feil.first().reason)
+        assertEquals("Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)", feil.first().reason)
     }
 
     @Test

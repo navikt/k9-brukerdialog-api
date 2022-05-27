@@ -44,7 +44,7 @@ internal fun MutableSet<Violation>.validerIdentifikator(identifikator: String?, 
                     Violation(
                         parameterName = felt,
                         parameterType = ParameterType.ENTITY,
-                        reason = "Er ikke gyldig identifikator.",
+                        reason = "Er ikke gyldig identifikator. ${it.message}",
                         invalidValue = "${identifikator.take(6)}*****"
                     )
                 )
@@ -57,6 +57,6 @@ internal fun MutableList<String>.validerIdentifikator(identifikator: String?, fe
         add("$felt kan ikke være null eller blank.")
     } else {
         runCatching { Personidentifikator(identifikator) }
-            .onFailure { add("$felt er ikke gyldig identifikator. ${identifikator.take(6)}*****") }
+            .onFailure { add("$felt er ikke gyldig identifikator, '${identifikator.take(6)}*****'. ${it.message}") }
     }
 }

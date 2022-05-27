@@ -84,9 +84,9 @@ class OmsorgsdagerAleneomsorgBarnTest {
             navn = "Barn",
             type = TypeBarn.FRA_OPPSLAG,
             aktørId = "123",
-            identitetsnummer = "ikke gyldig" ,
+            identitetsnummer = "11111111111" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerFeil(1, listOf("barn.identitetsnummer er ikke gyldig identifikator. ikke g*****"))
+        ).valider("barn").validerFeil(1, listOf("barn.identitetsnummer er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)"))
     }
 
     @Test

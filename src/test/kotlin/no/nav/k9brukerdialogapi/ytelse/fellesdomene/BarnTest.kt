@@ -88,7 +88,7 @@ class BarnTest {
             navn = "Barn"
         )
         val feil = barn.valider()
-        assertEquals(feil.first().reason, "Er ikke gyldig identifikator.")
+        assertEquals(feil.first().reason, "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)")
         assertEquals(1, feil.size)
     }
 
