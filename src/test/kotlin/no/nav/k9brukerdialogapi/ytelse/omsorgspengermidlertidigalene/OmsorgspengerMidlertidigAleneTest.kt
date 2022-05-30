@@ -5,8 +5,8 @@ import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
-import no.nav.helse.TestUtils
 import no.nav.helse.TestUtils.Companion.issueToken
+import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
@@ -104,7 +104,7 @@ class OmsorgspengerMidlertidigAleneTest {
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
         )
-        TestUtils.requestAndAssert(
+        requestAndAssert(
             httpMethod = HttpMethod.Post,
             path = OMSORGSPENGER_MIDLERTIDIG_ALENE_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.Accepted,
@@ -144,7 +144,7 @@ class OmsorgspengerMidlertidigAleneTest {
             harBekreftetOpplysninger = false,
             harForståttRettigheterOgPlikter = true
         )
-        TestUtils.requestAndAssert(
+        requestAndAssert(
             engine = engine,
             logger = logger,
             httpMethod = HttpMethod.Post,
@@ -153,39 +153,38 @@ class OmsorgspengerMidlertidigAleneTest {
             jwtToken = tokenXToken,
             requestEntity = søknad.somJson(),
             expectedResponse = """
-            {
-              "detail": "Requesten inneholder ugyldige paramtere.",
-              "instance": "about:blank",
-              "type": "/problem-details/invalid-request-parameters",
-              "title": "invalid-request-parameters",
-              "invalid_parameters": [
                 {
-                  "type": "entity",
-                  "name": "harBekreftetOpplysninger",
-                  "reason": "Opplysningene må bekreftes for å sende inn søknad.",
-                  "invalid_value": null
-                },
-                {
-                  "name": "annenForelder.fnr",
-                  "reason": "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
-                  "invalid_value": "111111*****",
-                  "type": "entity"
-                },
-                {
-                  "type": "entity",
-                  "name": "AnnenForelder.periodeTilOgMed",
-                  "reason": "periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL",
-                  "invalid_value": null
-                },
-                {
-                  "name": "barn.norskIdentifikator",
-                  "reason": "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
-                  "invalid_value": "111111*****",
-                  "type": "entity"
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "harBekreftetOpplysninger",
+                      "reason": "Opplysningene må bekreftes for å sende inn søknad."
+                    },
+                    {
+                      "type": "entity",
+                      "name": "valideringsfeil",
+                      "reason": "annenForelder.fnr er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
+                      "invalid_value": null
+                    },
+                    {
+                      "type": "entity",
+                      "name": "valideringsfeil",
+                      "reason": "annenForelder.periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL eller UTØVER_VERNEPLIKT",
+                      "invalid_value": null
+                    },
+                    {
+                      "name": "barn.norskIdentifikator",
+                      "reason": "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
+                      "invalid_value": "111111*****",
+                      "type": "entity"
+                    }
+                  ],
+                  "status": 400
                 }
-              ],
-              "status": 400
-            }
                 """.trimIndent()
         )
     }

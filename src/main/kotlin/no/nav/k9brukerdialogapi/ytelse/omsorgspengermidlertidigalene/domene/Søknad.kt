@@ -65,7 +65,7 @@ class Søknad(
 
     internal fun valider() = mutableSetOf<Violation>().apply {
         addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
-        addAll(annenForelder.valider())
+        addAll(annenForelder.validerV2("annenForelder").somViolation())
         barn.forEach { addAll(it.valider()) }
 
         if(barn.isEmpty()){
@@ -82,3 +82,13 @@ class Søknad(
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 }
+
+private fun MutableList<String>.somViolation(): Set<Violation> = map {
+    Violation(
+        parameterName = "valideringsfeil",
+        parameterType = ParameterType.ENTITY,
+        reason = it,
+        invalidValue = null
+    )
+}.toSet()
+

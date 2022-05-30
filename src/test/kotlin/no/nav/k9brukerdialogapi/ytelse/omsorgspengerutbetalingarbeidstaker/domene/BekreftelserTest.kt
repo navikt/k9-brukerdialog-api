@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.helse.TestUtils.Companion.validerFeil
-import no.nav.helse.TestUtils.Companion.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import kotlin.test.Test
 
 class BekreftelserTest {
@@ -11,7 +11,7 @@ class BekreftelserTest {
         Bekreftelser(
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
-        ).valider("test").validerIngenFeil()
+        ).valider("test").verifiserIngenFeil()
     }
 
     @Test
@@ -19,7 +19,7 @@ class BekreftelserTest {
         Bekreftelser(
             harBekreftetOpplysninger = false,
             harForståttRettigheterOgPlikter = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -27,6 +27,6 @@ class BekreftelserTest {
         Bekreftelser(
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = false
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 }

@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene
 
-import no.nav.helse.TestUtils.Companion.validerFeil
-import no.nav.helse.TestUtils.Companion.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.somJson
 import org.json.JSONObject
@@ -64,7 +64,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             fødselsdato = LocalDate.now().minusMonths(4),
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerIngenFeil()
+        ).valider("barn").verifiserIngenFeil()
     }
 
     @Test
@@ -75,7 +75,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             aktørId = "123",
             identitetsnummer = null ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerFeil(1, listOf("barn.identitetsnummer kan ikke være null eller blank."))
+        ).valider("barn").verifiserFeil(1, listOf("barn.identitetsnummer kan ikke være null eller blank."))
     }
 
     @Test
@@ -86,7 +86,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             aktørId = "123",
             identitetsnummer = "11111111111" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerFeil(1, listOf("barn.identitetsnummer er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)"))
+        ).valider("barn").verifiserFeil(1, listOf("barn.identitetsnummer er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)"))
     }
 
     @Test
@@ -97,7 +97,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             aktørId = "123",
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerFeil(1, listOf("barn.navn kan ikke være tomt/blankt."))
+        ).valider("barn").verifiserFeil(1, listOf("barn.navn kan ikke være tomt/blankt."))
     }
 
     @Test
@@ -108,7 +108,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             aktørId = "123",
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerFeil(1, listOf("barn.navn kan ikke være over 100 tegn."))
+        ).valider("barn").verifiserFeil(1, listOf("barn.navn kan ikke være over 100 tegn."))
     }
 
     @Test
@@ -120,7 +120,7 @@ class OmsorgsdagerAleneomsorgBarnTest {
             aktørId = "123",
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.TIDLIGERE
-        ).valider("barn").validerFeil(1, listOf("barn.fødselsdato må være satt når type!=FRA_OPPSLAG."))
+        ).valider("barn").verifiserFeil(1, listOf("barn.fødselsdato må være satt når type!=FRA_OPPSLAG."))
     }
 
     @Test
@@ -132,6 +132,6 @@ class OmsorgsdagerAleneomsorgBarnTest {
             identitetsnummer = "02119970078" ,
             tidspunktForAleneomsorg = TidspunktForAleneomsorg.SISTE_2_ÅRENE,
             dato = null
-        ).valider("barn").validerFeil(1, listOf("barn.dato må være satt."))
+        ).valider("barn").verifiserFeil(1, listOf("barn.dato må være satt."))
     }
 }

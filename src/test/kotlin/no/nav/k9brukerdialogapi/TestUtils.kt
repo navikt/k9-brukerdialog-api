@@ -5,27 +5,25 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.security.mock.oauth2.MockOAuth2Server
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 class TestUtils {
     companion object {
 
-        internal fun MutableList<String>.validerFeil(antallFeil: Int, valideringsfeil: List<String> = listOf()) {
-            Assert.assertEquals(antallFeil, this.size)
+        internal fun MutableList<String>.verifiserFeil(antallFeil: Int, valideringsfeil: List<String> = listOf()) {
+            assertEquals(antallFeil, this.size)
 
-            if(valideringsfeil.isNotEmpty()){
-                valideringsfeil.forEach {
-                    assertContains(this, it)
-                }
+            valideringsfeil.forEach {
+                assertContains(this, it)
             }
         }
 
-        internal fun MutableList<String>.validerIngenFeil() {
-            Assert.assertTrue(this.isEmpty())
+        internal fun MutableList<String>.verifiserIngenFeil() {
+            assertTrue(this.isEmpty())
         }
 
         fun getIdentFromIdToken(request: Request?): String {

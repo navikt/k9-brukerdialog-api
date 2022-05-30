@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.helse.TestUtils.Companion.validerFeil
-import no.nav.helse.TestUtils.Companion.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Bosteder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Utenlandsopphold
@@ -20,7 +20,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = "Belgia",
             erEØSLand = true
-        ).valider("test").validerIngenFeil()
+        ).valider("test").verifiserIngenFeil()
     }
 
     @Test
@@ -31,7 +31,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = "Belgia",
             erEØSLand = null
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -42,7 +42,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = "Belgia",
             erEØSLand = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -53,7 +53,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = " ",
             erEØSLand = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -64,7 +64,7 @@ class BostedOgOppholdTest {
             landkode = " ",
             landnavn = "Belgia",
             erEØSLand = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test

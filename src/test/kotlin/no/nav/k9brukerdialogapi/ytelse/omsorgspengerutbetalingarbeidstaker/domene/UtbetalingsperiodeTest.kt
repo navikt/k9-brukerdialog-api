@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.helse.TestUtils.Companion.validerFeil
-import no.nav.helse.TestUtils.Companion.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9.søknad.felles.fravær.AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
@@ -22,7 +22,7 @@ class UtbetalingsperiodeTest {
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = Duration.ofHours(7),
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerIngenFeil()
+        ).valider("test").verifiserIngenFeil()
     }
 
     @Test
@@ -33,7 +33,7 @@ class UtbetalingsperiodeTest {
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = Duration.ofHours(7),
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -44,7 +44,7 @@ class UtbetalingsperiodeTest {
             antallTimerBorte = Duration.ofHours(7),
             antallTimerPlanlagt = Duration.ofHours(5),
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -55,7 +55,7 @@ class UtbetalingsperiodeTest {
             antallTimerPlanlagt = Duration.ofHours(5),
             antallTimerBorte = null,
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -66,7 +66,7 @@ class UtbetalingsperiodeTest {
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = null,
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test

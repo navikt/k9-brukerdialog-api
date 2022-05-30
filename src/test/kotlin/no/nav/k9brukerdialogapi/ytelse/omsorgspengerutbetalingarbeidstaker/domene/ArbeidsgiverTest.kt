@@ -1,6 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.helse.TestUtils.Companion.validerFeil
+import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.somK9Fraværsperiode
 import java.time.Duration
 import java.time.LocalDate
@@ -39,7 +39,7 @@ class ArbeidsgiverTest {
             perioder = listOf(),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -59,7 +59,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -79,7 +79,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -100,7 +100,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -121,7 +121,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -140,7 +140,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = null,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
@@ -159,7 +159,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = null
-        ).valider("test").validerFeil(1)
+        ).valider("test").verifiserFeil(1)
     }
 
     @Test
