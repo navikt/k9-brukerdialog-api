@@ -7,6 +7,7 @@ import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerMidlertidigAlene
+import no.nav.k9brukerdialogapi.general.somViolation
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
@@ -82,13 +83,3 @@ class Søknad(
         if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 }
-
-private fun MutableList<String>.somViolation(): Set<Violation> = map {
-    Violation(
-        parameterName = "valideringsfeil",
-        parameterType = ParameterType.ENTITY,
-        reason = it,
-        invalidValue = null
-    )
-}.toSet()
-

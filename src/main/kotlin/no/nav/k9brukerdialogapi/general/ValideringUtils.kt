@@ -63,3 +63,13 @@ internal fun MutableList<String>.validerIdentifikator(identifikator: String?, fe
 }
 
 internal fun LocalDate.erLikEllerEtter(tilOgMedDato: LocalDate) = this.isEqual(tilOgMedDato) || this.isAfter(tilOgMedDato)
+
+
+internal fun MutableList<String>.somViolation(): Set<Violation> = map {
+    Violation(
+        parameterName = "valideringsfeil",
+        parameterType = ParameterType.ENTITY,
+        reason = it,
+        invalidValue = null
+    )
+}.toSet()
