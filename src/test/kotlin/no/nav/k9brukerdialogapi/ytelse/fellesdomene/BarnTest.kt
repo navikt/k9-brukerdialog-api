@@ -1,13 +1,13 @@
 package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.somJson
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -70,47 +70,38 @@ class BarnTest {
     }
 
     @Test
+    fun `Gyldig barn gir ingen valideringsfeil`(){
+        Barn(
+            norskIdentifikator = "02119970078",
+            navn = "Barnesen"
+        ).valider("barn").verifiserIngenFeil()
+    }
+
+    @Test
     fun `Forvent valideringsfeil dersom norskIdentifikator er null`(){
-        val barn = Barn(
+        Barn(
             norskIdentifikator = null,
             aktørId = "123",
             navn = "Barn"
-        )
-        val feil = barn.valider()
-        assertEquals(feil.first().reason, "Kan ikke være null eller blank.")
-        assertEquals(1, feil.size)
-
-        barn.validerV2("barn")
+        ).valider("barn")
             .verifiserFeil(1, listOf("barn.norskIdentifikator kan ikke være null eller blank."))
     }
 
     @Test
     fun `Forvent valideringsfeil dersom norskIdentifikator er ugyldig`(){
-        val barn = Barn(
+        Barn(
             norskIdentifikator = "11111111111",
             aktørId = "123",
             navn = "Barn"
-        )
-        val feil = barn.valider()
-        assertEquals(feil.first().reason, "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)")
-        assertEquals(1, feil.size)
-
-        barn.validerV2("barn")
+        ).valider("barn")
             .verifiserFeil(1, listOf("barn.norskIdentifikator er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)"))
     }
 
     @Test
     fun `Forvent valideringsfeil dersom navn er blank`(){
-        val barn = Barn(
+        Barn(
             norskIdentifikator = "02119970078",
             navn = " "
-        )
-
-        val feil = barn.valider()
-        assertEquals(feil.first().reason, "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.")
-        assertEquals(1, feil.size)
-
-        barn.validerV2("barn")
-            .verifiserFeil(1, listOf("barn.navn kan ikke være tomt eller blank."))
+        ).valider("barn").verifiserFeil(1, listOf("barn.navn kan ikke være tomt eller blank."))
     }
 }

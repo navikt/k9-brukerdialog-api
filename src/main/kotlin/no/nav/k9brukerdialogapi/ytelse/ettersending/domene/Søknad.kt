@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.ettersending.domene
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
@@ -27,7 +28,7 @@ class Søknad(
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
         krever(vedlegg.isNotEmpty(), "Liste over vedlegg kan ikke være tom")
         if(søknadstype.gjelderPleiepenger()) krever(!beskrivelse.isNullOrBlank(), "beskrivelse må være satt dersom det gjelder pleiepenger")
-        if (isNotEmpty()) throw Throwblem(no.nav.k9brukerdialogapi.general.ValidationProblemDetails(this))
+        if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
     internal fun somKomplettSøknad(søker: Søker, k9Format: Ettersendelse, titler: List<String>) =

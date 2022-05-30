@@ -34,7 +34,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
 
     @Test
     fun `Forvent valideringsfeil dersom sammeAdresse er false og mangler samværsavtale`(){
-        val feil = assertThrows<Throwblem> {
+        assertThrows<Throwblem> {
             Søknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
@@ -48,13 +48,14 @@ class OmsorgspengerUtvidetRettSøknadTest {
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Dersom sammeAdresse er false kan ikke samværsavtale være null eller tom."))
+        }.also {
+            assertTrue { it.message.toString().contains("Dersom sammeAdresse er false kan ikke samværsavtale være tom.") }
+        }
     }
 
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`(){
-        val feil: String = assertThrows<Throwblem>{
+        assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
@@ -67,13 +68,14 @@ class OmsorgspengerUtvidetRettSøknadTest {
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = false
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Må ha forstått rettigheter og plikter for å sende inn søknad."))
+        }.also {
+            assertTrue { it.message.toString().contains("harForståttRettigheterOgPlikter må være true") }
+        }
     }
 
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`(){
-        val feil: String = assertThrows<Throwblem>{
+        assertThrows<Throwblem>{
             Søknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
@@ -86,8 +88,9 @@ class OmsorgspengerUtvidetRettSøknadTest {
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Opplysningene må bekreftes for å sende inn søknad."))
+        }.also {
+            assertTrue { it.message.toString().contains("harBekreftetOpplysninger må være true") }
+        }
     }
 
     @Test

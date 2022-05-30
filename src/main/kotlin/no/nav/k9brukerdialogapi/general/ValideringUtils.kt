@@ -2,8 +2,6 @@ package no.nav.k9brukerdialogapi.general
 
 import no.nav.helse.dusseldorf.common.Personidentifikator
 import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import java.time.LocalDate
 
 internal fun MutableList<String>.krever(resultat: Boolean?, feilmelding: String = "") {
@@ -25,31 +23,6 @@ data class ValidationProblemDetails(
         return super.asMap().toMutableMap().apply {
             put("invalid_parameters", feil)
         }.toMap()
-    }
-}
-
-internal fun MutableSet<Violation>.validerIdentifikator(identifikator: String?, felt: String){
-    if (identifikator.isNullOrBlank()) {
-        add(
-            Violation(
-                parameterName = felt,
-                parameterType = ParameterType.ENTITY,
-                reason = "Kan ikke være null eller blank.",
-                invalidValue = identifikator
-            )
-        )
-    } else {
-        runCatching { Personidentifikator(identifikator) }
-            .onFailure {
-                add(
-                    Violation(
-                        parameterName = felt,
-                        parameterType = ParameterType.ENTITY,
-                        reason = "Er ikke gyldig identifikator. ${it.message}",
-                        invalidValue = "${identifikator.take(6)}*****"
-                    )
-                )
-            }
     }
 }
 
