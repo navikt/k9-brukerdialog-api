@@ -40,8 +40,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.FENGSEL,
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = LocalDate.parse("2021-08-01")
-        )
-            .valider("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.navn kan ikke være tomt eller blank."))
     }
 
@@ -53,8 +52,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.FENGSEL,
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = LocalDate.parse("2021-08-01")
-        )
-            .valider("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.fnr er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)"))
     }
 
@@ -67,8 +65,7 @@ class AnnenForelderTest {
             periodeOver6Måneder = true,
             periodeFraOgMed = LocalDate.parse("2021-01-02"),
             periodeTilOgMed = LocalDate.parse("2021-01-01")
-        )
-            .valider("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed må være lik eller etter periodeFraOgMed."))
     }
 

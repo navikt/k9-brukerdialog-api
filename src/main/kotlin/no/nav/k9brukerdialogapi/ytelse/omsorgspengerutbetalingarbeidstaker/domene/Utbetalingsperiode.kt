@@ -6,6 +6,7 @@ import no.nav.k9.søknad.felles.fravær.FraværPeriode
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9.søknad.felles.type.Periode
+import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import java.time.Duration
@@ -26,7 +27,7 @@ class Utbetalingsperiode(
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
-        krever(!fraOgMed.isAfter(tilOgMed),"$felt.fraOgMed kan ikke være etter tilOgMed")
+        krever(tilOgMed.erLikEllerEtter(fraOgMed),"$felt.tilOgMed må være lik eller etter fraOgMed.")
         if(antallTimerBorte != null){
             kreverIkkeNull(antallTimerPlanlagt, "$felt.Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt")
         }

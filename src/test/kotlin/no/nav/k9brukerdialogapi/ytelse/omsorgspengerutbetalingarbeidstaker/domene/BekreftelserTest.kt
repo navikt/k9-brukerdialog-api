@@ -11,7 +11,7 @@ class BekreftelserTest {
         Bekreftelser(
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
-        ).valider("test").verifiserIngenFeil()
+        ).valider("bekreftelser").verifiserIngenFeil()
     }
 
     @Test
@@ -19,7 +19,7 @@ class BekreftelserTest {
         Bekreftelser(
             harBekreftetOpplysninger = false,
             harForståttRettigheterOgPlikter = true
-        ).valider("test").verifiserFeil(1)
+        ).valider("bekreftelser").verifiserFeil(1, listOf("bekreftelser.harBekreftetOpplysninger må være true"))
     }
 
     @Test
@@ -27,6 +27,6 @@ class BekreftelserTest {
         Bekreftelser(
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = false
-        ).valider("test").verifiserFeil(1)
+        ).valider("bekreftelser").verifiserFeil(1, listOf("bekreftelser.harForståttRettigheterOgPlikter må være true"))
     }
 }

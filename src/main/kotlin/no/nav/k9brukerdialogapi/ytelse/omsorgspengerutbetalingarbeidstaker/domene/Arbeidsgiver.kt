@@ -29,8 +29,8 @@ class Arbeidsgiver(
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         addAll(perioder.valider("$felt.perioder"))
         krever(perioder.isNotEmpty(), "$felt.periode kan ikke være tom")
-        krever(navn.isNotBlank(), "$felt.navn kan ikke være blankt eller tomt. navn=$navn")
-        krever(organisasjonsnummer.isNotBlank(), "$felt.organisasjonsnummer kan ikke være blankt eller tomt. organisasjonsnummer=$organisasjonsnummer")
+        krever(navn.isNotBlank(), "$felt.navn kan ikke være blankt eller tomt. navn='$navn'")
+        krever(organisasjonsnummer.isNotBlank(), "$felt.organisasjonsnummer kan ikke være blankt eller tomt. organisasjonsnummer='$organisasjonsnummer'")
         kreverIkkeNull(arbeidsgiverHarUtbetaltLønn, "$felt.arbeidsgiverHarUtbetaltLønn må være satt")
         kreverIkkeNull(harHattFraværHosArbeidsgiver, "$felt.harHattFraværHosArbeidsgiver må være satt")
         when(utbetalingsårsak){

@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
 import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.somK9Fraværsperiode
 import java.time.Duration
 import java.time.LocalDate
@@ -27,7 +28,7 @@ class ArbeidsgiverTest {
                     årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
                 )
             )
-        )
+        ).valider("arbeidsgiver").verifiserIngenFeil()
     }
 
     @Test
@@ -39,7 +40,7 @@ class ArbeidsgiverTest {
             perioder = listOf(),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").verifiserFeil(1)
+        ).valider("arbeidsgiver").verifiserFeil(1, listOf("arbeidsgiver.periode kan ikke være tom"))
     }
 
     @Test
@@ -59,7 +60,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").verifiserFeil(1)
+        ).valider("arbeidsgiver").verifiserFeil(1, listOf("arbeidsgiver.navn kan ikke være blankt eller tomt. navn=' '"))
     }
 
     @Test
@@ -79,7 +80,8 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").verifiserFeil(1)
+        ).valider("arbeidsgiver")
+            .verifiserFeil(1, listOf("arbeidsgiver.organisasjonsnummer kan ikke være blankt eller tomt. organisasjonsnummer=' '"))
     }
 
     @Test
@@ -100,7 +102,8 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").verifiserFeil(1)
+        ).valider("arbeidsgiver")
+            .verifiserFeil(1, listOf("arbeidsgiver.konfliktForklaring må være satt dersom Utbetalingsårsak=KONFLIKT_MED_ARBEIDSGIVER"))
     }
 
     @Test
@@ -121,7 +124,8 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").verifiserFeil(1)
+        ).valider("arbeidsgiver")
+            .verifiserFeil(1, listOf("arbeidsgiver.årsakNyoppstartet må være satt dersom Utbetalingsårsak=NYOPPSTARTET_HOS_ARBEIDSGIVER"))
     }
 
     @Test
@@ -140,7 +144,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = null,
             arbeidsgiverHarUtbetaltLønn = true
-        ).valider("test").verifiserFeil(1)
+        ).valider("arbeidsgiver").verifiserFeil(1, listOf("arbeidsgiver.harHattFraværHosArbeidsgiver må være satt"))
     }
 
     @Test
@@ -159,7 +163,7 @@ class ArbeidsgiverTest {
             ),
             harHattFraværHosArbeidsgiver = true,
             arbeidsgiverHarUtbetaltLønn = null
-        ).valider("test").verifiserFeil(1)
+        ).valider("arbeidsgiver").verifiserFeil(1, listOf("arbeidsgiver.arbeidsgiverHarUtbetaltLønn må være satt"))
     }
 
     @Test
