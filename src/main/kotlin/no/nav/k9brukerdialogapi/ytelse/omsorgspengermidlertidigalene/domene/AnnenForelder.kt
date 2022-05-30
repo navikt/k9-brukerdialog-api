@@ -1,11 +1,13 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.type.Periode
+import no.nav.k9brukerdialogapi.general.erLikEllerEtter
+import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.*
 import java.time.LocalDate
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.AnnenForelder as K9AnnenForelder
 
@@ -30,92 +32,31 @@ class AnnenForelder(
             }
     }
 
-    override fun equals(other: Any?) = this === other || (other is AnnenForelder && this.equals(other))
-
-    private fun equals(other: AnnenForelder) = this.fnr == other.fnr && this.navn == other.navn
-
-    internal fun valider() = mutableSetOf<Violation>().apply {
-        validerIdentifikator(fnr, "annenForelder.fnr")
-
-        if (navn.isNullOrBlank()) {
-            add(
-                Violation(
-                    parameterName = "AnnenForelder.navn",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Navn på annen forelder kan ikke være null, tom eller kun white spaces",
-                    invalidValue = navn
-                )
-            )
-        }
-
-        if (periodeTilOgMed != null && periodeFraOgMed.isAfter(periodeTilOgMed)) {
-            add(
-                Violation(
-                    parameterName = "AnnenForelder.periodeFraOgMed",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "periodeFraOgMed kan ikke være etter periodeTilOgMed",
-                    invalidValue = periodeFraOgMed
-                )
-            )
-        }
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        validerIdentifikator(fnr, "$felt.fnr")
+        krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blank.")
+        periodeTilOgMed?.let { krever(periodeTilOgMed.erLikEllerEtter(periodeFraOgMed), "$felt.periodeTilOgMed må være lik eller etter periodeFraOgMed.") }
 
         when(situasjon){
-            Situasjon.INNLAGT_I_HELSEINSTITUSJON -> addAll(validerBekreftelsePeriodeOver6Mnd(situasjon))
-            Situasjon.UTØVER_VERNEPLIKT, Situasjon.FENGSEL -> addAll(validerVærnepliktEllerFengsel(situasjon))
-            Situasjon.SYKDOM, Situasjon.ANNET -> {
-                addAll(validerSituasjonBeskrivelse(situasjon))
-                addAll(validerBekreftelsePeriodeOver6Mnd(situasjon))
+            INNLAGT_I_HELSEINSTITUSJON -> validerGyldigPeriodeSatt(felt, situasjon)
+            UTØVER_VERNEPLIKT, FENGSEL -> validerVærnepliktEllerFengsel(felt)
+            SYKDOM, ANNET -> {
+                validerGyldigPeriodeSatt(felt, situasjon)
+                krever(!situasjonBeskrivelse.isNullOrBlank(), "$felt.situasjonBeskrivelse kan ikke være null eller tom dersom situasjon er $situasjon")
             }
         }
     }
 
-    private fun validerBekreftelsePeriodeOver6Mnd(situasjon: Situasjon) = mutableSetOf<Violation>().apply {
-        if (periodeTilOgMed == null && periodeOver6Måneder == null) {
-            add(
-                Violation(
-                    parameterName = "AnnenForelder.periodeOver6Måneder",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "periodeOver6Måneder kan ikke være null når periodeTilOgMed er null, og situasjonen er $situasjon",
-                    invalidValue = periodeFraOgMed
-                )
-            )
-        }
+    private fun MutableList<String>.validerVærnepliktEllerFengsel(felt: String) =
+        kreverIkkeNull(periodeTilOgMed, "$felt.periodeTilOgMed kan ikke være null dersom situasjonen er $FENGSEL eller $UTØVER_VERNEPLIKT")
+
+    private fun MutableList<String>.validerGyldigPeriodeSatt(felt: String, situasjon: Situasjon) {
+        krever(
+            periodeTilOgMed != null || periodeOver6Måneder != null,
+            "$felt.periodeTilOgMed eller periodeOver6Måneder må være satt dersom situasjonen er $situasjon"
+        )
     }
 
-    private fun validerVærnepliktEllerFengsel(situasjon: Situasjon) = mutableSetOf<Violation>().apply {
-        if (periodeTilOgMed == null) {
-            add(
-                Violation(
-                    parameterName = "AnnenForelder.periodeTilOgMed",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "periodeTilOgMed kan ikke være null dersom situasjonen er $situasjon",
-                    invalidValue = periodeTilOgMed
-                )
-            )
-        }
-    }
-
-    private fun validerSituasjonBeskrivelse(situasjon: Situasjon) = mutableSetOf<Violation>().apply {
-        if (situasjonBeskrivelse.isNullOrBlank()) {
-            add(
-                Violation(
-                    parameterName = "AnnenForelder.situasjonBeskrivelse",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Situasjonsbeskrivelse på annenForelder kan ikke være null, tom eller kun white spaces når situasjon er $situasjon",
-                    invalidValue = situasjonBeskrivelse
-                )
-            )
-        }
-
-        if (!situasjonBeskrivelse.isNullOrBlank() && (situasjonBeskrivelse.length !in 5..1000)) {
-            add(
-                Violation(
-                    parameterName = "AnnenForelder.situasjonBeskrivelse",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Situasjonsbeskrivelse på annenForelder kan kun ha en lengde mellom 5 til 1000 tegn.",
-                    invalidValue = situasjonBeskrivelse.length
-                )
-            )
-        }
-    }
+    override fun equals(other: Any?) = this === other || (other is AnnenForelder && this.equals(other))
+    private fun equals(other: AnnenForelder) = this.fnr == other.fnr && this.navn == other.navn
 }

@@ -33,7 +33,7 @@ class Bosted(
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         kreverIkkeNull(erEØSLand, "$felt.erEØSLand må være satt")
         krever(!fraOgMed.isAfter(tilOgMed), "$felt.fraOgMed kan ikke være etter tilOgMed")
-        krever(landnavn.isNotBlank(), "$felt.landnavn kan ikke være blankt eller tomt. landnavn=$landnavn")
-        krever(landkode.isNotBlank(), "$felt.landkode kan ikke være blankt eller tomt. landkode=$landkode")
+        krever(landnavn.isNotBlank(), "$felt.landnavn kan ikke være blankt eller tomt. landnavn='$landnavn'")
+        krever(landkode.isNotBlank(), "$felt.landkode kan ikke være blankt eller tomt. landkode='$landkode'")
     }
 }

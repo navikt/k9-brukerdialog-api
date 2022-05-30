@@ -4,6 +4,7 @@ import no.nav.helse.dusseldorf.common.Personidentifikator
 import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Violation
+import java.time.LocalDate
 
 internal fun MutableList<String>.krever(resultat: Boolean?, feilmelding: String = "") {
     if (resultat != true) this.add(feilmelding)
@@ -60,3 +61,5 @@ internal fun MutableList<String>.validerIdentifikator(identifikator: String?, fe
             .onFailure { add("$felt er ikke gyldig identifikator, '${identifikator.take(6)}*****'. ${it.message}") }
     }
 }
+
+internal fun LocalDate.erLikEllerEtter(tilOgMedDato: LocalDate) = this.isEqual(tilOgMedDato) || this.isAfter(tilOgMedDato)

@@ -1,21 +1,18 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
-import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerMidlertidigAlene
+import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
+import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
-
 
 class Søknad(
     val søknadId: String = UUID.randomUUID().toString(),
@@ -63,22 +60,13 @@ class Søknad(
         }
     }
 
-    internal fun valider() = mutableSetOf<Violation>().apply {
-        addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
-        addAll(annenForelder.valider())
-        barn.forEach { addAll(it.valider()) }
+    internal fun valider() = mutableListOf<String>().apply {
+        krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true")
+        krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
+        krever(barn.isNotEmpty(), "Listen over barn kan ikke være tom")
+        addAll(annenForelder.valider("annenForelder"))
+        barn.forEachIndexed { index, barn -> addAll(barn.validerV2("barn[$index]")) }
 
-        if(barn.isEmpty()){
-            add(
-                Violation(
-                    parameterName = "barn",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Listen over barn kan ikke være tom",
-                    invalidValue = barn
-                )
-            )
-        }
-
-        if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
+        if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 }

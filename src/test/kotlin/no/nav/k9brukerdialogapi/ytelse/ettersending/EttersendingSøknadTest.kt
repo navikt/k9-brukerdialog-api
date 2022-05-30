@@ -1,6 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending
 
-import no.nav.helse.TestUtils.Companion.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.somJson
@@ -52,7 +52,7 @@ class EttersendingSøknadTest {
             beskrivelse = "Pleiepenger .....",
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
-        ).valider().validerIngenFeil()
+        ).valider().verifiserIngenFeil()
     }
 
     @Test

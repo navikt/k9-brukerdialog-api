@@ -191,13 +191,13 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                   "invalid_parameters": [
                      "bosteder[0].erEØSLand må være satt",
                      "bosteder[0].fraOgMed kan ikke være etter tilOgMed",
-                     "bosteder[0].landnavn kan ikke være blankt eller tomt. landnavn= ",
+                     "bosteder[0].landnavn kan ikke være blankt eller tomt. landnavn=' '",
                      "opphold[0].erEØSLand må være satt",
                      "opphold[0].fraOgMed kan ikke være etter tilOgMed",
-                     "opphold[0].landnavn kan ikke være blankt eller tomt. landnavn= ",
+                     "opphold[0].landnavn kan ikke være blankt eller tomt. landnavn=' '",
                      "bekreftelser.harBekreftetOpplysninger må være true",
                      "bekreftelser.harForståttRettigheterOgPlikter må være true",
-                     "arbeidsgivere[0].navn kan ikke være blankt eller tomt. navn= ",
+                     "arbeidsgivere[0].navn kan ikke være blankt eller tomt. navn=' '",
                      "arbeidsgivere[0].arbeidsgiverHarUtbetaltLønn må være satt",
                      "arbeidsgivere[0].harHattFraværHosArbeidsgiver må være satt",
                      "arbeidsgivere[0].konfliktForklaring må være satt dersom Utbetalingsårsak=KONFLIKT_MED_ARBEIDSGIVER"

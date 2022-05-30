@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.helse.TestUtils.Companion.validerFeil
-import no.nav.helse.TestUtils.Companion.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9.søknad.felles.fravær.AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
@@ -22,18 +22,19 @@ class UtbetalingsperiodeTest {
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = Duration.ofHours(7),
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerIngenFeil()
+        ).valider("utbetalingsperiode").verifiserIngenFeil()
     }
 
     @Test
     fun `Utbetalingsperiode hvor fraOgMed er etter tilOgMed gir feil`() {
         Utbetalingsperiode(
             fraOgMed = LocalDate.now(),
-            tilOgMed = LocalDate.now().minusDays(4),
+            tilOgMed = LocalDate.now().minusDays(1),
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = Duration.ofHours(7),
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("utbetalingsperiode")
+            .verifiserFeil(1, listOf("utbetalingsperiode.tilOgMed må være lik eller etter fraOgMed."))
     }
 
     @Test
@@ -44,7 +45,8 @@ class UtbetalingsperiodeTest {
             antallTimerBorte = Duration.ofHours(7),
             antallTimerPlanlagt = Duration.ofHours(5),
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("utbetalingsperiode")
+            .verifiserFeil(1, listOf("utbetalingsperiode.antallTimerBorte kan ikke være større enn antallTimerPlanlagt"))
     }
 
     @Test
@@ -55,7 +57,8 @@ class UtbetalingsperiodeTest {
             antallTimerPlanlagt = Duration.ofHours(5),
             antallTimerBorte = null,
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("utbetalingsperiode")
+            .verifiserFeil(1, listOf("utbetalingsperiode.Dersom antallTimerPlanlagt er satt må antallTimerBorte være satt"))
     }
 
     @Test
@@ -66,7 +69,8 @@ class UtbetalingsperiodeTest {
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = null,
             årsak = ORDINÆRT_FRAVÆR
-        ).valider("test").validerFeil(1)
+        ).valider("utbetalingsperiode")
+            .verifiserFeil(1, listOf("utbetalingsperiode.Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt"))
     }
 
     @Test

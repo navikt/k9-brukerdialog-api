@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.helse.TestUtils.Companion.validerFeil
-import no.nav.helse.TestUtils.Companion.validerIngenFeil
+import no.nav.helse.TestUtils.Companion.verifiserFeil
+import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Bosteder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Bosted.Companion.somK9Utenlandsopphold
@@ -20,7 +20,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = "Belgia",
             erEØSLand = true
-        ).valider("test").validerIngenFeil()
+        ).valider("bosted").verifiserIngenFeil()
     }
 
     @Test
@@ -31,7 +31,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = "Belgia",
             erEØSLand = null
-        ).valider("test").validerFeil(1)
+        ).valider("bosted").verifiserFeil(1, listOf("bosted.erEØSLand må være satt"))
     }
 
     @Test
@@ -42,7 +42,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = "Belgia",
             erEØSLand = true
-        ).valider("test").validerFeil(1)
+        ).valider("bosted").verifiserFeil(1, listOf("bosted.fraOgMed kan ikke være etter tilOgMed"))
     }
 
     @Test
@@ -53,7 +53,7 @@ class BostedOgOppholdTest {
             landkode = "BE",
             landnavn = " ",
             erEØSLand = true
-        ).valider("test").validerFeil(1)
+        ).valider("bosted").verifiserFeil(1, listOf("bosted.landnavn kan ikke være blankt eller tomt. landnavn=' '"))
     }
 
     @Test
@@ -64,7 +64,7 @@ class BostedOgOppholdTest {
             landkode = " ",
             landnavn = "Belgia",
             erEØSLand = true
-        ).valider("test").validerFeil(1)
+        ).valider("bosted").verifiserFeil(1, listOf("bosted.landkode kan ikke være blankt eller tomt. landkode=' '"))
     }
 
     @Test
