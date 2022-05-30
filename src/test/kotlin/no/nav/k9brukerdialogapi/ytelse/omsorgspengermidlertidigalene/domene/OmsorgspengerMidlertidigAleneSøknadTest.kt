@@ -16,7 +16,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
 
     @Test
     fun `Forventer valideringsfeil dersom søknaden mangler barn`() {
-        val feil = assertThrows<Throwblem> {
+        assertThrows<Throwblem> {
             Søknad(
                 id = "123456789",
                 språk = "nb",
@@ -33,13 +33,14 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains( "Listen over barn kan ikke være tom"))
+        }.also {
+            assertTrue { it.message.toString().contains("Listen over barn kan ikke være tom") }
+        }
     }
 
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`() {
-        val feil = assertThrows<Throwblem> {
+        assertThrows<Throwblem> {
             Søknad(
                 id = "123456789",
                 språk = "nb",
@@ -61,13 +62,14 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = false
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Må ha forstått rettigheter og plikter for å sende inn søknad."))
+        }.also {
+            assertTrue { it.message.toString().contains("harForståttRettigheterOgPlikter må være true") }
+        }
     }
 
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`() {
-        val feil = assertThrows<Throwblem> {
+        assertThrows<Throwblem> {
             Søknad(
                 id = "123456789",
                 språk = "nb",
@@ -89,8 +91,9 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true
             ).valider()
-        }.message.toString()
-        assertTrue(feil.contains("Opplysningene må bekreftes for å sende inn søknad."))
+        }.also {
+            assertTrue { it.message.toString().contains("harBekreftetOpplysninger må være true") }
+        }
     }
 
     @Test

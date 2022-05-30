@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
+import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import java.time.LocalDate
@@ -40,6 +41,11 @@ class Barn(
                 )
             )
         }
+    }
+
+    internal fun validerV2(felt: String) = mutableListOf<String>().apply {
+        validerIdentifikator(norskIdentifikator, "$felt.norskIdentifikator")
+        krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blank.")
     }
 
     override fun toString() = "Barn(aktoerId=${aktørId}, navn=${navn}, fodselsdato=${fødselsdato}"

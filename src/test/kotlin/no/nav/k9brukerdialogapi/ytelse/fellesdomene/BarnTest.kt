@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
+import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.somJson
 import org.json.JSONObject
@@ -78,6 +79,9 @@ class BarnTest {
         val feil = barn.valider()
         assertEquals(feil.first().reason, "Kan ikke være null eller blank.")
         assertEquals(1, feil.size)
+
+        barn.validerV2("barn")
+            .verifiserFeil(1, listOf("barn.norskIdentifikator kan ikke være null eller blank."))
     }
 
     @Test
@@ -90,6 +94,9 @@ class BarnTest {
         val feil = barn.valider()
         assertEquals(feil.first().reason, "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)")
         assertEquals(1, feil.size)
+
+        barn.validerV2("barn")
+            .verifiserFeil(1, listOf("barn.norskIdentifikator er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)"))
     }
 
     @Test
@@ -102,5 +109,8 @@ class BarnTest {
         val feil = barn.valider()
         assertEquals(feil.first().reason, "Navn på barnet kan ikke være tomt, og kan maks være 100 tegn.")
         assertEquals(1, feil.size)
+
+        barn.validerV2("barn")
+            .verifiserFeil(1, listOf("barn.navn kan ikke være tomt eller blank."))
     }
 }

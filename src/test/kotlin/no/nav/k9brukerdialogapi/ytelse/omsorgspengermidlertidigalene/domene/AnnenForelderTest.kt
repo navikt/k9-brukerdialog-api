@@ -41,7 +41,7 @@ class AnnenForelderTest {
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = LocalDate.parse("2021-08-01")
         )
-            .validerV2("annenForelder")
+            .valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.navn kan ikke være tomt eller blank."))
     }
 
@@ -54,7 +54,7 @@ class AnnenForelderTest {
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = LocalDate.parse("2021-08-01")
         )
-            .validerV2("annenForelder")
+            .valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.fnr er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)"))
     }
 
@@ -68,8 +68,8 @@ class AnnenForelderTest {
             periodeFraOgMed = LocalDate.parse("2021-01-02"),
             periodeTilOgMed = LocalDate.parse("2021-01-01")
         )
-            .validerV2("annenForelder")
-            .verifiserFeil(1, listOf("periodeTilOgMed må være lik eller etter periodeFraOgMed."))
+            .valider("annenForelder")
+            .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed må være lik eller etter periodeFraOgMed."))
     }
 
     @Test
@@ -80,7 +80,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.INNLAGT_I_HELSEINSTITUSJON,
             periodeOver6Måneder = true,
             periodeFraOgMed = LocalDate.parse("2021-01-01")
-        ).validerV2("annenForelder").verifiserIngenFeil()
+        ).valider("annenForelder").verifiserIngenFeil()
     }
 
     @Test
@@ -91,7 +91,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.INNLAGT_I_HELSEINSTITUSJON,
             periodeFraOgMed = LocalDate.parse("2020-01-01"),
             periodeTilOgMed = LocalDate.parse("2020-07-01")
-        ).validerV2("annenForelder").verifiserIngenFeil()
+        ).valider("annenForelder").verifiserIngenFeil()
     }
 
     @Test
@@ -103,7 +103,7 @@ class AnnenForelderTest {
             periodeFraOgMed = LocalDate.parse("2020-01-01"),
             periodeTilOgMed = null,
             periodeOver6Måneder = null
-        ).validerV2("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed eller periodeOver6Måneder må være satt dersom situasjonen er INNLAGT_I_HELSEINSTITUSJON"))
     }
 
@@ -115,7 +115,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.FENGSEL,
             periodeFraOgMed = LocalDate.parse("2020-01-01"),
             periodeTilOgMed = LocalDate.parse("2021-08-01")
-        ).validerV2("annenForelder").verifiserIngenFeil()
+        ).valider("annenForelder").verifiserIngenFeil()
     }
 
     @Test
@@ -126,7 +126,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.FENGSEL,
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = null
-        ).validerV2("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL eller UTØVER_VERNEPLIKT"))
     }
 
@@ -138,7 +138,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.UTØVER_VERNEPLIKT,
             periodeFraOgMed = LocalDate.parse("2020-01-01"),
             periodeTilOgMed = LocalDate.parse("2021-08-01")
-        ).validerV2("annenForelder").verifiserIngenFeil()
+        ).valider("annenForelder").verifiserIngenFeil()
     }
 
     @Test
@@ -149,7 +149,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.UTØVER_VERNEPLIKT,
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = null
-        ).validerV2("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL eller UTØVER_VERNEPLIKT"))
     }
 
@@ -162,7 +162,7 @@ class AnnenForelderTest {
             situasjonBeskrivelse = "Blabla noe skjedde",
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeOver6Måneder = true
-        ).validerV2("annenForelder").verifiserIngenFeil()
+        ).valider("annenForelder").verifiserIngenFeil()
     }
 
     @Test
@@ -174,7 +174,7 @@ class AnnenForelderTest {
             situasjonBeskrivelse = "",
             periodeOver6Måneder = true,
             periodeFraOgMed = LocalDate.parse("2021-01-01")
-        ).validerV2("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.situasjonBeskrivelse kan ikke være null eller tom dersom situasjon er ANNET"))
     }
 
@@ -188,7 +188,7 @@ class AnnenForelderTest {
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeTilOgMed = null,
             periodeOver6Måneder = null
-        ).validerV2("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed eller periodeOver6Måneder må være satt dersom situasjonen er ANNET"))
     }
 
@@ -201,7 +201,7 @@ class AnnenForelderTest {
             situasjonBeskrivelse = "Blabla noe skjedde",
             periodeFraOgMed = LocalDate.parse("2021-01-01"),
             periodeOver6Måneder = true
-        ).validerV2("annenForelder").verifiserIngenFeil()
+        ).valider("annenForelder").verifiserIngenFeil()
     }
 
     @Test
@@ -213,7 +213,7 @@ class AnnenForelderTest {
             situasjonBeskrivelse = "",
             periodeOver6Måneder = true,
             periodeFraOgMed = LocalDate.parse("2021-01-01")
-        ).validerV2("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.situasjonBeskrivelse kan ikke være null eller tom dersom situasjon er SYKDOM"))
     }
 
@@ -225,7 +225,7 @@ class AnnenForelderTest {
             situasjon = Situasjon.SYKDOM,
             situasjonBeskrivelse = "COVID-19",
             periodeFraOgMed = LocalDate.parse("2021-01-01")
-        ).validerV2("annenForelder")
+        ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed eller periodeOver6Måneder må være satt dersom situasjonen er SYKDOM"))
     }
 }

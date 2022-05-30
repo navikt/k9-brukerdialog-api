@@ -32,14 +32,10 @@ class AnnenForelder(
             }
     }
 
-    override fun equals(other: Any?) = this === other || (other is AnnenForelder && this.equals(other))
-
-    private fun equals(other: AnnenForelder) = this.fnr == other.fnr && this.navn == other.navn
-
-    internal fun validerV2(felt: String) = mutableListOf<String>().apply {
-        validerIdentifikator(fnr, "annenForelder.fnr")
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        validerIdentifikator(fnr, "$felt.fnr")
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blank.")
-        periodeTilOgMed?.let { krever(periodeTilOgMed.erLikEllerEtter(periodeFraOgMed), "periodeTilOgMed må være lik eller etter periodeFraOgMed.") }
+        periodeTilOgMed?.let { krever(periodeTilOgMed.erLikEllerEtter(periodeFraOgMed), "$felt.periodeTilOgMed må være lik eller etter periodeFraOgMed.") }
 
         when(situasjon){
             INNLAGT_I_HELSEINSTITUSJON -> validerGyldigPeriodeSatt(felt, situasjon)
@@ -60,4 +56,7 @@ class AnnenForelder(
             "$felt.periodeTilOgMed eller periodeOver6Måneder må være satt dersom situasjonen er $situasjon"
         )
     }
+
+    override fun equals(other: Any?) = this === other || (other is AnnenForelder && this.equals(other))
+    private fun equals(other: AnnenForelder) = this.fnr == other.fnr && this.navn == other.navn
 }

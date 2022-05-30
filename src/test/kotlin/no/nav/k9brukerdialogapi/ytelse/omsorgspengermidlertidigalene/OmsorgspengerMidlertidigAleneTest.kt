@@ -136,13 +136,13 @@ class OmsorgspengerMidlertidigAleneTest {
             ),
             barn = listOf(
                 Barn(
-                    navn = "Ole Dole",
+                    navn = "  ",
                     norskIdentifikator = "11111111111",
                     aktørId = null
                 )
             ),
             harBekreftetOpplysninger = false,
-            harForståttRettigheterOgPlikter = true
+            harForståttRettigheterOgPlikter = false
         )
         requestAndAssert(
             engine = engine,
@@ -159,30 +159,12 @@ class OmsorgspengerMidlertidigAleneTest {
                   "type": "/problem-details/invalid-request-parameters",
                   "title": "invalid-request-parameters",
                   "invalid_parameters": [
-                    {
-                      "type": "entity",
-                      "name": "harBekreftetOpplysninger",
-                      "reason": "Opplysningene må bekreftes for å sende inn søknad.",
-                      "invalid_value": null
-                    },
-                    {
-                      "type": "entity",
-                      "name": "valideringsfeil",
-                      "reason": "annenForelder.fnr er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
-                      "invalid_value": null
-                    },
-                    {
-                      "type": "entity",
-                      "name": "valideringsfeil",
-                      "reason": "annenForelder.periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL eller UTØVER_VERNEPLIKT",
-                      "invalid_value": null
-                    },
-                    {
-                      "name": "barn.norskIdentifikator",
-                      "reason": "Er ikke gyldig identifikator. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
-                      "invalid_value": "111111*****",
-                      "type": "entity"
-                    }
+                    "harForståttRettigheterOgPlikter må være true",
+                    "harBekreftetOpplysninger må være true",
+                    "annenForelder.fnr er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
+                    "annenForelder.periodeTilOgMed kan ikke være null dersom situasjonen er FENGSEL eller UTØVER_VERNEPLIKT",
+                    "barn[0].norskIdentifikator er ikke gyldig identifikator, '111111*****'. kalkulertKontrollsifferEn (-) er ikke lik forventetKontrollsifferEn (1)",
+                    "barn[0].navn kan ikke være tomt eller blank."
                   ],
                   "status": 400
                 }
