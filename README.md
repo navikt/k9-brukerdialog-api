@@ -10,7 +10,7 @@ Støtte for følgende ytelser:
 | Omsorgspenger midlertidig alene | Ja | https://github.com/navikt/omsorgspenger-midlertidig-alene-prosessering | https://github.com/navikt/omsorgspenger-midlertidig-alene-dialog |
 | Ettersending | Ja | https://github.com/navikt/k9-ettersending-prosessering | https://github.com/navikt/sif-ettersending |
 | Omsorgsdager aleneomsorg | Nei | https://github.com/navikt/omsorgsdager-aleneomsorg-prosessering | https://github.com/navikt/omsorgsdager-aleneomsorg-dialog |
-| Omsorgspenger utbetaling arbeidstaker | Nei | https://github.com/navikt/omsorgspengerutbetalingsoknad-arbeidstaker-prosessering | https://github.com/navikt/omsorgspengerutbetaling-arbeidstaker-soknad |
+| Omsorgspenger utbetaling arbeidstaker | Ja | https://github.com/navikt/omsorgspengerutbetalingsoknad-arbeidstaker-prosessering | https://github.com/navikt/omsorgspengerutbetaling-arbeidstaker-soknad |
 | | | | |
 
 
