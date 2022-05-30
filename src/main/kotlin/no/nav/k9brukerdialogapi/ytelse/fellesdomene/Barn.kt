@@ -43,6 +43,7 @@ class Barn(
         }
     }
 
+    // Erstatter valider() når resterende har gått over til lik type validering.
     internal fun validerV2(felt: String) = mutableListOf<String>().apply {
         validerIdentifikator(norskIdentifikator, "$felt.norskIdentifikator")
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blank.")
