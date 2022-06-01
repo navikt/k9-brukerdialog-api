@@ -13,13 +13,12 @@
   "externalHosts": [
     "api-gw-q1.oera.no",
     "oauth2.googleapis.com",
-    "login.microsoftonline.com",
-    "k9-selvbetjening-oppslag.dev-fss-pub.nais.io"
+    "login.microsoftonline.com"
   ],
   "env": {
     "CORS_ADDRESSES": "https://omsorgspengesoknad.dev.nav.no,https://ekstra-omsorgsdager-andre-forelder-ikke-tilsyn.dev.nav.no,https://k9-ettersending-soknad.dev.nav.no,https://omsorgsdager-aleneomsorg-dialog.dev.nav.no,https://omsorgspengerutbetaling-arbeidstaker-soknad.dev.nav.no",
     "COOKIE_NAME": "selvbetjening-idtoken",
-    "K9_OPPSLAG_REGISTER_URL": "https://k9-selvbetjening-oppslag.dev-fss-pub.nais.io",
+    "K9_OPPSLAG_REGISTER_URL": "http://k9-selvbetjening-oppslag",
     "K9_SELVBETJENING_OPPSLAG_TOKENX_AUDIENCE": "dev-fss:dusseldorf:k9-selvbetjening-oppslag",
     "K9_MELLOMLAGRING_SERVICE_DISCOVERY": "http://k9-mellomlagring",
     "K9_MELLOMLAGRING_INGRESS": "https://k9-mellomlagring.dev.intern.nav.no/v1/dokument",
