@@ -65,7 +65,7 @@ class Søknad(
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
         krever(barn.isNotEmpty(), "Listen over barn kan ikke være tom")
         addAll(annenForelder.valider("annenForelder"))
-        barn.forEachIndexed { index, barn -> addAll(barn.validerV2("barn[$index]")) }
+        barn.forEachIndexed { index, barn -> addAll(barn.valider("barn[$index]")) }
 
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }

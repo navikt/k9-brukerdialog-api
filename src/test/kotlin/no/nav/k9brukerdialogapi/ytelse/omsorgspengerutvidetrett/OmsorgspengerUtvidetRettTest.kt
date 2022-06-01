@@ -142,22 +142,9 @@ class OmsorgspengerUtvidetRettTest {
                   "type": "/problem-details/invalid-request-parameters",
                   "title": "invalid-request-parameters",
                   "invalid_parameters": [
-                    {
-                      "name": "harForståttRettigheterOgPlikter",
-                      "reason": "Må ha forstått rettigheter og plikter for å sende inn søknad.",
-                      "invalid_value": null,
-                      "type": "entity"
-                    }, {
-                      "name": "harBekreftetOpplysninger",
-                      "reason": "Opplysningene må bekreftes for å sende inn søknad.",
-                      "invalid_value": null,
-                      "type": "entity"
-                    }, {
-                      "type": "entity",
-                      "name": "barn.norskIdentifikator",
-                      "reason": "Er ikke gyldig identifikator. Forventet at personidentifikator kun var siffer, men var 123****** (3)",
-                      "invalid_value": "123*****"
-                    }
+                    "harBekreftetOpplysninger må være true",
+                    "harForståttRettigheterOgPlikter må være true",
+                    "barn.norskIdentifikator er ikke gyldig identifikator, '123*****'. Forventet at personidentifikator kun var siffer, men var 123****** (3)"
                   ],
                   "status": 400
                 }

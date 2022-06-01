@@ -1,23 +1,21 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
-import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
+import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
+import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.validerSamtykke
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
-
 
 class Søknad(
     val søknadId: String = UUID.randomUUID().toString(),
@@ -37,11 +35,11 @@ class Søknad(
         private val k9FormatVersjon = Versjon.of("1.0.0")
     }
 
-    fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
+    internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
         if (barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
     }
 
-    fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
+    internal fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
         SøknadId.of(søknadId),
         k9FormatVersjon,
         mottatt,
@@ -52,7 +50,7 @@ class Søknad(
         )
     )
 
-    fun tilKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
+    internal fun tilKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
         språk = språk,
         søknadId = søknadId,
         mottatt = mottatt,
@@ -68,22 +66,15 @@ class Søknad(
         k9FormatSøknad = k9Format
     )
 
-    fun valider() = mutableSetOf<Violation>().apply {
-        addAll(validerSamtykke(harForståttRettigheterOgPlikter, harBekreftetOpplysninger))
-        addAll(barn.valider())
-
-        if (sammeAdresse != null && !sammeAdresse && samværsavtale.isNullOrEmpty()) {
-            add(
-                Violation(
-                    parameterName = "sammeAdresse og samværsavtale",
-                    parameterType = ParameterType.ENTITY,
-                    reason = "Dersom sammeAdresse er false kan ikke samværsavtale være null eller tom.",
-                    invalidValue = "sammeAdresse=$sammeAdresse, samværsavtale=$samværsavtale"
-
-                )
-            )
+    internal fun valider() = mutableListOf<String>().apply {
+        krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
+        krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true")
+        kreverIkkeNull(sammeAdresse, "sammeAdresse må være satt.")
+        if(sammeAdresse != null && !sammeAdresse){
+            krever(samværsavtale?.isNotEmpty(), "Dersom sammeAdresse er false kan ikke samværsavtale være tom.")
         }
+        addAll(barn.valider("barn"))
 
-        if (this.isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
+        if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 }
