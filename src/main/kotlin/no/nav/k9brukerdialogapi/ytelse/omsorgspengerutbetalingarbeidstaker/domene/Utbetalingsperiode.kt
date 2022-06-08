@@ -19,6 +19,7 @@ class Utbetalingsperiode(
     private val antallTimerBorte: Duration? = null,
     private val antallTimerPlanlagt: Duration? = null,
     private val årsak: FraværÅrsak,
+    // TODO: 08/06/2022 Vurder om frontend kan endre til å sende med liste med Arbeidstaker, da slipper vi spesiell håndtering at snf sender men ikke arbeidstaker.
     private val aktivitetFravær: List<AktivitetFravær> = listOf()
 ) {
     companion object{
