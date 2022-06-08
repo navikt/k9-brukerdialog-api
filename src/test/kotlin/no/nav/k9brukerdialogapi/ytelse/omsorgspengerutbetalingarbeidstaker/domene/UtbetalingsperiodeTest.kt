@@ -5,6 +5,8 @@ import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9brukerdialogapi.somJson
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.AktivitetFravær.FRILANSER
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.AktivitetFravær.SELVSTENDIG_VIRKSOMHET
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.FraværÅrsak.ORDINÆRT_FRAVÆR
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.Duration
@@ -73,7 +75,7 @@ class UtbetalingsperiodeTest {
     }
 
     @Test
-    fun `Genererer forventet FraværPeriode`() {
+    fun `Genererer forventet FraværPeriode for arbeidstaker`() {
         val utbetalingsperiode = Utbetalingsperiode(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-10"),
@@ -96,6 +98,37 @@ class UtbetalingsperiodeTest {
               ],
               "arbeidsforholdId": null,
               "arbeidsgiverOrgNr": "825905162"
+            }
+        """.trimIndent()
+        JSONAssert.assertEquals(forventetFraværPeriode, faktiskFraværPeriode, true)
+    }
+
+
+    @Test
+    fun `Genererer forventet FraværPeriode for selvstendig næringsdrivende og frilans`() {
+        val utbetalingsperiode = Utbetalingsperiode(
+            fraOgMed = LocalDate.parse("2022-01-01"),
+            tilOgMed = LocalDate.parse("2022-01-10"),
+            antallTimerBorte = Duration.ofHours(5),
+            antallTimerPlanlagt = Duration.ofHours(7),
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf(FRILANSER, SELVSTENDIG_VIRKSOMHET)
+        )
+        val faktiskFraværPeriode = utbetalingsperiode.somFraværPeriode(
+            SøknadÅrsak.ARBEIDSGIVER_KONKURS
+        ).somJson()
+        val forventetFraværPeriode = """
+            {
+              "periode": "2022-01-01/2022-01-10",
+              "duration": "PT5H",
+              "årsak": "ORDINÆRT_FRAVÆR",
+              "søknadÅrsak": "ARBEIDSGIVER_KONKURS",
+              "aktivitetFravær": [
+                "FRILANSER",
+                "SELVSTENDIG_VIRKSOMHET"
+              ],
+              "arbeidsforholdId": null,
+              "arbeidsgiverOrgNr": null
             }
         """.trimIndent()
         JSONAssert.assertEquals(forventetFraværPeriode, faktiskFraværPeriode, true)

@@ -53,6 +53,20 @@ class Utbetalingsperiode(
         organisasjonsnummer,
         null
     )
+
+    internal fun somFraværPeriode(
+        søknadÅrsak: SøknadÅrsak,
+    ) = FraværPeriode(
+        Periode(fraOgMed, tilOgMed),
+        antallTimerBorte,
+        årsak.somK9FraværÅrsak(),
+        søknadÅrsak,
+        aktivitetFravær.map {
+            it.somK9AktivitetFravær()
+        },
+        null,
+        null
+    )
 }
 
 enum class FraværÅrsak {

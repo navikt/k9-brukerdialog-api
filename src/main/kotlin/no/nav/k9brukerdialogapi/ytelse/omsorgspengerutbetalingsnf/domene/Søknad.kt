@@ -17,6 +17,6 @@ class Søknad(
     private val opphold: List<Opphold>,
     private val spørsmål: List<SpørsmålOgSvar>,
     private val bekreftelser: Bekreftelser,
-    private val utbetalingsperioder: List<Utbetalingsperiode>,
+    private val utbetalingsperioder: List<Utbetalingsperiode>
 ) {
 }
