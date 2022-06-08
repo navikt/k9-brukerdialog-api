@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import no.nav.k9brukerdialogapi.general.krever
 

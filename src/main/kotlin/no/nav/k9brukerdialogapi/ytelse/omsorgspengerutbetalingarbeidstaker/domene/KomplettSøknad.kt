@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 
 import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import java.time.ZonedDateTime
 
 class KomplettSøknad(
