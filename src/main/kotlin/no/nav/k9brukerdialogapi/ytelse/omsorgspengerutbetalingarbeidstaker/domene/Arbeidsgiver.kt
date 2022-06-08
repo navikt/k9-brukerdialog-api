@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
-import no.nav.k9.søknad.felles.fravær.AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9brukerdialogapi.general.krever
@@ -40,9 +39,8 @@ class Arbeidsgiver(
     }
 
     internal fun somK9Fraværsperiode() = perioder.map {
-        it.somFraværPeriode(
+        it.somFraværPeriodeForArbeidstaker(
             søknadÅrsak = utbetalingsårsak.somSøknadÅrsak(),
-            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER),
             organisasjonsnummer = Organisasjonsnummer.of(organisasjonsnummer)
         )
     }
