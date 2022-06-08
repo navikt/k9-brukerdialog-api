@@ -1,7 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.k9.søknad.felles.fravær.AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.FraværPeriode
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
@@ -11,6 +10,7 @@ import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import java.time.Duration
 import java.time.LocalDate
+import no.nav.k9.søknad.felles.fravær.AktivitetFravær as K9AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.FraværÅrsak as K9FraværÅrsak
 
 class Utbetalingsperiode(
@@ -18,7 +18,8 @@ class Utbetalingsperiode(
     @JsonFormat(pattern = "yyyy-MM-dd") private val tilOgMed: LocalDate,
     private val antallTimerBorte: Duration? = null,
     private val antallTimerPlanlagt: Duration? = null,
-    private val årsak: FraværÅrsak
+    private val årsak: FraværÅrsak,
+    private val aktivitetFravær: List<AktivitetFravær> = listOf()
 ) {
     companion object{
         internal fun List<Utbetalingsperiode>.valider(felt: String) = this.flatMapIndexed { index, periode ->
@@ -39,16 +40,15 @@ class Utbetalingsperiode(
         }
     }
 
-    internal fun somFraværPeriode(
+    internal fun somFraværPeriodeForArbeidstaker(
         søknadÅrsak: SøknadÅrsak,
-        aktivitetFravær: List<AktivitetFravær>,
         organisasjonsnummer: Organisasjonsnummer
     ) = FraværPeriode(
         Periode(fraOgMed, tilOgMed),
         antallTimerBorte,
         årsak.somK9FraværÅrsak(),
         søknadÅrsak,
-        aktivitetFravær,
+        listOf(AktivitetFravær.ARBEIDSTAKER.somK9AktivitetFravær()),
         organisasjonsnummer,
         null
     )
@@ -63,5 +63,17 @@ enum class FraværÅrsak {
         STENGT_SKOLE_ELLER_BARNEHAGE -> K9FraværÅrsak.STENGT_SKOLE_ELLER_BARNEHAGE
         SMITTEVERNHENSYN -> K9FraværÅrsak.SMITTEVERNHENSYN
         ORDINÆRT_FRAVÆR -> K9FraværÅrsak.ORDINÆRT_FRAVÆR
+    }
+}
+
+enum class AktivitetFravær {
+    ARBEIDSTAKER,
+    FRILANSER,
+    SELVSTENDIG_VIRKSOMHET;
+
+    fun somK9AktivitetFravær() = when(this){
+        ARBEIDSTAKER -> K9AktivitetFravær.ARBEIDSTAKER
+        FRILANSER -> K9AktivitetFravær.FRILANSER
+        SELVSTENDIG_VIRKSOMHET -> K9AktivitetFravær.SELVSTENDIG_VIRKSOMHET
     }
 }

@@ -2,7 +2,6 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 
 import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
-import no.nav.k9.søknad.felles.fravær.AktivitetFravær
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9brukerdialogapi.somJson
@@ -82,9 +81,8 @@ class UtbetalingsperiodeTest {
             antallTimerPlanlagt = Duration.ofHours(7),
             årsak = ORDINÆRT_FRAVÆR
         )
-        val faktiskFraværPeriode = utbetalingsperiode.somFraværPeriode(
+        val faktiskFraværPeriode = utbetalingsperiode.somFraværPeriodeForArbeidstaker(
             SøknadÅrsak.ARBEIDSGIVER_KONKURS,
-            listOf(AktivitetFravær.ARBEIDSTAKER),
             Organisasjonsnummer.of("825905162")
         ).somJson()
         val forventetFraværPeriode = """
