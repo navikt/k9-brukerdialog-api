@@ -39,7 +39,7 @@ class Arbeidsgiver(
     }
 
     internal fun somK9Fraværsperiode() = perioder.map {
-        it.somFraværPeriodeForArbeidstaker(
+        it.somFraværPeriode(
             søknadÅrsak = utbetalingsårsak.somSøknadÅrsak(),
             organisasjonsnummer = Organisasjonsnummer.of(organisasjonsnummer)
         )

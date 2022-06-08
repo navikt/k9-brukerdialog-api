@@ -20,7 +20,8 @@ class UtbetalingsperiodeTest {
             tilOgMed = LocalDate.now().plusDays(4),
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = Duration.ofHours(7),
-            årsak = ORDINÆRT_FRAVÆR
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
         ).valider("utbetalingsperiode").verifiserIngenFeil()
     }
 
@@ -31,7 +32,8 @@ class UtbetalingsperiodeTest {
             tilOgMed = LocalDate.now().minusDays(1),
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = Duration.ofHours(7),
-            årsak = ORDINÆRT_FRAVÆR
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
         ).valider("utbetalingsperiode")
             .verifiserFeil(1, listOf("utbetalingsperiode.tilOgMed må være lik eller etter fraOgMed."))
     }
@@ -43,7 +45,8 @@ class UtbetalingsperiodeTest {
             tilOgMed = LocalDate.now().plusDays(4),
             antallTimerBorte = Duration.ofHours(7),
             antallTimerPlanlagt = Duration.ofHours(5),
-            årsak = ORDINÆRT_FRAVÆR
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
         ).valider("utbetalingsperiode")
             .verifiserFeil(1, listOf("utbetalingsperiode.antallTimerBorte kan ikke være større enn antallTimerPlanlagt"))
     }
@@ -55,7 +58,8 @@ class UtbetalingsperiodeTest {
             tilOgMed = LocalDate.now().plusDays(4),
             antallTimerPlanlagt = Duration.ofHours(5),
             antallTimerBorte = null,
-            årsak = ORDINÆRT_FRAVÆR
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
         ).valider("utbetalingsperiode")
             .verifiserFeil(1, listOf("utbetalingsperiode.Dersom antallTimerPlanlagt er satt må antallTimerBorte være satt"))
     }
@@ -67,21 +71,23 @@ class UtbetalingsperiodeTest {
             tilOgMed = LocalDate.now().plusDays(4),
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = null,
-            årsak = ORDINÆRT_FRAVÆR
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
         ).valider("utbetalingsperiode")
             .verifiserFeil(1, listOf("utbetalingsperiode.Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt"))
     }
 
     @Test
-    fun `Genererer forventet FraværPeriode`() {
+    fun `Genererer forventet FraværPeriode for arbeidstaker`() {
         val utbetalingsperiode = Utbetalingsperiode(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-10"),
             antallTimerBorte = Duration.ofHours(5),
             antallTimerPlanlagt = Duration.ofHours(7),
-            årsak = ORDINÆRT_FRAVÆR
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
         )
-        val faktiskFraværPeriode = utbetalingsperiode.somFraværPeriodeForArbeidstaker(
+        val faktiskFraværPeriode = utbetalingsperiode.somFraværPeriode(
             SøknadÅrsak.ARBEIDSGIVER_KONKURS,
             Organisasjonsnummer.of("825905162")
         ).somJson()

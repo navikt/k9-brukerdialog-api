@@ -59,7 +59,8 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                         Utbetalingsperiode(
                             fraOgMed = LocalDate.parse("2022-01-25"),
                             tilOgMed = LocalDate.parse("2022-01-28"),
-                            årsak = FraværÅrsak.SMITTEVERNHENSYN
+                            årsak = FraværÅrsak.SMITTEVERNHENSYN,
+                            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                         )
                     )
                 )
@@ -145,7 +146,8 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                         Utbetalingsperiode(
                             fraOgMed = LocalDate.parse("2022-01-25"),
                             tilOgMed = LocalDate.parse("2022-01-28"),
-                            årsak = FraværÅrsak.SMITTEVERNHENSYN
+                            årsak = FraværÅrsak.SMITTEVERNHENSYN,
+                            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                         )
                     )
                 )

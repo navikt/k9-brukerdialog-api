@@ -19,8 +19,7 @@ class Utbetalingsperiode(
     private val antallTimerBorte: Duration? = null,
     private val antallTimerPlanlagt: Duration? = null,
     private val årsak: FraværÅrsak,
-    // TODO: 08/06/2022 Vurder om frontend kan endre til å sende med liste med Arbeidstaker, da slipper vi spesiell håndtering at snf sender men ikke arbeidstaker.
-    private val aktivitetFravær: List<AktivitetFravær> = listOf()
+    private val aktivitetFravær: List<AktivitetFravær>
 ) {
     companion object{
         internal fun List<Utbetalingsperiode>.valider(felt: String) = this.flatMapIndexed { index, periode ->
@@ -41,15 +40,15 @@ class Utbetalingsperiode(
         }
     }
 
-    internal fun somFraværPeriodeForArbeidstaker(
+    internal fun somFraværPeriode(
         søknadÅrsak: SøknadÅrsak,
-        organisasjonsnummer: Organisasjonsnummer
+        organisasjonsnummer: Organisasjonsnummer?
     ) = FraværPeriode(
         Periode(fraOgMed, tilOgMed),
         antallTimerBorte,
         årsak.somK9FraværÅrsak(),
         søknadÅrsak,
-        listOf(AktivitetFravær.ARBEIDSTAKER.somK9AktivitetFravær()),
+        aktivitetFravær.map { it.somK9AktivitetFravær() },
         organisasjonsnummer,
         null
     )
