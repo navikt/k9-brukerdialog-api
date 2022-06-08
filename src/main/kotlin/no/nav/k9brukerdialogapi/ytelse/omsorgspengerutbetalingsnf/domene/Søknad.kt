@@ -5,6 +5,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode
+import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
@@ -17,6 +18,8 @@ class Søknad(
     private val opphold: List<Opphold>,
     private val spørsmål: List<SpørsmålOgSvar>,
     private val bekreftelser: Bekreftelser,
-    private val utbetalingsperioder: List<Utbetalingsperiode>
-) {
-}
+    private val utbetalingsperioder: List<Utbetalingsperiode>,
+    private val andreUtbetalinger: List<AndreUtbetalinger>,
+    private val erArbeidstakerOgså: Boolean,
+    private val vedlegg: List<URL> = listOf()
+)
