@@ -25,7 +25,8 @@ class ArbeidsgiverTest {
                     tilOgMed = LocalDate.now(),
                     antallTimerBorte = Duration.ofHours(5),
                     antallTimerPlanlagt = Duration.ofHours(7),
-                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                    aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                 )
             )
         ).valider("arbeidsgiver").verifiserIngenFeil()
@@ -55,7 +56,8 @@ class ArbeidsgiverTest {
                     LocalDate.now().plusDays(4),
                     Duration.ofHours(5),
                     Duration.ofHours(7),
-                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                    aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                 )
             ),
             harHattFraværHosArbeidsgiver = true,
@@ -75,7 +77,8 @@ class ArbeidsgiverTest {
                     LocalDate.now().plusDays(4),
                     Duration.ofHours(5),
                     Duration.ofHours(7),
-                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                    aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                 )
             ),
             harHattFraværHosArbeidsgiver = true,
@@ -97,7 +100,8 @@ class ArbeidsgiverTest {
                     LocalDate.now().plusDays(4),
                     Duration.ofHours(5),
                     Duration.ofHours(7),
-                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                    aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                 )
             ),
             harHattFraværHosArbeidsgiver = true,
@@ -119,7 +123,8 @@ class ArbeidsgiverTest {
                     LocalDate.now().plusDays(4),
                     Duration.ofHours(5),
                     Duration.ofHours(7),
-                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                    aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                 )
             ),
             harHattFraværHosArbeidsgiver = true,
@@ -139,7 +144,8 @@ class ArbeidsgiverTest {
                 Utbetalingsperiode(
                     LocalDate.now(),
                     LocalDate.now().plusDays(4),
-                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                    aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                 )
             ),
             harHattFraværHosArbeidsgiver = null,
@@ -158,7 +164,8 @@ class ArbeidsgiverTest {
                 Utbetalingsperiode(
                     LocalDate.now(),
                     LocalDate.now().plusDays(4),
-                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                    årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                    aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                 )
             ),
             harHattFraværHosArbeidsgiver = true,
@@ -178,12 +185,14 @@ class ArbeidsgiverTest {
                     Utbetalingsperiode(
                         fraOgMed = LocalDate.parse("2022-01-01"),
                         tilOgMed = LocalDate.parse("2022-01-05"),
-                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                        aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                     ),
                     Utbetalingsperiode(
                         fraOgMed = LocalDate.parse("2022-01-10"),
                         tilOgMed = LocalDate.parse("2022-01-15"),
-                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                        aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                     )
                 ),
                 harHattFraværHosArbeidsgiver = true,
@@ -198,7 +207,8 @@ class ArbeidsgiverTest {
                     Utbetalingsperiode(
                         fraOgMed = LocalDate.parse("2022-01-20"),
                         tilOgMed = LocalDate.parse("2022-01-25"),
-                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                        aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                     )
                 ),
                 harHattFraværHosArbeidsgiver = true,
