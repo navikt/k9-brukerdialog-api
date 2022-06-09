@@ -108,7 +108,8 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                         Utbetalingsperiode(
                             fraOgMed = LocalDate.now().minusDays(4),
                             tilOgMed = LocalDate.now(),
-                            årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                            årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                         )
                     )
                 )
@@ -171,7 +172,8 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                         Utbetalingsperiode(
                             fraOgMed = LocalDate.now().minusDays(4),
                             tilOgMed = LocalDate.now(),
-                            årsak = FraværÅrsak.ORDINÆRT_FRAVÆR
+                            årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
                         )
                     )
                 )
