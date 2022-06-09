@@ -25,6 +25,20 @@ class UtbetalingsperiodeTest {
         ).valider("utbetalingsperiode").verifiserIngenFeil()
     }
 
+
+    @Test
+    fun `Utbetalingsperiode med tom liste for aktivitetFravær gir feil`() {
+        Utbetalingsperiode(
+            fraOgMed = LocalDate.now(),
+            tilOgMed = LocalDate.now().plusDays(4),
+            antallTimerBorte = Duration.ofHours(5),
+            antallTimerPlanlagt = Duration.ofHours(7),
+            årsak = ORDINÆRT_FRAVÆR,
+            aktivitetFravær = listOf()
+        ).valider("utbetalingsperiode")
+            .verifiserFeil(1, listOf("utbetalingsperiode.aktivitetFravær kan ikke være tom."))
+    }
+
     @Test
     fun `Utbetalingsperiode hvor fraOgMed er etter tilOgMed gir feil`() {
         Utbetalingsperiode(

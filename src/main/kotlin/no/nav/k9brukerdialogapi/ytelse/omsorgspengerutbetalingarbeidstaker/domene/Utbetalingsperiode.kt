@@ -29,6 +29,7 @@ class Utbetalingsperiode(
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         krever(tilOgMed.erLikEllerEtter(fraOgMed),"$felt.tilOgMed må være lik eller etter fraOgMed.")
+        krever(aktivitetFravær.isNotEmpty(), "$felt.aktivitetFravær kan ikke være tom.")
         if(antallTimerBorte != null){
             kreverIkkeNull(antallTimerPlanlagt, "$felt.Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt")
         }
