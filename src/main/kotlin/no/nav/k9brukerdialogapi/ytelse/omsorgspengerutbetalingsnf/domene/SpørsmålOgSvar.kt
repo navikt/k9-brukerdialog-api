@@ -10,9 +10,9 @@ class SpørsmålOgSvar(
     companion object{
         private const val MAX_FRITEKST_TEGN = 1000
 
-        internal fun List<SpørsmålOgSvar>.valider(felt: String) = this.mapIndexed { index, spørsmålOgSvar ->
+        internal fun List<SpørsmålOgSvar>.valider(felt: String) = this.flatMapIndexed { index, spørsmålOgSvar ->
             spørsmålOgSvar.valider("$felt[$index]")
-        }.flatten()
+        }
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {

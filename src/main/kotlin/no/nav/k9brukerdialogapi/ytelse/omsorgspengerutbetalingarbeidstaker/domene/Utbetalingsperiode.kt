@@ -25,6 +25,11 @@ class Utbetalingsperiode(
         internal fun List<Utbetalingsperiode>.valider(felt: String) = this.flatMapIndexed { index, periode ->
             periode.valider("$felt[$index]")
         }
+
+        internal fun List<Utbetalingsperiode>.somK9FraværPeriode(
+            søknadÅrsak: SøknadÅrsak? = null,
+            organisasjonsnummer: String? = null
+        ) = this.map { it.somK9FraværPeriode(søknadÅrsak, organisasjonsnummer) }
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
@@ -41,16 +46,16 @@ class Utbetalingsperiode(
         }
     }
 
-    internal fun somFraværPeriode(
-        søknadÅrsak: SøknadÅrsak,
-        organisasjonsnummer: Organisasjonsnummer?
+    internal fun somK9FraværPeriode(
+        søknadÅrsak: SøknadÅrsak? = null,
+        organisasjonsnummer: String? = null
     ) = FraværPeriode(
         Periode(fraOgMed, tilOgMed),
         antallTimerBorte,
         årsak.somK9FraværÅrsak(),
         søknadÅrsak,
         aktivitetFravær.map { it.somK9AktivitetFravær() },
-        organisasjonsnummer,
+        Organisasjonsnummer.of(organisasjonsnummer),
         null
     )
 }

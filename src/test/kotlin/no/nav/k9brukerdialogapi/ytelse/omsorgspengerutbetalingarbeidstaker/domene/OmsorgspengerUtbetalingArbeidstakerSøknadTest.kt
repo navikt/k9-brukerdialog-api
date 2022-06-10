@@ -154,7 +154,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
             ),
             hjemmePgaSmittevernhensyn = true,
             hjemmePgaStengtBhgSkole = true
-        )
+        ).valider()
     }
 
     @Test
