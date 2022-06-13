@@ -1,11 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.AktivitetFravær
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.FraværÅrsak
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import java.net.URL
 import java.time.LocalDate
 

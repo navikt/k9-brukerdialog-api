@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.k9.søknad.felles.fravær.FraværPeriode
@@ -33,8 +33,8 @@ class Utbetalingsperiode(
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
-        krever(tilOgMed.erLikEllerEtter(fraOgMed),"$felt.tilOgMed må være lik eller etter fraOgMed.")
         krever(aktivitetFravær.isNotEmpty(), "$felt.aktivitetFravær kan ikke være tom.")
+        krever(tilOgMed.erLikEllerEtter(fraOgMed),"$felt.tilOgMed må være lik eller etter fraOgMed.")
         if(antallTimerBorte != null){
             kreverIkkeNull(antallTimerPlanlagt, "$felt.Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt")
         }

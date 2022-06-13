@@ -3,8 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate

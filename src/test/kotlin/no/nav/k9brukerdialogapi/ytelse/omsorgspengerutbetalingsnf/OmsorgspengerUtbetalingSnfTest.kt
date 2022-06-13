@@ -14,10 +14,10 @@ import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.AktivitetFravær
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.FraværÅrsak
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.genererSøknadForOmsUtSnf
@@ -160,8 +160,8 @@ class OmsorgspengerUtbetalingSnfTest {
                     "opphold[0].erEØSLand må være satt",
                     "opphold[0].fraOgMed kan ikke være etter tilOgMed",
                     "opphold[0].landkode kan ikke være blankt eller tomt. landkode=' '",
-                    "utbetalingsperioder[0].tilOgMed må være lik eller etter fraOgMed.",
                     "utbetalingsperioder[0].aktivitetFravær kan ikke være tom.",
+                    "utbetalingsperioder[0].tilOgMed må være lik eller etter fraOgMed.",
                     "utbetalingsperioder[1].Dersom antallTimerPlanlagt er satt må antallTimerBorte være satt"
                   ],
                   "status": 400

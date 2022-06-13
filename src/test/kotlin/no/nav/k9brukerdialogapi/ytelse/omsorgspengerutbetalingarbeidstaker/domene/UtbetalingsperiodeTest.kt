@@ -4,11 +4,13 @@ import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.AktivitetFravær.FRILANSER
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.AktivitetFravær.SELVSTENDIG_VIRKSOMHET
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.FraværÅrsak.ORDINÆRT_FRAVÆR
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.FraværÅrsak.SMITTEVERNHENSYN
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode.Companion.somK9FraværPeriode
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær.FRILANSER
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær.SELVSTENDIG_VIRKSOMHET
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak.ORDINÆRT_FRAVÆR
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak.SMITTEVERNHENSYN
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode.Companion.somK9FraværPeriode
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.Duration
 import java.time.LocalDate
@@ -27,7 +29,6 @@ class UtbetalingsperiodeTest {
             aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
         ).valider("utbetalingsperiode").verifiserIngenFeil()
     }
-
 
     @Test
     fun `Utbetalingsperiode med tom liste for aktivitetFravær gir feil`() {

@@ -2,6 +2,9 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 
 import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.somK9Fraværsperiode
 import java.time.Duration
 import java.time.LocalDate
