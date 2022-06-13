@@ -2,6 +2,8 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 
 import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.somJson
+import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -30,6 +32,27 @@ class AnnenForelderTest {
             )
         )
         assertFalse(annenForelder.equals(null))
+    }
+
+    @Test
+    fun `AnnenForelder blir mappet til forventet K9Format`(){
+        val faktisk = AnnenForelder(
+            navn = "Navnesen",
+            fnr = "26104500284",
+            situasjon = Situasjon.FENGSEL,
+            periodeFraOgMed = LocalDate.parse("2021-01-01"),
+            periodeTilOgMed = LocalDate.parse("2021-08-01")
+        ).somK9AnnenForelder()
+
+        val forventet = """
+            {
+              "norskIdentitetsnummer": "26104500284",
+              "situasjon": "FENGSEL",
+              "situasjonBeskrivelse": null,
+              "periode": "2021-01-01/2021-08-01"
+            }
+        """.trimIndent()
+        JSONAssert.assertEquals(forventet, faktisk.somJson(), true)
     }
 
     @Test
@@ -225,4 +248,5 @@ class AnnenForelderTest {
         ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed eller periodeOver6Måneder må være satt dersom situasjonen er SYKDOM"))
     }
+
 }

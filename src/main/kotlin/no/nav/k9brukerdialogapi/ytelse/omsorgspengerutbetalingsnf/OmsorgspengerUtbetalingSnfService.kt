@@ -67,17 +67,17 @@ class OmsorgspengerUtbetalingSnfService(
         metadata: Metadata
     ) {
         logger.info("Validerer ${søknad.vedlegg.size} vedlegg.")
-        val vedlegg = vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId, søker.somDokumentEier())
-        vedlegg.valider("vedlegg", søknad.vedlegg)
-        vedleggService.persisterVedlegg(søknad.vedlegg, callId, søker.somDokumentEier())
-        val komplettSøknad = søknad.tilKomplettSøknad(søker, k9Format)
+
+        val dokumentEier = søker.somDokumentEier()
+        vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId, dokumentEier).valider("vedlegg", søknad.vedlegg)
+        vedleggService.persisterVedlegg(søknad.vedlegg, callId, dokumentEier)
 
         try {
-            kafkaProdusent.produserKafkaMelding(metadata, JSONObject(komplettSøknad.somJson()), OMSORGSPENGER_UTBETALING_SNF)
+            kafkaProdusent.produserKafkaMelding(metadata, JSONObject(søknad.tilKomplettSøknad(søker, k9Format).somJson()), OMSORGSPENGER_UTBETALING_SNF)
         } catch (exception: Exception){
             logger.error("Feilet ved å legge melding på Kafka.")
             logger.info("Fjerner hold på persisterte vedlegg")
-            vedleggService.fjernHoldPåPersistertVedlegg(søknad.vedlegg, callId, søker.somDokumentEier())
+            vedleggService.fjernHoldPåPersistertVedlegg(søknad.vedlegg, callId, dokumentEier)
             throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }
     }
