@@ -26,7 +26,7 @@ fun Route.omsorgspengerUtbetalingSnfApis(
     route(OMSORGSPENGER_UTBETALING_SNF_URL){
         post(INNSENDING_URL){
             val søknad = call.receive<Søknad>()
-            logger.info(formaterStatuslogging(Ytelse.OMSORGSDAGER_ALENEOMSORG, søknad.søknadId.id, "mottatt."))
+            logger.info(formaterStatuslogging(Ytelse.OMSORGSPENGER_UTBETALING_SNF, søknad.søknadId.id, "mottatt."))
             omsorgspengerUtbetalingSnfService.registrer(søknad, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
             registrerMottattSøknad(Ytelse.OMSORGSPENGER_UTBETALING_SNF)
             call.respond(HttpStatusCode.Accepted)
