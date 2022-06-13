@@ -5,6 +5,7 @@ import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.AktivitetFravær
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.FraværÅrsak
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode
@@ -33,7 +34,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                     ),
                     Barn(
                         navn = "Barnesen",
-                        fødselsdato = LocalDate.now().minusYears(14),
+                        fødselsdato = LocalDate.now().minusYears(13).minusDays(1),
                         type = TypeBarn.FRA_OPPSLAG,
                         utvidetRett = false,
                         identitetsnummer = "111111"
@@ -42,6 +43,148 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett.") }
+        }
+    }
+
+    @Test
+    fun `Skal gi valideringsfeil dersom et barna er 12 år men harDekketTiFørsteDagerSelv er false`() {
+        assertThrows<Throwblem> {
+            genererSøknadForOmsUtSnf(
+                barn = listOf(
+                    Barn(
+                        navn = "Barnesen",
+                        fødselsdato = LocalDate.now().minusYears(12),
+                        type = TypeBarn.FRA_OPPSLAG,
+                        utvidetRett = false,
+                        identitetsnummer = "26104500284"
+                    )
+                ),
+                harDekketTiFørsteDagerSelv = false
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("Dersom et barn er 12 år eller yngre må harDekketTiFørsteDagerSelv være true.") }
+        }
+    }
+
+    @Test
+    fun `Ugyldig opphold og bosteder skal gi validerinsfeil`(){
+        assertThrows<Throwblem> {
+            genererSøknadForOmsUtSnf(
+                bosteder = listOf(
+                    Bosted(
+                        fraOgMed = LocalDate.now(),
+                        tilOgMed = LocalDate.now().plusDays(2),
+                        landkode = "BEL",
+                        landnavn = "Belgia",
+                        erEØSLand = null
+                    )
+                ),
+                opphold = listOf(
+                    Opphold(
+                        fraOgMed = LocalDate.now(),
+                        tilOgMed = LocalDate.now().plusDays(2),
+                        landkode = "BEL",
+                        landnavn = " ",
+                        erEØSLand = true
+                    )
+                )
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("bosteder[0].erEØSLand må være satt") }
+            assertTrue { it.message.toString().contains("opphold[0].landnavn kan ikke være blankt eller tomt. landnavn=' '") }
+        }
+    }
+
+    @Test
+    fun `Ugyldig utbetalingsperioder skal gi valideringsfeil`(){
+        assertThrows<Throwblem> {
+            genererSøknadForOmsUtSnf(
+                utbetalingsperiode = listOf(
+                    Utbetalingsperiode(
+                        fraOgMed = LocalDate.parse("2022-01-20"),
+                        tilOgMed = LocalDate.parse("2022-01-19"),
+                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                        aktivitetFravær = listOf(AktivitetFravær.SELVSTENDIG_VIRKSOMHET)
+                    ),
+                    Utbetalingsperiode(
+                        fraOgMed = LocalDate.parse("2022-01-20"),
+                        tilOgMed = LocalDate.parse("2022-01-24"),
+                        årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
+                        aktivitetFravær = listOf()
+                    )
+                )
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("utbetalingsperioder[0].tilOgMed må være lik eller etter fraOgMed.") }
+            assertTrue { it.message.toString().contains("utbetalingsperioder[1].aktivitetFravær kan ikke være tom.") }
+        }
+    }
+
+    @Test
+    fun `Ugyldig bekreftelser skal gi valideringsfeil`(){
+        assertThrows<Throwblem> {
+            genererSøknadForOmsUtSnf(
+                bekreftelser = Bekreftelser(
+                    harBekreftetOpplysninger = false,
+                    harForståttRettigheterOgPlikter = null
+                ),
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("bekreftelser.harBekreftetOpplysninger må være true") }
+            assertTrue { it.message.toString().contains("bekreftelser.harForståttRettigheterOgPlikter må være true") }
+        }
+    }
+
+    @Test
+    fun `Ugyldig barn skal gi valideringsfeil`(){
+        assertThrows<Throwblem> {
+            genererSøknadForOmsUtSnf(
+                barn = listOf(
+                    Barn(
+                        navn = "Barnesen",
+                        fødselsdato = LocalDate.now().minusYears(14),
+                        type = TypeBarn.FRA_OPPSLAG,
+                        utvidetRett = true,
+                        identitetsnummer = "123"
+                    )
+                )
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("barn[0].identitetsnummer er ikke gyldig identifikator, '123*****'") }
+        }
+    }
+
+    @Test
+    fun `Ugyldig frilans skal gi valideringsfeil`(){
+        assertThrows<Throwblem> {
+            genererSøknadForOmsUtSnf(
+                frilans = Frilans(
+                    startdato = LocalDate.parse("2022-01-01"),
+                    sluttdato = LocalDate.parse("2022-10-01"),
+                    jobberFortsattSomFrilans = null
+                )
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("frilans.jobberFortsattSomFrilans kan ikke være null") }
+        }
+    }
+
+    @Test
+    fun `Ugyldig selvstendigNæringsdrivende skal gi valideringsfeil`() {
+        assertThrows<Throwblem> {
+            genererSøknadForOmsUtSnf(
+                selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+                    fraOgMed = LocalDate.parse("2022-01-01"),
+                    tilOgMed = LocalDate.parse("2022-10-01"),
+                    næringstyper = listOf(Næringstyper.DAGMAMMA),
+                    navnPåVirksomheten = "Kiwi ASA",
+                    organisasjonsnummer = "123ABC",
+                    erNyoppstartet = true,
+                    harFlereAktiveVirksomheter = false
+                )
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("selvstendigNæringsdrivende.organisasjonsnummer kan kun bestå av tall.") }
         }
     }
 

@@ -33,13 +33,13 @@ class SelvstendigNæringsdrivende(
 ) {
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
+        tilOgMed?.let { krever(it.erLikEllerEtter(fraOgMed), "$felt.tilOgMed må være før eller lik tilOgMed.") }
         organisasjonsnummer?.let {
             krever(it.all { tall -> tall.isDigit() }, "$felt.organisasjonsnummer kan kun bestå av tall.")
         }
-        registrertIUtlandet?.let { addAll(it.valider("$felt.registrertIUtlandet")) }
-        tilOgMed?.let { krever(it.erLikEllerEtter(fraOgMed), "$felt.tilOgMed må være før eller lik tilOgMed.") }
         kreverIkkeNull(harFlereAktiveVirksomheter, "$felt.harFlereAktiveVirksomheter kan ikke være null.")
         validerErNyoppstartet(felt)
+        registrertIUtlandet?.let { addAll(it.valider("$felt.registrertIUtlandet")) }
     }
 
     private fun MutableList<String>.validerErNyoppstartet(felt: String) {

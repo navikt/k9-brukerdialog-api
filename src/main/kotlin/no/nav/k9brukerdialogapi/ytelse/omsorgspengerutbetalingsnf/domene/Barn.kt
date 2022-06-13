@@ -17,6 +17,9 @@ class Barn(
 ) {
     companion object{
         internal fun List<Barn>.somK9BarnListe() = this.filter { it.type == FRA_OPPSLAG }.map { it.somK9Barn() }
+        internal fun List<Barn>.valider(felt: String) = this.flatMapIndexed { index, barn ->
+            barn.valider("$felt[$index]")
+        }
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
@@ -24,7 +27,7 @@ class Barn(
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blankt.")
     }
 
-    internal fun trettenÅrEllerEldre() = LocalDate.now().year.minus(fødselsdato.year) >= 12
+    internal fun trettenÅrEllerEldre() = LocalDate.now().year.minus(fødselsdato.year) >= 13
     internal fun somK9Barn() = K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
 }
 

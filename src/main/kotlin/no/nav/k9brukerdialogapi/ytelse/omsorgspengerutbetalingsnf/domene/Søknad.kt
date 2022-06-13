@@ -8,14 +8,18 @@ import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.somK9Bosteder
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.somK9Utenlandsopphold
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode.Companion.somK9FraværPeriode
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsperiode.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn.Companion.somK9BarnListe
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn.Companion.valider
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -37,7 +41,7 @@ class Søknad(
     private val barn: List<Barn>,
     private val frilans: Frilans? = null,
     private val selvstendigNæringsdrivende: SelvstendigNæringsdrivende? = null,
-    private val vedlegg: List<URL> = listOf()
+    internal val vedlegg: List<URL> = listOf()
 ) {
 
     companion object {
@@ -45,13 +49,28 @@ class Søknad(
     }
 
     internal fun valider() = mutableListOf<String>().apply {
+        addAll(validerUtvidetRett())
         addAll(validerHarDekketTiFørsteDagerSelv())
+        addAll(bosteder.valider("bosteder"))
+        addAll(opphold.valider("opphold"))
+        addAll(bekreftelser.valider("bekreftelser"))
+        addAll(utbetalingsperioder.valider("utbetalingsperioder"))
+        addAll(barn.valider("barn"))
+        frilans?.let { addAll(it.valider("frilans")) }
+        selvstendigNæringsdrivende?.let { addAll(it.valider("selvstendigNæringsdrivende")) }
+
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    private fun validerHarDekketTiFørsteDagerSelv() = mutableListOf<String>().apply {
+    private fun validerUtvidetRett() = mutableListOf<String>().apply {
         if(barn.all { it.trettenÅrEllerEldre() }){
             krever(barn.any{ it.utvidetRett == true}, "Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett.")
+        }
+    }
+
+    private fun validerHarDekketTiFørsteDagerSelv() = mutableListOf<String>().apply {
+        if(barn.any { !it.trettenÅrEllerEldre() }){
+            krever(harDekketTiFørsteDagerSelv, "Dersom et barn er 12 år eller yngre må harDekketTiFørsteDagerSelv være true.")
         }
     }
 
@@ -74,4 +93,24 @@ class Søknad(
         frilans?.let { medFrilanser(it.somK9Frilanser()) }
         this@Søknad.selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivende(it.somK9SelvstendigNæringsdrivende()) }
     }
+
+    fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
+        søknadId = søknadId,
+        mottatt = mottatt,
+        språk = språk,
+        søker = søker,
+        bosteder = bosteder,
+        opphold = opphold,
+        spørsmål = spørsmål,
+        harDekketTiFørsteDagerSelv = harDekketTiFørsteDagerSelv,
+        bekreftelser = bekreftelser,
+        utbetalingsperioder = utbetalingsperioder,
+        andreUtbetalinger = andreUtbetalinger,
+        erArbeidstakerOgså = erArbeidstakerOgså,
+        barn = barn,
+        frilans = frilans,
+        selvstendigNæringsdrivende = selvstendigNæringsdrivende,
+        vedleggId = vedlegg.map { it.vedleggId() },
+        k9FormatSøknad = k9Format
+    )
 }
