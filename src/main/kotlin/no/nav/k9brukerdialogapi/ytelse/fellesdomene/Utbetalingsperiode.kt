@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.k9.søknad.felles.fravær.FraværPeriode
@@ -25,11 +25,16 @@ class Utbetalingsperiode(
         internal fun List<Utbetalingsperiode>.valider(felt: String) = this.flatMapIndexed { index, periode ->
             periode.valider("$felt[$index]")
         }
+
+        internal fun List<Utbetalingsperiode>.somK9FraværPeriode(
+            søknadÅrsak: SøknadÅrsak? = null,
+            organisasjonsnummer: String? = null
+        ) = this.map { it.somK9FraværPeriode(søknadÅrsak, organisasjonsnummer) }
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
-        krever(tilOgMed.erLikEllerEtter(fraOgMed),"$felt.tilOgMed må være lik eller etter fraOgMed.")
         krever(aktivitetFravær.isNotEmpty(), "$felt.aktivitetFravær kan ikke være tom.")
+        krever(tilOgMed.erLikEllerEtter(fraOgMed),"$felt.tilOgMed må være lik eller etter fraOgMed.")
         if(antallTimerBorte != null){
             kreverIkkeNull(antallTimerPlanlagt, "$felt.Dersom antallTimerBorte er satt må antallTimerPlanlagt være satt")
         }
@@ -41,16 +46,16 @@ class Utbetalingsperiode(
         }
     }
 
-    internal fun somFraværPeriode(
-        søknadÅrsak: SøknadÅrsak,
-        organisasjonsnummer: Organisasjonsnummer?
+    internal fun somK9FraværPeriode(
+        søknadÅrsak: SøknadÅrsak? = null,
+        organisasjonsnummer: String? = null
     ) = FraværPeriode(
         Periode(fraOgMed, tilOgMed),
         antallTimerBorte,
         årsak.somK9FraværÅrsak(),
         søknadÅrsak,
         aktivitetFravær.map { it.somK9AktivitetFravær() },
-        organisasjonsnummer,
+        Organisasjonsnummer.of(organisasjonsnummer),
         null
     )
 }

@@ -20,10 +20,11 @@ import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.EttersendingService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.OmsorgspengerUtbetalingArbeidstakerService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.OmsorgspengerUtbetalingSnfService
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
@@ -52,15 +53,13 @@ internal class SøknadServiceTest{
     lateinit var omsorgspengerUtvidetRettSøknadService: OmsorgspengerUtvidetRettService
     lateinit var ettersendingSøknadService: EttersendingService
     lateinit var omsorgspengerUtbetalingArbeidstakerService: OmsorgspengerUtbetalingArbeidstakerService
+    lateinit var omsorgspengerUtbetalingSnfService: OmsorgspengerUtbetalingSnfService
 
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
         omsorgspengerUtvidetRettSøknadService = OmsorgspengerUtvidetRettService(
-            kafkaProdusent = kafkaProducer,
-            vedleggService = vedleggService,
-            søkerService = søkerService,
-            barnService = barnService
+            søkerService, barnService, vedleggService, kafkaProducer
         )
         ettersendingSøknadService = EttersendingService(
             kafkaProducer, søkerService, vedleggService
@@ -68,10 +67,14 @@ internal class SøknadServiceTest{
         omsorgspengerUtbetalingArbeidstakerService = OmsorgspengerUtbetalingArbeidstakerService(
             søkerService, vedleggService, kafkaProducer
         )
+        omsorgspengerUtbetalingSnfService = OmsorgspengerUtbetalingSnfService(
+            søkerService, barnService, vedleggService, kafkaProducer
+        )
         assertNotNull(kafkaProducer)
         assertNotNull(omsorgspengerUtvidetRettSøknadService)
         assertNotNull(ettersendingSøknadService)
         assertNotNull(omsorgspengerUtbetalingArbeidstakerService)
+        assertNotNull(omsorgspengerUtbetalingSnfService)
     }
 
     @Test
@@ -203,6 +206,67 @@ internal class SøknadServiceTest{
                         correlationId = "123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "omsorgsdager-melding-api")),
+                    callId = CallId("abc")
+                )
+            }
+        }
+
+        coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
+    }
+
+    @Test
+    internal fun `Verifiser at søknadservice for omsorgspenger utbetaling snf fjerner hold på persistert vedlegg dersom kafka feiler`() {
+        assertThrows<MeldingRegistreringFeiletException> {
+            runBlocking {
+                coEvery {søkerService.hentSøker(any(), any()) } returns Søker(
+                    aktørId = "123",
+                    fødselsdato = LocalDate.parse("2000-01-01"),
+                    fødselsnummer = "02119970078"
+                )
+
+                coEvery { vedleggService.hentVedlegg(vedleggUrls = any(), any(), any(), any()) } returns listOf(Vedlegg("bytearray".toByteArray(), "vedlegg", "vedlegg", DokumentEier("290990123456")))
+
+                every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
+
+                omsorgspengerUtbetalingSnfService.registrer(
+                    søknad = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Søknad(
+                        språk = "nb",
+                        bosteder = listOf(),
+                        opphold = listOf(),
+                        spørsmål = listOf(),
+                        harDekketTiFørsteDagerSelv = null,
+                        bekreftelser = Bekreftelser(
+                            harBekreftetOpplysninger = true,
+                            harForståttRettigheterOgPlikter = true
+                        ),
+                        utbetalingsperioder = listOf(
+                            Utbetalingsperiode(
+                                fraOgMed = LocalDate.parse("2022-01-11"),
+                                tilOgMed = LocalDate.parse("2022-01-15"),
+                                årsak = FraværÅrsak.SMITTEVERNHENSYN,
+                                aktivitetFravær = listOf(
+                                    AktivitetFravær.FRILANSER
+                                )
+                            )
+                        ),
+                        andreUtbetalinger = listOf(),
+                        erArbeidstakerOgså = false,
+                        barn = listOf(
+                            no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn(
+                                navn = "Barnesen",
+                                fødselsdato = LocalDate.now().minusYears(14),
+                                type = TypeBarn.FRA_OPPSLAG,
+                                utvidetRett = true,
+                                identitetsnummer = "26104500284"
+                            )
+                        ),
+                        vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+                    ),
+                    metadata = Metadata(
+                        version = 1,
+                        correlationId = "123"
+                    ),
+                    idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
                     callId = CallId("abc")
                 )
             }

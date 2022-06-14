@@ -14,6 +14,8 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.Omsorgspeng
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.omsorgspengerMidlertidigAleneApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.OmsorgspengerUtbetalingArbeidstakerService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.omsorgspengerUtbetalingArbeidstakerApi
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.OmsorgspengerUtbetalingSnfService
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.omsorgspengerUtbetalingSnfApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.omsorgspengerUtvidetRettApis
 
@@ -43,5 +45,9 @@ fun Route.ytelseRoutes(
     omsorgspengerUtbetalingArbeidstakerApi(
         idTokenProvider,
         OmsorgspengerUtbetalingArbeidstakerService(søkerService, vedleggService, kafkaProdusent)
+    )
+    omsorgspengerUtbetalingSnfApis(
+        idTokenProvider,
+        OmsorgspengerUtbetalingSnfService(søkerService, barnService, vedleggService, kafkaProdusent)
     )
 }

@@ -18,3 +18,4 @@ const val OMSORGSPENGER_MIDLERTIDIG_ALENE_URL = "/omsorgspenger-midlertidig-alen
 const val ETTERSENDING_URL = "/ettersending"
 const val OMSORGSDAGER_ALENEOMSORG_URL = "/omsorgsdager-aleneomsorg"
 const val OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL = "/omsorgspenger-utbetaling-arbeidstaker"
+const val OMSORGSPENGER_UTBETALING_SNF_URL = "/omsorgspenger-utbetaling-snf"
