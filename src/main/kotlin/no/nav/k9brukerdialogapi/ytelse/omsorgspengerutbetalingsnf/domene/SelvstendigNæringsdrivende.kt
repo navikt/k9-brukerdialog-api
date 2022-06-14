@@ -73,31 +73,3 @@ class SelvstendigNæringsdrivende(
 class YrkesaktivSisteTreFerdigliknedeArene(
     private val oppstartsdato: LocalDate
 )
-
-class VarigEndring(
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private val dato: LocalDate,
-    private val inntektEtterEndring: Int,
-    private val forklaring: String
-) {
-    companion object{
-        internal fun SelvstendigNæringsdrivendePeriodeInfo.leggTilVarigEndring(varigEndring: VarigEndring){
-            medErVarigEndring(true)
-            medEndringDato(varigEndring.dato)
-            medEndringBegrunnelse(varigEndring.forklaring)
-            medBruttoInntekt(BigDecimal.valueOf(varigEndring.inntektEtterEndring.toLong()))
-        }
-    }
-}
-
-class Regnskapsfører(
-    private val navn: String,
-    private val telefon: String
-) {
-    companion object{
-        internal fun SelvstendigNæringsdrivendePeriodeInfo.leggTilK9Regnskapsfører(regnskapsfører: Regnskapsfører) {
-            medRegnskapsførerNavn(regnskapsfører.navn)
-            medRegnskapsførerTlf(regnskapsfører.telefon)
-        }
-    }
-}

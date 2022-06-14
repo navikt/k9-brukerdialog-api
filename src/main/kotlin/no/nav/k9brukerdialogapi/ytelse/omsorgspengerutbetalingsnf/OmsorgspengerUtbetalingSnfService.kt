@@ -53,9 +53,12 @@ class OmsorgspengerUtbetalingSnfService(
         k9Format: no.nav.k9.søknad.Søknad,
         metadata: Metadata
     ) {
-        val komplettSøknad = søknad.tilKomplettSøknad(søker, k9Format)
         try {
-            kafkaProdusent.produserKafkaMelding(metadata, JSONObject(komplettSøknad.somJson()), OMSORGSPENGER_UTBETALING_SNF)
+            kafkaProdusent.produserKafkaMelding(
+                metadata,
+                JSONObject(søknad.tilKomplettSøknad(søker, k9Format).somJson()),
+                OMSORGSPENGER_UTBETALING_SNF
+            )
         } catch (exception: Exception) {
             logger.error("Feilet ved å legge melding på Kafka.")
             throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
