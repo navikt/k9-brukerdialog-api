@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn.FRA_OPPSLAG
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
@@ -26,6 +27,10 @@ class Barn(
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         validerIdentifikator(identitetsnummer, "$felt.identitetsnummer")
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blankt.")
+    }
+
+    internal fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
+        if(identitetsnummer == null) identitetsnummer = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
     internal fun trettenÅrEllerEldre() = LocalDate.now().year.minus(fødselsdato.year) >= 13

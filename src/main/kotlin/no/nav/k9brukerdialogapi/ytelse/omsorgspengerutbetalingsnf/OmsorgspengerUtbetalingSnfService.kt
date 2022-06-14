@@ -6,6 +6,7 @@ import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.kafka.Metadata
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.somJson
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory
 
 class OmsorgspengerUtbetalingSnfService(
     private val søkerService: SøkerService,
+    private val barnService: BarnService,
     private val vedleggService: VedleggService,
     private val kafkaProdusent: KafkaProducer
 ) {
@@ -28,6 +30,8 @@ class OmsorgspengerUtbetalingSnfService(
 
     suspend fun registrer(søknad: Søknad, callId: CallId, metadata: Metadata, idToken: IdToken) {
         logger.info(formaterStatuslogging(YTELSE, søknad.søknadId.id, "registreres."))
+
+        søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
         søknad.valider()
 
         val søker = søkerService.hentSøker(idToken, callId)

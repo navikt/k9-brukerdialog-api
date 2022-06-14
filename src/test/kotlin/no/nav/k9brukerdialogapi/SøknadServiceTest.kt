@@ -68,7 +68,7 @@ internal class SøknadServiceTest{
             søkerService, vedleggService, kafkaProducer
         )
         omsorgspengerUtbetalingSnfService = OmsorgspengerUtbetalingSnfService(
-            søkerService, vedleggService, kafkaProducer
+            søkerService, barnService, vedleggService, kafkaProducer
         )
         assertNotNull(kafkaProducer)
         assertNotNull(omsorgspengerUtvidetRettSøknadService)

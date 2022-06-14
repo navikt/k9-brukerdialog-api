@@ -48,6 +48,6 @@ fun Route.ytelseRoutes(
     )
     omsorgspengerUtbetalingSnfApis(
         idTokenProvider,
-        OmsorgspengerUtbetalingSnfService(søkerService, vedleggService, kafkaProdusent)
+        OmsorgspengerUtbetalingSnfService(søkerService, barnService, vedleggService, kafkaProdusent)
     )
 }

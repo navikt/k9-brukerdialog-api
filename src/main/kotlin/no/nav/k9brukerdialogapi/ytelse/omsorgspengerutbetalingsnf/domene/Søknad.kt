@@ -7,6 +7,7 @@ import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
@@ -74,6 +75,10 @@ class Søknad(
         }
     }
 
+    internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
+        barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
+    }
+
     internal fun somK9Format(søker: Søker) = K9Søknad(
         søknadId,
         k9FormatVersjon,
@@ -94,7 +99,7 @@ class Søknad(
         this@Søknad.selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivende(it.somK9SelvstendigNæringsdrivende()) }
     }
 
-    fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
+    internal fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
         søknadId = søknadId,
         mottatt = mottatt,
         språk = språk,
