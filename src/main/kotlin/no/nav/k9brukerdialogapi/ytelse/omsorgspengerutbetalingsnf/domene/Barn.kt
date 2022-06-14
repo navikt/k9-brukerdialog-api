@@ -33,6 +33,7 @@ class Barn(
         if(identitetsnummer == null) identitetsnummer = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
+    internal fun tolvÅrEllerYngre() = LocalDate.now().year.minus(fødselsdato.year) <= 12
     internal fun trettenÅrEllerEldre() = LocalDate.now().year.minus(fødselsdato.year) >= 13
     internal fun somK9Barn() = K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
 }

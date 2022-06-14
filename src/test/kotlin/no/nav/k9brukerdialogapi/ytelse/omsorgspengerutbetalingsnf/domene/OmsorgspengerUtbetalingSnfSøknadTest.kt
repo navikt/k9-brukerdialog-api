@@ -32,13 +32,35 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                         fødselsdato = LocalDate.now().minusYears(13).minusDays(1),
                         type = TypeBarn.FRA_OPPSLAG,
                         utvidetRett = false,
-                        identitetsnummer = "111111"
+                        identitetsnummer = "11880898304"
                     )
                 )
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett.") }
         }
+    }
+
+    @Test
+    fun `Skal ikke gi valideringsfeil dersom alle barna er over 13 år og minst et barn har utvidet rett`() {
+        genererSøknadForOmsUtSnf(
+            barn = listOf(
+                Barn(
+                    navn = "Barnesen",
+                    fødselsdato = LocalDate.now().minusYears(14),
+                    type = TypeBarn.FRA_OPPSLAG,
+                    utvidetRett = false,
+                    identitetsnummer = "26104500284"
+                ),
+                Barn(
+                    navn = "Barnesen",
+                    fødselsdato = LocalDate.now().minusYears(13).minusDays(1),
+                    type = TypeBarn.FRA_OPPSLAG,
+                    utvidetRett = true,
+                    identitetsnummer = "11880898304"
+                )
+            )
+        ).valider()
     }
 
     @Test
@@ -59,6 +81,21 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
         }.also {
             assertTrue { it.message.toString().contains("Dersom et barn er 12 år eller yngre må harDekketTiFørsteDagerSelv være true.") }
         }
+    }
+
+    @Test
+    fun `Skal ikke gi valideringsfeil dersom et barna er 12 år og harDekketTiFørsteDagerSelv er true`() {
+        genererSøknadForOmsUtSnf(
+            barn = listOf(
+                Barn(
+                    navn = "Barnesen",
+                    fødselsdato = LocalDate.now().minusYears(12),
+                    type = TypeBarn.FRA_OPPSLAG,
+                    identitetsnummer = "26104500284"
+                )
+            ),
+            harDekketTiFørsteDagerSelv = true
+        ).valider()
     }
 
     @Test

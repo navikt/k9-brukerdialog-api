@@ -70,7 +70,7 @@ class Søknad(
     }
 
     private fun validerHarDekketTiFørsteDagerSelv() = mutableListOf<String>().apply {
-        if(barn.any { !it.trettenÅrEllerEldre() }){
+        if(barn.any { it.tolvÅrEllerYngre() }){
             krever(harDekketTiFørsteDagerSelv, "Dersom et barn er 12 år eller yngre må harDekketTiFørsteDagerSelv være true.")
         }
     }
