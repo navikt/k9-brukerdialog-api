@@ -9,7 +9,7 @@ val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fr
 val k9FormatVersion = "5.8.7"
 val fuelVersion = "2.3.1"
 val lettuceCoreVersion = "6.1.8.RELEASE"
-val tokenSupportVersion = "2.0.20"
+val tokenSupportVersion = "2.1.0"
 val mockOauth2ServerVersion = "0.4.8"
 
 plugins {
