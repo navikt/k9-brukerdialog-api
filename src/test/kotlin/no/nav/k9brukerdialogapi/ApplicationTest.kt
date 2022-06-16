@@ -221,7 +221,7 @@ class ApplicationTest {
                     claims = mapOf("acr" to "Level3"),
                     somCookie = true
                 ),
-                expectedCode = HttpStatusCode.Forbidden,
+                expectedCode = HttpStatusCode.Unauthorized,
                 expectedResponse = null
             )
         }
