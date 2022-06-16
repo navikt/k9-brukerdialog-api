@@ -45,15 +45,22 @@ fun Route.mellomlagringApis(
         }
 
         get{
-            val mellomlagring = mellomlagringService.hentMellomlagring(
+            val mellomlagringFraCache = mellomlagringService.hentMellomlagring(
                 call.getCallId(),
                 idTokenProvider.getIdToken(call),
                 Ytelse.valueOf(call.parameters["ytelse"]!!)
             )
 
+            val responsMellomlagring: String = when{
+                mellomlagringFraCache == null -> "{}"
+                mellomlagringFraCache == "{}" -> "{}"
+                mellomlagringFraCache.erGammelTypeMellomlagring() -> mellomlagringFraCache
+                else -> Mellomlagring(mellomlagringFraCache).somJson()
+            }
+
             call.respondText(
                 contentType = ContentType.Application.Json,
-                text = if(mellomlagring!= null) Mellomlagring(mellomlagring).somJson() else "{}",
+                text = responsMellomlagring,
                 status = HttpStatusCode.OK
             )
         }

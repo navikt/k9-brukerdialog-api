@@ -309,6 +309,30 @@ class ApplicationTest {
         }
 
         @Test
+        fun `Sende inn tom mellomlagring`() {
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = mockOAuth2Server.issueToken(fnr = "25908998033"),
+                expectedCode = HttpStatusCode.Created,
+                expectedResponse = null,
+                requestEntity = "{}",
+                engine = engine,
+                logger = logger
+            )
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                jwtToken = mockOAuth2Server.issueToken(fnr = "25908998033"),
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = """{}""",
+                engine = engine,
+                logger = logger
+            )
+        }
+
+        @Test
         fun `gitt mellomlagring ikke eksisterer, forvent tomt objekt`() {
 
             requestAndAssert(
