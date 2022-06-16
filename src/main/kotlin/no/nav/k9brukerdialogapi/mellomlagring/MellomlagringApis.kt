@@ -1,13 +1,14 @@
 package no.nav.k9brukerdialogapi.mellomlagring
 
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.MELLOMLAGRING_URL
 import no.nav.k9brukerdialogapi.general.getCallId
+import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 
 fun Route.mellomlagringApis(
@@ -49,9 +50,10 @@ fun Route.mellomlagringApis(
                 idTokenProvider.getIdToken(call),
                 Ytelse.valueOf(call.parameters["ytelse"]!!)
             )
+
             call.respondText(
                 contentType = ContentType.Application.Json,
-                text = mellomlagring ?: "{}",
+                text = if(mellomlagring!= null) Mellomlagring(mellomlagring).somJson() else "{}",
                 status = HttpStatusCode.OK
             )
         }

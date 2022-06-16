@@ -1,8 +1,7 @@
 package no.nav.k9brukerdialogapi.general
 
-import io.ktor.application.*
-import io.ktor.features.*
-import no.nav.k9brukerdialogapi.kafka.Metadata
+import io.ktor.server.application.*
+import io.ktor.server.plugins.callid.*
 
 data class CallId(val value : String)
 

@@ -1,16 +1,12 @@
 package no.nav.k9brukerdialogapi.oppslag.arbeidsgiver
 
-import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
-import no.nav.helse.dusseldorf.ktor.core.Configuration
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.ARBEIDSGIVER_URL
-import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.oppslag.TilgangNektetException
 import no.nav.k9brukerdialogapi.oppslag.respondTilgangNektetProblemDetail

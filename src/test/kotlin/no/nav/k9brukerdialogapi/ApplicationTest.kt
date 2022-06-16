@@ -1,8 +1,8 @@
 package no.nav.k9brukerdialogapi
 
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.*
 import io.ktor.http.*
+import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils.Companion.issueToken
@@ -206,23 +206,24 @@ class ApplicationTest {
 
             wireMockServer.stubK9OppslagSoker() // reset til default mapping
 
-            @Test
-            fun `Hente søker med tilgangsnivå 3`() {
-                requestAndAssert(
-                    engine = engine,
-                    logger = logger,
-                    httpMethod = HttpMethod.Get,
-                    path = OPPSLAG_URL + SØKER_URL,
-                    cookie = mockOAuth2Server.issueToken(
-                        issuerId = "login-service",
-                        fnr = gyldigFødselsnummerA,
-                        claims = mapOf("acr" to "Level3"),
-                        somCookie = true
-                    ),
-                    expectedCode = HttpStatusCode.Forbidden,
-                    expectedResponse = null
-                )
-            }
+        }
+
+        @Test
+        fun `Hente søker med tilgangsnivå 3`() {
+            requestAndAssert(
+                engine = engine,
+                logger = logger,
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL + SØKER_URL,
+                cookie = mockOAuth2Server.issueToken(
+                    issuerId = "login-service",
+                    fnr = gyldigFødselsnummerA,
+                    claims = mapOf("acr" to "Level3"),
+                    somCookie = true
+                ),
+                expectedCode = HttpStatusCode.Forbidden,
+                expectedResponse = null
+            )
         }
 
     }
@@ -232,6 +233,8 @@ class ApplicationTest {
 
         @Test
         fun `Sende inn, hente, oppdatere og slette mellomlagring`() {
+
+            //language=json
             val mellomlagringSøknad = """
             {
                 "mellomlagring": "soknad"

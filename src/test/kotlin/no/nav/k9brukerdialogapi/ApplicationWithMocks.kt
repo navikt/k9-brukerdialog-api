@@ -48,7 +48,7 @@ class ApplicationWithMocks {
                 }
             })
 
-            withApplication { no.nav.k9brukerdialogapi.main(testArgs) }
+            testApplication { no.nav.k9brukerdialogapi.main(testArgs) }
         }
     }
 }

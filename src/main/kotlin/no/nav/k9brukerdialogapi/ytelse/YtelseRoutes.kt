@@ -1,6 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse
 
-import io.ktor.routing.*
+import io.ktor.server.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService

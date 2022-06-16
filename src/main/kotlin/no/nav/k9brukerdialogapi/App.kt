@@ -7,14 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.jackson.*
-import io.ktor.metrics.micrometer.*
-import io.ktor.request.*
-import io.ktor.routing.*
+import io.ktor.serialization.jackson.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.metrics.micrometer.*
+import io.ktor.server.plugins.callid.*
+import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.request.*
+import io.ktor.server.routing.*
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenStatusPages
@@ -48,9 +52,9 @@ import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
-import no.nav.security.token.support.ktor.RequiredClaims
-import no.nav.security.token.support.ktor.asIssuerProps
-import no.nav.security.token.support.ktor.tokenValidationSupport
+import no.nav.security.token.support.v2.RequiredClaims
+import no.nav.security.token.support.v2.asIssuerProps
+import no.nav.security.token.support.v2.tokenValidationSupport
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -83,17 +87,17 @@ fun Application.k9BrukerdialogApi() {
     }
 
     install(CORS) {
-        method(HttpMethod.Options)
-        method(HttpMethod.Get)
-        method(HttpMethod.Post)
-        method(HttpMethod.Put)
-        method(HttpMethod.Delete)
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Get)
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
         allowNonSimpleContentTypes = true
         allowCredentials = true
-        log.info("Configuring CORS")
+        logger.info("Configuring CORS")
         configuration.getWhitelistedCorsAddreses().forEach {
-            log.info("Adding host {} with scheme {}", it.host, it.scheme)
-            host(host = it.authority, schemes = listOf(it.scheme))
+            logger.info("Adding host {} with scheme {}", it.host, it.scheme)
+            allowHost(host = it.authority, schemes = listOf(it.scheme))
         }
     }
 
@@ -168,7 +172,7 @@ fun Application.k9BrukerdialogApi() {
             k9BrukerdialogCacheGateway = k9BrukerdialogCacheGateway
         )
 
-        environment.monitor.subscribe(ApplicationStopping) {
+        environment!!.monitor.subscribe(ApplicationStopping) {
             logger.info("Stopper Kafka Producer.")
             kafkaProducer.close()
             logger.info("Kafka Producer Stoppet.")
