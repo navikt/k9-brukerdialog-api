@@ -8,8 +8,8 @@ import io.ktor.server.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.MELLOMLAGRING_URL
 import no.nav.k9brukerdialogapi.general.getCallId
-import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import org.json.JSONObject
 
 fun Route.mellomlagringApis(
     mellomlagringService: MellomlagringService,
@@ -19,10 +19,10 @@ fun Route.mellomlagringApis(
         post{
             try {
                 mellomlagringService.settMellomlagring(
-                    call.getCallId(),
-                    idTokenProvider.getIdToken(call),
-                    Ytelse.valueOf(call.parameters["ytelse"]!!),
-                    call.receive()
+                    callId = call.getCallId(),
+                    idToken = idTokenProvider.getIdToken(call),
+                    ytelse = Ytelse.valueOf(call.parameters["ytelse"]!!),
+                    mellomlagring =  JSONObject(call.receive<Map<*, *>>()).toString()
                 )
                 call.respond(HttpStatusCode.Created)
             } catch (e: CacheConflictException){
@@ -36,7 +36,7 @@ fun Route.mellomlagringApis(
                     call.getCallId(),
                     idTokenProvider.getIdToken(call),
                     Ytelse.valueOf(call.parameters["ytelse"]!!),
-                    call.receive()
+                    JSONObject(call.receive<Map<*, *>>()).toString()
                 )
                 call.respond(HttpStatusCode.NoContent)
             } catch (e: CacheNotFoundException) {
@@ -45,22 +45,14 @@ fun Route.mellomlagringApis(
         }
 
         get{
-            val mellomlagringFraCache = mellomlagringService.hentMellomlagring(
+            val mellomlagring = mellomlagringService.hentMellomlagring(
                 call.getCallId(),
                 idTokenProvider.getIdToken(call),
                 Ytelse.valueOf(call.parameters["ytelse"]!!)
             )
-
-            val responsMellomlagring: String = when{
-                mellomlagringFraCache == null -> "{}"
-                mellomlagringFraCache == "{}" -> "{}"
-                mellomlagringFraCache.erGammelTypeMellomlagring() -> mellomlagringFraCache
-                else -> Mellomlagring(mellomlagringFraCache).somJson()
-            }
-
             call.respondText(
                 contentType = ContentType.Application.Json,
-                text = responsMellomlagring,
+                text = mellomlagring ?: "{}",
                 status = HttpStatusCode.OK
             )
         }

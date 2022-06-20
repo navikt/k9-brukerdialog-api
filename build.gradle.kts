@@ -11,6 +11,7 @@ val fuelVersion = "2.3.1"
 val lettuceCoreVersion = "6.1.8.RELEASE"
 val tokenSupportVersion = "2.1.0"
 val mockOauth2ServerVersion = "0.5.1"
+val junitVersion = "5.8.1"
 
 plugins {
     kotlin("jvm") version "1.7.0"
@@ -64,6 +65,7 @@ dependencies {
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation ("org.skyscreamer:jsonassert:1.5.0")
     testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 
 repositories {

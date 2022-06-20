@@ -14,6 +14,7 @@ import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -231,15 +232,15 @@ class ApplicationTest {
     @Nested
     inner class MellomlagringTest {
 
-        @Test
-        fun `Sende inn, hente, oppdatere og slette mellomlagring`() {
+        @BeforeEach
+        fun beforeEeach(){
+            K9BrukerdialogCacheResponseTransformer.mellomlagredeVerdierCache.clear()
+        }
 
+        @Test
+        fun `Innsending av tom mellomlagring`(){
             //language=json
-            val mellomlagringSøknad = """
-            {
-                "mellomlagring": "soknad"
-            }
-        """.trimIndent()
+            val mellomlagringSøknad = """{}""".trimIndent()
 
             requestAndAssert(
                 httpMethod = HttpMethod.Post,
@@ -261,15 +262,40 @@ class ApplicationTest {
                 engine = engine,
                 logger = logger
             )
+        }
+
+        @Test
+        fun `Sende inn, hente, oppdatere og slette mellomlagring`() {
+            val mellomlagring = """{"formData":{"noe":"no"},"metadata":{"noeAnnet":"ABC"}}"""
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = "mellomlagring/ETTERSENDING",
+                jwtToken = tokenXToken,
+                expectedCode = HttpStatusCode.Created,
+                expectedResponse = null,
+                requestEntity = mellomlagring,
+                engine = engine,
+                logger = logger
+            )
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/ETTERSENDING",
+                jwtToken = tokenXToken,
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = mellomlagring,
+                engine = engine,
+                logger = logger
+            )
             val oppdatertMellomlagringSøknad = """
             {
                 "mellomlagring": "oppdatert soknad"
             }
-        """.trimIndent()
+            """.trimIndent()
 
             requestAndAssert(
                 httpMethod = HttpMethod.Put,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.NoContent,
                 requestEntity = oppdatertMellomlagringSøknad,
@@ -279,7 +305,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = oppdatertMellomlagringSøknad,
@@ -289,7 +315,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Delete,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.Accepted,
                 engine = engine,
@@ -298,35 +324,10 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = """{}""".trimIndent(),
-                engine = engine,
-                logger = logger
-            )
-
-        }
-
-        @Test
-        fun `Sende inn tom mellomlagring`() {
-            requestAndAssert(
-                httpMethod = HttpMethod.Post,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = mockOAuth2Server.issueToken(fnr = "25908998033"),
-                expectedCode = HttpStatusCode.Created,
-                expectedResponse = null,
-                requestEntity = "{}",
-                engine = engine,
-                logger = logger
-            )
-
-            requestAndAssert(
-                httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
-                jwtToken = mockOAuth2Server.issueToken(fnr = "25908998033"),
-                expectedCode = HttpStatusCode.OK,
-                expectedResponse = """{}""",
                 engine = engine,
                 logger = logger
             )

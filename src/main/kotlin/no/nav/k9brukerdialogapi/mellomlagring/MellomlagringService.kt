@@ -26,11 +26,11 @@ class MellomlagringService(
         callId: CallId,
         idToken: IdToken,
         ytelse: Ytelse,
-        mellomlagring: Mellomlagring,
+        mellomlagring: String,
     ) = k9BrukerdialogCacheGateway.mellomlagreSøknad(
         cacheRequest = CacheRequest(
             nøkkelPrefiks = genererNøkkelPrefix(ytelse),
-            verdi = mellomlagring.mellomlagring ?: "{}",
+            verdi = mellomlagring,
             utløpsdato = ZonedDateTime.now(ZoneOffset.UTC).plusHours(mellomlagretTidTimer.toLong()),
             opprettet = ZonedDateTime.now(ZoneOffset.UTC),
             endret = null
@@ -49,7 +49,7 @@ class MellomlagringService(
         callId: CallId,
         idToken: IdToken,
         ytelse: Ytelse,
-        mellomlagring: Mellomlagring,
+        mellomlagring: String,
     ): CacheResponse {
         val eksisterendeMellomlagring = k9BrukerdialogCacheGateway.hentMellomlagretSøknad(
             nøkkelPrefiks = genererNøkkelPrefix(ytelse),
@@ -60,7 +60,7 @@ class MellomlagringService(
             k9BrukerdialogCacheGateway.oppdaterMellomlagretSøknad(
                 cacheRequest = CacheRequest(
                     nøkkelPrefiks = genererNøkkelPrefix(ytelse),
-                    verdi = mellomlagring.mellomlagring ?: "{}",
+                    verdi = mellomlagring,
                     utløpsdato = eksisterendeMellomlagring.utløpsdato,
                     opprettet = eksisterendeMellomlagring.opprettet,
                     endret = ZonedDateTime.now()
