@@ -1,8 +1,8 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett
 
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.*
 import io.ktor.http.*
+import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils.Companion.issueToken

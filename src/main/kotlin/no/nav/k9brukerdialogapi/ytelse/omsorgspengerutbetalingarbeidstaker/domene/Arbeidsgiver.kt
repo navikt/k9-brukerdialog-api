@@ -36,6 +36,7 @@ class Arbeidsgiver(
         when(utbetalingsårsak){
             NYOPPSTARTET_HOS_ARBEIDSGIVER -> kreverIkkeNull(årsakNyoppstartet, "$felt.årsakNyoppstartet må være satt dersom Utbetalingsårsak=NYOPPSTARTET_HOS_ARBEIDSGIVER")
             KONFLIKT_MED_ARBEIDSGIVER -> krever(!konfliktForklaring.isNullOrBlank(), "$felt.konfliktForklaring må være satt dersom Utbetalingsårsak=KONFLIKT_MED_ARBEIDSGIVER")
+            Utbetalingsårsak.ARBEIDSGIVER_KONKURS -> null
         }
     }
 

@@ -1,10 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf
 
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSPENGER_UTBETALING_SNF_URL

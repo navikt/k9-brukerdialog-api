@@ -1,8 +1,8 @@
 package no.nav.k9brukerdialogapi
 
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.*
 import io.ktor.http.*
+import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.TestUtils.Companion.issueToken
@@ -14,6 +14,7 @@ import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -206,23 +207,24 @@ class ApplicationTest {
 
             wireMockServer.stubK9OppslagSoker() // reset til default mapping
 
-            @Test
-            fun `Hente søker med tilgangsnivå 3`() {
-                requestAndAssert(
-                    engine = engine,
-                    logger = logger,
-                    httpMethod = HttpMethod.Get,
-                    path = OPPSLAG_URL + SØKER_URL,
-                    cookie = mockOAuth2Server.issueToken(
-                        issuerId = "login-service",
-                        fnr = gyldigFødselsnummerA,
-                        claims = mapOf("acr" to "Level3"),
-                        somCookie = true
-                    ),
-                    expectedCode = HttpStatusCode.Forbidden,
-                    expectedResponse = null
-                )
-            }
+        }
+
+        @Test
+        fun `Hente søker med tilgangsnivå 3`() {
+            requestAndAssert(
+                engine = engine,
+                logger = logger,
+                httpMethod = HttpMethod.Get,
+                path = OPPSLAG_URL + SØKER_URL,
+                cookie = mockOAuth2Server.issueToken(
+                    issuerId = "login-service",
+                    fnr = gyldigFødselsnummerA,
+                    claims = mapOf("acr" to "Level3"),
+                    somCookie = true
+                ),
+                expectedCode = HttpStatusCode.Unauthorized,
+                expectedResponse = null
+            )
         }
 
     }
@@ -230,13 +232,15 @@ class ApplicationTest {
     @Nested
     inner class MellomlagringTest {
 
+        @BeforeEach
+        fun beforeEeach(){
+            K9BrukerdialogCacheResponseTransformer.mellomlagredeVerdierCache.clear()
+        }
+
         @Test
-        fun `Sende inn, hente, oppdatere og slette mellomlagring`() {
-            val mellomlagringSøknad = """
-            {
-                "mellomlagring": "soknad"
-            }
-        """.trimIndent()
+        fun `Innsending av tom mellomlagring`(){
+            //language=json
+            val mellomlagringSøknad = """{}""".trimIndent()
 
             requestAndAssert(
                 httpMethod = HttpMethod.Post,
@@ -258,15 +262,40 @@ class ApplicationTest {
                 engine = engine,
                 logger = logger
             )
+        }
+
+        @Test
+        fun `Sende inn, hente, oppdatere og slette mellomlagring`() {
+            val mellomlagring = """{"formData":{"noe":"no"},"metadata":{"noeAnnet":"ABC"}}"""
+            requestAndAssert(
+                httpMethod = HttpMethod.Post,
+                path = "mellomlagring/ETTERSENDING",
+                jwtToken = tokenXToken,
+                expectedCode = HttpStatusCode.Created,
+                expectedResponse = null,
+                requestEntity = mellomlagring,
+                engine = engine,
+                logger = logger
+            )
+
+            requestAndAssert(
+                httpMethod = HttpMethod.Get,
+                path = "mellomlagring/ETTERSENDING",
+                jwtToken = tokenXToken,
+                expectedCode = HttpStatusCode.OK,
+                expectedResponse = mellomlagring,
+                engine = engine,
+                logger = logger
+            )
             val oppdatertMellomlagringSøknad = """
             {
                 "mellomlagring": "oppdatert soknad"
             }
-        """.trimIndent()
+            """.trimIndent()
 
             requestAndAssert(
                 httpMethod = HttpMethod.Put,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.NoContent,
                 requestEntity = oppdatertMellomlagringSøknad,
@@ -276,7 +305,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = oppdatertMellomlagringSøknad,
@@ -286,7 +315,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Delete,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.Accepted,
                 engine = engine,
@@ -295,14 +324,13 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/OMSORGSDAGER_ALENEOMSORG",
+                path = "mellomlagring/ETTERSENDING",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = """{}""".trimIndent(),
                 engine = engine,
                 logger = logger
             )
-
         }
 
         @Test

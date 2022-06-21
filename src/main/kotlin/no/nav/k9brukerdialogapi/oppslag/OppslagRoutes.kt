@@ -1,6 +1,6 @@
 package no.nav.k9brukerdialogapi.oppslag
 
-import io.ktor.routing.*
+import io.ktor.server.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.OPPSLAG_URL
 import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.ArbeidsgiverService
