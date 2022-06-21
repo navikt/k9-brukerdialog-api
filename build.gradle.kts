@@ -2,24 +2,25 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.1.6.8-0cee26b"
+val dusseldorfKtorVersion = "3.2.0.2-b18c5fe"
 val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val k9FormatVersion = "5.8.7"
+val k9FormatVersion = "6.0.2"
 val fuelVersion = "2.3.1"
 val lettuceCoreVersion = "6.1.8.RELEASE"
-val tokenSupportVersion = "2.0.20"
-val mockOauth2ServerVersion = "0.4.8"
+val tokenSupportVersion = "2.1.0"
+val mockOauth2ServerVersion = "0.5.1"
+val junitVersion = "5.8.2"
 
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/0cee26b85bfcad9bbc4fc7466db8af36055691bb/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/b18c5feeca2840e6812eb805d50937d7aa0aca6a/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
@@ -30,6 +31,7 @@ dependencies {
     implementation ( "no.nav.helse:dusseldorf-ktor-health:$dusseldorfKtorVersion")
     implementation ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
     implementation ( "no.nav.helse:dusseldorf-common:$dusseldorfKtorVersion")
+    implementation("io.ktor:ktor-server-cors:$ktorVersion")
 
     implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
     implementation("com.github.kittinunf.fuel:fuel-coroutines:$fuelVersion"){
@@ -37,7 +39,7 @@ dependencies {
     }
 
     // NAV
-    implementation ("no.nav.security:token-validation-ktor:$tokenSupportVersion")
+    implementation ("no.nav.security:token-validation-ktor-v2:$tokenSupportVersion")
     testImplementation ("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
 
     // Client
@@ -63,11 +65,10 @@ dependencies {
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation ("org.skyscreamer:jsonassert:1.5.0")
     testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 
 repositories {
-    mavenLocal()
-
     maven {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/navikt/dusseldorf-ktor")
