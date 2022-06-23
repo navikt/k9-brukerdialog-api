@@ -75,7 +75,7 @@ class OmsorgspengerUtbetalingArbeidstakerService(
         metadata: Metadata
     ) {
         logger.info("Validerer ${søknad.vedlegg.size} vedlegg.")
-        val vedlegg = vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId, søker.somDokumentEier())
+        val vedlegg = vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId)
         vedlegg.valider("vedlegg", søknad.vedlegg)
         vedleggService.persisterVedlegg(søknad.vedlegg, callId, søker.somDokumentEier())
         val komplettSøknad = søknad.tilKomplettSøknad(søker, k9Format, vedlegg.map { it.title })

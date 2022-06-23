@@ -76,7 +76,7 @@ class OmsorgspengerUtbetalingSnfService(
         logger.info("Validerer ${søknad.vedlegg.size} vedlegg.")
 
         val dokumentEier = søker.somDokumentEier()
-        vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId, dokumentEier).valider("vedlegg", søknad.vedlegg)
+        vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId).valider("vedlegg", søknad.vedlegg)
         vedleggService.persisterVedlegg(søknad.vedlegg, callId, dokumentEier)
 
         try {

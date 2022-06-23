@@ -36,3 +36,5 @@ data class Vedlegg(
 data class DokumentEier(
     @JsonProperty("eiers_fødselsnummer") val eiersFødselsnummer: String
 )
+
+internal fun String.somDokumentEier() = DokumentEier(this)

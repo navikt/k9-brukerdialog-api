@@ -6,8 +6,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.general.CallId
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.net.URL
 
 class VedleggService(
@@ -26,20 +24,18 @@ class VedleggService(
     suspend fun hentVedlegg(
         vedleggId: String,
         idToken: IdToken,
-        callId: CallId,
-        eier: DokumentEier
+        callId: CallId
     ): Vedlegg? = k9MellomlagringGateway.hentVedlegg(
         vedleggId = vedleggId,
         idToken = idToken,
         callId = callId,
-        eier = eier
+        eier = idToken.getNorskIdentifikasjonsnummer().somDokumentEier()
     )
 
     suspend fun hentVedlegg(
         vedleggUrls: List<URL>,
         idToken: IdToken,
-        callId: CallId,
-        eier: DokumentEier
+        callId: CallId
     ): List<Vedlegg> {
         val vedlegg = coroutineScope {
             val futures = mutableListOf<Deferred<Vedlegg?>>()
@@ -48,8 +44,7 @@ class VedleggService(
                     hentVedlegg(
                         vedleggId = it.vedleggId(),
                         idToken = idToken,
-                        callId = callId,
-                        eier = eier
+                        callId = callId
                     )
                 })
 
@@ -62,13 +57,12 @@ class VedleggService(
     suspend fun slettVedlegg(
         vedleggId: String,
         idToken: IdToken,
-        callId: CallId,
-        eier: DokumentEier
+        callId: CallId
     ): Boolean = k9MellomlagringGateway.slettVedlegg(
         vedleggId = vedleggId,
         idToken = idToken,
         callId = callId,
-        eier = eier
+        eier = idToken.getNorskIdentifikasjonsnummer().somDokumentEier()
     )
 
     internal suspend fun persisterVedlegg(

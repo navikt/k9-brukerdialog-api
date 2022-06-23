@@ -40,7 +40,7 @@ class OmsorgspengerUtvidetRettService(
         søknad.valider()
 
         val dokumentEier = søker.somDokumentEier()
-        validerVedlegg(søknad, idToken, callId, dokumentEier)
+        validerVedlegg(søknad, idToken, callId)
         persisterVedlegg(søknad, callId, dokumentEier)
 
         try {
@@ -66,14 +66,14 @@ class OmsorgspengerUtvidetRettService(
         }
     }
 
-    suspend fun validerVedlegg(søknad: Søknad, idToken: IdToken, callId: CallId, dokumentEier: DokumentEier) {
+    suspend fun validerVedlegg(søknad: Søknad, idToken: IdToken, callId: CallId) {
         logger.info("Validerer vedlegg")
         if(søknad.legeerklæring.isNotEmpty()) {
-            vedleggService.hentVedlegg(søknad.legeerklæring, idToken, callId, dokumentEier)
+            vedleggService.hentVedlegg(søknad.legeerklæring, idToken, callId)
                 .valider("legeerklæring", søknad.legeerklæring)
         }
         if (søknad.samværsavtale != null && søknad.samværsavtale.isNotEmpty()) {
-            vedleggService.hentVedlegg(søknad.samværsavtale, idToken, callId, dokumentEier)
+            vedleggService.hentVedlegg(søknad.samværsavtale, idToken, callId)
                 .valider("samværsavtale", søknad.samværsavtale)
         }
     }

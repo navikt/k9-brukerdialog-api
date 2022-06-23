@@ -56,14 +56,12 @@ fun Route.vedleggApis(
             val vedlegg = vedleggService.hentVedlegg(
                 vedleggId = vedleggId.value,
                 idToken = idTokenProvider.getIdToken(call),
-                callId = call.getCallId(),
-                eier = DokumentEier(idTokenProvider.getIdToken(call).getNorskIdentifikasjonsnummer())
+                callId = call.getCallId()
             )
 
             when(vedlegg){
                 null -> call.respondProblemDetails(vedleggNotFoundProblemDetails)
-                else -> call.respondBytes(bytes = vedlegg.content, contentType = ContentType.parse(vedlegg.contentType), status = HttpStatusCode.OK
-                )
+                else -> call.respondBytes(bytes = vedlegg.content, contentType = ContentType.parse(vedlegg.contentType), status = HttpStatusCode.OK)
             }
         }
 
@@ -74,8 +72,7 @@ fun Route.vedleggApis(
             val resultat = vedleggService.slettVedlegg(
                 vedleggId = vedleggId.value,
                 idToken = idTokenProvider.getIdToken(call),
-                callId = call.getCallId(),
-                eier = DokumentEier(idTokenProvider.getIdToken(call).getNorskIdentifikasjonsnummer())
+                callId = call.getCallId()
             )
 
             when (resultat) {
