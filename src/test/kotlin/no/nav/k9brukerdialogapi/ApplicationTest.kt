@@ -9,6 +9,7 @@ import no.nav.helse.TestUtils.Companion.issueToken
 import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
+import no.nav.k9brukerdialogapi.vedlegg.VedleggListe
 import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.json.JSONObject
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URL
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -638,6 +640,32 @@ class ApplicationTest {
                 fileName = "big_picture.png",
                 expectedCode = HttpStatusCode.PayloadTooLarge
             )
+        }
+
+        @Test
+        fun `Validerer liste med vedlegg hvor et ikke eksisterer`() {
+            with(engine) {
+                val vedleggSomIkkeFinnes = URL("http://localhost:8085/vedlegg/finnesIkke.jpg")
+                val vedleggSomFinnes = URL(
+                    handleRequestUploadImage(
+                        cookie = cookie,
+                        vedlegg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
+                    )
+                )
+                val vedleggListe = VedleggListe(listOf(vedleggSomFinnes, vedleggSomIkkeFinnes))
+
+                handleRequest(
+                    HttpMethod.Post,  VEDLEGG_URL+ VALIDERING_URL,
+                ) {
+                    addHeader(HttpHeaders.Authorization, "Bearer $tokenXToken")
+                    addHeader(HttpHeaders.ContentType, "application/json")
+                    setBody(vedleggListe.somJson())
+                }.apply {
+                    assertEquals("""{"vedleggUrl":["http://localhost:8085/vedlegg/finnesIkke.jpg"]}""",
+                    response.content)
+                }
+
+            }
         }
     }
 }

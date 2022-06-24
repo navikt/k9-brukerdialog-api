@@ -92,6 +92,19 @@ class VedleggService(
             eier = eier
         )
     }
+
+    suspend fun finnVedleggSomIkkeEksisterer(vedleggListe: VedleggListe, idToken: IdToken, callId: CallId): List<URL> {
+        val vedleggSomIkkeEksisterer = mutableListOf<URL>()
+        vedleggListe.vedleggUrl.forEach { vedleggUrl: URL ->
+            val resultat = hentVedlegg(
+                vedleggUrl.vedleggId(),
+                idToken,
+                callId
+            )
+            if (resultat == null) vedleggSomIkkeEksisterer.add(vedleggUrl)
+        }
+        return vedleggSomIkkeEksisterer
+    }
 }
 
 fun URL.vedleggId(): String = this.toString().substringAfterLast("/")

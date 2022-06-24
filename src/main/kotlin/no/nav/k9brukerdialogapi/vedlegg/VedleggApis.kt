@@ -9,6 +9,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.helse.dusseldorf.ktor.core.respondProblemDetails
+import no.nav.k9brukerdialogapi.VALIDERING_URL
 import no.nav.k9brukerdialogapi.VEDLEGGID_URL
 import no.nav.k9brukerdialogapi.VEDLEGG_URL
 import no.nav.k9brukerdialogapi.general.getCallId
@@ -79,6 +80,21 @@ fun Route.vedleggApis(
                 true -> call.respond(HttpStatusCode.NoContent)
                 false -> call.respondProblemDetails(feilVedSlettingAvVedlegg)
             }
+        }
+
+
+        post(VALIDERING_URL){
+            val vedleggListe = call.receive<VedleggListe>()
+            logger.info("Validerer at ${vedleggListe.vedleggUrl.size} vedlegg finnes.")
+
+            val vedleggSomIkkeEksisterer = vedleggService.finnVedleggSomIkkeEksisterer(
+                vedleggListe,
+                idTokenProvider.getIdToken(call),
+                call.getCallId()
+            )
+
+            if(vedleggSomIkkeEksisterer.isNotEmpty()) logger.info("Fant ikke ${vedleggSomIkkeEksisterer.size} vedlegg")
+            call.respond(VedleggListe(vedleggSomIkkeEksisterer))
         }
     }
 }
