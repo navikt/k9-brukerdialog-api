@@ -28,8 +28,7 @@ class VedleggService(
     ): Vedlegg? = k9MellomlagringGateway.hentVedlegg(
         vedleggId = vedleggId,
         idToken = idToken,
-        callId = callId,
-        eier = idToken.getNorskIdentifikasjonsnummer().somDokumentEier()
+        callId = callId
     )
 
     suspend fun hentVedlegg(
@@ -61,8 +60,7 @@ class VedleggService(
     ): Boolean = k9MellomlagringGateway.slettVedlegg(
         vedleggId = vedleggId,
         idToken = idToken,
-        callId = callId,
-        eier = idToken.getNorskIdentifikasjonsnummer().somDokumentEier()
+        callId = callId
     )
 
     internal suspend fun persisterVedlegg(
