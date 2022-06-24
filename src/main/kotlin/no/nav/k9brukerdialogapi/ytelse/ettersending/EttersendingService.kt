@@ -33,7 +33,7 @@ class EttersendingService(
         val søker = søkerService.hentSøker(idToken, callId).also { søker -> søker.valider() }
 
         val dokumentEier = søker.somDokumentEier()
-        val vedlegg = vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId, dokumentEier).also { vedlegg ->
+        val vedlegg = vedleggService.hentVedlegg(søknad.vedlegg, idToken, callId).also { vedlegg ->
             vedlegg.valider("vedlegg", søknad.vedlegg)
         }
 

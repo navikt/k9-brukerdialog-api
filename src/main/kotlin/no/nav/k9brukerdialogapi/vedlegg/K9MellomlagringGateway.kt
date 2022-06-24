@@ -117,10 +117,9 @@ class K9MellomlagringGateway(
     suspend fun slettVedlegg(
         vedleggId: String,
         idToken: IdToken,
-        callId: CallId,
-        eier: DokumentEier
+        callId: CallId
     ): Boolean {
-        val body = objectMapper.writeValueAsBytes(eier)
+        val body = objectMapper.writeValueAsBytes(idToken.getNorskIdentifikasjonsnummer().somDokumentEier())
 
         val urlMedId = Url.buildURL(
             baseUrl = komplettUrl,
@@ -333,8 +332,8 @@ class K9MellomlagringGateway(
         )
     }
 
-    suspend fun hentVedlegg(vedleggId: String, idToken: IdToken, eier: DokumentEier, callId: CallId): Vedlegg? {
-        val body = objectMapper.writeValueAsBytes(eier)
+    suspend fun hentVedlegg(vedleggId: String, idToken: IdToken, callId: CallId): Vedlegg? {
+        val body = objectMapper.writeValueAsBytes(idToken.getNorskIdentifikasjonsnummer().somDokumentEier())
 
         val urlMedId = Url.buildURL(
             baseUrl = komplettUrl,

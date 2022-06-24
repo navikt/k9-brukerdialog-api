@@ -1,8 +1,13 @@
 package no.nav.k9brukerdialogapi.vedlegg
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.net.URL
 
 data class VedleggId(val value: String)
+
+data class VedleggListe (
+    val vedleggUrl: List<URL>
+)
 
 data class Vedlegg(
     val content: ByteArray,
@@ -36,3 +41,5 @@ data class Vedlegg(
 data class DokumentEier(
     @JsonProperty("eiers_fødselsnummer") val eiersFødselsnummer: String
 )
+
+internal fun String.somDokumentEier() = DokumentEier(this)
