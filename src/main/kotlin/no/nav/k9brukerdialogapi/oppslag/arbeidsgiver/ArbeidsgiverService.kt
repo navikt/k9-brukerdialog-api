@@ -1,7 +1,6 @@
 package no.nav.k9brukerdialogapi.oppslag.arbeidsgiver
 
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
-import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.oppslag.TilgangNektetException
 import org.slf4j.Logger
@@ -31,30 +30,32 @@ class ArbeidsgiverService(
         tilOgMed: LocalDate,
         skalHentePrivateArbeidsgivere: Boolean,
         skalHenteFrilansoppdrag: Boolean
-    ): Arbeidsgivere {
-        var attributter = Pair("a", mutableListOf<String>())
-        attributter.second.addAll(arbeidsgivereAttributter)
-        if (skalHentePrivateArbeidsgivere) attributter.second.addAll(privateArbeidsgivereAttributter)
-        if (skalHenteFrilansoppdrag) attributter.second.addAll(frilansoppdragAttributter)
-
-        return try {
-            arbeidsgivereGateway.hentArbeidsgivere(
-                idToken,
-                callId,
-                listOf(
-                    attributter,
-                    Pair("fom", listOf(DateTimeFormatter.ISO_LOCAL_DATE.format(fraOgMed))),
-                    Pair("tom", listOf(DateTimeFormatter.ISO_LOCAL_DATE.format(tilOgMed)))
-                )
+    ): Arbeidsgivere = try {
+        arbeidsgivereGateway.hentArbeidsgivere(
+            idToken,
+            callId,
+            listOf(
+                Pair("a", genererAttributter(skalHentePrivateArbeidsgivere, skalHenteFrilansoppdrag)),
+                Pair("fom", listOf(DateTimeFormatter.ISO_LOCAL_DATE.format(fraOgMed))),
+                Pair("tom", listOf(DateTimeFormatter.ISO_LOCAL_DATE.format(tilOgMed)))
             )
-        } catch (cause: Throwable) {
-            when (cause) {
-                is TilgangNektetException -> throw cause
-                else -> {
-                    logger.error("Feil ved henting av arbeidsgivere, returnerer en tom liste", cause)
-                    Arbeidsgivere(emptyList(), emptyList(), emptyList())
-                }
+        )
+    } catch (cause: Throwable) {
+        when (cause) {
+            is TilgangNektetException -> throw cause
+            else -> {
+                logger.error("Feil ved henting av arbeidsgivere, returnerer en tom liste", cause)
+                Arbeidsgivere(emptyList(), emptyList(), emptyList())
             }
         }
+    }
+
+    private fun genererAttributter(
+        skalHentePrivateArbeidsgivere: Boolean,
+        skalHenteFrilansoppdrag: Boolean
+    ) = mutableListOf<String>().apply {
+        addAll(arbeidsgivereAttributter)
+        if (skalHentePrivateArbeidsgivere) addAll(privateArbeidsgivereAttributter)
+        if (skalHenteFrilansoppdrag) addAll(frilansoppdragAttributter)
     }
 }
