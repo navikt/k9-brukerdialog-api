@@ -31,5 +31,4 @@ class OverføreTest {
         Overføre(EKTEFELLE, 11).valider("overføre")
             .verifiserFeil(1, listOf("overføre.antallDagerSomSkalOverføres må være innenfor range 1..10."))
     }
-
 }

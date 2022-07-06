@@ -4,7 +4,7 @@ import no.nav.helse.dusseldorf.common.Personidentifikator
 import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
 import java.time.LocalDate
 
-internal fun MutableList<String>.krever(resultat: Boolean?, feilmelding: String = "") {
+internal fun MutableList<String>.krever(resultat: Boolean?, feilmelding: String) {
     if (resultat != true) this.add(feilmelding)
 }
 
