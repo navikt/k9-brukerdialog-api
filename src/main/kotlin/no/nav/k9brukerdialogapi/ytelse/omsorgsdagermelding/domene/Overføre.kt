@@ -13,7 +13,7 @@ class Overføre(
         internal val gyldigDagerRange = (1..10)
     }
 
-    fun valider(felt: String) = mutableListOf<String>().apply {
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
         krever(mottakerType in gyldigeMottakere, "$felt.mottakerType må være en av $gyldigeMottakere.")
         krever(antallDagerSomSkalOverføres in gyldigDagerRange, "$felt.antallDagerSomSkalOverføres må være innenfor range $gyldigDagerRange.")
     }
