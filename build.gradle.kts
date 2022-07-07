@@ -14,7 +14,7 @@ val mockOauth2ServerVersion = "0.5.1"
 val junitVersion = "5.8.2"
 
 plugins {
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.7.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
