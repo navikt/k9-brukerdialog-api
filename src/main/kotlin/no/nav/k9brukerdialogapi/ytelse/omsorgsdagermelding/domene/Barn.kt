@@ -22,6 +22,7 @@ class Barn(
 
     fun manglerIdentitetsnummer() = identitetsnummer.isNullOrBlank()
     fun oppdaterIdentitetsnummerMed(identitetsnummer: String){
+        require(manglerIdentitetsnummer()) { "Kan kun oppdatere identitetsnummer på barn som mangler." }
         this.identitetsnummer = identitetsnummer
     }
 
