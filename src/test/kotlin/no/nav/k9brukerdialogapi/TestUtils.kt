@@ -14,7 +14,7 @@ import kotlin.test.assertContains
 class TestUtils {
     companion object {
 
-        internal fun MutableList<String>.verifiserFeil(antallFeil: Int, valideringsfeil: List<String> = listOf()) {
+        internal fun List<String>.verifiserFeil(antallFeil: Int, valideringsfeil: List<String> = listOf()) {
             assertEquals(antallFeil, this.size)
 
             valideringsfeil.forEach {
@@ -22,7 +22,7 @@ class TestUtils {
             }
         }
 
-        internal fun MutableList<String>.verifiserIngenFeil() {
+        internal fun List<String>.verifiserIngenFeil() {
             assertTrue(this.isEmpty())
         }
 
