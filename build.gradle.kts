@@ -11,7 +11,7 @@ val fuelVersion = "2.3.1"
 val lettuceCoreVersion = "6.1.8.RELEASE"
 val tokenSupportVersion = "2.1.1"
 val mockOauth2ServerVersion = "0.5.1"
-val junitVersion = "5.8.2"
+val junitVersion = "5.9.0"
 
 plugins {
     kotlin("jvm") version "1.7.10"
