@@ -17,5 +17,4 @@ class Overføre(
         krever(mottakerType in gyldigeMottakere, "$felt.mottakerType må være en av $gyldigeMottakere.")
         krever(antallDagerSomSkalOverføres in gyldigDagerRange, "$felt.antallDagerSomSkalOverføres må være innenfor range $gyldigDagerRange.")
     }
-
 }

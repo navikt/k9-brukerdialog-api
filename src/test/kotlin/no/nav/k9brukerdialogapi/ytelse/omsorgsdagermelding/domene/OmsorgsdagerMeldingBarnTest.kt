@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
 import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Barn.Companion.valider
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -76,5 +77,30 @@ class BarnTest {
             aleneOmOmsorgen = true,
             utvidetRett = null
         ).valider("barn").verifiserFeil(1, listOf("barn.utvidetRett kan ikke være null. Må være true/false."))
+    }
+
+    @Test
+    fun `Liste med barn med utvidetRett=null gir feil`(){
+        listOf(
+            Barn(
+                identitetsnummer = "02119970078",
+                fødselsdato = LocalDate.parse("2022-01-01"),
+                navn = "Ola",
+                aleneOmOmsorgen = true,
+                utvidetRett = null
+            ),
+            Barn(
+                identitetsnummer = "02119970078",
+                fødselsdato = LocalDate.parse("2022-01-01"),
+                navn = "Ola",
+                aleneOmOmsorgen = true,
+                utvidetRett = null
+            )
+        ).valider("barn").verifiserFeil(2,
+            listOf(
+                "barn[0].utvidetRett kan ikke være null. Må være true/false.",
+                "barn[1].utvidetRett kan ikke være null. Må være true/false."
+            )
+        )
     }
 }

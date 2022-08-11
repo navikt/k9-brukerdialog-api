@@ -13,6 +13,12 @@ class Barn(
     private val aleneOmOmsorgen: Boolean? = null,
     private val utvidetRett: Boolean? = null
 ) {
+    companion object {
+        internal fun List<Barn>.valider(felt: String) = flatMapIndexed { index: Int, barn: Barn ->
+            barn.valider("$felt[$index]")
+        }
+    }
+
     fun valider(felt: String) = mutableListOf<String>().apply {
         validerIdentifikator(identitetsnummer, "$felt.identitetsnummer")
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blank.")
@@ -21,7 +27,7 @@ class Barn(
     }
 
     fun manglerIdentitetsnummer() = identitetsnummer.isNullOrBlank()
-    fun oppdaterIdentitetsnummerMed(identitetsnummer: String){
+    fun oppdaterIdentitetsnummerMed(identitetsnummer: String) {
         require(manglerIdentitetsnummer()) { "Kan kun oppdatere identitetsnummer på barn som mangler." }
         this.identitetsnummer = identitetsnummer
     }
