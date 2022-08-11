@@ -25,7 +25,11 @@ class MeldingTest {
             )),
             harUtvidetRett = true,
             harAleneomsorg = true,
+            erYrkesaktiv = true,
+            arbeiderINorge = true,
             arbeidssituasjon = listOf(ARBEIDSTAKER),
+            type = Meldingstype.KORONA,
+            korona = Koronaoverføre(4),
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         ).valider()
@@ -48,7 +52,11 @@ class MeldingTest {
                 )),
                 harUtvidetRett = true,
                 harAleneomsorg = true,
+                erYrkesaktiv = true,
+                arbeiderINorge = true,
                 arbeidssituasjon = listOf(ARBEIDSTAKER),
+                type = Meldingstype.KORONA,
+                korona = Koronaoverføre(4),
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = false
             ).valider()
@@ -75,7 +83,11 @@ class MeldingTest {
                 )),
                 harUtvidetRett = true,
                 harAleneomsorg = true,
+                erYrkesaktiv = true,
+                arbeiderINorge = true,
                 arbeidssituasjon = listOf(ARBEIDSTAKER),
+                type = Meldingstype.KORONA,
+                korona = Koronaoverføre(4),
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ).valider()
@@ -86,47 +98,26 @@ class MeldingTest {
     }
 
     @Test
-    fun `Melding hvor arbeidssituasjon er tom liste skal gi feil`(){
+    fun `Melding hvor arbeidssituasjon og barn er tom liste skal gi feil`(){
         assertThrows<Throwblem> {
             Melding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                 språk = "nb",
                 mottakerFnr = "26104500284",
                 mottakerNavn = "Navnesen",
-                barn = listOf(Barn(
-                    identitetsnummer = "02119970078",
-                    fødselsdato = LocalDate.now(),
-                    navn = "Navnesen",
-                    aleneOmOmsorgen = true,
-                    utvidetRett = true
-                )),
                 arbeidssituasjon = listOf(),
+                barn = listOf(),
                 harUtvidetRett = true,
                 harAleneomsorg = true,
+                erYrkesaktiv = true,
+                arbeiderINorge = true,
+                type = Meldingstype.KORONA,
+                korona = Koronaoverføre(4),
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("arbeidssituasjon kan ikke være en tom liste.") }
-        }
-    }
-
-    @Test
-    fun `Melding hvor barn er tom liste skal gi feil`(){
-        assertThrows<Throwblem> {
-            Melding(
-                id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
-                språk = "nb",
-                mottakerFnr = "26104500284",
-                mottakerNavn = "Navnesen",
-                barn = listOf(),
-                arbeidssituasjon = listOf(ARBEIDSTAKER),
-                harUtvidetRett = true,
-                harAleneomsorg = true,
-                harBekreftetOpplysninger = true,
-                harForståttRettigheterOgPlikter = true
-            ).valider()
-        }.also {
             assertTrue { it.message.toString().contains("barn kan ikke være en tom liste.") }
         }
     }
@@ -148,7 +139,11 @@ class MeldingTest {
                 )),
                 harUtvidetRett = true,
                 harAleneomsorg = true,
+                erYrkesaktiv = true,
+                arbeiderINorge = true,
                 arbeidssituasjon = listOf(ARBEIDSTAKER),
+                type = Meldingstype.KORONA,
+                korona = Koronaoverføre(4),
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ).valider()
@@ -159,7 +154,7 @@ class MeldingTest {
     }
 
     @Test
-    fun `Melding hvor harAleneomsorg og harUtvidetRett er null skal gi feil`(){
+    fun `Melding hvor harAleneomsorg, harUtvidetRett, arbeiderINorge og erYrkesaktiv er null skal gi feil`(){
         assertThrows<Throwblem> {
             Melding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
@@ -175,13 +170,51 @@ class MeldingTest {
                 )),
                 harUtvidetRett = null,
                 harAleneomsorg = null,
+                erYrkesaktiv = null,
+                arbeiderINorge = null,
                 arbeidssituasjon = listOf(ARBEIDSTAKER),
+                type = Meldingstype.KORONA,
+                korona = Koronaoverføre(4),
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("harUtvidetRett kan ikke være null. Må være true/false.") }
             assertTrue { it.message.toString().contains("harAleneomsorg kan ikke være null. Må være true/false.") }
+            assertTrue { it.message.toString().contains("arbeiderINorge kan ikke være null. Må være true/false.") }
+            assertTrue { it.message.toString().contains("erYrkesaktiv kan ikke være null. Må være true/false.") }
+        }
+    }
+
+    @Test
+    fun `Melding hvor type=KORONA men korona er null skal gi feil`() {
+        assertThrows<Throwblem> {
+            Melding(
+                id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
+                språk = "nb",
+                mottakerFnr = "26104500284",
+                mottakerNavn = "Navnesen",
+                barn = listOf(
+                    Barn(
+                        identitetsnummer = "02119970078",
+                        fødselsdato = LocalDate.now(),
+                        navn = "Navnesen",
+                        aleneOmOmsorgen = true,
+                        utvidetRett = true
+                    )
+                ),
+                harUtvidetRett = true,
+                harAleneomsorg = true,
+                erYrkesaktiv = true,
+                arbeiderINorge = true,
+                arbeidssituasjon = listOf(ARBEIDSTAKER),
+                type = Meldingstype.KORONA,
+                korona = null,
+                harForståttRettigheterOgPlikter = true,
+                harBekreftetOpplysninger = true
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("Ved type=KORONA kan ikke 'korona' være null.") }
         }
     }
 }

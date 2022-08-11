@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
-import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.k9brukerdialogapi.general.krever
 import java.time.LocalDate
@@ -23,8 +22,8 @@ class Koronaoverføre(
 }
 
 class KoronaStengingsperiode(
-    @JsonAlias("fom") @JsonFormat(pattern = "yyyy-MM-dd") val fraOgMed: LocalDate,
-    @JsonAlias("tom") @JsonFormat(pattern = "yyyy-MM-dd") val tilOgMed: LocalDate
+    @JsonFormat(pattern = "yyyy-MM-dd") val fraOgMed: LocalDate,
+    @JsonFormat(pattern = "yyyy-MM-dd") val tilOgMed: LocalDate
 ) {
     override fun toString(): String = "KoronaStengingsperiode(fraOgMed=$fraOgMed, tilOgMed=$tilOgMed)"
 }

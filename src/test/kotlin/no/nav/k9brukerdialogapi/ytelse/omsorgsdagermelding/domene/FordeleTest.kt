@@ -27,5 +27,4 @@ class FordeleTest {
         val komplettFordele = fordele.somKomplettFordele()
         assertEquals(komplettFordele.samværsavtaleVedleggId.first(), vedleggId)
     }
-
 }
