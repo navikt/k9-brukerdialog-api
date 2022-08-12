@@ -6,6 +6,7 @@ import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.kafka.TopicEntry
 import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSDAGER_ALENEOMSORG_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSDAGER_MELDING_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_SNF_TOPIC
@@ -38,7 +39,8 @@ object KafkaWrapper {
                 ETTERSENDING_TOPIC,
                 OMSORGSDAGER_ALENEOMSORG_TOPIC,
                 OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
-                OMSORGSPENGER_UTBETALING_SNF_TOPIC
+                OMSORGSPENGER_UTBETALING_SNF_TOPIC,
+                OMSORGSDAGER_MELDING_TOPIC
             )
         )
         return kafkaEnvironment
@@ -67,7 +69,8 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
         ETTERSENDING_TOPIC,
         OMSORGSDAGER_ALENEOMSORG_TOPIC,
         OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
-        OMSORGSPENGER_UTBETALING_SNF_TOPIC
+        OMSORGSPENGER_UTBETALING_SNF_TOPIC,
+        OMSORGSDAGER_MELDING_TOPIC
     ))
     return consumer
 }

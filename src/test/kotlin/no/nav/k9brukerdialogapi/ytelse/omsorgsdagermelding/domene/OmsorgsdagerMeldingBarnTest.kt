@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
 import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Barn.Companion.valider
 import java.time.LocalDate
 import kotlin.test.Test
@@ -14,13 +15,25 @@ class BarnTest {
     fun `Oppdatering av identitetsnummer fungerer som forventet`(){
         val barn = Barn(
             identitetsnummer = null,
+            aktørId = "12345",
             fødselsdato = LocalDate.parse("2022-01-01"),
             navn = "Ola",
             aleneOmOmsorgen = true,
             utvidetRett = false
         )
         assertTrue(barn.manglerIdentitetsnummer())
-        barn.oppdaterIdentitetsnummerMed("02119970078")
+        barn.leggTilIdentifikatorHvisMangler(
+            listOf(
+                BarnOppslag(
+                    LocalDate.now(),
+                    "Ola",
+                    null,
+                    "Duck",
+                    aktørId = "12345",
+                    identitetsnummer = "02119970078"
+                )
+            )
+        )
         assertFalse(barn.manglerIdentitetsnummer())
     }
 

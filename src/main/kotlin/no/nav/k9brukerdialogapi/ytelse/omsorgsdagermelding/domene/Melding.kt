@@ -5,12 +5,17 @@ import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
+import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Barn.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Meldingstype.*
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.*
 
 class Melding(
-    private val søknadId: String = UUID.randomUUID().toString(),
+    internal val søknadId: String = UUID.randomUUID().toString(),
+    private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     private val id: String,
     private val språk: String,
     private val barn: List<Barn>,
@@ -22,14 +27,44 @@ class Melding(
     private val arbeiderINorge: Boolean? = null,
     private val arbeidssituasjon: List<Arbeidssituasjon>,
     private val antallDagerBruktIÅr: Int? = null,
-    private val type: Meldingstype,
+    internal val type: Meldingstype,
     private val korona: Koronaoverføre? = null,
     private val overføring: Overføre? = null,
-    private val fordeling: Fordele? = null,
+    internal val fordeling: Fordele? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
 ) {
-    fun valider() = mutableListOf<String>().apply {
+
+    internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
+        barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
+    }
+
+    internal fun inneholderVedlegg() = (type == FORDELING && fordeling != null && fordeling.inneholderVedlegg())
+
+    internal fun somKomplettMelding(søker: Søker) = KomplettMelding(
+        søknadId = søknadId,
+        søker = søker,
+        mottatt = mottatt,
+        id = id,
+        språk = språk,
+        barn = barn,
+        mottakerFnr = mottakerFnr,
+        mottakerNavn = mottakerNavn,
+        harAleneomsorg = harAleneomsorg!!,
+        harUtvidetRett = harUtvidetRett!!,
+        erYrkesaktiv = erYrkesaktiv!!,
+        arbeiderINorge = arbeiderINorge!!,
+        arbeidssituasjon = arbeidssituasjon,
+        antallDagerBruktIÅr = antallDagerBruktIÅr,
+        type = type,
+        korona = korona,
+        overføring = overføring,
+        fordeling = fordeling?.somKomplettFordele(),
+        harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
+        harBekreftetOpplysninger = harBekreftetOpplysninger
+    )
+
+    internal fun valider() = mutableListOf<String>().apply {
         validerIdentifikator(mottakerFnr, "mottakerFnr")
         krever(barn.isNotEmpty(), "barn kan ikke være en tom liste.")
         krever(mottakerNavn.isNotBlank(), "mottakerNavn kan ikke være tomt eller blankt.")
@@ -37,9 +72,9 @@ class Melding(
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true.")
         krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true.")
 
-        addAll(barn.valider("barn"))
-        validerKreverIkkeNull()
         validerType()
+        validerKreverIkkeNull()
+        addAll(barn.valider("barn"))
 
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
