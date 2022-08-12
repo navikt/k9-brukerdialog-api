@@ -116,7 +116,7 @@ class OmsorgsdagerMeldingTest {
 
         requestAndAssert(
             httpMethod = HttpMethod.Post,
-            path = "$OMSORGSDAGER_MELDING_URL$INNSENDING_URL",
+            path = "$OMSORGSDAGER_MELDING_FORDELING_URL$INNSENDING_URL",
             expectedCode = HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
             requestEntity = melding.somJson(),
@@ -151,7 +151,7 @@ class OmsorgsdagerMeldingTest {
 
         requestAndAssert(
             httpMethod = HttpMethod.Post,
-            path = "$OMSORGSDAGER_MELDING_URL$INNSENDING_URL",
+            path = "$OMSORGSDAGER_MELDING_FORDELING_URL$INNSENDING_URL",
             expectedCode = HttpStatusCode.BadRequest,
             jwtToken = tokenXToken,
             requestEntity = melding.somJson(),

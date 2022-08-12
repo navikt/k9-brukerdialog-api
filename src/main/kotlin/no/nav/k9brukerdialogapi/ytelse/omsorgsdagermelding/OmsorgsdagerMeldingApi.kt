@@ -5,9 +5,12 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.pipeline.*
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.INNSENDING_URL
-import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_URL
+import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_FORDELING_URL
+import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_KORONAOVERFORING_URL
+import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_OVERFORING_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.kafka.getMetadata
@@ -21,12 +24,25 @@ fun Route.omsorgsdagerMeldingApi(
     idTokenProvider: IdTokenProvider,
     omsorgsdagerMeldingService: OmsorgsdagerMeldingService
 ) {
-    route(OMSORGSDAGER_MELDING_URL){
-        post(INNSENDING_URL){
-            val melding = call.receive<Melding>()
-            logger.info(formaterStatuslogging(melding.type.somYtelse(), melding.søknadId, "mottatt."))
-            omsorgsdagerMeldingService.registrer(melding, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
-            call.respond(HttpStatusCode.Accepted)
-        }
+    post(OMSORGSDAGER_MELDING_FORDELING_URL+INNSENDING_URL){
+        mottaMelding(omsorgsdagerMeldingService, idTokenProvider)
     }
+
+    post(OMSORGSDAGER_MELDING_OVERFORING_URL+INNSENDING_URL){
+        mottaMelding(omsorgsdagerMeldingService, idTokenProvider)
+    }
+
+    post(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL+INNSENDING_URL){
+        mottaMelding(omsorgsdagerMeldingService, idTokenProvider)
+    }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
+    omsorgsdagerMeldingService: OmsorgsdagerMeldingService,
+    idTokenProvider: IdTokenProvider
+) {
+    val melding = call.receive<Melding>()
+    logger.info(formaterStatuslogging(melding.type.somYtelse(), melding.søknadId, "mottatt."))
+    omsorgsdagerMeldingService.registrer(melding, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
+    call.respond(HttpStatusCode.Accepted)
 }

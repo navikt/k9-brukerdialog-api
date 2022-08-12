@@ -269,6 +269,9 @@ fun Application.k9BrukerdialogApi() {
                 request.contains(OMSORGSDAGER_ALENEOMSORG_URL.removePrefix("/")) -> OMSORGSDAGER_ALENEOMSORG.name.lowercase()
                 request.contains(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL.removePrefix("/")) -> OMSORGSPENGER_UTBETALING_ARBEIDSTAKER.name.lowercase()
                 request.contains(OMSORGSPENGER_UTBETALING_SNF_URL.removePrefix("/")) -> OMSORGSPENGER_UTBETALING_SNF.name.lowercase()
+                request.contains(OMSORGSDAGER_MELDING_FORDELING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_FORDELING.name.lowercase()
+                request.contains(OMSORGSDAGER_MELDING_OVERFORING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_OVERFORING.name.lowercase()
+                request.contains(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_KORONAOVERFORING.name.lowercase()
                 else -> null
             }
         }
