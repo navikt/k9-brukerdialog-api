@@ -6,12 +6,12 @@ val dusseldorfKtorVersion = "3.2.0.2-b18c5fe"
 val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val k9FormatVersion = "6.0.2"
+val k9FormatVersion = "6.0.5"
 val fuelVersion = "2.3.1"
 val lettuceCoreVersion = "6.1.8.RELEASE"
-val tokenSupportVersion = "2.1.1"
+val tokenSupportVersion = "2.1.3"
 val mockOauth2ServerVersion = "0.5.1"
-val junitVersion = "5.8.2"
+val junitVersion = "5.9.0"
 
 plugins {
     kotlin("jvm") version "1.7.10"
