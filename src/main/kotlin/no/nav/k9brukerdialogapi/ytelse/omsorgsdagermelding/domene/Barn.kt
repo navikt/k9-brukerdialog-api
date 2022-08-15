@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import java.time.LocalDate
 
 class Barn(
@@ -19,17 +20,17 @@ class Barn(
         }
     }
 
-    fun valider(felt: String) = mutableListOf<String>().apply {
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
         validerIdentifikator(identitetsnummer, "$felt.identitetsnummer")
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blank.")
         kreverIkkeNull(aleneOmOmsorgen, "$felt.aleneOmOmsorgen kan ikke være null. Må være true/false.")
         kreverIkkeNull(utvidetRett, "$felt.utvidetRett kan ikke være null. Må være true/false.")
     }
 
-    fun manglerIdentitetsnummer() = identitetsnummer.isNullOrBlank()
-    fun oppdaterIdentitetsnummerMed(identitetsnummer: String) {
-        require(manglerIdentitetsnummer()) { "Kan kun oppdatere identitetsnummer på barn som mangler." }
-        this.identitetsnummer = identitetsnummer
+    internal fun manglerIdentitetsnummer() = identitetsnummer.isNullOrBlank()
+
+    internal fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
+        if(manglerIdentitetsnummer()) identitetsnummer = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
 }

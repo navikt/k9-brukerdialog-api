@@ -10,20 +10,20 @@ class KoronaoverføreTest {
 
     @Test
     fun `Gyldig Koronaoverføring gir ingen feil`(){
-        Koronaoverføre(5, STENGINGSPERIODE_2021).valider("koronaoverføre").verifiserIngenFeil()
         Koronaoverføre(1, STENGINGSPERIODE_2021).valider("koronaoverføre").verifiserIngenFeil()
-        Koronaoverføre(999, STENGINGSPERIODE_2021).valider("koronaoverføre").verifiserIngenFeil()
+        Koronaoverføre(5).valider("koronaoverføre").verifiserIngenFeil()
+        Koronaoverføre(999).valider("koronaoverføre").verifiserIngenFeil()
     }
 
     @Test
     fun `Koronaoverføring av mindre enn 1 dag skal gi feil`(){
-        Koronaoverføre(0, STENGINGSPERIODE_2021).valider("koronaoverføre")
+        Koronaoverføre(0).valider("koronaoverføre")
             .verifiserFeil(1, listOf("koronaoverføre.antallDagerSomSkalOverføres må være innenfor range 1..999."))
     }
 
     @Test
     fun `Koronaoverføring av mer enn 999 dag skal gi feil`(){
-        Koronaoverføre(1_000, STENGINGSPERIODE_2021).valider("koronaoverføre")
+        Koronaoverføre(1_000).valider("koronaoverføre")
             .verifiserFeil(1, listOf("koronaoverføre.antallDagerSomSkalOverføres må være innenfor range 1..999."))
     }
 

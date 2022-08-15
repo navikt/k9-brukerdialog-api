@@ -7,11 +7,13 @@ import java.net.URL
 
 class Fordele(
     private val mottakerType: Mottaker,
-    private val samværsavtale: List<URL> = listOf()
+    internal val samværsavtale: List<URL> = listOf()
 ){
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         krever(mottakerType == SAMVÆRSFORELDER, "$felt.mottakerType må være '$SAMVÆRSFORELDER'.")
     }
+
+    internal fun inneholderVedlegg() = samværsavtale.isNotEmpty()
 
     internal fun somKomplettFordele() = KomplettFordele(
         mottakerType = mottakerType,
