@@ -31,6 +31,7 @@ class OmsorgsdagerMeldingService(
 
         melding.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
         melding.valider()
+
         if(melding.inneholderVedlegg()) validerOgPersisterVedlegg(melding, idToken, callId, søker.somDokumentEier())
 
         try {
@@ -38,7 +39,6 @@ class OmsorgsdagerMeldingService(
         } catch (exception: Exception) {
             logger.error("Feilet ved å legge melding på Kafka. $exception")
             if(melding.inneholderVedlegg()) fjernHoldPåPersisterteVedlegg(melding, callId, søker.somDokumentEier())
-
             throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }
     }

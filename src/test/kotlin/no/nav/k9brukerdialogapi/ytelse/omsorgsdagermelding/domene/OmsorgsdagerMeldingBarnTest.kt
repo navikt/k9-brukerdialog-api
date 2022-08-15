@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 class BarnTest {
 
     @Test
-    fun `Oppdatering av identitetsnummer fungerer som forventet`(){
+    fun `Legge til manglende identitetsnummer fungerer som forventet`(){
         val barn = Barn(
             identitetsnummer = null,
             aktørId = "12345",
@@ -25,12 +25,7 @@ class BarnTest {
         barn.leggTilIdentifikatorHvisMangler(
             listOf(
                 BarnOppslag(
-                    LocalDate.now(),
-                    "Ola",
-                    null,
-                    "Duck",
-                    aktørId = "12345",
-                    identitetsnummer = "02119970078"
+                    LocalDate.now(), "Ole", null, "Duck", "12345", "02119970078"
                 )
             )
         )
