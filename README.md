@@ -12,6 +12,7 @@ Støtte for følgende ytelser:
 | Omsorgsdager aleneomsorg | Ja | https://github.com/navikt/omsorgsdager-aleneomsorg-prosessering | https://github.com/navikt/omsorgsdager-aleneomsorg-dialog |
 | Omsorgspenger utbetaling arbeidstaker | Ja | https://github.com/navikt/omsorgspengerutbetalingsoknad-arbeidstaker-prosessering | https://github.com/navikt/omsorgspengerutbetaling-arbeidstaker-soknad |
 | Omsorgspenger utbetaling snf | Ja | https://github.com/navikt/omsorgspengerutbetalingsoknad-prosessering | https://github.com/navikt/omsorgspengerutbetaling-soknad |
+| Omsorgsdager melding | Nei | https://github.com/navikt/omsorgsdager-melding-prosessering | https://github.com/navikt/omsorgsdager-deling-dialog |
 | | | | |
 
 
