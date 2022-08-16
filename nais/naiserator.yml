@@ -56,6 +56,7 @@ spec:
         - application: sif-ettersending
         - application: omsorgspengerutbetaling-arbeidstaker-soknad
         - application: omsorgsdager-aleneomsorg-dialog
+        - application: deling-omsorgsdager
     outbound:
       rules:
         - application: k9-mellomlagring
