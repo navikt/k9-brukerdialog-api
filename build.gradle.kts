@@ -2,13 +2,12 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.0.2-b18c5fe"
+val dusseldorfKtorVersion = "3.2.0.3-d4fdef9"
 val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val k9FormatVersion = "6.0.4"
+val k9FormatVersion = "6.0.6"
 val fuelVersion = "2.3.1"
-val lettuceCoreVersion = "6.1.8.RELEASE"
 val tokenSupportVersion = "2.1.3"
 val mockOauth2ServerVersion = "0.5.1"
 val junitVersion = "5.9.0"
@@ -20,7 +19,7 @@ plugins {
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/b18c5feeca2840e6812eb805d50937d7aa0aca6a/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/d4fdef93d9c095447393dc4b2c62c1978a13715d/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
@@ -45,7 +44,6 @@ dependencies {
     // Client
     implementation ( "no.nav.helse:dusseldorf-ktor-client:$dusseldorfKtorVersion")
     implementation ( "no.nav.helse:dusseldorf-oauth2-client:$dusseldorfKtorVersion")
-    implementation ("io.lettuce:lettuce-core:$lettuceCoreVersion")
 
     // K9-format
     implementation ( "no.nav.k9:k9-format:$k9FormatVersion")
@@ -64,7 +62,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation ("org.skyscreamer:jsonassert:1.5.1")
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.12.5")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 
