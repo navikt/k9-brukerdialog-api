@@ -14,6 +14,7 @@ import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_OVERFORING_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.kafka.getMetadata
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Melding
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
@@ -27,27 +28,26 @@ fun Route.omsorgsdagerMeldingApi(
     omsorgsdagerMeldingService: OmsorgsdagerMeldingService
 ) {
     post(OMSORGSDAGER_MELDING_FORDELING_URL+INNSENDING_URL){
-        mottaMelding(omsorgsdagerMeldingService, idTokenProvider)
-        registrerMottattSøknad(OMSORGSDAGER_MELDING_FORDELING)
+        mottaMelding(omsorgsdagerMeldingService, idTokenProvider, OMSORGSDAGER_MELDING_FORDELING)
     }
 
     post(OMSORGSDAGER_MELDING_OVERFORING_URL+INNSENDING_URL){
-        mottaMelding(omsorgsdagerMeldingService, idTokenProvider)
-        registrerMottattSøknad(OMSORGSDAGER_MELDING_OVERFORING)
+        mottaMelding(omsorgsdagerMeldingService, idTokenProvider, OMSORGSDAGER_MELDING_OVERFORING)
     }
 
     post(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL+INNSENDING_URL){
-        mottaMelding(omsorgsdagerMeldingService, idTokenProvider)
-        registrerMottattSøknad(OMSORGSDAGER_MELDING_KORONAOVERFORING)
+        mottaMelding(omsorgsdagerMeldingService, idTokenProvider, OMSORGSDAGER_MELDING_KORONAOVERFORING)
     }
 }
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
     omsorgsdagerMeldingService: OmsorgsdagerMeldingService,
-    idTokenProvider: IdTokenProvider
+    idTokenProvider: IdTokenProvider,
+    ytelse: Ytelse
 ) {
     val melding = call.receive<Melding>()
     logger.info(formaterStatuslogging(melding.type.somYtelse(), melding.søknadId, "mottatt."))
     omsorgsdagerMeldingService.registrer(melding, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
+    registrerMottattSøknad(ytelse)
     call.respond(HttpStatusCode.Accepted)
 }
