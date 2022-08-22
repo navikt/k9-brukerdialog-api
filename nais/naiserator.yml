@@ -57,6 +57,7 @@ spec:
         - application: omsorgspengerutbetaling-arbeidstaker-soknad
         - application: omsorgsdager-aleneomsorg-dialog
         - application: deling-omsorgsdager
+        - application: omsorgspengerutbetaling-soknad
     outbound:
       rules:
         - application: k9-mellomlagring
