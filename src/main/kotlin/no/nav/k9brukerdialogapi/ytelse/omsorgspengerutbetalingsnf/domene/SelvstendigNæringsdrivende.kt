@@ -54,7 +54,7 @@ class SelvstendigNæringsdrivende(
     }
 
     private fun byggK9SelvstendingNæringsdrivendeInfo()= SelvstendigNæringsdrivendePeriodeInfo().apply {
-        medVirksomhetstyper(næringstype.somK9Virksomhetstype())
+        medVirksomhetstyper(listOf(næringstype.somK9Virksomhetstype()))
         medRegistrertIUtlandet(!registrertINorge!!)
         medErNyoppstartet(this@SelvstendigNæringsdrivende.erNyoppstartet)
 
