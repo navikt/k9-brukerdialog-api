@@ -4,7 +4,6 @@ import no.nav.helse.TestUtils.Companion.verifiserFeil
 import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstyper.DAGMAMMA
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstyper.JORDBRUK_SKOGBRUK
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
@@ -17,7 +16,7 @@ class SelvstendigNæringsdrivendeTest {
         val k9SelvstendigNæringsdrivende = SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
-            næringstyper = listOf(DAGMAMMA, JORDBRUK_SKOGBRUK),
+            næringstype = DAGMAMMA,
             næringsinntekt = 3_000_000,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
@@ -44,8 +43,7 @@ class SelvstendigNæringsdrivendeTest {
               "perioder": {
                 "2022-01-01/2022-10-01": {
                   "virksomhetstyper": [
-                    "DAGMAMMA",
-                    "JORDBRUK_SKOGBRUK"
+                    "DAGMAMMA"
                   ],
                   "regnskapsførerNavn": "Knut",
                   "regnskapsførerTlf": "123123123",
@@ -72,7 +70,7 @@ class SelvstendigNæringsdrivendeTest {
         SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
-            næringstyper = listOf(DAGMAMMA),
+            næringstype = DAGMAMMA,
             næringsinntekt = 3_000_000,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
@@ -99,7 +97,7 @@ class SelvstendigNæringsdrivendeTest {
         SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
-            næringstyper = listOf(DAGMAMMA),
+            næringstype = DAGMAMMA,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "123ABC",
             registrertINorge = true,
@@ -114,7 +112,7 @@ class SelvstendigNæringsdrivendeTest {
         SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
-            næringstyper = listOf(DAGMAMMA),
+            næringstype = DAGMAMMA,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
             registrertIUtlandet = Land("ABC", "Nederland"),
@@ -129,7 +127,7 @@ class SelvstendigNæringsdrivendeTest {
         SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2021-01-01"),
-            næringstyper = listOf(DAGMAMMA),
+            næringstype = DAGMAMMA,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
             registrertINorge = true,
@@ -144,7 +142,7 @@ class SelvstendigNæringsdrivendeTest {
         SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-01"),
-            næringstyper = listOf(DAGMAMMA),
+            næringstype = DAGMAMMA,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
             registrertINorge = true,
@@ -159,7 +157,7 @@ class SelvstendigNæringsdrivendeTest {
         SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2015-01-01"),
             tilOgMed = LocalDate.parse("2022-01-01"),
-            næringstyper = listOf(DAGMAMMA),
+            næringstype = DAGMAMMA,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
             registrertINorge = true,
@@ -174,7 +172,7 @@ class SelvstendigNæringsdrivendeTest {
         SelvstendigNæringsdrivende(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-01"),
-            næringstyper = listOf(DAGMAMMA),
+            næringstype = DAGMAMMA,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
             registrertINorge = true,

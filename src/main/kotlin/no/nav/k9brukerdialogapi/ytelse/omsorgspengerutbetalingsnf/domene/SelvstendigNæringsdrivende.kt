@@ -8,7 +8,6 @@ import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstyper.Companion.somK9Virksomhetstyper
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Regnskapsfører.Companion.leggTilK9Regnskapsfører
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.VarigEndring.Companion.leggTilVarigEndring
 import java.math.BigDecimal
@@ -18,7 +17,7 @@ import no.nav.k9.søknad.felles.opptjening.SelvstendigNæringsdrivende as K9Selv
 class SelvstendigNæringsdrivende(
     @JsonFormat(pattern = "yyyy-MM-dd") private val fraOgMed: LocalDate,
     @JsonFormat(pattern = "yyyy-MM-dd") private val tilOgMed: LocalDate? = null,
-    private val næringstyper: List<Næringstyper>,
+    private val næringstype: Næringstyper,
     private val fiskerErPåBladB: Boolean? = null,
     private val næringsinntekt: Int? = null,
     private val navnPåVirksomheten: String,
@@ -55,7 +54,7 @@ class SelvstendigNæringsdrivende(
     }
 
     private fun byggK9SelvstendingNæringsdrivendeInfo()= SelvstendigNæringsdrivendePeriodeInfo().apply {
-        medVirksomhetstyper(næringstyper.somK9Virksomhetstyper())
+        medVirksomhetstyper(listOf(næringstype.somK9Virksomhetstype()))
         medRegistrertIUtlandet(!registrertINorge!!)
         medErNyoppstartet(this@SelvstendigNæringsdrivende.erNyoppstartet)
 
