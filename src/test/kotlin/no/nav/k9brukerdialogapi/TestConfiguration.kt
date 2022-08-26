@@ -3,9 +3,7 @@ package no.nav.k9brukerdialogapi
 import com.github.tomakehurst.wiremock.WireMockServer
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.jws.ClientCredentials
-import no.nav.helse.dusseldorf.testsupport.jws.LoginService
 import no.nav.helse.dusseldorf.testsupport.wiremock.getAzureV2WellKnownUrl
-import no.nav.helse.dusseldorf.testsupport.wiremock.getLoginServiceV1WellKnownUrl
 import no.nav.helse.dusseldorf.testsupport.wiremock.getTokendingsWellKnownUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9BrukerdialogCacheUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9MellomlagringUrl
@@ -30,7 +28,6 @@ object TestConfiguration {
             Pair("nav.authorization.cookie_name", "selvbetjening-idtoken"),
             Pair("nav.gateways.k9_oppslag_url","$k9OppslagUrl"),
             Pair("nav.gateways.k9_mellomlagring_url", "$k9MellomlagringUrl"),
-            Pair("nav.gateways.k9_mellomlagring_ingress","$k9MellomlagringUrl"),
             Pair("nav.gateways.k9_brukerdialog_cache_url", "$k9BrukerdialogCacheUrl"),
             Pair("nav.cors.addresses", corsAdresses),
         )
