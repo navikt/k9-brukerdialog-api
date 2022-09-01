@@ -22,7 +22,7 @@ class OpptjeningIUtlandetTest{
     }
 
     @Test
-    fun `OpptjeningIUtlandet med ugyldig land gir valideringsfeil`(){
+    fun `Ugyldig land gir valideringsfeil`(){
         OpptjeningIUtlandet(
             navn = "Fisk AS",
             opptjeningType = ARBEIDSTAKER,
