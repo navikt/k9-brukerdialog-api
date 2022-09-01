@@ -4,7 +4,6 @@ import no.nav.k9.søknad.felles.type.Landkode
 import no.nav.k9brukerdialogapi.general.krever
 import java.util.*
 
-
 class Land(
     private val landkode: String,
     private val landnavn: String

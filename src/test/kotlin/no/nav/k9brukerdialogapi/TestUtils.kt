@@ -17,8 +17,8 @@ class TestUtils {
         internal fun List<String>.verifiserFeil(antallFeil: Int, valideringsfeil: List<String> = listOf()) {
             assertEquals(antallFeil, this.size)
 
-            valideringsfeil.forEach {
-                assertContains(this, it)
+            this.forEach {
+                assertContains(valideringsfeil, it)
             }
         }
 
