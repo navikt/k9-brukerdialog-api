@@ -208,7 +208,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                 selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
                     fraOgMed = LocalDate.parse("2022-01-01"),
                     tilOgMed = LocalDate.parse("2022-10-01"),
-                    næringstype = Næringstyper.DAGMAMMA,
+                    næringstype = Næringstype.DAGMAMMA,
                     navnPåVirksomheten = "Kiwi ASA",
                     organisasjonsnummer = "123ABC",
                     erNyoppstartet = true,
@@ -287,7 +287,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
             selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-10-01"),
-                næringstype = Næringstyper.JORDBRUK_SKOGBRUK,
+                næringstype = Næringstype.JORDBRUK_SKOGBRUK,
                 næringsinntekt = 3_000_000,
                 navnPåVirksomheten = "Kiwi ASA",
                 organisasjonsnummer = "975959171",

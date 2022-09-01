@@ -37,7 +37,7 @@ internal fun genererSøknadForOmsUtSnf(
     selvstendigNæringsdrivende: SelvstendigNæringsdrivende = SelvstendigNæringsdrivende(
         fraOgMed = LocalDate.parse("2022-01-01"),
         tilOgMed = LocalDate.parse("2022-10-01"),
-        næringstype = Næringstyper.DAGMAMMA,
+        næringstype = Næringstype.DAGMAMMA,
         navnPåVirksomheten = "Kiwi ASA",
         organisasjonsnummer = "975959171",
         registrertINorge = true,
