@@ -71,12 +71,15 @@ class MedlemskapTest {
         )
         val forventet = """
             {
-              "2022-01-01/2022-01-01": {
-                "land": "CU"
+              "perioder": {
+                "2022-01-01/2022-01-01": {
+                  "land": "CU"
+                },
+                "2022-01-04/2022-01-04": {
+                  "land": "CN"
+                }
               },
-              "2022-01-04/2022-01-04": {
-                "land": "CN"
-              }
+              "perioderSomSkalSlettes": {}
             }
         """.trimIndent()
         JSONAssert.assertEquals(forventet, medlemskap.somK9Bosteder().somJson(), true)

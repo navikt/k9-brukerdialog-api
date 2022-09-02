@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
+import no.nav.k9.søknad.felles.personopplysninger.Bosteder
 import no.nav.k9.søknad.felles.personopplysninger.Bosteder.BostedPeriodeInfo
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.general.krever
@@ -21,8 +22,10 @@ class Medlemskap(
         }
     }
 
-    internal fun somK9Bosteder() = mutableMapOf<Periode, BostedPeriodeInfo>().apply {
-        utenlandsoppholdSiste12Mnd.forEach { this[it.k9Periode()] = it.somK9BostedPeriodeInfo() }
-        utenlandsoppholdNeste12Mnd.forEach { this[it.k9Periode()] = it.somK9BostedPeriodeInfo() }
-    }
+    internal fun somK9Bosteder() = Bosteder().medPerioder(
+        mutableMapOf<Periode, BostedPeriodeInfo>().apply {
+            utenlandsoppholdSiste12Mnd.forEach { this[it.k9Periode()] = it.somK9BostedPeriodeInfo() }
+            utenlandsoppholdNeste12Mnd.forEach { this[it.k9Periode()] = it.somK9BostedPeriodeInfo() }
+        }
+    )
 }
