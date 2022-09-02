@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
-import no.nav.helse.TestUtils.Companion.verifiserFeil
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.ÅrsakManglerIdentitetsnummer.BOR_I_UTLANDET
 import org.json.JSONObject

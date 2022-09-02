@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
-import no.nav.helse.TestUtils.Companion.verifiserFeil
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import kotlin.test.Test
 
 class BekreftelserTest {

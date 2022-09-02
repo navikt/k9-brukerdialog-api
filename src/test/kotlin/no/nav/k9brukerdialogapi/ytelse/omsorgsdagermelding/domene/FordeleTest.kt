@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
-import no.nav.helse.TestUtils.Companion.verifiserFeil
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Mottaker.*
 import java.net.URL
 import kotlin.test.Test

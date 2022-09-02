@@ -5,11 +5,11 @@ import io.ktor.http.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
-import no.nav.helse.TestUtils.Companion.issueToken
-import no.nav.helse.TestUtils.Companion.requestAndAssert
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
+import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
+import no.nav.k9brukerdialogapi.TestUtils.Companion.requestAndAssert
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker

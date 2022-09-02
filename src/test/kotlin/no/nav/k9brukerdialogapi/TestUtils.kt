@@ -1,4 +1,4 @@
-package no.nav.helse
+package no.nav.k9brukerdialogapi
 
 import com.github.tomakehurst.wiremock.http.Request
 import io.ktor.http.*
