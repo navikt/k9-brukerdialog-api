@@ -9,11 +9,11 @@ import java.time.LocalDate
 import no.nav.k9.søknad.ytelse.pls.v1.Pleietrengende as K9Pleietrengende
 
 class Pleietrengende(
-    val norskIdentitetsnummer: String? = null,
+    private val norskIdentitetsnummer: String? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    val fødselsdato: LocalDate? = null,
-    val årsakManglerIdentitetsnummer: ÅrsakManglerIdentitetsnummer? = null,
-    val navn: String
+    private val fødselsdato: LocalDate? = null,
+    private val årsakManglerIdentitetsnummer: ÅrsakManglerIdentitetsnummer? = null,
+    private val navn: String
 ) {
     internal fun somK9Pleietrengende(): K9Pleietrengende = when {
         norskIdentitetsnummer != null -> K9Pleietrengende().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentitetsnummer))
@@ -21,7 +21,7 @@ class Pleietrengende(
         else -> K9Pleietrengende()
     }
 
-    fun valider(felt: String) = mutableListOf<String>().apply {
+    fun valider(felt: String = "pleietrengende") = mutableListOf<String>().apply {
         krever(navn.isNotBlank(), "$felt.navn kan ikke være tomt eller blankt.")
         fødselsdato?.let { krever(it.erFørEllerLik(LocalDate.now()), "$felt.fødselsdato kan ikke være i fremtiden.") }
         if(norskIdentitetsnummer == null){

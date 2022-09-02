@@ -7,12 +7,12 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næring
 import java.time.LocalDate
 
 class UtenlandskNæring(
-    val næringstype: Næringstype,
-    val navnPåVirksomheten: String,
-    val land: Land,
-    val organisasjonsnummer: String? = null,
-    val fraOgMed: LocalDate,
-    val tilOgMed: LocalDate? = null
+    private val næringstype: Næringstype,
+    private val navnPåVirksomheten: String,
+    private val land: Land,
+    private val organisasjonsnummer: String? = null,
+    private val fraOgMed: LocalDate,
+    private val tilOgMed: LocalDate? = null
 ) {
 
     companion object {

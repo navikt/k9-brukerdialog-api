@@ -119,7 +119,7 @@ class SelvstendigNæringsdrivendeTest {
             erNyoppstartet = true,
             harFlereAktiveVirksomheter = false
         ).valider("sn")
-            .verifiserFeil(1, listOf("sn.registrertIUtlandet.Landkode 'ABC' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
+            .verifiserFeil(1, listOf("sn.registrertIUtlandet.landkode 'ABC' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
     }
 
     @Test

@@ -6,11 +6,11 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
 import java.time.LocalDate
 
 class OpptjeningIUtlandet (
-    val navn: String,
-    val opptjeningType: OpptjeningType,
-    val land: Land,
-    val fraOgMed: LocalDate,
-    val tilOgMed: LocalDate
+    private val navn: String,
+    private val opptjeningType: OpptjeningType,
+    private val land: Land,
+    private val fraOgMed: LocalDate,
+    private val tilOgMed: LocalDate
 ) {
     companion object {
         internal fun List<OpptjeningIUtlandet>.valider(felt: String) = flatMapIndexed { index, opptjeningIUtlandet ->

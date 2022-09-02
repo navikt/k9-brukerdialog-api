@@ -31,7 +31,7 @@ class OpptjeningIUtlandetTest{
             tilOgMed = LocalDate.parse("2022-03-01")
         ).valider("opptjeningIUtlandet").verifiserFeil(2,
             listOf(
-                "opptjeningIUtlandet.land.Landkode 'MARS' er ikke en gyldig ISO 3166-1 alpha-3 kode.",
+                "opptjeningIUtlandet.land.landkode 'MARS' er ikke en gyldig ISO 3166-1 alpha-3 kode.",
                 "opptjeningIUtlandet.land.landnavn kan ikke være tomt eller blankt."
             )
         )

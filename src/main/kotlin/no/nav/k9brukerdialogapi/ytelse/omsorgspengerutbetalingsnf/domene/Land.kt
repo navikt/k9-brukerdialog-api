@@ -16,7 +16,7 @@ class Land(
     internal fun somK9Landkode() = Landkode.of(landkode)
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
-        krever(LANDKODER.contains(landkode), "$felt.Landkode '$landkode' er ikke en gyldig ISO 3166-1 alpha-3 kode.")
+        krever(LANDKODER.contains(landkode), "$felt.landkode '$landkode' er ikke en gyldig ISO 3166-1 alpha-3 kode.")
         krever(landnavn.isNotBlank(), "$felt.landnavn kan ikke være tomt eller blankt.")
     }
 }

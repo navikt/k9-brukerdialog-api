@@ -33,7 +33,7 @@ class UtenlandskNæringTest{
             tilOgMed = null
         ).valider("utenlandskNæring").verifiserFeil(2,
             listOf(
-                "utenlandskNæring.land.Landkode 'MARS' er ikke en gyldig ISO 3166-1 alpha-3 kode.",
+                "utenlandskNæring.land.landkode 'MARS' er ikke en gyldig ISO 3166-1 alpha-3 kode.",
                 "utenlandskNæring.land.landnavn kan ikke være tomt eller blankt."
             )
         )

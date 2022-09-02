@@ -20,6 +20,6 @@ class LandTest {
     @Test
     fun `Land med ugydlig landkode gir valideringsfeil`(){
         Land(landkode = "AAA", landnavn = "Nederland")
-            .valider("land").verifiserFeil(1, listOf("land.Landkode 'AAA' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
+            .valider("land").verifiserFeil(1, listOf("land.landkode 'AAA' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
     }
 }

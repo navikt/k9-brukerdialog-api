@@ -28,13 +28,13 @@ class PleietrengendeTest {
     @Test
     fun `Gyldig pleietrengende gir ingen valideringsfeil`(){
         Pleietrengende(navn = "Ole", norskIdentitetsnummer = "06098523047")
-            .valider("pleietrengende").verifiserIngenFeil()
+            .valider().verifiserIngenFeil()
     }
 
     @Test
     fun `Blankt navn skal gi valideringsfeil`(){
         Pleietrengende(navn = " ", norskIdentitetsnummer = "06098523047")
-            .valider("pleietrengende")
+            .valider()
             .verifiserFeil(1, listOf("pleietrengende.navn kan ikke være tomt eller blankt."))
     }
 
@@ -44,28 +44,28 @@ class PleietrengendeTest {
             navn = "Ole",
             fødselsdato = LocalDate.now().plusDays(1),
             årsakManglerIdentitetsnummer = BOR_I_UTLANDET
-        ).valider("pleietrengende")
+        ).valider()
             .verifiserFeil(1, listOf("pleietrengende.fødselsdato kan ikke være i fremtiden."))
     }
 
     @Test
     fun `NorskIdentitetsnummer og årsak som null skal gi valideringsfeil`(){
         Pleietrengende(navn = "Ole", fødselsdato = LocalDate.now(), norskIdentitetsnummer = null, årsakManglerIdentitetsnummer = null)
-            .valider("pleietrengende")
+            .valider()
             .verifiserFeil(1, listOf("pleietrengende.årsakManglerIdentitetsnummer må være satt dersom norskIdentitetsnummer er null."))
     }
 
     @Test
     fun `NorskIdentitetsnummer og fødselsdato som null skal gi valideringsfeil`(){
         Pleietrengende(navn = "Ole", fødselsdato = null, norskIdentitetsnummer = null, årsakManglerIdentitetsnummer = BOR_I_UTLANDET)
-            .valider("pleietrengende")
+            .valider()
             .verifiserFeil(1, listOf("pleietrengende.fødselsdato må være satt dersom norskIdentitetsnummer er null."))
     }
 
     @Test
     fun `Ugyldig norskIdentitetsnummer skal gi valideringsfeil`(){
         Pleietrengende(navn = "Ole", norskIdentitetsnummer = "IKKE_GYLDIG")
-            .valider("pleietrengende")
+            .valider()
             .verifiserFeil(1, listOf("pleietrengende.norskIdentitetsnummer er ikke gyldig identifikator, 'IKKE_G*****'. Forventet at personidentifikator kun var siffer, men var IKKE_G****** (11)"))
     }
 }
