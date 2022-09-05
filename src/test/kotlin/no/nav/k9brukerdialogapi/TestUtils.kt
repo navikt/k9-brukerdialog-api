@@ -1,4 +1,4 @@
-package no.nav.helse
+package no.nav.k9brukerdialogapi
 
 import com.github.tomakehurst.wiremock.http.Request
 import io.ktor.http.*
@@ -16,9 +16,8 @@ class TestUtils {
 
         internal fun List<String>.verifiserFeil(antallFeil: Int, valideringsfeil: List<String> = listOf()) {
             assertEquals(antallFeil, this.size)
-
-            valideringsfeil.forEach {
-                assertContains(this, it)
+            this.forEach {
+                assertContains(valideringsfeil, it)
             }
         }
 

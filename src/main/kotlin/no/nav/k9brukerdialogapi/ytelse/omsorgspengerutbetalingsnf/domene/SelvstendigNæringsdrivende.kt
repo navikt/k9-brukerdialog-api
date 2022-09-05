@@ -17,7 +17,7 @@ import no.nav.k9.søknad.felles.opptjening.SelvstendigNæringsdrivende as K9Selv
 class SelvstendigNæringsdrivende(
     @JsonFormat(pattern = "yyyy-MM-dd") private val fraOgMed: LocalDate,
     @JsonFormat(pattern = "yyyy-MM-dd") private val tilOgMed: LocalDate? = null,
-    private val næringstype: Næringstyper,
+    private val næringstype: Næringstype,
     private val fiskerErPåBladB: Boolean? = null,
     private val næringsinntekt: Int? = null,
     private val navnPåVirksomheten: String,

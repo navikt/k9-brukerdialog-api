@@ -1,8 +1,8 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending
 
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype

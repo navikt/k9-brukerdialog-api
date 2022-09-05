@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
-import no.nav.helse.TestUtils.Companion.verifiserFeil
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert

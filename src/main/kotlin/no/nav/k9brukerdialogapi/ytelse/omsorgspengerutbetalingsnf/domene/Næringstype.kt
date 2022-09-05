@@ -2,7 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
 import no.nav.k9.søknad.felles.type.VirksomhetType
 
-enum class Næringstyper {
+enum class Næringstype {
     FISKE,
     JORDBRUK_SKOGBRUK,
     DAGMAMMA,

@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene
 
-import no.nav.helse.TestUtils.Companion.verifiserFeil
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.somJson
 import org.json.JSONObject

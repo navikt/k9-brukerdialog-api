@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.extension.Parameters
 import com.github.tomakehurst.wiremock.extension.ResponseTransformer
 import com.github.tomakehurst.wiremock.http.Request
 import com.github.tomakehurst.wiremock.http.Response
-import no.nav.helse.TestUtils
+import no.nav.k9brukerdialogapi.TestUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.LoggerFactory

@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
-import no.nav.helse.TestUtils.Companion.verifiserFeil
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import kotlin.test.Test
 
 class LandTest {
@@ -20,6 +20,6 @@ class LandTest {
     @Test
     fun `Land med ugydlig landkode gir valideringsfeil`(){
         Land(landkode = "AAA", landnavn = "Nederland")
-            .valider("land").verifiserFeil(1, listOf("land.Landkode 'AAA' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
+            .valider("land").verifiserFeil(1, listOf("land.landkode 'AAA' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
     }
 }

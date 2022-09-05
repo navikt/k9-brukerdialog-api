@@ -1,9 +1,9 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
-import no.nav.helse.TestUtils.Companion.verifiserFeil
-import no.nav.helse.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstyper.DAGMAMMA
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype.DAGMAMMA
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
@@ -119,7 +119,7 @@ class SelvstendigNæringsdrivendeTest {
             erNyoppstartet = true,
             harFlereAktiveVirksomheter = false
         ).valider("sn")
-            .verifiserFeil(1, listOf("sn.registrertIUtlandet.Landkode 'ABC' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
+            .verifiserFeil(1, listOf("sn.registrertIUtlandet.landkode 'ABC' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
     }
 
     @Test
