@@ -18,17 +18,17 @@ class Arbeidsforhold(
 
             return arbeidIPeriode.somK9ArbeidstidInfo(fraOgMed, tilOgMed, jobberNormaltTimer.tilTimerPerDag().tilDuration())
         }
+
+        internal fun arbeidstidInfoMedNullTimer(fraOgMed: LocalDate, tilOgMed: LocalDate) = ArbeidstidInfo().medPerioder(
+            mapOf(
+                Periode(fraOgMed, tilOgMed) to ArbeidstidPeriodeInfo()
+                    .medFaktiskArbeidTimerPerDag(NULL_ARBEIDSTIMER)
+                    .medJobberNormaltTimerPerDag(NULL_ARBEIDSTIMER)
+            )
+        )
     }
 
     internal fun valider(felt: String = "arbeidsforhold") = mutableListOf<String>().apply {
         addAll(arbeidIPeriode.valider("$felt.arbeidIPeriode"))
     }
 }
-
-private fun arbeidstidInfoMedNullTimer(fraOgMed: LocalDate, tilOgMed: LocalDate) = ArbeidstidInfo().medPerioder(
-    mapOf(
-        Periode(fraOgMed, tilOgMed) to ArbeidstidPeriodeInfo()
-            .medFaktiskArbeidTimerPerDag(NULL_ARBEIDSTIMER)
-            .medJobberNormaltTimerPerDag(NULL_ARBEIDSTIMER)
-    )
-)

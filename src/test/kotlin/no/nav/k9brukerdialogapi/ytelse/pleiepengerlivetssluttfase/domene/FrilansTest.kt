@@ -1,8 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
+import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.NULL_ARBEIDSTIMER
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.SYV_OG_EN_HALV_TIME
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.JA
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.NEI
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -80,5 +84,21 @@ class FrilansTest {
                 assertEquals(startdato, it.startdato)
                 assertEquals(sluttdato, it.sluttdato)
             }
+    }
+
+    @Test
+    fun `Mapping til K9Arbeidstid blir som forventet`(){
+        val fraOgMed = LocalDate.parse("2022-01-01")
+        val tilOgMed = LocalDate.parse("2022-01-10")
+        Frilans(
+            startdato = LocalDate.parse("2022-01-02"),
+            sluttdato = LocalDate.parse("2022-01-01"),
+            jobberFortsattSomFrilans = false,
+            harHattInntektSomFrilanser = true,
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(NEI))
+        ).somK9Arbeidstid(fraOgMed, tilOgMed).also {
+            assertEquals(SYV_OG_EN_HALV_TIME, it.perioder[Periode(fraOgMed, tilOgMed)]!!.jobberNormaltTimerPerDag)
+            assertEquals(NULL_ARBEIDSTIMER, it.perioder[Periode(fraOgMed, tilOgMed)]!!.faktiskArbeidTimerPerDag)
+        }
     }
 }

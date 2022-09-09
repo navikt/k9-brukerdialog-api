@@ -5,6 +5,7 @@ import no.nav.k9.søknad.felles.opptjening.Frilanser
 import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.Arbeidsforhold.Companion.somK9ArbeidstidInfo
 import java.time.LocalDate
 
 class Frilans(
@@ -28,4 +29,7 @@ class Frilans(
         medStartDato(this@Frilans.startdato)
         this@Frilans.sluttdato?.let { medSluttDato(this@Frilans.sluttdato) }
     }
+
+    internal fun somK9Arbeidstid(fraOgMed: LocalDate, tilOgMed: LocalDate) = arbeidsforhold.somK9ArbeidstidInfo(fraOgMed, tilOgMed)
+
 }

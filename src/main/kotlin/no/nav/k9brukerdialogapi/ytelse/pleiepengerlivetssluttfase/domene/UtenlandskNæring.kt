@@ -16,7 +16,7 @@ class UtenlandskNæring(
 ) {
 
     companion object {
-        internal fun List<UtenlandskNæring>.valider(felt: String) = flatMapIndexed { index, utenlandskNæring ->
+        internal fun List<UtenlandskNæring>.valider(felt: String = "utenlandskNæring") = flatMapIndexed { index, utenlandskNæring ->
             utenlandskNæring.valider("$felt[$index]")
         }
     }

@@ -65,8 +65,8 @@ class ArbeidsgiverTest {
                 arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(NEI))
             )
         ).valider().verifiserFeil(2, listOf(
-            "arbeidsgiver[0].organisasjonsnummer er ikke gyldig.",
-            "arbeidsgiver[1].organisasjonsnummer er ikke gyldig."
+            "arbeidsgivere[0].organisasjonsnummer er ikke gyldig.",
+            "arbeidsgivere[1].organisasjonsnummer er ikke gyldig."
         ))
     }
 

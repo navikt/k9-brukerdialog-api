@@ -16,9 +16,10 @@ class Arbeidsgiver(
 ) {
 
     companion object{
-        internal fun List<Arbeidsgiver>.valider(felt: String = "arbeidsgiver") = flatMapIndexed { index: Int, arbeidsgiver: Arbeidsgiver ->
+        internal fun List<Arbeidsgiver>.valider(felt: String = "arbeidsgivere") = flatMapIndexed { index: Int, arbeidsgiver: Arbeidsgiver ->
             arbeidsgiver.valider("$felt[$index]")
         }
+        internal fun List<Arbeidsgiver>.somK9Arbeidstaker(fraOgMed: LocalDate, tilOgMed: LocalDate) = map { it.somK9Arbeidstaker(fraOgMed, tilOgMed) }
     }
 
     internal fun valider(felt: String = "arbeidsgiver") = mutableListOf<String>().apply {
