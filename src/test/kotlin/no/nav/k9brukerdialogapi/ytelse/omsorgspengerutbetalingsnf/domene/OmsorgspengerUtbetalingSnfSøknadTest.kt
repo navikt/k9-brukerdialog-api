@@ -359,7 +359,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                 "fraværsperioder": [
                   {
                     "periode": "2022-01-20/2022-01-25",
-                    "duration": "PT5H",
+                    "duration": "PT5H30M",
                     "årsak": "ORDINÆRT_FRAVÆR",
                     "søknadÅrsak": null,
                     "aktivitetFravær": [

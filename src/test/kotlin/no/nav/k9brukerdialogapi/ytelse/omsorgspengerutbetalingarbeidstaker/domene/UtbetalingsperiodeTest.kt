@@ -112,7 +112,7 @@ class UtbetalingsperiodeTest {
         val forventetFraværPeriode = """
             {
               "periode": "2022-01-01/2022-01-10",
-              "duration": "PT5H",
+              "duration": "PT5H30M",
               "årsak": "ORDINÆRT_FRAVÆR",
               "søknadÅrsak": "ARBEIDSGIVER_KONKURS",
               "aktivitetFravær": [
@@ -152,7 +152,7 @@ class UtbetalingsperiodeTest {
         val forventetFraværPeriode = """
             [{
               "periode": "2022-01-01/2022-01-10",
-              "duration": "PT5H",
+              "duration": "PT5H30M",
               "delvisFravær": {
                  "normalarbeidstid":"PT7H",
                  "fravær":"PT5H"
