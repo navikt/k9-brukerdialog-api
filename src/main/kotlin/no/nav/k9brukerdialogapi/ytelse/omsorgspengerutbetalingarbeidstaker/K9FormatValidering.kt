@@ -10,7 +10,7 @@ import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetalingValidator
 
 internal fun validerK9FormatForOMP_UT(søknad: Søknad) {
-    val valideringsfeil = OmsorgspengerUtbetalingValidator(Versjon("1.0"))
+    val valideringsfeil = OmsorgspengerUtbetalingValidator(Versjon("1.1"))
         .valider(søknad.getYtelse<OmsorgspengerUtbetaling>())
         .map {
             Violation(

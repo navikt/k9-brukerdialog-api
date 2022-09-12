@@ -32,7 +32,7 @@ class Utbetalingsperiode(
             organisasjonsnummer: String? = null
         ) = this.map { it.somK9FraværPeriode(søknadÅrsak, organisasjonsnummer) }
 
-        internal fun delvisFravær(antallTimerPlanlagt: Duration?, antallTimerBorte: Duration?): DelvisFravær? {
+        private fun Utbetalingsperiode.delvisFravær(): DelvisFravær? {
             if((antallTimerPlanlagt == null || antallTimerBorte == null) ||
                 antallTimerPlanlagt == antallTimerBorte
             ) {
@@ -60,16 +60,16 @@ class Utbetalingsperiode(
     internal fun somK9FraværPeriode(
         søknadÅrsak: SøknadÅrsak? = null,
         organisasjonsnummer: String? = null
-    ) = FraværPeriode(
-        Periode(fraOgMed, tilOgMed),
-        antallTimerBorte,
-        delvisFravær(antallTimerPlanlagt, antallTimerBorte),
-        årsak.somK9FraværÅrsak(),
-        søknadÅrsak,
-        aktivitetFravær.map { it.somK9AktivitetFravær() },
-        Organisasjonsnummer.of(organisasjonsnummer),
-        null
-    )
+    ) = FraværPeriode()
+            .medPeriode(Periode(fraOgMed, tilOgMed))
+            .medFraværÅrsak(årsak.somK9FraværÅrsak())
+            .medSøknadsårsak(søknadÅrsak)
+            .medAktivitetFravær(aktivitetFravær.map {it.somK9AktivitetFravær()})
+            .medArbeidsgiverOrgNr(Organisasjonsnummer.of(organisasjonsnummer))
+            .medNormalarbeidstid(antallTimerPlanlagt)
+            .medFravær(antallTimerBorte)
+            .medDelvisFravær(delvisFravær())
+
 }
 
 enum class FraværÅrsak {
