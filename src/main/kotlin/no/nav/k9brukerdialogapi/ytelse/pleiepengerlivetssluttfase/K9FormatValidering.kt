@@ -4,10 +4,10 @@ import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
-import no.nav.k9.søknad.ytelse.pls.v1.PleipengerLivetsSluttfase
+import no.nav.k9.søknad.ytelse.pls.v1.PleiepengerLivetsSluttfaseSøknadValidator
 
 fun validerK9FormatPILS(k9Format: no.nav.k9.søknad.Søknad) {
-    val mangler = PleipengerLivetsSluttfase().validator.valider(k9Format.getYtelse<PleipengerLivetsSluttfase>()).map {
+    val mangler = PleiepengerLivetsSluttfaseSøknadValidator().valider(k9Format).map {
         Violation(
             parameterName = it.felt,
             parameterType = ParameterType.ENTITY,
