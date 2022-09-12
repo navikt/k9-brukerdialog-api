@@ -31,16 +31,6 @@ class Utbetalingsperiode(
             søknadÅrsak: SøknadÅrsak? = null,
             organisasjonsnummer: String? = null
         ) = this.map { it.somK9FraværPeriode(søknadÅrsak, organisasjonsnummer) }
-
-        private fun Utbetalingsperiode.delvisFravær(): DelvisFravær? {
-            if((antallTimerPlanlagt == null || antallTimerBorte == null) ||
-                antallTimerPlanlagt == antallTimerBorte
-            ) {
-                return null
-            }
-            return DelvisFravær(antallTimerPlanlagt, antallTimerBorte)
-        }
-
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
@@ -68,7 +58,6 @@ class Utbetalingsperiode(
             .medArbeidsgiverOrgNr(Organisasjonsnummer.of(organisasjonsnummer))
             .medNormalarbeidstid(antallTimerPlanlagt)
             .medFravær(antallTimerBorte)
-            .medDelvisFravær(delvisFravær())
 
 }
 
