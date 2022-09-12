@@ -13,7 +13,7 @@ class OpptjeningIUtlandet (
     private val tilOgMed: LocalDate
 ) {
     companion object {
-        internal fun List<OpptjeningIUtlandet>.valider(felt: String) = flatMapIndexed { index, opptjeningIUtlandet ->
+        internal fun List<OpptjeningIUtlandet>.valider(felt: String = "opptjeningIUtlandet") = flatMapIndexed { index, opptjeningIUtlandet ->
             opptjeningIUtlandet.valider("$felt[$index]")
         }
     }

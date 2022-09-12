@@ -6,7 +6,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.Utenlan
 import no.nav.k9.søknad.felles.personopplysninger.Utenlandsopphold as K9Utenlandsopphold
 
 class UtenlandsoppholdIPerioden(
-    private val skalOppholdeSegIUtlandetIPerioden: Boolean? = null,
+    internal val skalOppholdeSegIUtlandetIPerioden: Boolean? = null,
     private val opphold: List<Utenlandsopphold> = listOf()
 ) {
     internal fun valider(felt: String = "utenlandsoppholdIPerioden") = mutableListOf<String>().apply {
