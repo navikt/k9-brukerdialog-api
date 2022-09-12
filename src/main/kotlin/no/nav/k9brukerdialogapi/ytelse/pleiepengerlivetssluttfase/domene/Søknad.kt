@@ -12,6 +12,7 @@ import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.SYV_OG_EN_HALV_TIME
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.Arbeidsforhold.Companion.arbeidstidInfoMedNullTimer
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.Arbeidsgiver.Companion.somK9Arbeidstaker
@@ -48,6 +49,29 @@ class Søknad(
     companion object{
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
     }
+
+    internal fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
+        søknadId = søknadId,
+        søker = søker,
+        språk = språk,
+        fraOgMed = fraOgMed,
+        tilOgMed = tilOgMed,
+        mottatt = mottatt,
+        vedleggId = vedleggUrls.map { it.vedleggId() },
+        opplastetIdVedleggId = opplastetIdVedleggUrls.map { it.vedleggId() },
+        medlemskap = medlemskap,
+        pleietrengende = pleietrengende,
+        utenlandsoppholdIPerioden = utenlandsoppholdIPerioden,
+        frilans = frilans,
+        arbeidsgivere = arbeidsgivere,
+        opptjeningIUtlandet = opptjeningIUtlandet,
+        utenlandskNæring = utenlandskNæring,
+        selvstendigNæringsdrivende = selvstendigNæringsdrivende,
+        harVærtEllerErVernepliktig = harVærtEllerErVernepliktig,
+        harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
+        harBekreftetOpplysninger = harBekreftetOpplysninger,
+        k9Format = k9Format
+    )
 
     internal fun valider() = mutableListOf<String>().apply {
         addAll(medlemskap.valider())
@@ -96,15 +120,11 @@ class Søknad(
     private fun byggK9Arbeidstid() = Arbeidstid().apply {
         if(arbeidsgivere.isNotEmpty()) medArbeidstaker(arbeidsgivere.somK9Arbeidstaker(fraOgMed, tilOgMed))
 
-        selvstendigNæringsdrivende?.let {
-            medSelvstendigNæringsdrivendeArbeidstidInfo(it.somK9ArbeidstidInfo(fraOgMed, tilOgMed))
-        }
+        selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivendeArbeidstidInfo(it.somK9ArbeidstidInfo(fraOgMed, tilOgMed)) }
 
         when(frilans){
             null -> medFrilanserArbeidstid(arbeidstidInfoMedNullTimer(fraOgMed, tilOgMed))
             else -> medFrilanserArbeidstid(frilans.somK9Arbeidstid(fraOgMed, tilOgMed))
         }
     }
-
-
 }
