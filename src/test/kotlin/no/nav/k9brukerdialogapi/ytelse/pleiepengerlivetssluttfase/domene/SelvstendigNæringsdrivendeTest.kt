@@ -81,12 +81,8 @@ class SelvstendigNæringsdrivendeTest {
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-10-01"),
                 næringstype = Næringstype.DAGMAMMA,
-                næringsinntekt = 3_000_000,
                 navnPåVirksomheten = "Kiwi ASA",
-                organisasjonsnummer = "975959171",
-                registrertINorge = true,
                 erNyoppstartet = true,
-                harFlereAktiveVirksomheter = true
             ),
             arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(NEI, emptyList()))
         ).somK9ArbeidstidInfo(mandag, fredag)
