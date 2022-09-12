@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import no.nav.k9.søknad.felles.fravær.DelvisFravær
 import no.nav.k9.søknad.felles.fravær.FraværPeriode
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
@@ -30,6 +31,16 @@ class Utbetalingsperiode(
             søknadÅrsak: SøknadÅrsak? = null,
             organisasjonsnummer: String? = null
         ) = this.map { it.somK9FraværPeriode(søknadÅrsak, organisasjonsnummer) }
+
+        internal fun delvisFravær(antallTimerPlanlagt: Duration?, antallTimerBorte: Duration?): DelvisFravær? {
+            if((antallTimerPlanlagt == null || antallTimerBorte == null) ||
+                antallTimerPlanlagt == antallTimerBorte
+            ) {
+                return null
+            }
+            return DelvisFravær(antallTimerPlanlagt, antallTimerBorte)
+        }
+
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
@@ -52,6 +63,7 @@ class Utbetalingsperiode(
     ) = FraværPeriode(
         Periode(fraOgMed, tilOgMed),
         antallTimerBorte,
+        delvisFravær(antallTimerPlanlagt, antallTimerBorte),
         årsak.somK9FraværÅrsak(),
         søknadÅrsak,
         aktivitetFravær.map { it.somK9AktivitetFravær() },

@@ -119,7 +119,11 @@ class UtbetalingsperiodeTest {
                 "ARBEIDSTAKER"
               ],
               "arbeidsforholdId": null,
-              "arbeidsgiverOrgNr": "825905162"
+              "arbeidsgiverOrgNr": "825905162",
+                "delvisFravær": {
+                  "normalarbeidstid":"PT7H",
+                  "fravær":"PT5H"
+                }
             }
         """.trimIndent()
         JSONAssert.assertEquals(forventetFraværPeriode, faktiskFraværPeriode, true)
@@ -149,6 +153,10 @@ class UtbetalingsperiodeTest {
             [{
               "periode": "2022-01-01/2022-01-10",
               "duration": "PT5H",
+              "delvisFravær": {
+                 "normalarbeidstid":"PT7H",
+                 "fravær":"PT5H"
+             },
               "årsak": "ORDINÆRT_FRAVÆR",
               "søknadÅrsak": null,
               "aktivitetFravær": [
@@ -161,6 +169,7 @@ class UtbetalingsperiodeTest {
             {
               "periode": "2022-01-11/2022-01-15",
               "duration": null,
+              "delvisFravær": null,
               "årsak": "SMITTEVERNHENSYN",
               "søknadÅrsak": null,
               "aktivitetFravær": [

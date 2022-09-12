@@ -6,6 +6,7 @@ import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
+import java.time.Duration
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -90,7 +91,8 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                       "ARBEIDSTAKER"
                     ],
                     "arbeidsforholdId": null,
-                    "arbeidsgiverOrgNr": "825905162"
+                    "arbeidsgiverOrgNr": "825905162",
+                    "delvisFravær": null
                   }
                 ],
                 "fraværsperioderKorrigeringIm": null,

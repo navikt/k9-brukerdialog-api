@@ -314,7 +314,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
         val forventetK9Format = """
             {
               "søknadId": "${søknad.søknadId.id}",
-              "versjon": "1.0.0",
+              "versjon": "1.1.0",
               "mottattDato": "2022-01-02T03:04:05.000Z",
               "søker": {
                 "norskIdentitetsnummer": "02119970078"
@@ -366,7 +366,11 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                       "FRILANSER"
                     ],
                     "arbeidsforholdId": null,
-                    "arbeidsgiverOrgNr": null
+                    "arbeidsgiverOrgNr": null,
+                    "delvisFravær": {
+                      "normalarbeidstid":"PT7H",
+                      "fravær":"PT5H"
+                    }
                   },
                   {
                     "periode": "2022-01-20/2022-01-25",
@@ -377,7 +381,8 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                       "SELVSTENDIG_VIRKSOMHET"
                     ],
                     "arbeidsforholdId": null,
-                    "arbeidsgiverOrgNr": null
+                    "arbeidsgiverOrgNr": null,
+                    "delvisFravær": null
                   }
                 ],
                 "fraværsperioderKorrigeringIm": null,
