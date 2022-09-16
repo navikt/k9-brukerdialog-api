@@ -46,7 +46,7 @@ class Søknad(
 ) {
 
     companion object {
-        private val k9FormatVersjon = Versjon.of("1.1.0")
+        private val k9FormatVersjon = Versjon.of("1.0.0")
     }
 
     internal fun valider() = mutableListOf<String>().apply {

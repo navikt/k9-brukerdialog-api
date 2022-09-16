@@ -6,7 +6,6 @@ import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
-import java.time.Duration
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -72,7 +71,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
         val forventetK9Format = """
             {
               "søknadId": "$søknadId",
-              "versjon": "1.1.0",
+              "versjon": "1.0.0",
               "mottattDato": "2022-01-02T03:04:05.000Z",
               "søker": {
                 "norskIdentitetsnummer": "02119970078"
@@ -91,8 +90,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                       "ARBEIDSTAKER"
                     ],
                     "arbeidsforholdId": null,
-                    "arbeidsgiverOrgNr": "825905162",
-                    "delvisFravær": null
+                    "arbeidsgiverOrgNr": "825905162"
                   }
                 ],
                 "fraværsperioderKorrigeringIm": null,
