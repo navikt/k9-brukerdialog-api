@@ -31,6 +31,8 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBar
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.PleiepengerLivetsSluttfaseService
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.gyldigPILSSøknad
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
@@ -58,6 +60,7 @@ internal class SøknadServiceTest{
     lateinit var omsorgspengerUtbetalingArbeidstakerService: OmsorgspengerUtbetalingArbeidstakerService
     lateinit var omsorgspengerUtbetalingSnfService: OmsorgspengerUtbetalingSnfService
     lateinit var omsorgsdagerMeldingService: OmsorgsdagerMeldingService
+    lateinit var pleiepengerLivetsSluttfaseService: PleiepengerLivetsSluttfaseService
 
     @BeforeEach
     internal fun setUp() {
@@ -77,12 +80,16 @@ internal class SøknadServiceTest{
         omsorgsdagerMeldingService = OmsorgsdagerMeldingService(
             søkerService, barnService, kafkaProducer, vedleggService
         )
+        pleiepengerLivetsSluttfaseService = PleiepengerLivetsSluttfaseService(
+            søkerService, kafkaProducer, vedleggService
+        )
         assertNotNull(kafkaProducer)
         assertNotNull(omsorgspengerUtvidetRettSøknadService)
         assertNotNull(ettersendingSøknadService)
         assertNotNull(omsorgspengerUtbetalingArbeidstakerService)
         assertNotNull(omsorgspengerUtbetalingSnfService)
         assertNotNull(omsorgsdagerMeldingService)
+        assertNotNull(pleiepengerLivetsSluttfaseService)
     }
 
     @Test
@@ -334,4 +341,34 @@ internal class SøknadServiceTest{
 
         coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
     }
+
+    @Test
+    internal fun `Verifiser at søknadservice for pleiepenger livets sluttfase fjerner hold på persistert vedlegg dersom kafka feiler`(){
+        assertThrows<MeldingRegistreringFeiletException> {
+            runBlocking {
+                coEvery {søkerService.hentSøker(any(), any()) } returns Søker(
+                    aktørId = "123",
+                    fødselsdato = LocalDate.parse("2000-01-01"),
+                    fødselsnummer = "02119970078"
+                )
+
+                coEvery { vedleggService.hentVedlegg(vedleggUrls = any(), any(), any()) } returns listOf(Vedlegg("bytearray".toByteArray(), "vedlegg", "vedlegg", DokumentEier("290990123456")))
+
+                every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
+
+                pleiepengerLivetsSluttfaseService.registrer(
+                    søknad = gyldigPILSSøknad(listOf()),
+                    metadata = Metadata(
+                        version = 1,
+                        correlationId = "123"
+                    ),
+                    idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
+                    callId = CallId("abc")
+                )
+            }
+        }
+
+        coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
+    }
+
 }

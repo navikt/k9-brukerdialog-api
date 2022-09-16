@@ -27,13 +27,13 @@ import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
 
 class Søknad(
-    private val søknadId: String = UUID.randomUUID().toString(),
+    internal val søknadId: String = UUID.randomUUID().toString(),
     private val språk: String,
     private val fraOgMed: LocalDate,
     private val tilOgMed: LocalDate,
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-    private val vedleggUrls: List<URL> = listOf(),
-    private val opplastetIdVedleggUrls: List<URL> = listOf(),
+    internal val vedleggUrls: List<URL> = listOf(),
+    internal val opplastetIdVedleggUrls: List<URL> = listOf(),
     private val pleietrengende: Pleietrengende,
     private val medlemskap: Medlemskap,
     private val utenlandsoppholdIPerioden: UtenlandsoppholdIPerioden,
@@ -49,6 +49,8 @@ class Søknad(
     companion object{
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
     }
+
+    internal fun inneholderVedlegg() = vedleggUrls.isNotEmpty() || opplastetIdVedleggUrls.isNotEmpty()
 
     internal fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
         søknadId = søknadId,

@@ -20,6 +20,8 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.OmsorgspengerU
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.omsorgspengerUtbetalingSnfApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.omsorgspengerUtvidetRettApis
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.PleiepengerLivetsSluttfaseService
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.pleiepengerLivetsSluttfaseApi
 
 fun Route.ytelseRoutes(
     idTokenProvider: IdTokenProvider,
@@ -55,5 +57,8 @@ fun Route.ytelseRoutes(
     omsorgsdagerMeldingApi(
         idTokenProvider,
         OmsorgsdagerMeldingService(søkerService, barnService, kafkaProdusent, vedleggService)
+    )
+    pleiepengerLivetsSluttfaseApi(idTokenProvider,
+        PleiepengerLivetsSluttfaseService(søkerService, kafkaProdusent, vedleggService)
     )
 }
