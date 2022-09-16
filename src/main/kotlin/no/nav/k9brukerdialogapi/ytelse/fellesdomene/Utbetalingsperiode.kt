@@ -58,6 +58,7 @@ class Utbetalingsperiode(
         Organisasjonsnummer.of(organisasjonsnummer),
         null
     )
+
 }
 
 enum class FraværÅrsak {

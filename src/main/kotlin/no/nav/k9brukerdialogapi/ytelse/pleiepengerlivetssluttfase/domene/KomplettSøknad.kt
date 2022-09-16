@@ -26,4 +26,7 @@ class KomplettSøknad(
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
     private val k9Format: K9Søknad
-)
+){
+    override fun equals(other: Any?) = this === other || other is KomplettSøknad && this.equals(other)
+    private fun equals(other: KomplettSøknad) = søknadId == other.søknadId
+}

@@ -273,6 +273,7 @@ fun Application.k9BrukerdialogApi() {
                 request.contains(OMSORGSDAGER_MELDING_OVERFORING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_OVERFORING.name.lowercase()
                 request.contains(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_KORONAOVERFORING.name.lowercase()
                 request.contains(OMSORGSDAGER_MELDING.name) -> OMSORGSDAGER_MELDING.name.lowercase()
+                request.contains(PLEIEPENGER_LIVETS_SLUTTFASE_URL.removePrefix("/")) -> PLEIEPENGER_LIVETS_SLUTTFASE.name.lowercase()
                 else -> null
             }
         }

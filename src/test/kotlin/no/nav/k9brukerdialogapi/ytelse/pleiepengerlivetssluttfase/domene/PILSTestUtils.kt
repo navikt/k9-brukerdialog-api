@@ -9,6 +9,8 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 internal fun gyldigPILSSøknad(
+    vedleggUrls: List<URL> = listOf(URL("http://localhost:8080/vedlegg/1")),
+    opplastetIdVedleggUrls: List<URL> = listOf(URL("http://localhost:8080/vedlegg/2")),
     pleietrengende: Pleietrengende =  Pleietrengende(norskIdentitetsnummer = "06098523047", navn = "Bjarne"),
     medlemskap: Medlemskap = Medlemskap(
         harBoddIUtlandetSiste12Mnd = true,
@@ -103,8 +105,8 @@ internal fun gyldigPILSSøknad(
     søknadId = "4e62f8de-1ff6-40e9-bdcd-10485c789094",
     mottatt = ZonedDateTime.of(2022, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
     språk = "nb",
-    vedleggUrls = listOf(URL("http://localhost:8080/vedlegg/1")),
-    opplastetIdVedleggUrls = listOf(URL("http://localhost:8080/vedlegg/2")),
+    vedleggUrls = vedleggUrls,
+    opplastetIdVedleggUrls = opplastetIdVedleggUrls,
     pleietrengende = pleietrengende,
     fraOgMed = LocalDate.parse("2021-01-01"),
     tilOgMed = LocalDate.parse("2021-01-10"),

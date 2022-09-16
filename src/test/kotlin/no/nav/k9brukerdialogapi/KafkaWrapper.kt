@@ -11,6 +11,7 @@ import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOP
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_SNF_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.hentTopicForYtelse
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.clients.CommonClientConfigs
@@ -40,7 +41,8 @@ object KafkaWrapper {
                 OMSORGSDAGER_ALENEOMSORG_TOPIC,
                 OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
                 OMSORGSPENGER_UTBETALING_SNF_TOPIC,
-                OMSORGSDAGER_MELDING_TOPIC
+                OMSORGSDAGER_MELDING_TOPIC,
+                PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
             )
         )
         return kafkaEnvironment
@@ -70,7 +72,8 @@ internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<
         OMSORGSDAGER_ALENEOMSORG_TOPIC,
         OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
         OMSORGSPENGER_UTBETALING_SNF_TOPIC,
-        OMSORGSDAGER_MELDING_TOPIC
+        OMSORGSDAGER_MELDING_TOPIC,
+        PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
     ))
     return consumer
 }
