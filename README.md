@@ -13,7 +13,7 @@ Støtte for følgende ytelser:
 | Omsorgspenger utbetaling arbeidstaker | Ja | https://github.com/navikt/omsorgspengerutbetalingsoknad-arbeidstaker-prosessering | https://github.com/navikt/omsorgspengerutbetaling-arbeidstaker-soknad |
 | Omsorgspenger utbetaling snf | Ja | https://github.com/navikt/omsorgspengerutbetalingsoknad-prosessering | https://github.com/navikt/omsorgspengerutbetaling-soknad |
 | Omsorgsdager melding | Ja | https://github.com/navikt/omsorgsdager-melding-prosessering | https://github.com/navikt/omsorgsdager-deling-dialog |
-| Pleiepenger livets sluttfase | Nei | https://github.com/navikt/pleiepenger-livets-sluttfase-prosessering | https://github.com/navikt/pleiepenger-i-livets-sluttfase-soknad |
+| Pleiepenger livets sluttfase | Ja | https://github.com/navikt/pleiepenger-livets-sluttfase-prosessering | https://github.com/navikt/pleiepenger-i-livets-sluttfase-soknad |
 | | | | |
 
 
