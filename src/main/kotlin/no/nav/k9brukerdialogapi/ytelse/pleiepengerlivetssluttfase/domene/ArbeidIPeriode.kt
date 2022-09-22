@@ -10,7 +10,7 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDate
 
-enum class JobberIPeriodeSvar { JA, NEI }
+enum class JobberIPeriodeSvar { SOM_VANLIG, REDUSERT, HELT_FRAVÆR }
 
 class ArbeidIPeriode(
     private val jobberIPerioden: JobberIPeriodeSvar,
@@ -18,15 +18,15 @@ class ArbeidIPeriode(
 ) {
     internal fun valider(felt: String = "arbeidIPeriode") = mutableListOf<String>().apply {
         when(jobberIPerioden){
-            JobberIPeriodeSvar.JA -> krever(!enkeltdager.isNullOrEmpty(), "$felt.enkeltdager kan ikke være null/tom når jobberIPerioden=JA.")
-            JobberIPeriodeSvar.NEI -> krever(enkeltdager.isNullOrEmpty(), "$felt.enkeltdager må være null/tom når jobberIPerioden=NEI.")
+            JobberIPeriodeSvar.REDUSERT -> krever(!enkeltdager.isNullOrEmpty(), "$felt.enkeltdager kan ikke være null/tom når jobberIPerioden=JA.")
+            JobberIPeriodeSvar.HELT_FRAVÆR, JobberIPeriodeSvar.SOM_VANLIG -> krever(enkeltdager.isNullOrEmpty(), "$felt.enkeltdager må være null/tom når jobberIPerioden=NEI.")
         }
     }
 
     internal fun somK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate, normaltimerPerDag: Duration) = ArbeidstidInfo().apply {
         when (jobberIPerioden) {
-            JobberIPeriodeSvar.NEI -> leggTilPeriode(fraOgMed, tilOgMed, normaltimerPerDag, NULL_ARBEIDSTIMER)
-            JobberIPeriodeSvar.JA -> leggTilPerioderFraEnkeltdager(fraOgMed, tilOgMed, normaltimerPerDag, enkeltdager)
+            JobberIPeriodeSvar.HELT_FRAVÆR -> leggTilPeriode(fraOgMed, tilOgMed, normaltimerPerDag, NULL_ARBEIDSTIMER)
+            JobberIPeriodeSvar.REDUSERT, JobberIPeriodeSvar.SOM_VANLIG -> leggTilPerioderFraEnkeltdager(fraOgMed, tilOgMed, normaltimerPerDag, enkeltdager)
         }
     }
 }
