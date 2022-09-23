@@ -151,7 +151,7 @@ class SelvstendigNæringsdrivendeTest {
             arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, emptyList()))
         ).valider().verifiserFeil(2, listOf(
             "selvstendigNæringsdrivende.virksomhet.organisasjonsnummer kan kun bestå av tall.",
-            "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA."
+            "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT."
         ))
     }
 }

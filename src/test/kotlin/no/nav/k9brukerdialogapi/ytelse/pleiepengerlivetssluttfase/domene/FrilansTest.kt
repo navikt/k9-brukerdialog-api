@@ -71,7 +71,7 @@ class FrilansTest {
             harHattInntektSomFrilanser = true,
             arbeidsforhold = Arbeidsforhold(20.0, ArbeidIPeriode(REDUSERT, emptyList())),
         ).valider().verifiserFeil(1,
-            listOf("frilans.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA.")
+            listOf("frilans.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT.")
         )
     }
 

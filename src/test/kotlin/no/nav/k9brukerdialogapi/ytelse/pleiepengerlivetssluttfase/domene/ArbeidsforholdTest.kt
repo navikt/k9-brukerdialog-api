@@ -35,7 +35,7 @@ class ArbeidsforholdTest {
         Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, null))
             .valider()
             .verifiserFeil(1, listOf(
-                "arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA."
+                "arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT."
             )
         )
     }
