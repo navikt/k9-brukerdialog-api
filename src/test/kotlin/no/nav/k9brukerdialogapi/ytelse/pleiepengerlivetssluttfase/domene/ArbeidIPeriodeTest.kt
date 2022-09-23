@@ -3,9 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.SOM_VANLIG
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.*
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
@@ -49,7 +47,7 @@ class ArbeidIPeriodeTest {
     }
 
     @Test
-    fun `Mapping til K9Arbeidstid når man jobber i perioden - enkeltdager man ikke har oppgitt blir satt til 0 timer faktisk`(){
+    fun `Mapping til K9Arbeidstid når man jobber redusert - enkeltdager man ikke har oppgitt blir satt til 0 timer faktisk`(){
         val k9Arbeidstid = ArbeidIPeriode(REDUSERT,
             listOf(
                 Enkeltdag(mandag, TRE_TIMER),
@@ -63,6 +61,14 @@ class ArbeidIPeriodeTest {
         listOf(onsdag, torsdag, fredag).forEach {
             assertEquals(SYV_OG_HALV_TIME, k9Arbeidstid.perioder[Periode(it, it)]!!.jobberNormaltTimerPerDag)
             assertEquals(NULL_TIMER, k9Arbeidstid.perioder[Periode(it, it)]!!.faktiskArbeidTimerPerDag)
+        }
+    }
+
+    @Test
+    fun `Mapping til K9Arbeidtid når man jobber som vanlig`(){
+        ArbeidIPeriode(SOM_VANLIG,).somK9ArbeidstidInfo(mandag, fredag, SYV_OG_HALV_TIME).also {
+            assertEquals(SYV_OG_HALV_TIME, it.perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
+            assertEquals(SYV_OG_HALV_TIME, it.perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
         }
     }
 
