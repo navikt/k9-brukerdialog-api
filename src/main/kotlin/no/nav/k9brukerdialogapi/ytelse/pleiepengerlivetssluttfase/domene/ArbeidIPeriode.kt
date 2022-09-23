@@ -26,7 +26,8 @@ class ArbeidIPeriode(
     internal fun somK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate, normaltimerPerDag: Duration) = ArbeidstidInfo().apply {
         when (jobberIPerioden) {
             JobberIPeriodeSvar.HELT_FRAVÆR -> leggTilPeriode(fraOgMed, tilOgMed, normaltimerPerDag, NULL_ARBEIDSTIMER)
-            JobberIPeriodeSvar.REDUSERT, JobberIPeriodeSvar.SOM_VANLIG -> leggTilPerioderFraEnkeltdager(fraOgMed, tilOgMed, normaltimerPerDag, enkeltdager)
+            JobberIPeriodeSvar.REDUSERT -> leggTilPerioderFraEnkeltdager(fraOgMed, tilOgMed, normaltimerPerDag, enkeltdager)
+            JobberIPeriodeSvar.SOM_VANLIG -> leggTilPeriode(fraOgMed, tilOgMed, normaltimerPerDag, normaltimerPerDag)
         }
     }
 }
