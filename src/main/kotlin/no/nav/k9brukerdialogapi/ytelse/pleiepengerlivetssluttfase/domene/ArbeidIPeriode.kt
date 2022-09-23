@@ -18,8 +18,8 @@ class ArbeidIPeriode(
 ) {
     internal fun valider(felt: String = "arbeidIPeriode") = mutableListOf<String>().apply {
         when(jobberIPerioden){
-            JobberIPeriodeSvar.REDUSERT -> krever(!enkeltdager.isNullOrEmpty(), "$felt.enkeltdager kan ikke være null/tom når jobberIPerioden=JA.")
-            JobberIPeriodeSvar.HELT_FRAVÆR, JobberIPeriodeSvar.SOM_VANLIG -> krever(enkeltdager.isNullOrEmpty(), "$felt.enkeltdager må være null/tom når jobberIPerioden=NEI.")
+            JobberIPeriodeSvar.REDUSERT -> krever(!enkeltdager.isNullOrEmpty(), "$felt.enkeltdager kan ikke være null/tom når jobberIPerioden=${jobberIPerioden.name}.")
+            JobberIPeriodeSvar.HELT_FRAVÆR, JobberIPeriodeSvar.SOM_VANLIG -> krever(enkeltdager.isNullOrEmpty(), "$felt.enkeltdager må være null/tom når jobberIPerioden=${jobberIPerioden.name}.")
         }
     }
 

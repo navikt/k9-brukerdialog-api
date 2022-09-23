@@ -29,13 +29,13 @@ class ArbeidIPeriodeTest {
     @Test
     fun `Hvis man oppgir at man jobber men ikke sender med dager skal det gi valideringsfeil`(){
         ArbeidIPeriode(REDUSERT, emptyList()).valider("arbeidIPeriode")
-            .verifiserFeil(1, listOf("arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA."))
+            .verifiserFeil(1, listOf("arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT."))
     }
 
     @Test
     fun `Hvis man oppgir at man ikke jobber men sender med dager skal det gi valideringsfeil`(){
         ArbeidIPeriode(HELT_FRAVÆR, listOf(Enkeltdag(LocalDate.now(), Duration.ofHours(3)))).valider("arbeidIPeriode")
-            .verifiserFeil(1, listOf("arbeidIPeriode.enkeltdager må være null/tom når jobberIPerioden=NEI."))
+            .verifiserFeil(1, listOf("arbeidIPeriode.enkeltdager må være null/tom når jobberIPerioden=HELT_FRAVÆR."))
     }
     
     @Test
