@@ -17,6 +17,7 @@ class KomplettSøknad(
     private val medlemskap: Medlemskap,
     private val pleietrengende: Pleietrengende,
     private val utenlandsoppholdIPerioden: UtenlandsoppholdIPerioden,
+    private val ferieuttakIPerioden: FerieuttakIPerioden?,
     private val frilans: Frilans?,
     private val arbeidsgivere: List<Arbeidsgiver>,
     private val opptjeningIUtlandet: List<OpptjeningIUtlandet>,
