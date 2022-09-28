@@ -12,7 +12,7 @@ import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class SøknadTest {
+class PilsSøknadTest {
     @Test
     fun `Gyldig søknad gir ingen valideringsfeil`(){
         gyldigPILSSøknad().valider().verifiserIngenFeil()
@@ -157,6 +157,9 @@ class SøknadTest {
                     }
                   },
                   "perioderSomSkalSlettes": {}
+                },
+                "lovbestemtFerie": {
+                  "perioder": {}
                 },
                 "arbeidstid": {
                   "arbeidstakerList": [
