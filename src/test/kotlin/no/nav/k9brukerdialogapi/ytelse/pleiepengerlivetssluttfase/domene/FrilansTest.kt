@@ -5,8 +5,8 @@ import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.NULL_ARBEIDSTIMER
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.SYV_OG_EN_HALV_TIME
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.JA
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.NEI
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -69,9 +69,9 @@ class FrilansTest {
             startdato = LocalDate.parse("2022-01-01"),
             jobberFortsattSomFrilans = true,
             harHattInntektSomFrilanser = true,
-            arbeidsforhold = Arbeidsforhold(20.0, ArbeidIPeriode(JA, emptyList())),
+            arbeidsforhold = Arbeidsforhold(20.0, ArbeidIPeriode(REDUSERT, emptyList())),
         ).valider().verifiserFeil(1,
-            listOf("frilans.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA.")
+            listOf("frilans.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT.")
         )
     }
 
@@ -95,7 +95,7 @@ class FrilansTest {
             sluttdato = LocalDate.parse("2022-01-01"),
             jobberFortsattSomFrilans = false,
             harHattInntektSomFrilanser = true,
-            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(NEI))
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR))
         ).somK9Arbeidstid(fraOgMed, tilOgMed).also {
             assertEquals(SYV_OG_EN_HALV_TIME, it.perioder[Periode(fraOgMed, tilOgMed)]!!.jobberNormaltTimerPerDag)
             assertEquals(NULL_ARBEIDSTIMER, it.perioder[Periode(fraOgMed, tilOgMed)]!!.faktiskArbeidTimerPerDag)

@@ -13,7 +13,6 @@ class Arbeidsforhold(
     companion object{
         internal fun Arbeidsforhold?.somK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
             if(this == null) return arbeidstidInfoMedNullTimer(fraOgMed, tilOgMed)
-
             return arbeidIPeriode.somK9ArbeidstidInfo(fraOgMed, tilOgMed, jobberNormaltTimer.tilTimerPerDag().tilDuration())
         }
     }

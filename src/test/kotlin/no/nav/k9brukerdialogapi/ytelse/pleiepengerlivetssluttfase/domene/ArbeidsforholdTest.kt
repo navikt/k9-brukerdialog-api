@@ -4,8 +4,9 @@ import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.Arbeidsforhold.Companion.somK9ArbeidstidInfo
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.JA
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.NEI
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.SOM_VANLIG
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
@@ -24,17 +25,17 @@ class ArbeidsforholdTest {
 
     @Test
     fun `Gyldig Arbeidsforhold gir ingen valideringsfeil`(){
-        Arbeidsforhold(37.5, ArbeidIPeriode(NEI, null)).valider().verifiserIngenFeil()
-        Arbeidsforhold(37.5, ArbeidIPeriode(JA, listOf(Enkeltdag(LocalDate.now(), Duration.ofHours(3)))))
+        Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, null)).valider().verifiserIngenFeil()
+        Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, listOf(Enkeltdag(LocalDate.now(), Duration.ofHours(3)))))
             .valider().verifiserIngenFeil()
     }
 
     @Test
     fun `Ved feil i arbeidIPeriode skal det gi validerignsfeil`() {
-        Arbeidsforhold(37.5, ArbeidIPeriode(JA, null))
+        Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, null))
             .valider()
             .verifiserFeil(1, listOf(
-                "arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA."
+                "arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT."
             )
         )
     }
@@ -49,7 +50,7 @@ class ArbeidsforholdTest {
 
     @Test
     fun `Mapping til K9ArbeidstidInfo ved Arbeidsforhold hvor man ikke jobber i perioden skal bruke oppgitt normaltid og 0 faktisk`(){
-        Arbeidsforhold(37.5, ArbeidIPeriode(NEI, null)).somK9ArbeidstidInfo(mandag, fredag).also {
+        Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, null)).somK9ArbeidstidInfo(mandag, fredag).also {
             assertEquals(SYV_OG_HALV_TIME, it.perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
             assertEquals(NULL_TIMER, it.perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
         }
@@ -59,7 +60,7 @@ class ArbeidsforholdTest {
     fun `Mapping til K9ArbeidstidInfo hvor enkeltdager er oppgitt - manglende dager fylles med oppgitt normal og 0 faktisk`() {
         Arbeidsforhold(37.5,
             ArbeidIPeriode(
-                JA,
+                REDUSERT,
                 listOf(Enkeltdag(mandag, TRE_TIMER), Enkeltdag(onsdag, TRE_TIMER), Enkeltdag(fredag, TRE_TIMER))
             )
         ).somK9ArbeidstidInfo(mandag, fredag).also {
