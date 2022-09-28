@@ -23,7 +23,7 @@ import java.time.ZonedDateTime
 import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
 
-private val k9FormatVersjon = Versjon.of("1.0.0")
+private val k9FormatVersjon = Versjon.of("1.1.0")
 
 class Søknad(
     internal val søknadId: String = UUID.randomUUID().toString(),
