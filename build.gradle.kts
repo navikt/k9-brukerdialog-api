@@ -2,11 +2,11 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.0.3-d4fdef9"
+val dusseldorfKtorVersion = "3.2.1.0-f35fe61"
 val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val k9FormatVersion = "6.0.6"
+val k9FormatVersion = "6.1.6"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "2.1.4"
 val mockOauth2ServerVersion = "0.5.1"

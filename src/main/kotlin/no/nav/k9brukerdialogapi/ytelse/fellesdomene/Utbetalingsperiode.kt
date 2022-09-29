@@ -49,15 +49,14 @@ class Utbetalingsperiode(
     internal fun somK9FraværPeriode(
         søknadÅrsak: SøknadÅrsak? = null,
         organisasjonsnummer: String? = null
-    ) = FraværPeriode(
-        Periode(fraOgMed, tilOgMed),
-        antallTimerBorte,
-        årsak.somK9FraværÅrsak(),
-        søknadÅrsak,
-        aktivitetFravær.map { it.somK9AktivitetFravær() },
-        Organisasjonsnummer.of(organisasjonsnummer),
-        null
-    )
+    ) = FraværPeriode()
+            .medPeriode(Periode(fraOgMed, tilOgMed))
+            .medFraværÅrsak(årsak.somK9FraværÅrsak())
+            .medSøknadsårsak(søknadÅrsak)
+            .medAktivitetFravær(aktivitetFravær.map {it.somK9AktivitetFravær()})
+            .medArbeidsgiverOrgNr(Organisasjonsnummer.of(organisasjonsnummer))
+            .medNormalarbeidstid(antallTimerPlanlagt)
+            .medFravær(antallTimerBorte)
 
 }
 

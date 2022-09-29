@@ -5,12 +5,11 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.Søknad
-import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
-import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetalingValidator
+import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetalingSøknadValidator
 
 internal fun validerK9FormatForOMP_UT(søknad: Søknad) {
-    val valideringsfeil = OmsorgspengerUtbetalingValidator()
-        .valider(søknad.getYtelse<OmsorgspengerUtbetaling>())
+    val valideringsfeil = OmsorgspengerUtbetalingSøknadValidator()
+        .valider(søknad)
         .map {
             Violation(
                 parameterName = it.felt,
