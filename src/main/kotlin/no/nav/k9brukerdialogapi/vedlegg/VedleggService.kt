@@ -6,11 +6,17 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.general.CallId
+import org.slf4j.LoggerFactory
 import java.net.URL
 
 class VedleggService(
     private val k9MellomlagringGateway: K9MellomlagringGateway
 ) {
+
+    private companion object {
+        private val logger = LoggerFactory.getLogger(VedleggService::class.java)
+    }
+
     suspend fun lagreVedlegg(
         vedlegg: Vedlegg,
         idToken: IdToken,
@@ -40,6 +46,7 @@ class VedleggService(
             val futures = mutableListOf<Deferred<Vedlegg?>>()
             vedleggUrls.forEach {
                 futures.add(async {
+                    logger.trace("Henter liste med vedlegg: {}", vedleggUrls)
                     hentVedlegg(
                         vedleggId = it.vedleggId(),
                         idToken = idToken,
