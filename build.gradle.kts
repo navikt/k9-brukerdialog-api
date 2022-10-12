@@ -2,15 +2,15 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.1.0-f35fe61"
+val dusseldorfKtorVersion = "3.2.1.2-ce40a5b"
 val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val k9FormatVersion = "6.1.6"
+val k9FormatVersion = "7.0.0"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "2.1.4"
-val mockOauth2ServerVersion = "0.5.1"
-val junitVersion = "5.9.0"
+val mockOauth2ServerVersion = "0.5.4"
+val junitVersion = "5.9.1"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -19,37 +19,39 @@ plugins {
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/d4fdef93d9c095447393dc4b2c62c1978a13715d/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/2d23a3ece2f179e3c6e3859212aad7cb0a69e1a4/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
     // Server
-    implementation ( "no.nav.helse:dusseldorf-ktor-core:$dusseldorfKtorVersion")
-    implementation ( "no.nav.helse:dusseldorf-ktor-jackson:$dusseldorfKtorVersion")
-    implementation ( "no.nav.helse:dusseldorf-ktor-metrics:$dusseldorfKtorVersion")
-    implementation ( "no.nav.helse:dusseldorf-ktor-health:$dusseldorfKtorVersion")
-    implementation ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
-    implementation ( "no.nav.helse:dusseldorf-common:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-ktor-core:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-ktor-jackson:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-ktor-metrics:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-ktor-health:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-common:$dusseldorfKtorVersion")
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
 
     implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
-    implementation("com.github.kittinunf.fuel:fuel-coroutines:$fuelVersion"){
+    implementation("com.github.kittinunf.fuel:fuel-coroutines:$fuelVersion") {
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
 
     // NAV
-    implementation ("no.nav.security:token-validation-ktor-v2:$tokenSupportVersion")
-    testImplementation ("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
+    implementation("no.nav.security:token-validation-ktor-v2:$tokenSupportVersion")
+    testImplementation("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
 
     // Client
-    implementation ( "no.nav.helse:dusseldorf-ktor-client:$dusseldorfKtorVersion")
-    implementation ( "no.nav.helse:dusseldorf-oauth2-client:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-ktor-client:$dusseldorfKtorVersion")
+    implementation("no.nav.helse:dusseldorf-oauth2-client:$dusseldorfKtorVersion")
 
     // K9-format
-    implementation ( "no.nav.k9:k9-format:$k9FormatVersion")
+    implementation ("no.nav.k9:k9-format:$k9FormatVersion")
     implementation ("no.nav.k9:soknad:$k9FormatVersion")
-    implementation ( "no.nav.k9:ettersendelse:$k9FormatVersion")
-    implementation ( "org.glassfish:jakarta.el:3.0.4")
+    implementation ("no.nav.k9:ettersendelse:$k9FormatVersion")
+
+    // Må være inkludert for å kunne validere søknad.
+    implementation ("org.glassfish:jakarta.el:3.0.4")
 
     // kafka
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
@@ -62,8 +64,8 @@ dependencies {
     }
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
-    testImplementation ("org.skyscreamer:jsonassert:1.5.1")
-    testImplementation("io.mockk:mockk:1.12.7")
+    testImplementation("org.skyscreamer:jsonassert:1.5.1")
+    testImplementation("io.mockk:mockk:1.13.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 
@@ -101,15 +103,15 @@ tasks.withType<ShadowJar> {
     archiveClassifier.set("")
     manifest {
         attributes(
-                mapOf(
-                        "Main-Class" to mainClass
-                )
+            mapOf(
+                "Main-Class" to mainClass
+            )
         )
     }
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "7.4.2"
+    gradleVersion = "7.5.1"
 }
 
 tasks.withType<Test> {
