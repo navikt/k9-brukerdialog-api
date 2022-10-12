@@ -6,7 +6,7 @@ val dusseldorfKtorVersion = "3.2.1.1-2d23a3e"
 val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val k9FormatVersion = "6.1.11"
+val k9FormatVersion = "7.0.0"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "2.1.4"
 val mockOauth2ServerVersion = "0.5.4"
@@ -46,11 +46,12 @@ dependencies {
     implementation("no.nav.helse:dusseldorf-oauth2-client:$dusseldorfKtorVersion")
 
     // K9-format
-    implementation ( "no.nav.k9:k9-format:$k9FormatVersion")
+    implementation ("no.nav.k9:k9-format:$k9FormatVersion")
     implementation ("no.nav.k9:soknad:$k9FormatVersion")
-    implementation ( "no.nav.k9:ettersendelse:$k9FormatVersion")
+    implementation ("no.nav.k9:ettersendelse:$k9FormatVersion")
+
     // Må være inkludert for å kunne validere søknad.
-    implementation ( "org.glassfish:jakarta.el:3.0.4")
+    implementation ("org.glassfish:jakarta.el:3.0.4")
 
     // kafka
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
