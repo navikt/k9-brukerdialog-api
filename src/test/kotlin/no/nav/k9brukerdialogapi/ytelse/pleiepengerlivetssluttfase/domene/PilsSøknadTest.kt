@@ -6,13 +6,14 @@ import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class SøknadTest {
+class PilsSøknadTest {
     @Test
     fun `Gyldig søknad gir ingen valideringsfeil`(){
         gyldigPILSSøknad().valider().verifiserIngenFeil()
@@ -80,7 +81,7 @@ class SøknadTest {
                         erNyoppstartet = false,
                         harFlereAktiveVirksomheter = false
                     ),
-                    arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(JobberIPeriodeSvar.JA, emptyList()))
+                    arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, emptyList()))
                 )
             ).valider()
         }.also {
@@ -91,7 +92,7 @@ class SøknadTest {
             assertTrue { it.message.toString().contains("utenlandskNæring[0].land.landnavn kan ikke være tomt eller blankt.")}
             assertTrue { it.message.toString().contains("opptjeningIUtlandet[0].tilOgMed må være lik eller etter fraOgMed.")}
             assertTrue { it.message.toString().contains("utenlandsoppholdIPerioden.opphold[0].landkode/landnavn.landkode 'UGYLDIG' er ikke en gyldig ISO 3166-1 alpha-3 kode.")}
-            assertTrue { it.message.toString().contains("selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA.")}
+            assertTrue { it.message.toString().contains("selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT.")}
         }
     }
 
@@ -157,6 +158,9 @@ class SøknadTest {
                     }
                   },
                   "perioderSomSkalSlettes": {}
+                },
+                "lovbestemtFerie": {
+                  "perioder": {}
                 },
                 "arbeidstid": {
                   "arbeidstakerList": [

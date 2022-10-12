@@ -7,8 +7,8 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næring
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Regnskapsfører
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.VarigEndring
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.YrkesaktivSisteTreFerdigliknedeArene
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.JA
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.NEI
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
@@ -42,7 +42,7 @@ class SelvstendigNæringsdrivendeTest {
                 erNyoppstartet = true,
                 harFlereAktiveVirksomheter = true
             ),
-            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(NEI, emptyList()))
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, emptyList()))
         ).somK9SelvstendigNæringsdrivende()
 
         val forventet = """
@@ -84,7 +84,7 @@ class SelvstendigNæringsdrivendeTest {
                 navnPåVirksomheten = "Kiwi ASA",
                 erNyoppstartet = true,
             ),
-            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(NEI, emptyList()))
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, emptyList()))
         ).somK9ArbeidstidInfo(mandag, fredag)
         val forventet = """
             {
@@ -126,7 +126,7 @@ class SelvstendigNæringsdrivendeTest {
                 erNyoppstartet = true,
                 harFlereAktiveVirksomheter = true
             ),
-            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(NEI, emptyList()))
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, emptyList()))
         ).valider().verifiserIngenFeil()
     }
 
@@ -148,10 +148,10 @@ class SelvstendigNæringsdrivendeTest {
                 erNyoppstartet = true,
                 harFlereAktiveVirksomheter = true
             ),
-            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(JA, emptyList()))
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, emptyList()))
         ).valider().verifiserFeil(2, listOf(
             "selvstendigNæringsdrivende.virksomhet.organisasjonsnummer kan kun bestå av tall.",
-            "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=JA."
+            "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT."
         ))
     }
 }

@@ -2,6 +2,8 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import java.net.URL
 import java.time.Duration
 import java.time.LocalDate
@@ -40,7 +42,7 @@ internal fun gyldigPILSSøknad(
             arbeidsforhold = Arbeidsforhold(
                 jobberNormaltTimer = 40.0,
                 arbeidIPeriode = ArbeidIPeriode(
-                    jobberIPerioden = JobberIPeriodeSvar.JA,
+                    jobberIPerioden = REDUSERT,
                     enkeltdager = listOf(Enkeltdag(LocalDate.parse("2021-01-01"), Duration.ofHours(4)))
                 )
             )
@@ -99,7 +101,7 @@ internal fun gyldigPILSSøknad(
             erNyoppstartet = false,
             harFlereAktiveVirksomheter = false
         ),
-        arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(JobberIPeriodeSvar.NEI))
+        arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR))
     )
 ) = Søknad(
     søknadId = "4e62f8de-1ff6-40e9-bdcd-10485c789094",

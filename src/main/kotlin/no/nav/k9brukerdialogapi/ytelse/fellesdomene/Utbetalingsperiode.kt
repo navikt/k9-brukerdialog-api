@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import no.nav.k9.søknad.felles.fravær.DelvisFravær
 import no.nav.k9.søknad.felles.fravær.FraværPeriode
 import no.nav.k9.søknad.felles.fravær.SøknadÅrsak
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
