@@ -54,9 +54,9 @@ class UtenlandsoppholdTest {
         val utenlandsopphold = Utenlandsopphold(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-01"),
-            landkode = "NLD", landnavn = "Nederland"
+            landkode = "XKX", landnavn = "Kosovo"
         )
-        val forventet = BostedPeriodeInfo().medLand(Landkode.of("NLD"))
+        val forventet = BostedPeriodeInfo().medLand(Landkode.of("XKX"))
         assertEquals(forventet.land.landkode, utenlandsopphold.somK9BostedPeriodeInfo().land.landkode)
     }
 

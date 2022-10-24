@@ -22,4 +22,9 @@ class LandTest {
         Land(landkode = "AAA", landnavn = "Nederland")
             .valider("land").verifiserFeil(1, listOf("land.landkode 'AAA' er ikke en gyldig ISO 3166-1 alpha-3 kode."))
     }
+
+    @Test
+    fun `Kosovo lankode XKX skal ikke gi valideringsfeil`(){
+        Land(landkode = "XKX", landnavn = "Kosovo").valider("land").verifiserIngenFeil()
+    }
 }
