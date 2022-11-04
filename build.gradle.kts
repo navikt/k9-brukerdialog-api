@@ -2,24 +2,25 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.1.1-2d23a3e"
+val dusseldorfKtorVersion = "3.2.1.3-d64eead"
 val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val k9FormatVersion = "7.0.0"
+val k9FormatVersion = "7.0.4"
 val fuelVersion = "2.3.1"
-val tokenSupportVersion = "2.1.4"
+val tokenSupportVersion = "2.1.7"
 val mockOauth2ServerVersion = "0.5.4"
 val junitVersion = "5.9.1"
+val jakartaElVersion = "3.0.4"
 
 plugins {
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/2d23a3ece2f179e3c6e3859212aad7cb0a69e1a4/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/d64eead05cb9d6ebec51332f2d15ee7207a95cf0/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
@@ -51,7 +52,7 @@ dependencies {
     implementation ("no.nav.k9:ettersendelse:$k9FormatVersion")
 
     // Må være inkludert for å kunne validere søknad.
-    implementation ("org.glassfish:jakarta.el:3.0.4")
+    implementation ("org.glassfish:jakarta.el:$jakartaElVersion")
 
     // kafka
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
@@ -65,7 +66,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation("org.skyscreamer:jsonassert:1.5.1")
-    testImplementation("io.mockk:mockk:1.13.1")
+    testImplementation("io.mockk:mockk:1.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 
