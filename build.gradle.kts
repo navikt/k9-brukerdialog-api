@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
 val dusseldorfKtorVersion = "3.2.1.3-d64eead"
-val ktorVersion = ext.get("ktorVersion").toString()
+val ktorVersion = "2.1.2" //ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
 val k9FormatVersion = "7.0.4"
 val fuelVersion = "2.3.1"
-val tokenSupportVersion = "2.1.3"
+val tokenSupportVersion = "2.1.7"
 val mockOauth2ServerVersion = "0.5.4"
 val junitVersion = "5.9.1"
 val jakartaElVersion = "3.0.4"
