@@ -2,8 +2,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.1.3-d64eead"
-val ktorVersion = "2.1.2" //ext.get("ktorVersion").toString()
+val dusseldorfKtorVersion = "3.2.1.2-1ee2fad"
+val ktorVersion = ext.get("ktorVersion").toString()
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
 val k9FormatVersion = "7.0.4"
@@ -20,7 +20,7 @@ plugins {
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/d64eead05cb9d6ebec51332f2d15ee7207a95cf0/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/1ee2fad5a99687992dac3baaf54ecba54093ed3a/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
