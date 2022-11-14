@@ -4,12 +4,11 @@ import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
-import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
+import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarnSøknadValidator
 
 fun validerK9Format(k9Format: no.nav.k9.søknad.Søknad) {
-    val valideringsfeil = OmsorgspengerKroniskSyktBarn
-        .MinValidator()
-        .valider(k9Format.getYtelse<OmsorgspengerKroniskSyktBarn>()).map {
+    val valideringsfeil = OmsorgspengerKroniskSyktBarnSøknadValidator()
+        .valider(k9Format).map {
             Violation(
                 parameterName = it.felt,
                 parameterType = ParameterType.ENTITY,
