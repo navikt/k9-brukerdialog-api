@@ -76,7 +76,7 @@ class PleiepengerLivetsSluttfaseTest {
         fun tearDown() {
             wireMockServer.stop()
             mockOAuth2Server.shutdown()
-            kafkaEnvironment.tearDown()
+            kafkaEnvironment.stop()
         }
     }
 

@@ -1,7 +1,6 @@
 package no.nav.k9brukerdialogapi
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.jws.ClientCredentials
 import no.nav.helse.dusseldorf.testsupport.wiremock.getAzureV2WellKnownUrl
 import no.nav.helse.dusseldorf.testsupport.wiremock.getTokendingsWellKnownUrl
@@ -9,12 +8,13 @@ import no.nav.k9brukerdialogapi.wiremock.getK9BrukerdialogCacheUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9MellomlagringUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9OppslagUrl
 import no.nav.security.mock.oauth2.MockOAuth2Server
+import org.testcontainers.containers.KafkaContainer
 
 object TestConfiguration {
 
     fun asMap(
         wireMockServer: WireMockServer? = null,
-        kafkaEnvironment: KafkaEnvironment? = null,
+        kafkaEnvironment: KafkaContainer? = null,
         port: Int = 8080,
         k9OppslagUrl: String? = wireMockServer?.getK9OppslagUrl(),
         k9MellomlagringUrl: String? = wireMockServer?.getK9MellomlagringUrl(),
@@ -65,7 +65,7 @@ object TestConfiguration {
 
         // Kafka
         kafkaEnvironment?.let {
-            map["nav.kafka.bootstrap_servers"] = it.brokersURL
+            map["nav.kafka.bootstrap_servers"] = it.bootstrapServers
             map["nav.kafka.transactionalId"] = "k9-brukerdialog-api"
 
         }

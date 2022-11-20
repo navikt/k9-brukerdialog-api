@@ -22,7 +22,6 @@ class KafkaConfig(
     private val producer = Properties().apply {
         put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
         put("transactional.id", transactionalId)
-        if(trustStore == null || keyStore == null) medCredentials(Pair("srvkafkaclient", "kafkaclient")) //For å skille mellom test/miljø
         medTrustStore(trustStore)
         medKeyStore(keyStore)
     }
@@ -61,13 +60,4 @@ private fun Properties.medKeyStore(keyStore: Pair<String, String>?) {
             logger.info("Keystore på '${it.first}' konfigurert.")
         } catch (cause: Throwable) {}
     }
-}
-
-private fun Properties.medCredentials(credentials: Pair<String, String>) {
-    put(SaslConfigs.SASL_MECHANISM, "PLAIN")
-    put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
-    put(
-        SaslConfigs.SASL_JAAS_CONFIG,
-        "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"${credentials.first}\" password=\"${credentials.second}\";"
-    )
 }
