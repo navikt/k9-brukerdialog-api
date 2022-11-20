@@ -51,6 +51,7 @@ private fun KafkaContainer.createTopicsForTest() {
             NewTopic(OMSORGSPENGER_UTBETALING_SNF_TOPIC, 1, 1),
             NewTopic(OMSORGSDAGER_MELDING_TOPIC, 1, 1),
             NewTopic(PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC, 1, 1),
+            NewTopic(ETTERSENDING_TOPIC, 1, 1),
         )
     )
 }
