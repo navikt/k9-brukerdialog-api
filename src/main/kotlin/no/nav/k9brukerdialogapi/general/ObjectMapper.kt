@@ -39,3 +39,4 @@ fun JSONObject.somOmsorgspengerUtbetalingArbeidstakerKomplettSøknad(): no.nav.k
 fun JSONObject.somOmsorgspengerUtbetalingSnfKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.KomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgsdagerKomplettMelding(): no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.KomplettMelding = objectMapper.readValue(this.toString())
 fun JSONObject.somPleiepengerLivetsSluttfaseKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.KomplettSøknad = objectMapper.readValue(this.toString())
+fun JSONObject.somOpplaeringspengerKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.opplaeringspenger.domene.KomplettSøknad = objectMapper.readValue(this.toString())

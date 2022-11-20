@@ -12,6 +12,7 @@ import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOP
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_SNF_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.OPPLAERINGSPENGER_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -81,6 +82,7 @@ class KafkaProducer(
             produsent.partitionsFor(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC)
             produsent.partitionsFor(OMSORGSPENGER_UTBETALING_SNF_TOPIC)
             produsent.partitionsFor(OMSORGSDAGER_MELDING_TOPIC)
+            produsent.partitionsFor(OPPLAERINGSPENGER_TOPIC)
             Healthy(NAME, "Tilkobling til Kafka OK!")
         } catch (cause: Throwable) {
             logger.error("Feil ved tilkobling til Kafka", cause)

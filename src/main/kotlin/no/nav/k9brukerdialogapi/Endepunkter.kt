@@ -20,6 +20,7 @@ const val OMSORGSPENGER_UTBETALING_SNF_URL = "/omsorgspenger-utbetaling-snf"
 const val OMSORGSPENGER_MIDLERTIDIG_ALENE_URL = "/omsorgspenger-midlertidig-alene"
 const val OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL = "/omsorgspenger-utbetaling-arbeidstaker"
 const val PLEIEPENGER_LIVETS_SLUTTFASE_URL = "/pleiepenger-livets-sluttfase"
+const val OPPLAERINGSPENGER_URL = "/opplaeringspenger"
 
 const val OMSORGSDAGER_MELDING_FORDELING_URL = "/omsorgsdager-melding-fordeling"
 const val OMSORGSDAGER_MELDING_OVERFORING_URL = "/omsorgsdager-melding-overforing"

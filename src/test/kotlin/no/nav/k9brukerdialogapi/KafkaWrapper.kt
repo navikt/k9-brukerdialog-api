@@ -11,6 +11,7 @@ import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOP
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_SNF_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.OPPLAERINGSPENGER_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.hentTopicForYtelse
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -42,7 +43,8 @@ object KafkaWrapper {
                 OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
                 OMSORGSPENGER_UTBETALING_SNF_TOPIC,
                 OMSORGSDAGER_MELDING_TOPIC,
-                PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
+                PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC,
+                OPPLAERINGSPENGER_TOPIC
             )
         )
         return kafkaEnvironment

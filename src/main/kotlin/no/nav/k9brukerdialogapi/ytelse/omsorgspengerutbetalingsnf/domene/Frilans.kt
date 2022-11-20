@@ -21,7 +21,7 @@ class Frilans(
     }
 
     fun somK9Frilanser() = Frilanser().apply {
-        medStartDato(this@Frilans.startdato)
-        this@Frilans.sluttdato?.let { medSluttDato(this@Frilans.sluttdato) }
+        medStartdato(this@Frilans.startdato)
+        this@Frilans.sluttdato?.let { medSluttdato(this@Frilans.sluttdato) }
     }
 }
