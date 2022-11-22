@@ -1,22 +1,40 @@
 package no.nav.k9brukerdialogapi
 
 import com.typesafe.config.ConfigFactory
-import io.ktor.http.*
-import io.ktor.server.config.*
-import io.ktor.server.testing.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.Url
+import io.ktor.http.fullPath
+import io.ktor.server.config.ApplicationConfig
+import io.ktor.server.config.HoconApplicationConfig
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.createTestEnvironment
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
 import no.nav.k9brukerdialogapi.TestUtils.Companion.requestAndAssert
 import no.nav.k9brukerdialogapi.vedlegg.VedleggListe
-import no.nav.k9brukerdialogapi.wiremock.*
+import no.nav.k9brukerdialogapi.wiremock.K9BrukerdialogCacheResponseTransformer
+import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
+import no.nav.k9brukerdialogapi.wiremock.stubK9BrukerdialogCache
+import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
+import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagArbeidsgivere
+import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
+import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
+import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -81,6 +99,7 @@ class ApplicationTest {
         @JvmStatic
         fun buildUp() {
             CollectorRegistry.defaultRegistry.clear()
+            K9BrukerdialogCacheResponseTransformer.mellomlagredeVerdierCache.clear()
             engine.start(wait = true)
         }
 
@@ -91,6 +110,7 @@ class ApplicationTest {
             wireMockServer.stop()
             kafkaEnvironment.tearDown()
             mockOAuth2Server.shutdown()
+            K9BrukerdialogCacheResponseTransformer.mellomlagredeVerdierCache.clear()
             logger.info("Tear down complete")
         }
     }
@@ -235,12 +255,12 @@ class ApplicationTest {
     inner class MellomlagringTest {
 
         @BeforeEach
-        fun beforeEeach(){
+        fun beforeEeach() {
             K9BrukerdialogCacheResponseTransformer.mellomlagredeVerdierCache.clear()
         }
 
         @Test
-        fun `Innsending av tom mellomlagring`(){
+        fun `Innsending av tom mellomlagring`() {
             //language=json
             val mellomlagringSøknad = """{}""".trimIndent()
 
@@ -266,12 +286,30 @@ class ApplicationTest {
             )
         }
 
-        @Test
-        fun `Sende inn, hente, oppdatere og slette mellomlagring`() {
+        @ParameterizedTest
+        @ValueSource(
+            strings = [
+                "OMSORGSPENGER_UTVIDET_RETT",
+                "OMSORGSPENGER_MIDLERTIDIG_ALENE",
+                "ETTERSENDING",
+                "OMSORGSDAGER_ALENEOMSORG",
+                "OMSORGSPENGER_UTBETALING_ARBEIDSTAKER",
+                "OMSORGSPENGER_UTBETALING_SNF",
+                "OMSORGSDAGER_MELDING",
+                "OMSORGSDAGER_MELDING_FORDELING",
+                "OMSORGSDAGER_MELDING_OVERFORING",
+                "OMSORGSDAGER_MELDING_KORONAOVERFORING",
+                "PLEIEPENGER_LIVETS_SLUTTFASE",
+                "ETTERSENDING_PLEIEPENGER_SYKT_BARN",
+                "ETTERSENDING_PLEIEPENGER_LIVETS_SLUTTFASE",
+                "ETTERSENDING_OMP"
+            ]
+        )
+        fun `Sende inn, hente, oppdatere og slette mellomlagring`(ytelse: String) {
             val mellomlagring = """{"formData":{"noe":"no"},"metadata":{"noeAnnet":"ABC"}}"""
             requestAndAssert(
                 httpMethod = HttpMethod.Post,
-                path = "mellomlagring/ETTERSENDING",
+                path = "mellomlagring/$ytelse",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.Created,
                 expectedResponse = null,
@@ -282,7 +320,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/ETTERSENDING",
+                path = "mellomlagring/$ytelse",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = mellomlagring,
@@ -297,7 +335,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Put,
-                path = "mellomlagring/ETTERSENDING",
+                path = "mellomlagring/$ytelse",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.NoContent,
                 requestEntity = oppdatertMellomlagringSøknad,
@@ -307,7 +345,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/ETTERSENDING",
+                path = "mellomlagring/$ytelse",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = oppdatertMellomlagringSøknad,
@@ -317,7 +355,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Delete,
-                path = "mellomlagring/ETTERSENDING",
+                path = "mellomlagring/$ytelse",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.Accepted,
                 engine = engine,
@@ -326,7 +364,7 @@ class ApplicationTest {
 
             requestAndAssert(
                 httpMethod = HttpMethod.Get,
-                path = "mellomlagring/ETTERSENDING",
+                path = "mellomlagring/$ytelse",
                 jwtToken = tokenXToken,
                 expectedCode = HttpStatusCode.OK,
                 expectedResponse = """{}""".trimIndent(),
@@ -655,14 +693,16 @@ class ApplicationTest {
                 val vedleggListe = VedleggListe(listOf(vedleggSomFinnes, vedleggSomIkkeFinnes))
 
                 handleRequest(
-                    HttpMethod.Post,  VEDLEGG_URL+ VALIDERING_URL,
+                    HttpMethod.Post, VEDLEGG_URL + VALIDERING_URL,
                 ) {
                     addHeader(HttpHeaders.Authorization, "Bearer $tokenXToken")
                     addHeader(HttpHeaders.ContentType, "application/json")
                     setBody(vedleggListe.somJson())
                 }.apply {
-                    assertEquals("""{"vedleggUrl":["http://localhost:8085/vedlegg/finnesIkke.jpg"]}""",
-                    response.content)
+                    assertEquals(
+                        """{"vedleggUrl":["http://localhost:8085/vedlegg/finnesIkke.jpg"]}""",
+                        response.content
+                    )
                 }
 
             }

@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.wiremock
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.tomakehurst.wiremock.common.FileSource
@@ -133,9 +134,9 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
     data class Cache(
         val nøkkel: String,
         val verdi: String,
-        val utløpsdato: ZonedDateTime,
-        val opprettet: ZonedDateTime? = null,
-        val endret: ZonedDateTime? = null
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val utløpsdato: ZonedDateTime,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val opprettet: ZonedDateTime? = null,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC") val endret: ZonedDateTime? = null
     )
 
     private fun CacheRequest.somCache(nøkkel: String) = Cache(
