@@ -55,7 +55,7 @@ internal fun genererSøknadForOmsUtSnf(
     ),
     bekreftelser = bekreftelser,
     utbetalingsperioder = utbetalingsperiode,
-    andreUtbetalinger = listOf(AndreUtbetalinger.DAGPENGER),
+    andreUtbetalinger = null,
     erArbeidstakerOgså = false,
     barn = barn,
     frilans = frilans,
