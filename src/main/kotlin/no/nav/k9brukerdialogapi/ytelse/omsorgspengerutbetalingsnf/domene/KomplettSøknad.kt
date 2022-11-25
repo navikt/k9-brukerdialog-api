@@ -22,7 +22,7 @@ class KomplettSøknad(
     private val harDekketTiFørsteDagerSelv: Boolean? = null,
     private val bekreftelser: Bekreftelser,
     private val utbetalingsperioder: List<Utbetalingsperiode>,
-    private val andreUtbetalinger: List<AndreUtbetalinger>,
+    @Deprecated("Kan fjernes etter lansering") private val andreUtbetalinger: List<AndreUtbetalinger>? = null,
     private val erArbeidstakerOgså: Boolean,
     private val barn: List<Barn>,
     private val frilans: Frilans? = null,
