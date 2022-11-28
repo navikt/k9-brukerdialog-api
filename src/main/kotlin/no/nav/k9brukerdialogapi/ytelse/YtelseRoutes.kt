@@ -5,7 +5,7 @@ import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
-import no.nav.k9brukerdialogapi.soknad.SøknadService
+import no.nav.k9brukerdialogapi.soknad.InnsendingService
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.EttersendingService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.ettersendingApis
@@ -59,6 +59,6 @@ fun Route.ytelseRoutes(
         OmsorgsdagerMeldingService(søkerService, barnService, kafkaProdusent, vedleggService)
     )
     pleiepengerLivetsSluttfaseApi(idTokenProvider,
-        SøknadService(søkerService, kafkaProdusent, vedleggService)
+        InnsendingService(søkerService, kafkaProdusent, vedleggService)
     )
 }

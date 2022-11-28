@@ -1,10 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9.søknad.SøknadValidator
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.pls.v1.PleiepengerLivetsSluttfaseSøknadValidator
 import no.nav.k9.søknad.ytelse.pls.v1.PleipengerLivetsSluttfase
 import no.nav.k9.søknad.ytelse.psb.v1.LovbestemtFerie
 import no.nav.k9.søknad.ytelse.psb.v1.Uttak
@@ -13,7 +15,7 @@ import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
-import no.nav.k9brukerdialogapi.soknad.Søknad
+import no.nav.k9brukerdialogapi.soknad.Innsending
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.SYV_OG_EN_HALV_TIME
@@ -49,14 +51,12 @@ class PilsSøknad(
     private val harVærtEllerErVernepliktig: Boolean? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
-): Søknad {
+): Innsending {
     companion object{
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
     }
 
-    internal fun inneholderVedlegg() = vedleggUrls.isNotEmpty() || opplastetIdVedleggUrls.isNotEmpty()
-
-    internal fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
+    override fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad) = PilsKomplettSøknad(
         søknadId = søknadId,
         søker = søker,
         språk = språk,
@@ -80,7 +80,7 @@ class PilsSøknad(
         k9Format = k9Format
     )
 
-    internal fun valider() = mutableListOf<String>().apply {
+    override fun valider() = mutableListOf<String>().apply {
         addAll(medlemskap.valider())
         addAll(arbeidsgivere.valider())
         addAll(pleietrengende.valider())
@@ -96,7 +96,7 @@ class PilsSøknad(
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    internal fun somK9Format(søker: Søker): K9Søknad {
+    override fun somK9Format(søker: Søker): K9Søknad {
         val ytelse = PleipengerLivetsSluttfase()
             .medSøknadsperiode(Periode(fraOgMed, tilOgMed))
             .medPleietrengende(pleietrengende.somK9Pleietrengende())
@@ -154,6 +154,12 @@ class PilsSøknad(
     }
 
     override fun ytelse(): Ytelse = Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
-    override fun søknadId(): String = søknadId
 
+    override fun søknadId(): String = søknadId
+    override fun vedlegg(): List<URL> = mutableListOf<URL>().apply {
+        addAll(vedleggUrls)
+        addAll(opplastetIdVedleggUrls)
+    }
+
+    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = PleiepengerLivetsSluttfaseSøknadValidator()
 }
