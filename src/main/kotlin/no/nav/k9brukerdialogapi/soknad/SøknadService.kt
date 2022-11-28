@@ -71,41 +71,95 @@ class SøknadService(
         }
     }
 
-    private suspend fun validerVedlegg(pilsSøknad: PilsSøknad, idToken: IdToken, callId: CallId) {
-        if (pilsSøknad.vedleggUrls.isNotEmpty()) {
-            logger.info("Validerer vedleggUrls")
-            vedleggService.hentVedlegg(pilsSøknad.vedleggUrls, idToken, callId)
-                .valider("vedleggUrls", pilsSøknad.vedleggUrls)
-        }
+    private suspend fun validerVedlegg(søknad: Søknad, idToken: IdToken, callId: CallId) {
+        when (søknad.ytelse()) {
+            Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE -> {
+                søknad as PilsSøknad
+                if (søknad.vedleggUrls.isNotEmpty()) {
+                    logger.info("Validerer vedleggUrls")
+                    vedleggService.hentVedlegg(søknad.vedleggUrls, idToken, callId)
+                        .valider("vedleggUrls", søknad.vedleggUrls)
+                }
 
-        if (pilsSøknad.opplastetIdVedleggUrls.isNotEmpty()) {
-            logger.info("Validerer opplastetIdVedleggUrls")
-            vedleggService.hentVedlegg(pilsSøknad.opplastetIdVedleggUrls, idToken, callId)
-                .valider("opplastetIdVedleggUrls", pilsSøknad.opplastetIdVedleggUrls)
+                if (søknad.opplastetIdVedleggUrls.isNotEmpty()) {
+                    logger.info("Validerer opplastetIdVedleggUrls")
+                    vedleggService.hentVedlegg(søknad.opplastetIdVedleggUrls, idToken, callId)
+                        .valider("opplastetIdVedleggUrls", søknad.opplastetIdVedleggUrls)
+                }
+            }
+            Ytelse.OMSORGSPENGER_UTVIDET_RETT -> TODO()
+            Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> TODO()
+            Ytelse.ETTERSENDING -> TODO()
+            Ytelse.OMSORGSDAGER_ALENEOMSORG -> TODO()
+            Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER -> TODO()
+            Ytelse.OMSORGSPENGER_UTBETALING_SNF -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_FORDELING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_OVERFORING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_KORONAOVERFORING -> TODO()
+            Ytelse.ETTERSENDING_PLEIEPENGER_SYKT_BARN -> TODO()
+            Ytelse.ETTERSENDING_PLEIEPENGER_LIVETS_SLUTTFASE -> TODO()
+            Ytelse.ETTERSENDING_OMP -> TODO()
         }
     }
 
-    private suspend fun persisterVedlegg(pilsSøknad: PilsSøknad, callId: CallId, eier: DokumentEier) {
-        if (pilsSøknad.vedleggUrls.isNotEmpty()) {
-            logger.info("Persisterer vedleggUrls")
-            vedleggService.persisterVedlegg(pilsSøknad.vedleggUrls, callId, eier)
-        }
+    private suspend fun persisterVedlegg(søknad: Søknad, callId: CallId, eier: DokumentEier) {
+        when (søknad.ytelse()) {
+            Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE -> {
+                søknad as PilsSøknad
+                if (søknad.vedleggUrls.isNotEmpty()) {
+                    logger.info("Persisterer vedleggUrls")
+                    vedleggService.persisterVedlegg(søknad.vedleggUrls, callId, eier)
+                }
 
-        if (pilsSøknad.opplastetIdVedleggUrls.isNotEmpty()) {
-            logger.info("Persisterer opplastetIdVedleggUrls")
-            vedleggService.persisterVedlegg(pilsSøknad.opplastetIdVedleggUrls, callId, eier)
+                if (søknad.opplastetIdVedleggUrls.isNotEmpty()) {
+                    logger.info("Persisterer opplastetIdVedleggUrls")
+                    vedleggService.persisterVedlegg(søknad.opplastetIdVedleggUrls, callId, eier)
+                }
+            }
+            Ytelse.OMSORGSPENGER_UTVIDET_RETT -> TODO()
+            Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> TODO()
+            Ytelse.ETTERSENDING -> TODO()
+            Ytelse.OMSORGSDAGER_ALENEOMSORG -> TODO()
+            Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER -> TODO()
+            Ytelse.OMSORGSPENGER_UTBETALING_SNF -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_FORDELING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_OVERFORING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_KORONAOVERFORING -> TODO()
+            Ytelse.ETTERSENDING_PLEIEPENGER_SYKT_BARN -> TODO()
+            Ytelse.ETTERSENDING_PLEIEPENGER_LIVETS_SLUTTFASE -> TODO()
+            Ytelse.ETTERSENDING_OMP -> TODO()
         }
     }
 
-    private suspend fun fjernHoldPåPersisterteVedlegg(pilsSøknad: PilsSøknad, callId: CallId, eier: DokumentEier) {
-        if (pilsSøknad.vedleggUrls.isNotEmpty()) {
-            logger.info("Fjerner hold på persisterte vedleggUrls")
-            vedleggService.fjernHoldPåPersistertVedlegg(pilsSøknad.vedleggUrls, callId, eier)
-        }
+    private suspend fun fjernHoldPåPersisterteVedlegg(søknad: Søknad, callId: CallId, eier: DokumentEier) {
+        when (søknad.ytelse()) {
+            Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE -> {
+                søknad as PilsSøknad
+                if (søknad.vedleggUrls.isNotEmpty()) {
+                    logger.info("Fjerner hold på persisterte vedleggUrls")
+                    vedleggService.fjernHoldPåPersistertVedlegg(søknad.vedleggUrls, callId, eier)
+                }
 
-        if (pilsSøknad.opplastetIdVedleggUrls.isNotEmpty()) {
-            logger.info("Fjerner hold på persisterte opplastetIdVedleggUrls")
-            vedleggService.fjernHoldPåPersistertVedlegg(pilsSøknad.opplastetIdVedleggUrls, callId, eier)
+                if (søknad.opplastetIdVedleggUrls.isNotEmpty()) {
+                    logger.info("Fjerner hold på persisterte opplastetIdVedleggUrls")
+                    vedleggService.fjernHoldPåPersistertVedlegg(søknad.opplastetIdVedleggUrls, callId, eier)
+                }
+            }
+            Ytelse.OMSORGSPENGER_UTVIDET_RETT -> TODO()
+            Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE -> TODO()
+            Ytelse.ETTERSENDING -> TODO()
+            Ytelse.OMSORGSDAGER_ALENEOMSORG -> TODO()
+            Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER -> TODO()
+            Ytelse.OMSORGSPENGER_UTBETALING_SNF -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_FORDELING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_OVERFORING -> TODO()
+            Ytelse.OMSORGSDAGER_MELDING_KORONAOVERFORING -> TODO()
+            Ytelse.ETTERSENDING_PLEIEPENGER_SYKT_BARN -> TODO()
+            Ytelse.ETTERSENDING_PLEIEPENGER_LIVETS_SLUTTFASE -> TODO()
+            Ytelse.ETTERSENDING_OMP -> TODO()
         }
     }
 }
