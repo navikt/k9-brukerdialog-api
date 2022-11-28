@@ -84,7 +84,7 @@ class InnsendingService(
 
     private suspend fun fjernHoldPåPersisterteVedlegg(innsending: Innsending, callId: CallId, eier: DokumentEier) {
         if (innsending.inneholderVedlegg()) {
-            logger.info("Fjerner hold på persisterte vedleggU")
+            logger.info("Fjerner hold på persisterte vedlegg")
             vedleggService.fjernHoldPåPersistertVedlegg(innsending.vedlegg(), callId, eier)
         }
     }
