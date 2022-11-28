@@ -11,7 +11,7 @@ import no.nav.k9brukerdialogapi.PLEIEPENGER_LIVETS_SLUTTFASE_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.kafka.getMetadata
-import no.nav.k9brukerdialogapi.soknad.InnsendingService
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PilsSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad

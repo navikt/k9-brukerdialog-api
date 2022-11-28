@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.soknad
+package no.nav.k9brukerdialogapi.innsending
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
@@ -17,6 +17,6 @@ interface Innsending {
 
     @kotlin.jvm.Throws(Throwblem::class)
     fun valider(): List<String>
-    fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad): PilsKomplettSøknad
+    fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad): KomplettInnsending
     fun validator(): SøknadValidator<K9Søknad>
 }

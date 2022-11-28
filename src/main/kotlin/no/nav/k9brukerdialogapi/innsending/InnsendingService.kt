@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.soknad
+package no.nav.k9brukerdialogapi.innsending
 
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.ktor.core.ParameterType

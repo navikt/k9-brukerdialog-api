@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import no.nav.k9.søknad.Søknad as K9Søknad
@@ -27,7 +28,7 @@ class PilsKomplettSøknad(
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
     private val k9Format: K9Søknad
-): no.nav.k9brukerdialogapi.soknad.KomplettSøknad{
+): KomplettInnsending {
     override fun equals(other: Any?) = this === other || other is PilsKomplettSøknad && this.equals(other)
     private fun equals(other: PilsKomplettSøknad) = søknadId == other.søknadId
 }
