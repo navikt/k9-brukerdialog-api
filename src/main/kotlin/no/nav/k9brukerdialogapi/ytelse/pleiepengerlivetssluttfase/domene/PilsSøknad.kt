@@ -13,7 +13,9 @@ import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.soknad.Søknad
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.SYV_OG_EN_HALV_TIME
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.arbeidstidInfoMedNullTimer
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.Arbeidsgiver.Companion.somK9Arbeidstaker
@@ -27,7 +29,7 @@ import java.time.ZonedDateTime
 import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
 
-class Søknad(
+class PilsSøknad(
     internal val søknadId: String = UUID.randomUUID().toString(),
     private val språk: String,
     private val fraOgMed: LocalDate,
@@ -47,7 +49,7 @@ class Søknad(
     private val harVærtEllerErVernepliktig: Boolean? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
-) {
+): Søknad {
     companion object{
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
     }
@@ -125,7 +127,7 @@ class Søknad(
 
     private fun byggK9OpptjeningAktivitet() = OpptjeningAktivitet().apply {
         frilans?.let { medFrilanser(it.somK9Frilanser()) }
-        this@Søknad.selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivende(it.somK9SelvstendigNæringsdrivende()) }
+        this@PilsSøknad.selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivende(it.somK9SelvstendigNæringsdrivende()) }
     }
 
     private fun byggK9Arbeidstid() = Arbeidstid().apply {
@@ -150,4 +152,8 @@ class Søknad(
 
         return LovbestemtFerie().medPerioder(perioder)
     }
+
+    override fun ytelse(): Ytelse = Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
+    override fun søknadId(): String = søknadId
+
 }

@@ -15,6 +15,7 @@ import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
+import no.nav.k9brukerdialogapi.soknad.SøknadService
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
@@ -31,7 +32,6 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBar
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.PleiepengerLivetsSluttfaseService
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.gyldigPILSSøknad
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -60,7 +60,7 @@ internal class SøknadServiceTest{
     lateinit var omsorgspengerUtbetalingArbeidstakerService: OmsorgspengerUtbetalingArbeidstakerService
     lateinit var omsorgspengerUtbetalingSnfService: OmsorgspengerUtbetalingSnfService
     lateinit var omsorgsdagerMeldingService: OmsorgsdagerMeldingService
-    lateinit var pleiepengerLivetsSluttfaseService: PleiepengerLivetsSluttfaseService
+    lateinit var søknadService: SøknadService
 
     @BeforeEach
     internal fun setUp() {
@@ -80,7 +80,7 @@ internal class SøknadServiceTest{
         omsorgsdagerMeldingService = OmsorgsdagerMeldingService(
             søkerService, barnService, kafkaProducer, vedleggService
         )
-        pleiepengerLivetsSluttfaseService = PleiepengerLivetsSluttfaseService(
+        søknadService = SøknadService(
             søkerService, kafkaProducer, vedleggService
         )
         assertNotNull(kafkaProducer)
@@ -89,7 +89,7 @@ internal class SøknadServiceTest{
         assertNotNull(omsorgspengerUtbetalingArbeidstakerService)
         assertNotNull(omsorgspengerUtbetalingSnfService)
         assertNotNull(omsorgsdagerMeldingService)
-        assertNotNull(pleiepengerLivetsSluttfaseService)
+        assertNotNull(søknadService)
     }
 
     @Test
@@ -356,7 +356,7 @@ internal class SøknadServiceTest{
 
                 every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
 
-                pleiepengerLivetsSluttfaseService.registrer(
+                søknadService.registrer(
                     søknad = gyldigPILSSøknad(listOf()),
                     metadata = Metadata(
                         version = 1,
