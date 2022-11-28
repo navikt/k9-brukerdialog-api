@@ -29,10 +29,12 @@ class SøknadService(
         val søker = søkerService.hentSøker(idToken, callId)
         søker.valider()
 
-        when (val ytelse = søknad.ytelse()) {
+        val ytelse = søknad.ytelse()
+        logger.info(formaterStatuslogging(ytelse, søknad.søknadId(), "registreres."))
+
+        when (ytelse) {
             Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE -> {
                 søknad as PilsSøknad
-                logger.info(formaterStatuslogging(ytelse, søknad.søknadId, "registreres."))
 
                 val k9Format = søknad.somK9Format(søker)
                 validerK9FormatPILS(k9Format)
