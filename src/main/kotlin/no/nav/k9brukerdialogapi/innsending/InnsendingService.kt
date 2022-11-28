@@ -36,9 +36,9 @@ class InnsendingService(
         søker.valider()
         val dokumentEier = søker.somDokumentEier()
 
+        innsending.valider()
         val k9Format = innsending.somK9Format(søker)
         validerK9Format(innsending, k9Format)
-        innsending.valider()
 
         if (innsending.inneholderVedlegg()) {
             validerVedlegg(innsending, idToken, callId)
