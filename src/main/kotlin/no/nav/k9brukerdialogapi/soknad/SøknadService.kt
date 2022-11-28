@@ -24,7 +24,6 @@ class SøknadService(
     private val vedleggService: VedleggService,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
-    private val YTELSE = Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
 
     internal suspend fun registrer(søknad: Søknad, callId: CallId, idToken: IdToken, metadata: Metadata) {
         val søker = søkerService.hentSøker(idToken, callId)
@@ -47,7 +46,7 @@ class SøknadService(
 
                 try {
                     kafkaProdusent.produserKafkaMelding(
-                        metadata = metadata, ytelse = YTELSE,
+                        metadata = metadata, ytelse = ytelse,
                         komplettSøknadSomJson = JSONObject(søknad.somKomplettSøknad(søker, k9Format).somJson())
                     )
                 } catch (e: Exception) {
