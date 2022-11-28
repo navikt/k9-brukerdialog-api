@@ -74,8 +74,8 @@ class InnsendingService(
     }
 
     private suspend fun validerVedlegg(innsending: Innsending, idToken: IdToken, callId: CallId) {
-        logger.info("Validerer vedleggUrls")
-        vedleggService.hentVedlegg(innsending.vedlegg(), idToken, callId).valider("vedleggUrls", innsending.vedlegg())
+        logger.info("Validerer vedlegg")
+        vedleggService.hentVedlegg(innsending.vedlegg(), idToken, callId).valider("vedlegg", innsending.vedlegg())
     }
 
     private suspend fun persisterVedlegg(innsending: Innsending, callId: CallId, eier: DokumentEier) {
