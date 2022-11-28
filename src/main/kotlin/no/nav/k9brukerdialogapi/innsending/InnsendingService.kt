@@ -37,7 +37,6 @@ class InnsendingService(
         val dokumentEier = søker.somDokumentEier()
 
         val k9Format = innsending.somK9Format(søker)
-        innsending.validator().valider(k9Format)
         validerK9Format(innsending, k9Format)
         innsending.valider()
 
