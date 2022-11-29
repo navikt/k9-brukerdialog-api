@@ -56,7 +56,7 @@ class PilsSøknad(
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
     }
 
-    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad, titler: List<String>) = PilsKomplettSøknad(
+    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = PilsKomplettSøknad(
         søknadId = søknadId,
         søker = søker,
         språk = språk,
@@ -77,7 +77,7 @@ class PilsSøknad(
         harVærtEllerErVernepliktig = harVærtEllerErVernepliktig,
         harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = harBekreftetOpplysninger,
-        k9Format = k9Format
+        k9Format = k9Format!!
     )
 
     override fun valider() = mutableListOf<String>().apply {

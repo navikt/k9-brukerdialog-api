@@ -18,7 +18,7 @@ import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Arbeidssituasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Fordele
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Melding
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.OmsorgsdagerMelding
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Meldingstype.FORDELING
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Mottaker.SAMVÆRSFORELDER
 import no.nav.security.mock.oauth2.MockOAuth2Server
@@ -87,7 +87,7 @@ class OmsorgsdagerMeldingTest {
 
     @Test
     fun `Innsending av gyldig melding om fordeling`() {
-        val melding = Melding(
+        val melding = OmsorgsdagerMelding(
             id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
             språk = "nb",
             mottakerFnr = "26104500284",
@@ -125,14 +125,14 @@ class OmsorgsdagerMeldingTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(melding.søknadId, Ytelse.OMSORGSDAGER_MELDING_FORDELING)
         assertEquals(
-            melding.somKomplettMelding(søker),
+            melding.somKomplettSøknad(søker),
             hentet.data.somOmsorgsdagerKomplettMelding()
         )
     }
 
     @Test
     fun `Innsending av ugyldig melding gir valideringsfeil`() {
-        val melding = Melding(
+        val melding = OmsorgsdagerMelding(
             id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
             språk = "nb",
             mottakerFnr = "26104500284",

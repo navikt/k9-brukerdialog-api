@@ -46,7 +46,7 @@ class OmsorgspengerMdlertidigAleneSøknad(
         )
     )
 
-    override fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad, titler: List<String>) = OmsorgspengerMdlertidigAleneKomplettSøknad(
+    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = OmsorgspengerMdlertidigAleneKomplettSøknad(
         mottatt = mottatt,
         søker = søker,
         søknadId = søknadId,
@@ -54,7 +54,7 @@ class OmsorgspengerMdlertidigAleneSøknad(
         språk = språk,
         annenForelder = annenForelder,
         barn = barn,
-        k9Format = k9Format,
+        k9Format = k9Format!!,
         harBekreftetOpplysninger = harBekreftetOpplysninger,
         harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter
     )

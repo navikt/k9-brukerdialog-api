@@ -105,7 +105,7 @@ class OmsorgspengerutbetalingSnfSøknad(
 
     override fun somKomplettSøknad(
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad,
+        k9Format: no.nav.k9.søknad.Søknad?,
         titler: List<String>,
     ) = OmsorgspengerutbetalingSnfKomplettSøknad(
         søknadId = søknadId,
@@ -125,7 +125,7 @@ class OmsorgspengerutbetalingSnfSøknad(
         selvstendigNæringsdrivende = selvstendigNæringsdrivende,
         vedleggId = vedlegg.map { it.vedleggId() },
         titler = titler,
-        k9FormatSøknad = k9Format
+        k9FormatSøknad = k9Format!!
     )
 
     override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTBETALING_SNF

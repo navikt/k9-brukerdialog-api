@@ -12,15 +12,15 @@ interface Innsending {
     fun søknadId(): String
     fun inneholderVedlegg(): Boolean = vedlegg().isNotEmpty()
     fun vedlegg(): List<URL>
-    fun somK9Format(søker: Søker): K9Søknad
+    fun somK9Format(søker: Søker): K9Søknad? = null
 
     @kotlin.jvm.Throws(Throwblem::class)
     fun valider(): List<String>
     fun somKomplettSøknad(
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad,
+        k9Format: no.nav.k9.søknad.Søknad? = null,
         titler: List<String> = listOf()
     ): KomplettInnsending
 
-    fun validator(): SøknadValidator<K9Søknad>
+    fun validator(): SøknadValidator<K9Søknad>? = null
 }

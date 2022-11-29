@@ -36,7 +36,7 @@ class InnsendingService(
 
         innsending.valider()
         val k9Format = innsending.somK9Format(søker)
-        validerK9Format(innsending, k9Format)
+        k9Format?.let {  validerK9Format(innsending, it) }
 
         if (innsending.inneholderVedlegg()) registrerSøknadMedVedlegg(innsending, idToken, callId, søker, k9Format, metadata)
         else registrerSøknadUtenVedlegg(innsending, søker, k9Format, metadata)
@@ -45,7 +45,7 @@ class InnsendingService(
     private fun registrerSøknadUtenVedlegg(
         innsending: Innsending,
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad,
+        k9Format: no.nav.k9.søknad.Søknad?,
         metadata: Metadata
     ) {
         try {
@@ -65,7 +65,7 @@ class InnsendingService(
         idToken: IdToken,
         callId: CallId,
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad,
+        k9Format: no.nav.k9.søknad.Søknad?,
         metadata: Metadata
     ) {
         logger.info("Validerer ${innsending.vedlegg().size} vedlegg.")
@@ -90,16 +90,16 @@ class InnsendingService(
     }
 
     fun validerK9Format(innsending: Innsending, søknad: K9Søknad) {
-        val feil = innsending.validator().valider(søknad).map {
+        val feil = innsending.validator()?.valider(søknad)?.map {
             Violation(
                 parameterName = it.felt,
                 parameterType = ParameterType.ENTITY,
                 reason = it.feilmelding,
                 invalidValue = "K9-format feilkode: ${it.feilkode}"
             )
-        }.toMutableSet()
+        }?.toMutableSet()
 
-        if (feil.isNotEmpty()) {
+        if (feil != null && feil.isNotEmpty()) {
             throw Throwblem(ValidationProblemDetails(feil))
         }
     }
