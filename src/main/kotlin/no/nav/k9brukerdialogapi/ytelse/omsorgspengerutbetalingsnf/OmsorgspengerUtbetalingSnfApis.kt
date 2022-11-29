@@ -10,9 +10,10 @@ import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSPENGER_UTBETALING_SNF_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
-import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Søknad
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.OmsorgspengerutbetalingSnfSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,14 +22,21 @@ private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgspengerutbeta
 
 fun Route.omsorgspengerUtbetalingSnfApis(
     idTokenProvider: IdTokenProvider,
-    omsorgspengerUtbetalingSnfService: OmsorgspengerUtbetalingSnfService
+    barnService: BarnService,
+    innsendingService: InnsendingService
 ) {
     route(OMSORGSPENGER_UTBETALING_SNF_URL){
         post(INNSENDING_URL){
-            val søknad = call.receive<Søknad>()
-            logger.info(formaterStatuslogging(Ytelse.OMSORGSPENGER_UTBETALING_SNF, søknad.søknadId.id, "mottatt."))
-            omsorgspengerUtbetalingSnfService.registrer(søknad, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
-            registrerMottattSøknad(Ytelse.OMSORGSPENGER_UTBETALING_SNF)
+            val søknad = call.receive<OmsorgspengerutbetalingSnfSøknad>()
+            val callId = call.getCallId()
+            val metadata = call.getMetadata()
+            val idToken = idTokenProvider.getIdToken(call)
+
+            logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId.id, "mottatt."))
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
+
+            innsendingService.registrer(søknad, callId, idToken, metadata)
+            registrerMottattSøknad(søknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }

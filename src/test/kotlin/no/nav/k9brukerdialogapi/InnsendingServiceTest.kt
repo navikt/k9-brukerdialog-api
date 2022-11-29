@@ -27,7 +27,6 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.OmsorgsdagerMeldingSe
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.OmsorgspengerUtbetalingArbeidstakerService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.OmsorgspengerUtbetalingSnfService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnSøknad
@@ -56,7 +55,6 @@ internal class InnsendingServiceTest{
 
     lateinit var ettersendingSøknadService: EttersendingService
     lateinit var omsorgspengerUtbetalingArbeidstakerService: OmsorgspengerUtbetalingArbeidstakerService
-    lateinit var omsorgspengerUtbetalingSnfService: OmsorgspengerUtbetalingSnfService
     lateinit var omsorgsdagerMeldingService: OmsorgsdagerMeldingService
     lateinit var innsendingService: InnsendingService
 
@@ -69,9 +67,6 @@ internal class InnsendingServiceTest{
         omsorgspengerUtbetalingArbeidstakerService = OmsorgspengerUtbetalingArbeidstakerService(
             søkerService, vedleggService, kafkaProducer
         )
-        omsorgspengerUtbetalingSnfService = OmsorgspengerUtbetalingSnfService(
-            søkerService, barnService, vedleggService, kafkaProducer
-        )
         omsorgsdagerMeldingService = OmsorgsdagerMeldingService(
             søkerService, barnService, kafkaProducer, vedleggService
         )
@@ -81,7 +76,6 @@ internal class InnsendingServiceTest{
         assertNotNull(kafkaProducer)
         assertNotNull(ettersendingSøknadService)
         assertNotNull(omsorgspengerUtbetalingArbeidstakerService)
-        assertNotNull(omsorgspengerUtbetalingSnfService)
         assertNotNull(omsorgsdagerMeldingService)
         assertNotNull(innsendingService)
     }
@@ -237,8 +231,8 @@ internal class InnsendingServiceTest{
 
                 every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
 
-                omsorgspengerUtbetalingSnfService.registrer(
-                    søknad = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Søknad(
+                innsendingService.registrer(
+                    innsending = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.OmsorgspengerutbetalingSnfSøknad(
                         språk = "nb",
                         bosteder = listOf(),
                         opphold = listOf(),

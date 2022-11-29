@@ -222,7 +222,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
 
     @Test
     fun `Gyldig søknad blir mappet til forventet k9Format`() {
-        val søknad = Søknad(
+        val søknad = OmsorgspengerutbetalingSnfSøknad(
             språk = "nb",
             mottatt = ZonedDateTime.of(2022, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
             bosteder = listOf(

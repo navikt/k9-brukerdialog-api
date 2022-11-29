@@ -45,7 +45,7 @@ internal fun genererSøknadForOmsUtSnf(
         harFlereAktiveVirksomheter = false
     ),
     vedlegg: List<URL> = listOf()
-) = Søknad(
+) = OmsorgspengerutbetalingSnfSøknad(
     språk = "nb",
     bosteder = bosteder,
     opphold = opphold,

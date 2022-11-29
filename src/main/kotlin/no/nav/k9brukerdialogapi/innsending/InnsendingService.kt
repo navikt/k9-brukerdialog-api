@@ -6,18 +6,18 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.Søknad as K9Søknad
-import no.nav.k9.søknad.ytelse.pls.v1.PleiepengerLivetsSluttfaseSøknadValidator
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.kafka.Metadata
+import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
+import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.valider
-import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -29,31 +29,63 @@ class InnsendingService(
 ) {
 
     internal suspend fun registrer(innsending: Innsending, callId: CallId, idToken: IdToken, metadata: Metadata) {
-        val ytelse = innsending.ytelse()
-        logger.info(formaterStatuslogging(ytelse, innsending.søknadId(), "registreres."))
+        logger.info(formaterStatuslogging(innsending.ytelse(), innsending.søknadId(), "registreres."))
 
         val søker = søkerService.hentSøker(idToken, callId)
         søker.valider()
-        val dokumentEier = søker.somDokumentEier()
 
         innsending.valider()
         val k9Format = innsending.somK9Format(søker)
         validerK9Format(innsending, k9Format)
 
-        if (innsending.inneholderVedlegg()) {
-            validerVedlegg(innsending, idToken, callId)
-            persisterVedlegg(innsending, callId, dokumentEier)
+        if (innsending.inneholderVedlegg()) registrerSøknadMedVedlegg(innsending, idToken, callId, søker, k9Format, metadata)
+        else registrerSøknadUtenVedlegg(innsending, søker, k9Format, metadata)
+    }
+
+    private fun registrerSøknadUtenVedlegg(
+        innsending: Innsending,
+        søker: Søker,
+        k9Format: no.nav.k9.søknad.Søknad,
+        metadata: Metadata
+    ) {
+        try {
+            kafkaProdusent.produserKafkaMelding(
+                metadata,
+                JSONObject(innsending.somKomplettSøknad(søker, k9Format).somJson()),
+                innsending.ytelse()
+            )
+        } catch (exception: Exception) {
+            logger.error("Feilet ved å legge melding på Kafka.")
+            throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }
+    }
+
+    private suspend fun registrerSøknadMedVedlegg(
+        innsending: Innsending,
+        idToken: IdToken,
+        callId: CallId,
+        søker: Søker,
+        k9Format: no.nav.k9.søknad.Søknad,
+        metadata: Metadata
+    ) {
+        logger.info("Validerer ${innsending.vedlegg().size} vedlegg.")
+        val vedlegg = vedleggService.hentVedlegg(innsending.vedlegg(), idToken, callId)
+        validerVedlegg(innsending, vedlegg)
+
+        val dokumentEier = søker.somDokumentEier()
+        persisterVedlegg(innsending, callId, dokumentEier)
 
         try {
             kafkaProdusent.produserKafkaMelding(
-                metadata = metadata, ytelse = ytelse,
-                komplettSøknadSomJson = JSONObject(innsending.somKomplettSøknad(søker, k9Format).somJson())
+                metadata,
+                JSONObject(innsending.somKomplettSøknad(søker, k9Format, vedlegg.map { it.title }).somJson()),
+                innsending.ytelse()
             )
-        } catch (e: Exception) {
-            logger.info("Feilet med å legge søknad på Kafka.")
-            if (innsending.inneholderVedlegg()) fjernHoldPåPersisterteVedlegg(innsending, callId, dokumentEier)
-            throw MeldingRegistreringFeiletException("Feilet med å legge søknad på Kafka.")
+        } catch (exception: Exception){
+            logger.error("Feilet ved å legge melding på Kafka.")
+            logger.info("Fjerner hold på persisterte vedlegg")
+            fjernHoldPåPersisterteVedlegg(innsending, callId, dokumentEier)
+            throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }
     }
 
@@ -72,9 +104,9 @@ class InnsendingService(
         }
     }
 
-    private suspend fun validerVedlegg(innsending: Innsending, idToken: IdToken, callId: CallId) {
+    private fun validerVedlegg(innsending: Innsending, vedlegg: List<Vedlegg>) {
         logger.info("Validerer vedlegg")
-        vedleggService.hentVedlegg(innsending.vedlegg(), idToken, callId).valider("vedlegg", innsending.vedlegg())
+        vedlegg.valider("vedlegg", innsending.vedlegg())
     }
 
     private suspend fun persisterVedlegg(innsending: Innsending, callId: CallId, eier: DokumentEier) {
