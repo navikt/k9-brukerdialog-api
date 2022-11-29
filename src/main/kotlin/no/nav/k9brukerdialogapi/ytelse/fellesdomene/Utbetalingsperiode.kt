@@ -19,7 +19,7 @@ class Utbetalingsperiode(
     @JsonFormat(pattern = "yyyy-MM-dd") private val tilOgMed: LocalDate,
     private val antallTimerBorte: Duration? = null,
     private val antallTimerPlanlagt: Duration? = null,
-    private val årsak: FraværÅrsak,
+    private val årsak: FraværÅrsak? = null,
     private val aktivitetFravær: List<AktivitetFravær>
 ) {
     companion object{
@@ -52,7 +52,7 @@ class Utbetalingsperiode(
         organisasjonsnummer: String? = null
     ) = FraværPeriode()
             .medPeriode(Periode(fraOgMed, tilOgMed))
-            .medFraværÅrsak(årsak.somK9FraværÅrsak())
+            .medFraværÅrsak(årsak?.somK9FraværÅrsak() ?: K9FraværÅrsak.ORDINÆRT_FRAVÆR)
             .medSøknadsårsak(søknadÅrsak)
             .medAktivitetFravær(aktivitetFravær.map {it.somK9AktivitetFravær()})
             .medArbeidsgiverOrgNr(Organisasjonsnummer.of(organisasjonsnummer))

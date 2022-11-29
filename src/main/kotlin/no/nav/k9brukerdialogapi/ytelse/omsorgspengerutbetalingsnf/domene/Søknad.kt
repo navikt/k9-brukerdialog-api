@@ -99,7 +99,11 @@ class Søknad(
         this@Søknad.selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivende(it.somK9SelvstendigNæringsdrivende()) }
     }
 
-    internal fun tilKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad) = KomplettSøknad(
+    internal fun tilKomplettSøknad(
+        søker: Søker,
+        k9Format: no.nav.k9.søknad.Søknad,
+        titler: List<String> = listOf(),
+    ) = KomplettSøknad(
         søknadId = søknadId,
         mottatt = mottatt,
         språk = språk,
@@ -116,6 +120,7 @@ class Søknad(
         frilans = frilans,
         selvstendigNæringsdrivende = selvstendigNæringsdrivende,
         vedleggId = vedlegg.map { it.vedleggId() },
+        titler = titler,
         k9FormatSøknad = k9Format
     )
 }
