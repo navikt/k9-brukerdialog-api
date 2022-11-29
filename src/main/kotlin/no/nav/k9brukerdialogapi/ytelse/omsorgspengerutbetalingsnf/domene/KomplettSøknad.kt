@@ -28,6 +28,7 @@ class KomplettSøknad(
     private val frilans: Frilans? = null,
     private val selvstendigNæringsdrivende: SelvstendigNæringsdrivende? = null,
     private val vedleggId: List<String> = listOf(),
+    private val titler: List<String>,
     private val k9FormatSøknad: Søknad
 ){
     override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
