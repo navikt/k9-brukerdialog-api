@@ -30,7 +30,10 @@ fun Route.ytelseRoutes(
 ){
     val innsendingService = InnsendingService(søkerService, kafkaProdusent, vedleggService)
 
+    pleiepengerLivetsSluttfaseApi(idTokenProvider, innsendingService)
     omsorgspengerUtvidetRettApis(innsendingService, barnService, idTokenProvider)
+    omsorgspengerUtbetalingSnfApis(idTokenProvider, barnService, innsendingService)
+
     omsorgspengerMidlertidigAleneApis(
         OmsorgspengerMidlertidigAleneService(søkerService, barnService, kafkaProdusent),
         idTokenProvider
@@ -47,10 +50,8 @@ fun Route.ytelseRoutes(
         idTokenProvider,
         OmsorgspengerUtbetalingArbeidstakerService(søkerService, vedleggService, kafkaProdusent)
     )
-    omsorgspengerUtbetalingSnfApis(idTokenProvider, barnService, innsendingService)
     omsorgsdagerMeldingApi(
         idTokenProvider,
         OmsorgsdagerMeldingService(søkerService, barnService, kafkaProdusent, vedleggService)
     )
-    pleiepengerLivetsSluttfaseApi(idTokenProvider, innsendingService)
 }
