@@ -1,9 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
+import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import java.time.ZonedDateTime
 
-class KomplettMelding(
+class OmsorgsdagerKomplettMelding(
     private val søknadId: String,
     private val søker: Søker,
     private val mottatt: ZonedDateTime,
@@ -24,8 +25,8 @@ class KomplettMelding(
     private val fordeling: KomplettFordele? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
-) {
-    override fun equals(other: Any?) = this === other || (other is KomplettMelding && this.equals(other))
+): KomplettInnsending {
+    override fun equals(other: Any?) = this === other || (other is OmsorgsdagerKomplettMelding && this.equals(other))
 
-    private fun equals(other: KomplettMelding) = this.søknadId == other.søknadId && this.id == other.id
+    private fun equals(other: OmsorgsdagerKomplettMelding) = this.søknadId == other.søknadId && this.id == other.id
 }

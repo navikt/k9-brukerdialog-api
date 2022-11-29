@@ -1,11 +1,13 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import io.ktor.util.pipeline.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.post
+import io.ktor.util.pipeline.PipelineContext
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_FORDELING_URL
@@ -13,10 +15,10 @@ import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_KORONAOVERFORING_URL
 import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_OVERFORING_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
-import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Melding
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.OmsorgsdagerMelding
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -25,29 +27,37 @@ private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgsdagermelding
 
 fun Route.omsorgsdagerMeldingApi(
     idTokenProvider: IdTokenProvider,
-    omsorgsdagerMeldingService: OmsorgsdagerMeldingService
+    innsendingService: InnsendingService,
+    barnService: BarnService,
 ) {
-    post(OMSORGSDAGER_MELDING_FORDELING_URL+INNSENDING_URL){
-        mottaMelding(omsorgsdagerMeldingService, idTokenProvider, OMSORGSDAGER_MELDING_FORDELING)
+    post(OMSORGSDAGER_MELDING_FORDELING_URL + INNSENDING_URL) {
+        mottaMelding(innsendingService, barnService, idTokenProvider)
     }
 
-    post(OMSORGSDAGER_MELDING_OVERFORING_URL+INNSENDING_URL){
-        mottaMelding(omsorgsdagerMeldingService, idTokenProvider, OMSORGSDAGER_MELDING_OVERFORING)
+    post(OMSORGSDAGER_MELDING_OVERFORING_URL + INNSENDING_URL) {
+        mottaMelding(innsendingService, barnService, idTokenProvider)
     }
 
-    post(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL+INNSENDING_URL){
-        mottaMelding(omsorgsdagerMeldingService, idTokenProvider, OMSORGSDAGER_MELDING_KORONAOVERFORING)
+    post(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL + INNSENDING_URL) {
+        mottaMelding(innsendingService, barnService, idTokenProvider)
     }
 }
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
-    omsorgsdagerMeldingService: OmsorgsdagerMeldingService,
-    idTokenProvider: IdTokenProvider,
-    ytelse: Ytelse
+    innsendingService: InnsendingService,
+    barnService: BarnService,
+    idTokenProvider: IdTokenProvider
 ) {
-    val melding = call.receive<Melding>()
-    logger.info(formaterStatuslogging(melding.type.somYtelse(), melding.søknadId, "mottatt."))
-    omsorgsdagerMeldingService.registrer(melding, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
-    registrerMottattSøknad(ytelse)
+    val melding = call.receive<OmsorgsdagerMelding>()
+    val callId = call.getCallId()
+    val metadata = call.getMetadata()
+    val idToken = idTokenProvider.getIdToken(call)
+
+    logger.info(formaterStatuslogging(melding.ytelse(), melding.søknadId, "mottatt."))
+
+    melding.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
+
+    innsendingService.registrer(melding, callId, idToken, metadata)
+    registrerMottattSøknad(melding.ytelse())
     call.respond(HttpStatusCode.Accepted)
 }

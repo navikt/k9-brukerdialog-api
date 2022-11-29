@@ -11,7 +11,7 @@ class MeldingTest {
 
     @Test
     fun `Gyldig melding gir ingen feil`(){
-        Melding(
+        OmsorgsdagerMelding(
             id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
             språk = "nb",
             mottakerFnr = "26104500284",
@@ -38,7 +38,7 @@ class MeldingTest {
     @Test
     fun `Melding hvor harBekreftetOpplysninger og harForståttRettigheterOgPlikter er false gir feil`(){
         assertThrows<Throwblem> {
-            Melding(
+            OmsorgsdagerMelding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                 språk = "nb",
                 mottakerFnr = "26104500284",
@@ -69,7 +69,7 @@ class MeldingTest {
     @Test
     fun `Melding hvor mottakerFnr og navn er ugyldig skal gi feil`(){
         assertThrows<Throwblem> {
-            Melding(
+            OmsorgsdagerMelding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                 språk = "nb",
                 mottakerFnr = "123abc",
@@ -100,7 +100,7 @@ class MeldingTest {
     @Test
     fun `Melding hvor arbeidssituasjon og barn er tom liste skal gi feil`(){
         assertThrows<Throwblem> {
-            Melding(
+            OmsorgsdagerMelding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                 språk = "nb",
                 mottakerFnr = "26104500284",
@@ -125,7 +125,7 @@ class MeldingTest {
     @Test
     fun `Melding hvor barn er ugyldig skal gi feil`(){
         assertThrows<Throwblem> {
-            Melding(
+            OmsorgsdagerMelding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                 språk = "nb",
                 mottakerFnr = "26104500284",
@@ -156,7 +156,7 @@ class MeldingTest {
     @Test
     fun `Melding hvor harAleneomsorg, harUtvidetRett, arbeiderINorge og erYrkesaktiv er null skal gi feil`(){
         assertThrows<Throwblem> {
-            Melding(
+            OmsorgsdagerMelding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                 språk = "nb",
                 mottakerFnr = "26104500284",
@@ -189,7 +189,7 @@ class MeldingTest {
     @Test
     fun `Melding hvor type=KORONA men korona er null skal gi feil`() {
         assertThrows<Throwblem> {
-            Melding(
+            OmsorgsdagerMelding(
                 id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                 språk = "nb",
                 mottakerFnr = "26104500284",

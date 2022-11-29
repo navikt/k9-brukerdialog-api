@@ -54,7 +54,7 @@ class OmsorgspengerKroniskSyktBarnSøknad(
         )
     )
 
-    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad, titler: List<String>) = OmsorgspengerKroniskSyktBarnKomplettSøknad(
+    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = OmsorgspengerKroniskSyktBarnKomplettSøknad(
         språk = språk,
         søknadId = søknadId,
         mottatt = mottatt,
@@ -67,7 +67,7 @@ class OmsorgspengerKroniskSyktBarnSøknad(
         samværsavtaleVedleggId = samværsavtale?.map { it.vedleggId() } ?: listOf(),
         harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = harBekreftetOpplysninger,
-        k9FormatSøknad = k9Format
+        k9FormatSøknad = k9Format!!
     )
 
     override fun valider() = mutableListOf<String>().apply {

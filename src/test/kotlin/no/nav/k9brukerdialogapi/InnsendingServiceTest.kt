@@ -23,7 +23,6 @@ import no.nav.k9brukerdialogapi.ytelse.ettersending.EttersendingService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.OmsorgsdagerMeldingService
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn
@@ -53,7 +52,6 @@ internal class InnsendingServiceTest{
     lateinit var vedleggService: VedleggService
 
     lateinit var ettersendingSøknadService: EttersendingService
-    lateinit var omsorgsdagerMeldingService: OmsorgsdagerMeldingService
     lateinit var innsendingService: InnsendingService
 
     @BeforeEach
@@ -62,15 +60,12 @@ internal class InnsendingServiceTest{
         ettersendingSøknadService = EttersendingService(
             kafkaProducer, søkerService, vedleggService
         )
-        omsorgsdagerMeldingService = OmsorgsdagerMeldingService(
-            søkerService, barnService, kafkaProducer, vedleggService
-        )
+
         innsendingService = InnsendingService(
             søkerService, kafkaProducer, vedleggService
         )
         assertNotNull(kafkaProducer)
         assertNotNull(ettersendingSøknadService)
-        assertNotNull(omsorgsdagerMeldingService)
         assertNotNull(innsendingService)
     }
 
@@ -286,8 +281,8 @@ internal class InnsendingServiceTest{
 
                 every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
 
-                omsorgsdagerMeldingService.registrer(
-                    melding = Melding(
+                innsendingService.registrer(
+                    innsending = OmsorgsdagerMelding(
                         id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
                         språk = "nb",
                         mottakerFnr = "26104500284",

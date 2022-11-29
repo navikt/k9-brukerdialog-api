@@ -53,7 +53,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
 
     override fun somKomplettSøknad(
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad,
+        k9Format: no.nav.k9.søknad.Søknad?,
         titler: List<String>
     ) = OmsorgspengerutbetalingArbeidstakerKomplettSøknad(
         søknadId = søknadId,
@@ -68,7 +68,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         titler = titler,
         hjemmePgaSmittevernhensyn = hjemmePgaSmittevernhensyn,
         hjemmePgaStengtBhgSkole = hjemmePgaStengtBhgSkole,
-        k9Format = k9Format
+        k9Format = k9Format!!
     )
 
     override fun somK9Format(søker: Søker) = K9Søknad(
