@@ -1,11 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import no.nav.k9.søknad.Søknad as K9Søknad
 
-class KomplettSøknad(
+class PilsKomplettSøknad(
     private val søknadId: String,
     private val søker: Søker,
     private val språk: String,
@@ -27,7 +28,7 @@ class KomplettSøknad(
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
     private val k9Format: K9Søknad
-){
-    override fun equals(other: Any?) = this === other || other is KomplettSøknad && this.equals(other)
-    private fun equals(other: KomplettSøknad) = søknadId == other.søknadId
+): KomplettInnsending {
+    override fun equals(other: Any?) = this === other || other is PilsKomplettSøknad && this.equals(other)
+    private fun equals(other: PilsKomplettSøknad) = søknadId == other.søknadId
 }

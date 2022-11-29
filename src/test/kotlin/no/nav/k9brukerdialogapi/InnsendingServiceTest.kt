@@ -15,6 +15,7 @@ import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
@@ -31,7 +32,6 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBar
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.PleiepengerLivetsSluttfaseService
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.gyldigPILSSøknad
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -42,7 +42,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.test.Test
 
-internal class SøknadServiceTest{
+internal class InnsendingServiceTest{
     @RelaxedMockK
     lateinit var kafkaProducer: KafkaProducer
 
@@ -60,7 +60,7 @@ internal class SøknadServiceTest{
     lateinit var omsorgspengerUtbetalingArbeidstakerService: OmsorgspengerUtbetalingArbeidstakerService
     lateinit var omsorgspengerUtbetalingSnfService: OmsorgspengerUtbetalingSnfService
     lateinit var omsorgsdagerMeldingService: OmsorgsdagerMeldingService
-    lateinit var pleiepengerLivetsSluttfaseService: PleiepengerLivetsSluttfaseService
+    lateinit var innsendingService: InnsendingService
 
     @BeforeEach
     internal fun setUp() {
@@ -80,7 +80,7 @@ internal class SøknadServiceTest{
         omsorgsdagerMeldingService = OmsorgsdagerMeldingService(
             søkerService, barnService, kafkaProducer, vedleggService
         )
-        pleiepengerLivetsSluttfaseService = PleiepengerLivetsSluttfaseService(
+        innsendingService = InnsendingService(
             søkerService, kafkaProducer, vedleggService
         )
         assertNotNull(kafkaProducer)
@@ -89,7 +89,7 @@ internal class SøknadServiceTest{
         assertNotNull(omsorgspengerUtbetalingArbeidstakerService)
         assertNotNull(omsorgspengerUtbetalingSnfService)
         assertNotNull(omsorgsdagerMeldingService)
-        assertNotNull(pleiepengerLivetsSluttfaseService)
+        assertNotNull(innsendingService)
     }
 
     @Test
@@ -356,8 +356,8 @@ internal class SøknadServiceTest{
 
                 every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
 
-                pleiepengerLivetsSluttfaseService.registrer(
-                    søknad = gyldigPILSSøknad(listOf()),
+                innsendingService.registrer(
+                    innsending = gyldigPILSSøknad(listOf()),
                     metadata = Metadata(
                         version = 1,
                         correlationId = "123"

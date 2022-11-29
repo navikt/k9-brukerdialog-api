@@ -103,7 +103,7 @@ internal fun gyldigPILSSøknad(
         ),
         arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR))
     )
-) = Søknad(
+) = PilsSøknad(
     søknadId = "4e62f8de-1ff6-40e9-bdcd-10485c789094",
     mottatt = ZonedDateTime.of(2022, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
     språk = "nb",

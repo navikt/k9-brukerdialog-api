@@ -1,10 +1,11 @@
 package no.nav.k9brukerdialogapi.ytelse
 
-import io.ktor.server.routing.*
+import io.ktor.server.routing.Route
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.EttersendingService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.ettersendingApis
@@ -20,7 +21,6 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.OmsorgspengerU
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.omsorgspengerUtbetalingSnfApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.omsorgspengerUtvidetRettApis
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.PleiepengerLivetsSluttfaseService
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.pleiepengerLivetsSluttfaseApi
 
 fun Route.ytelseRoutes(
@@ -59,6 +59,6 @@ fun Route.ytelseRoutes(
         OmsorgsdagerMeldingService(søkerService, barnService, kafkaProdusent, vedleggService)
     )
     pleiepengerLivetsSluttfaseApi(idTokenProvider,
-        PleiepengerLivetsSluttfaseService(søkerService, kafkaProdusent, vedleggService)
+        InnsendingService(søkerService, kafkaProdusent, vedleggService)
     )
 }
