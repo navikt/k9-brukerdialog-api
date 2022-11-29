@@ -6,7 +6,6 @@ import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
-import java.time.Duration
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -20,7 +19,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
     fun `K9Format blir som forventet`(){
         val mottatt = ZonedDateTime.of(2022, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC"))
         val søknadId = UUID.randomUUID().toString()
-        val søknad = Søknad(
+        val søknad = OmsorgspengerutbetalingArbeidstakerSøknad(
             søknadId = søknadId,
             mottatt = mottatt,
             språk = "nb",
@@ -68,7 +67,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
             hjemmePgaSmittevernhensyn = true,
             hjemmePgaStengtBhgSkole = true
         )
-        val faktiskK9Format = søknad.tilK9Format(SøknadUtils.søker).somJson()
+        val faktiskK9Format = søknad.somK9Format(SøknadUtils.søker).somJson()
         val forventetK9Format = """
             {
               "søknadId": "$søknadId",
@@ -126,7 +125,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
 
     @Test
     fun `Gyldig søknad gir ingen feil`() {
-        Søknad(
+        OmsorgspengerutbetalingArbeidstakerSøknad(
             språk = "nb",
             vedlegg = listOf(),
             bosteder = listOf(),
@@ -161,7 +160,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
     @Test
     fun `Søknad uten arbeidsgivere gir feil`() {
         assertThrows<Throwblem> {
-            Søknad(
+            OmsorgspengerutbetalingArbeidstakerSøknad(
                 språk = "nb",
                 vedlegg = listOf(),
                 bosteder = listOf(),

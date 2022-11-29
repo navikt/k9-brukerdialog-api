@@ -1,13 +1,14 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene
 
 import no.nav.k9.søknad.Søknad
+import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import java.time.ZonedDateTime
 
-class KomplettSøknad(
+class OmsorgspengerutbetalingArbeidstakerKomplettSøknad(
     internal val søknadId: String,
     private val mottatt: ZonedDateTime,
     private val språk: String,
@@ -21,10 +22,10 @@ class KomplettSøknad(
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null,
     private val k9Format: Søknad
-) {
-    override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
+): KomplettInnsending {
+    override fun equals(other: Any?) = this === other || (other is OmsorgspengerutbetalingArbeidstakerKomplettSøknad && this.equals(other))
 
-    private fun equals(other: KomplettSøknad) = this.søknadId == other.søknadId &&
+    private fun equals(other: OmsorgspengerutbetalingArbeidstakerKomplettSøknad) = this.søknadId == other.søknadId &&
             this.søker == other.søker &&
             this.vedleggId == other.vedleggId &&
             this.k9Format.søknadId == other.k9Format.søknadId

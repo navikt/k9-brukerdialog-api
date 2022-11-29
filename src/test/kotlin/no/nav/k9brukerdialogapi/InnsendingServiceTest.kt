@@ -25,7 +25,6 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.OmsorgsdagerMeldingService
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.*
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.OmsorgspengerUtbetalingArbeidstakerService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
@@ -54,7 +53,6 @@ internal class InnsendingServiceTest{
     lateinit var vedleggService: VedleggService
 
     lateinit var ettersendingSøknadService: EttersendingService
-    lateinit var omsorgspengerUtbetalingArbeidstakerService: OmsorgspengerUtbetalingArbeidstakerService
     lateinit var omsorgsdagerMeldingService: OmsorgsdagerMeldingService
     lateinit var innsendingService: InnsendingService
 
@@ -64,9 +62,6 @@ internal class InnsendingServiceTest{
         ettersendingSøknadService = EttersendingService(
             kafkaProducer, søkerService, vedleggService
         )
-        omsorgspengerUtbetalingArbeidstakerService = OmsorgspengerUtbetalingArbeidstakerService(
-            søkerService, vedleggService, kafkaProducer
-        )
         omsorgsdagerMeldingService = OmsorgsdagerMeldingService(
             søkerService, barnService, kafkaProducer, vedleggService
         )
@@ -75,7 +70,6 @@ internal class InnsendingServiceTest{
         )
         assertNotNull(kafkaProducer)
         assertNotNull(ettersendingSøknadService)
-        assertNotNull(omsorgspengerUtbetalingArbeidstakerService)
         assertNotNull(omsorgsdagerMeldingService)
         assertNotNull(innsendingService)
     }
@@ -173,8 +167,8 @@ internal class InnsendingServiceTest{
 
                 every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
 
-                omsorgspengerUtbetalingArbeidstakerService.registrer(
-                    søknad = Søknad(
+                innsendingService.registrer(
+                    innsending = OmsorgspengerutbetalingArbeidstakerSøknad(
                             språk = "nb",
                             vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
                             bosteder = listOf(),

@@ -16,7 +16,7 @@ import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
@@ -85,7 +85,7 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
     @Test
     fun `Innsending av gyldig søknad`() {
         val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
-        val søknad = Søknad(
+        val søknad = OmsorgspengerutbetalingArbeidstakerSøknad(
             språk = "nb",
             vedlegg = listOf(
                 vedlegg
@@ -128,14 +128,14 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER)
         assertEquals(
-            søknad.tilKomplettSøknad(SøknadUtils.søker, søknad.tilK9Format(SøknadUtils.søker), listOf("vedlegg1")),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker), listOf("vedlegg1")),
             hentet.data.somOmsorgspengerUtbetalingArbeidstakerKomplettSøknad()
         )
     }
 
     @Test
     fun `Innsending av ugyldig søknad med flere valideringsfeil`() {
-        val søknad = Søknad(
+        val søknad = OmsorgspengerutbetalingArbeidstakerSøknad(
             språk = "nb",
             vedlegg = listOf(),
             bosteder = listOf(
