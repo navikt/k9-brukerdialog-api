@@ -17,7 +17,6 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.Omsorgspeng
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.omsorgspengerMidlertidigAleneApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.OmsorgspengerUtbetalingArbeidstakerService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.omsorgspengerUtbetalingArbeidstakerApi
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.OmsorgspengerUtbetalingSnfService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.omsorgspengerUtbetalingSnfApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.omsorgspengerUtvidetRettApis
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.pleiepengerLivetsSluttfaseApi
@@ -31,7 +30,10 @@ fun Route.ytelseRoutes(
 ){
     val innsendingService = InnsendingService(søkerService, kafkaProdusent, vedleggService)
 
+    pleiepengerLivetsSluttfaseApi(idTokenProvider, innsendingService)
     omsorgspengerUtvidetRettApis(innsendingService, barnService, idTokenProvider)
+    omsorgspengerUtbetalingSnfApis(idTokenProvider, barnService, innsendingService)
+
     omsorgspengerMidlertidigAleneApis(
         OmsorgspengerMidlertidigAleneService(søkerService, barnService, kafkaProdusent),
         idTokenProvider
@@ -48,13 +50,8 @@ fun Route.ytelseRoutes(
         idTokenProvider,
         OmsorgspengerUtbetalingArbeidstakerService(søkerService, vedleggService, kafkaProdusent)
     )
-    omsorgspengerUtbetalingSnfApis(
-        idTokenProvider,
-        OmsorgspengerUtbetalingSnfService(søkerService, barnService, vedleggService, kafkaProdusent)
-    )
     omsorgsdagerMeldingApi(
         idTokenProvider,
         OmsorgsdagerMeldingService(søkerService, barnService, kafkaProdusent, vedleggService)
     )
-    pleiepengerLivetsSluttfaseApi(idTokenProvider, innsendingService)
 }

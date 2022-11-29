@@ -4,7 +4,6 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PilsKomplettSøknad
 import java.net.URL
 import no.nav.k9.søknad.Søknad as K9Søknad
 
@@ -17,6 +16,11 @@ interface Innsending {
 
     @kotlin.jvm.Throws(Throwblem::class)
     fun valider(): List<String>
-    fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad): KomplettInnsending
+    fun somKomplettSøknad(
+        søker: Søker,
+        k9Format: no.nav.k9.søknad.Søknad,
+        titler: List<String> = listOf()
+    ): KomplettInnsending
+
     fun validator(): SøknadValidator<K9Søknad>
 }

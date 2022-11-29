@@ -27,9 +27,9 @@ fun Route.pleiepengerLivetsSluttfaseApi(
     route(PLEIEPENGER_LIVETS_SLUTTFASE_URL){
         post(INNSENDING_URL){
             val pilsSøknad = call.receive<PilsSøknad>()
-            logger.info(formaterStatuslogging(PLEIEPENGER_LIVETS_SLUTTFASE, pilsSøknad.søknadId, "mottatt."))
+            logger.info(formaterStatuslogging(pilsSøknad.ytelse(), pilsSøknad.søknadId, "mottatt."))
             service.registrer(pilsSøknad, call.getCallId(), idTokenProvider.getIdToken(call), call.getMetadata())
-            registrerMottattSøknad(PLEIEPENGER_LIVETS_SLUTTFASE)
+            registrerMottattSøknad(pilsSøknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }

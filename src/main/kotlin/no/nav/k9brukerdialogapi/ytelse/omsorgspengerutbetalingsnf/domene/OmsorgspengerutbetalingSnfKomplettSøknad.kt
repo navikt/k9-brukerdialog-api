@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
 import no.nav.k9.søknad.Søknad
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
@@ -11,7 +12,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 
-class KomplettSøknad(
+class OmsorgspengerutbetalingSnfKomplettSøknad(
     internal val søknadId: SøknadId = SøknadId(UUID.randomUUID().toString()),
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     private val språk: String,
@@ -30,10 +31,10 @@ class KomplettSøknad(
     private val vedleggId: List<String> = listOf(),
     private val titler: List<String>,
     private val k9FormatSøknad: Søknad
-){
-    override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
+): KomplettInnsending {
+    override fun equals(other: Any?) = this === other || (other is OmsorgspengerutbetalingSnfKomplettSøknad && this.equals(other))
 
-    private fun equals(other: KomplettSøknad) = this.søknadId.id == other.søknadId.id &&
+    private fun equals(other: OmsorgspengerutbetalingSnfKomplettSøknad) = this.søknadId.id == other.søknadId.id &&
             this.søker == other.søker &&
             this.vedleggId == other.vedleggId &&
             this.k9FormatSøknad.søknadId == other.k9FormatSøknad.søknadId

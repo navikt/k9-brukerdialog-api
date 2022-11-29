@@ -36,6 +36,6 @@ fun JSONObject.somOmsorgspengerUtvidetRettKomplettSøknad(): no.nav.k9brukerdial
 fun JSONObject.somEttersendingKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.ettersending.domene.KomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgsdagerAleneomsorgKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.KomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgspengerUtbetalingArbeidstakerKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.KomplettSøknad = objectMapper.readValue(this.toString())
-fun JSONObject.somOmsorgspengerUtbetalingSnfKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.KomplettSøknad = objectMapper.readValue(this.toString())
+fun JSONObject.somOmsorgspengerUtbetalingSnfKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.OmsorgspengerutbetalingSnfKomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgsdagerKomplettMelding(): no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.KomplettMelding = objectMapper.readValue(this.toString())
 fun JSONObject.somPleiepengerLivetsSluttfaseKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PilsKomplettSøknad = objectMapper.readValue(this.toString())

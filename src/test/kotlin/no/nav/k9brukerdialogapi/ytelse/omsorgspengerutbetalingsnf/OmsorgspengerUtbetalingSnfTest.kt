@@ -101,7 +101,7 @@ class OmsorgspengerUtbetalingSnfTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId.id, Ytelse.OMSORGSPENGER_UTBETALING_SNF)
         assertEquals(
-            søknad.tilKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker)),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker)),
             hentet.data.somOmsorgspengerUtbetalingSnfKomplettSøknad()
         )
     }

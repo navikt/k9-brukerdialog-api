@@ -1,15 +1,19 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9.søknad.SøknadValidator
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
+import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetalingSøknadValidator
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.innsending.Innsending
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.somK9Bosteder
@@ -27,7 +31,7 @@ import java.time.ZonedDateTime
 import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
 
-class Søknad(
+class OmsorgspengerutbetalingSnfSøknad(
     internal val søknadId: SøknadId = SøknadId(UUID.randomUUID().toString()),
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     private val språk: String,
@@ -43,13 +47,13 @@ class Søknad(
     private val frilans: Frilans? = null,
     private val selvstendigNæringsdrivende: SelvstendigNæringsdrivende? = null,
     internal val vedlegg: List<URL> = listOf()
-) {
+): Innsending {
 
     companion object {
         private val k9FormatVersjon = Versjon.of("1.1.0")
     }
 
-    internal fun valider() = mutableListOf<String>().apply {
+    override fun valider() = mutableListOf<String>().apply {
         addAll(validerUtvidetRett())
         addAll(validerHarDekketTiFørsteDagerSelv())
         addAll(bosteder.valider("bosteder"))
@@ -79,7 +83,7 @@ class Søknad(
         barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
-    internal fun somK9Format(søker: Søker) = K9Søknad(
+    override fun somK9Format(søker: Søker) = K9Søknad(
         søknadId,
         k9FormatVersjon,
         mottatt,
@@ -96,14 +100,14 @@ class Søknad(
 
     private fun byggK9OpptjeningAktivitet() = OpptjeningAktivitet().apply {
         frilans?.let { medFrilanser(it.somK9Frilanser()) }
-        this@Søknad.selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivende(it.somK9SelvstendigNæringsdrivende()) }
+        this@OmsorgspengerutbetalingSnfSøknad.selvstendigNæringsdrivende?.let { medSelvstendigNæringsdrivende(it.somK9SelvstendigNæringsdrivende()) }
     }
 
-    internal fun tilKomplettSøknad(
+    override fun somKomplettSøknad(
         søker: Søker,
         k9Format: no.nav.k9.søknad.Søknad,
-        titler: List<String> = listOf(),
-    ) = KomplettSøknad(
+        titler: List<String>,
+    ) = OmsorgspengerutbetalingSnfKomplettSøknad(
         søknadId = søknadId,
         mottatt = mottatt,
         språk = språk,
@@ -123,4 +127,9 @@ class Søknad(
         titler = titler,
         k9FormatSøknad = k9Format
     )
+
+    override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTBETALING_SNF
+    override fun søknadId(): String = søknadId.id
+    override fun vedlegg(): List<URL> = vedlegg
+    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerUtbetalingSøknadValidator()
 }
