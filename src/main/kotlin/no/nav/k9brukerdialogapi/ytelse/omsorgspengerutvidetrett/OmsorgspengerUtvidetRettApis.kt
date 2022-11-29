@@ -10,9 +10,11 @@ import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSPENGER_UTVIDET_RETT_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTVIDET_RETT
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,14 +22,21 @@ import org.slf4j.LoggerFactory
 private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgspengerutvidetrett.OmsorgspengerUtvidetRettApis.kt")
 
 fun Route.omsorgspengerUtvidetRettApis(
-    omsorgspengerUtvidetRettService: OmsorgspengerUtvidetRettService,
+    innsendingService: InnsendingService,
+    barnService: BarnService,
     idTokenProvider: IdTokenProvider
 ){
     route(OMSORGSPENGER_UTVIDET_RETT_URL){
         post(INNSENDING_URL){
-            val søknad =  call.receive<Søknad>()
+            val søknad =  call.receive<OmsorgspengerKroniskSyktBarnSøknad>()
+            val callId = call.getCallId()
+            val idToken = idTokenProvider.getIdToken(call)
+            val metadata = call.getMetadata()
+
             logger.info(formaterStatuslogging(OMSORGSPENGER_UTVIDET_RETT, søknad.søknadId, "mottatt."))
-            omsorgspengerUtvidetRettService.registrer(søknad, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
+
+            innsendingService.registrer(søknad, callId, idToken, metadata)
             registrerMottattSøknad(OMSORGSPENGER_UTVIDET_RETT)
             call.respond(HttpStatusCode.Accepted)
         }
