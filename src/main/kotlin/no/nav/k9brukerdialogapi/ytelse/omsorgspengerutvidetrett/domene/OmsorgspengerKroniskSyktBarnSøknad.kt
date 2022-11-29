@@ -1,15 +1,19 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9.søknad.SøknadValidator
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
+import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarnSøknadValidator
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.innsending.Innsending
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import java.net.URL
 import java.time.ZoneOffset
@@ -17,7 +21,7 @@ import java.time.ZonedDateTime
 import java.util.*
 import no.nav.k9.søknad.Søknad as K9Søknad
 
-class Søknad(
+class OmsorgspengerKroniskSyktBarnSøknad(
     val søknadId: String = UUID.randomUUID().toString(),
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     private val språk: String,
@@ -29,7 +33,7 @@ class Søknad(
     private val kroniskEllerFunksjonshemming: Boolean,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
-) {
+): Innsending {
 
     companion object {
         private val k9FormatVersjon = Versjon.of("1.0.0")
@@ -39,7 +43,7 @@ class Søknad(
         if (barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
     }
 
-    internal fun tilK9Format(søker: Søker): K9Søknad = K9Søknad(
+    override fun somK9Format(søker: Søker): K9Søknad = K9Søknad(
         SøknadId.of(søknadId),
         k9FormatVersjon,
         mottatt,
@@ -50,7 +54,7 @@ class Søknad(
         )
     )
 
-    internal fun tilKomplettSøknad(søker: Søker, k9Format: K9Søknad) = KomplettSøknad(
+    override fun somKomplettSøknad(søker: Søker, k9Format: K9Søknad) = OmsorgspengerKroniskSyktBarnKomplettSøknad(
         språk = språk,
         søknadId = søknadId,
         mottatt = mottatt,
@@ -66,7 +70,7 @@ class Søknad(
         k9FormatSøknad = k9Format
     )
 
-    internal fun valider() = mutableListOf<String>().apply {
+    override fun valider() = mutableListOf<String>().apply {
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
         krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true")
         kreverIkkeNull(sammeAdresse, "sammeAdresse må være satt.")
@@ -76,5 +80,13 @@ class Søknad(
         addAll(barn.valider("barn"))
 
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
+    }
+
+    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerKroniskSyktBarnSøknadValidator()
+    override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTVIDET_RETT
+    override fun søknadId(): String = søknadId
+    override fun vedlegg(): List<URL> = mutableListOf<URL>().apply {
+        addAll(legeerklæring)
+        samværsavtale?.let { addAll(it) }
     }
 }

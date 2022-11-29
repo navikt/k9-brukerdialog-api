@@ -16,7 +16,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
 
     @Test
     fun `Validering skal ikke feile på gyldig søknad`() {
-        Søknad(
+        OmsorgspengerKroniskSyktBarnSøknad(
             språk = "nb",
             kroniskEllerFunksjonshemming = true,
             barn = Barn(
@@ -35,7 +35,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
     @Test
     fun `Forvent valideringsfeil dersom sammeAdresse er false og mangler samværsavtale`(){
         assertThrows<Throwblem> {
-            Søknad(
+            OmsorgspengerKroniskSyktBarnSøknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
                 barn = Barn(
@@ -56,7 +56,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`(){
         assertThrows<Throwblem>{
-            Søknad(
+            OmsorgspengerKroniskSyktBarnSøknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
                 barn = Barn(
@@ -76,7 +76,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`(){
         assertThrows<Throwblem>{
-            Søknad(
+            OmsorgspengerKroniskSyktBarnSøknad(
                 språk = "nb",
                 kroniskEllerFunksjonshemming = true,
                 barn = Barn(
@@ -95,7 +95,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
 
     @Test
     fun `Mapping av k9format blir som forventet`(){
-        val søknad = Søknad(
+        val søknad = OmsorgspengerKroniskSyktBarnSøknad(
             språk = "nb",
             mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
             barn = Barn(
@@ -110,7 +110,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         )
-        val faktiskK9Format = JSONObject(søknad.tilK9Format(SøknadUtils.søker).somJson())
+        val faktiskK9Format = JSONObject(søknad.somK9Format(SøknadUtils.søker).somJson())
         val forventetK9Format = JSONObject(
             """
                 {

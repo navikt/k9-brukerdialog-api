@@ -15,7 +15,7 @@ import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnSøknad
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -79,7 +79,7 @@ class OmsorgspengerUtvidetRettTest {
 
     @Test
     fun `Innsending av gyldig søknad`() {
-        val søknad = Søknad(
+        val søknad = OmsorgspengerKroniskSyktBarnSøknad(
             språk = "nb",
             kroniskEllerFunksjonshemming = true,
             barn = Barn(
@@ -106,14 +106,14 @@ class OmsorgspengerUtvidetRettTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_UTVIDET_RETT)
         assertEquals(
-            søknad.tilKomplettSøknad(SøknadUtils.søker, søknad.tilK9Format(SøknadUtils.søker)),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker)),
             hentet.data.somOmsorgspengerUtvidetRettKomplettSøknad()
         )
     }
 
     @Test
     fun `Innsending av ugyldig søknad som får valideringsfeil`() {
-        val søknad = Søknad(
+        val søknad = OmsorgspengerKroniskSyktBarnSøknad(
             språk = "nb",
             kroniskEllerFunksjonshemming = true,
             barn = Barn(

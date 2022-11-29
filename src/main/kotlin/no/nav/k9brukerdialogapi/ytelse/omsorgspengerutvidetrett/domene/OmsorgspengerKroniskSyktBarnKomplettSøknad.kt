@@ -1,13 +1,14 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.k9.søknad.Søknad
+import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 
-class KomplettSøknad(
+class OmsorgspengerKroniskSyktBarnKomplettSøknad(
     private val språk: String,
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     private val søknadId: String = UUID.randomUUID().toString(),
@@ -21,10 +22,10 @@ class KomplettSøknad(
     private val k9FormatSøknad: Søknad,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
-){
-    override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
+): KomplettInnsending {
+    override fun equals(other: Any?) = this === other || (other is OmsorgspengerKroniskSyktBarnKomplettSøknad && this.equals(other))
 
-    private fun equals(other: KomplettSøknad) =
+    private fun equals(other: OmsorgspengerKroniskSyktBarnKomplettSøknad) =
             this.søknadId == other.søknadId &&
             this.k9FormatSøknad.søknadId == other.k9FormatSøknad.søknadId
 }
