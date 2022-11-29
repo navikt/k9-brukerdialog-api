@@ -17,7 +17,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom søknaden mangler barn`() {
         assertThrows<Throwblem> {
-            Søknad(
+            OmsorgspengerMdlertidigAleneSøknad(
                 id = "123456789",
                 språk = "nb",
                 annenForelder = AnnenForelder(
@@ -41,7 +41,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`() {
         assertThrows<Throwblem> {
-            Søknad(
+            OmsorgspengerMdlertidigAleneSøknad(
                 id = "123456789",
                 språk = "nb",
                 annenForelder = AnnenForelder(
@@ -70,7 +70,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`() {
         assertThrows<Throwblem> {
-            Søknad(
+            OmsorgspengerMdlertidigAleneSøknad(
                 id = "123456789",
                 språk = "nb",
                 annenForelder = AnnenForelder(
@@ -98,7 +98,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
 
     @Test
     fun `K9Format blir som forventet`() {
-        val søknad = Søknad(
+        val søknad = OmsorgspengerMdlertidigAleneSøknad(
             id = "123456789",
             mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
             språk = "nb",
@@ -120,7 +120,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
         )
-        val faktiskK9Format = søknad.tilK9Format(søker).somJson()
+        val faktiskK9Format = søknad.somK9Format(søker).somJson()
         val forventetK9Format =
             //language=json
             """

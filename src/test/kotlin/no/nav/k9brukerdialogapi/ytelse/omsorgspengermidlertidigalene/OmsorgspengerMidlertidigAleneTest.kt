@@ -17,7 +17,7 @@ import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.AnnenForelder
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.OmsorgspengerMdlertidigAleneSøknad
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -82,7 +82,7 @@ class OmsorgspengerMidlertidigAleneTest {
 
     @Test
     fun `Innsending av gyldig søknad`() {
-        val søknad = Søknad(
+        val søknad = OmsorgspengerMdlertidigAleneSøknad(
             id = "123456789",
             språk = "nb",
             annenForelder = AnnenForelder(
@@ -115,14 +115,14 @@ class OmsorgspengerMidlertidigAleneTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE)
         assertEquals(
-            søknad.tilKomplettSøknad(søker, søknad.tilK9Format(søker)),
+            søknad.somKomplettSøknad(søker, søknad.somK9Format(søker)),
             hentet.data.somOmsorgspengerMidlertidigAleneKomplettSøknad()
         )
     }
 
     @Test
     fun `Innsending av ugyldig søknad gir valideringsfeil`() {
-        val søknad = Søknad(
+        val søknad = OmsorgspengerMdlertidigAleneSøknad(
             id = "123456789",
             språk = "nb",
             annenForelder = AnnenForelder(

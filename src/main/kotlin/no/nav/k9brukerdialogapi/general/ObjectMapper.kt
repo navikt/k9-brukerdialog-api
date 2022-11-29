@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.KomplettSøknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.OmsorgspengerMdlertidigAleneKomplettSøknad
 import org.json.JSONObject
 
 val objectMapper: ObjectMapper = jacksonObjectMapper().dusseldorfConfigured()
@@ -31,7 +31,7 @@ fun ObjectMapper.k9BrukerdialogCacheKonfigurert(): ObjectMapper {
 }
 
 fun Any.somJson() = objectMapper.writeValueAsString(this)
-fun JSONObject.somOmsorgspengerMidlertidigAleneKomplettSøknad(): KomplettSøknad = objectMapper.readValue(this.toString())
+fun JSONObject.somOmsorgspengerMidlertidigAleneKomplettSøknad(): OmsorgspengerMdlertidigAleneKomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgspengerUtvidetRettKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnKomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somEttersendingKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.ettersending.domene.KomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgsdagerAleneomsorgKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.KomplettSøknad = objectMapper.readValue(this.toString())
