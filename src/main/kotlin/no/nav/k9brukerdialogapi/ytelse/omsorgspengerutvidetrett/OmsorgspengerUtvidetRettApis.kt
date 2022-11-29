@@ -33,11 +33,11 @@ fun Route.omsorgspengerUtvidetRettApis(
             val idToken = idTokenProvider.getIdToken(call)
             val metadata = call.getMetadata()
 
-            logger.info(formaterStatuslogging(OMSORGSPENGER_UTVIDET_RETT, søknad.søknadId, "mottatt."))
+            logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
             søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
 
             innsendingService.registrer(søknad, callId, idToken, metadata)
-            registrerMottattSøknad(OMSORGSPENGER_UTVIDET_RETT)
+            registrerMottattSøknad(søknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }
