@@ -107,7 +107,7 @@ class OmsorgsdagerAleneomsorgTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSDAGER_ALENEOMSORG)
         assertEquals(
-            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format()),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker)),
             hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
         )
     }
