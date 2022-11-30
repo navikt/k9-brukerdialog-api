@@ -4,7 +4,7 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
@@ -18,7 +18,7 @@ class EttersendingSøknadTest {
 
     @Test
     fun `Mapping av K9Format blir som forventet`(){
-        val søknad = Søknad(
+        val søknad = Ettersendelse(
             språk = "nb",
             mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
             vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
@@ -45,7 +45,7 @@ class EttersendingSøknadTest {
 
     @Test
     fun `Gyldig søknad gir ingen valideringsfeil`() {
-        Søknad(
+        Ettersendelse(
             språk = "nb",
             vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
             søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
@@ -58,7 +58,7 @@ class EttersendingSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom søknadstype er PP og beskrivelse er null`() {
         assertThrows<Throwblem> {
-            Søknad(
+            Ettersendelse(
                 språk = "nb",
                 vedlegg = listOf(),
                 søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
@@ -74,7 +74,7 @@ class EttersendingSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom vedlegg er tom liste`(){
         assertThrows<Throwblem>{
-            Søknad(
+            Ettersendelse(
                 språk = "nb",
                 vedlegg = listOf(),
                 søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
@@ -89,7 +89,7 @@ class EttersendingSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom harForståttRettigheterOgPlikter er false`(){
         assertThrows<Throwblem> {
-            Søknad(
+            Ettersendelse(
                 språk = "nb",
                 vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
                 søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
@@ -104,7 +104,7 @@ class EttersendingSøknadTest {
     @Test
     fun `Forventer valideringsfeil dersom harBekreftetOpplysninger er false`(){
         assertThrows<Throwblem>{
-            Søknad(
+            Ettersendelse(
                 språk = "nb",
                 vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
                 søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,

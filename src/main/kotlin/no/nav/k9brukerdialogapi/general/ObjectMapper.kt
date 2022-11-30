@@ -33,7 +33,7 @@ fun ObjectMapper.k9BrukerdialogCacheKonfigurert(): ObjectMapper {
 fun Any.somJson() = objectMapper.writeValueAsString(this)
 fun JSONObject.somOmsorgspengerMidlertidigAleneKomplettSøknad(): OmsorgspengerMdlertidigAleneKomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgspengerUtvidetRettKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnKomplettSøknad = objectMapper.readValue(this.toString())
-fun JSONObject.somEttersendingKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.ettersending.domene.KomplettSøknad = objectMapper.readValue(this.toString())
+fun JSONObject.somEttersendingKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.ettersending.domene.KomplettEttersendelse = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgsdagerAleneomsorgKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.OmsorgsdagerAleneOmOmsorgenKomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgspengerUtbetalingArbeidstakerKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerKomplettSøknad = objectMapper.readValue(this.toString())
 fun JSONObject.somOmsorgspengerUtbetalingSnfKomplettSøknad(): no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.OmsorgspengerutbetalingSnfKomplettSøknad = objectMapper.readValue(this.toString())

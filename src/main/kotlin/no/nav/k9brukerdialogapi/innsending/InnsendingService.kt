@@ -5,7 +5,8 @@ import no.nav.helse.dusseldorf.ktor.core.ParameterType
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
-import no.nav.k9.søknad.Søknad as K9Søknad
+import no.nav.k9.ettersendelse.Ettersendelse
+import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
@@ -36,17 +37,24 @@ class InnsendingService(
 
         innsending.valider()
         val k9Format = innsending.somK9Format(søker)
-        k9Format?.let {  validerK9Format(innsending, it) }
+        k9Format?.let { validerK9Format(innsending, it) }
 
-        if (innsending.inneholderVedlegg()) registrerSøknadMedVedlegg(innsending, idToken, callId, søker, k9Format, metadata)
+        if (innsending.inneholderVedlegg()) registrerSøknadMedVedlegg(
+            innsending,
+            idToken,
+            callId,
+            søker,
+            k9Format,
+            metadata
+        )
         else registrerSøknadUtenVedlegg(innsending, søker, k9Format, metadata)
     }
 
     private fun registrerSøknadUtenVedlegg(
         innsending: Innsending,
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad?,
-        metadata: Metadata
+        k9Format: no.nav.k9.søknad.Innsending?,
+        metadata: Metadata,
     ) {
         try {
             kafkaProdusent.produserKafkaMelding(
@@ -65,8 +73,8 @@ class InnsendingService(
         idToken: IdToken,
         callId: CallId,
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad?,
-        metadata: Metadata
+        k9Format: no.nav.k9.søknad.Innsending?,
+        metadata: Metadata,
     ) {
         logger.info("Validerer ${innsending.vedlegg().size} vedlegg.")
         val vedlegg = vedleggService.hentVedlegg(innsending.vedlegg(), idToken, callId)
@@ -81,7 +89,7 @@ class InnsendingService(
                 JSONObject(innsending.somKomplettSøknad(søker, k9Format, vedlegg.map { it.title }).somJson()),
                 innsending.ytelse()
             )
-        } catch (exception: Exception){
+        } catch (exception: Exception) {
             logger.error("Feilet ved å legge melding på Kafka.")
             logger.info("Fjerner hold på persisterte vedlegg")
             fjernHoldPåPersisterteVedlegg(innsending, callId, dokumentEier)
@@ -89,8 +97,12 @@ class InnsendingService(
         }
     }
 
-    fun validerK9Format(innsending: Innsending, søknad: K9Søknad) {
-        val feil = innsending.validator()?.valider(søknad)?.map {
+    fun validerK9Format(innsending: Innsending, k9Format: no.nav.k9.søknad.Innsending) {
+        val feil = when(k9Format) {
+            is Søknad -> innsending.søknadValidator()?.valider(k9Format)
+            is Ettersendelse -> innsending.ettersendelseValidator()?.valider(k9Format)
+            else -> null
+        }?.map {
             Violation(
                 parameterName = it.felt,
                 parameterType = ParameterType.ENTITY,

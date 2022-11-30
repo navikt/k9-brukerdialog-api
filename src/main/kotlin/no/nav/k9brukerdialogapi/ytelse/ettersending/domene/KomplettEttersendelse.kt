@@ -1,10 +1,11 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending.domene
 
 import no.nav.k9.ettersendelse.Ettersendelse
+import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import java.time.ZonedDateTime
 
-class KomplettSøknad(
+class KomplettEttersendelse(
     private val søknadId: String,
     private val søker: Søker,
     private val språk: String,
@@ -16,11 +17,11 @@ class KomplettSøknad(
     private val søknadstype: Søknadstype,
     private val titler: List<String>,
     private val k9Format: Ettersendelse
-){
+): KomplettInnsending {
 
-    override fun equals(other: Any?) = this === other || (other is KomplettSøknad && this.equals(other))
+    override fun equals(other: Any?) = this === other || (other is KomplettEttersendelse && this.equals(other))
 
-    private fun equals(other: KomplettSøknad) = this.søknadId == other.søknadId
+    private fun equals(other: KomplettEttersendelse) = this.søknadId == other.søknadId
             && this.k9Format.søknadId == other.k9Format.søknadId
             && this.titler == other.titler
 

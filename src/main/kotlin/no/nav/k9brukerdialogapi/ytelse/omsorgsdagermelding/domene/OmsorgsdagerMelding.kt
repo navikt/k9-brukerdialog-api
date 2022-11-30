@@ -44,28 +44,30 @@ class OmsorgsdagerMelding(
         barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
-    override fun somKomplettSøknad(søker: Søker, k9Format: Søknad?, titler: List<String>): KomplettInnsending = OmsorgsdagerKomplettMelding(
-        søknadId = søknadId,
-        søker = søker,
-        mottatt = mottatt,
-        id = id,
-        språk = språk,
-        barn = barn,
-        mottakerFnr = mottakerFnr,
-        mottakerNavn = mottakerNavn,
-        harAleneomsorg = harAleneomsorg!!,
-        harUtvidetRett = harUtvidetRett!!,
-        erYrkesaktiv = erYrkesaktiv!!,
-        arbeiderINorge = arbeiderINorge!!,
-        arbeidssituasjon = arbeidssituasjon,
-        antallDagerBruktIÅr = antallDagerBruktIÅr,
-        type = type,
-        korona = korona,
-        overføring = overføring,
-        fordeling = fordeling?.somKomplettFordele(),
-        harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
-        harBekreftetOpplysninger = harBekreftetOpplysninger
-    )
+    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): KomplettInnsending {
+        return OmsorgsdagerKomplettMelding(
+            søknadId = søknadId,
+            søker = søker,
+            mottatt = mottatt,
+            id = id,
+            språk = språk,
+            barn = barn,
+            mottakerFnr = mottakerFnr,
+            mottakerNavn = mottakerNavn,
+            harAleneomsorg = harAleneomsorg!!,
+            harUtvidetRett = harUtvidetRett!!,
+            erYrkesaktiv = erYrkesaktiv!!,
+            arbeiderINorge = arbeiderINorge!!,
+            arbeidssituasjon = arbeidssituasjon,
+            antallDagerBruktIÅr = antallDagerBruktIÅr,
+            type = type,
+            korona = korona,
+            overføring = overføring,
+            fordeling = fordeling?.somKomplettFordele(),
+            harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
+            harBekreftetOpplysninger = harBekreftetOpplysninger
+        )
+    }
 
     override fun valider() = mutableListOf<String>().apply {
         validerIdentifikator(mottakerFnr, "mottakerFnr")

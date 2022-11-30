@@ -74,17 +74,18 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
 
     override fun somKomplettSøknad(
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad?,
+        k9Format: no.nav.k9.søknad.Innsending?,
         titler: List<String>,
     ): OmsorgsdagerAleneOmOmsorgenKomplettSøknad {
         require(barn.size == 1) { "Søknad etter splitt kan kun inneholdet et barn" }
+        requireNotNull(k9Format)
         return OmsorgsdagerAleneOmOmsorgenKomplettSøknad(
             mottatt = mottatt,
             søker = søker,
             søknadId = søknadId,
             språk = språk,
             barn = this.barn[0],
-            k9Søknad = k9Format!!,
+            k9Søknad = k9Format as no.nav.k9.søknad.Søknad,
             harBekreftetOpplysninger = harBekreftetOpplysninger,
             harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter
         )
@@ -94,5 +95,5 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
     override fun søknadId(): String = søknadId
     override fun vedlegg(): List<URL> = listOf()
 
-    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerAleneOmsorgSøknadValidator()
+    override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerAleneOmsorgSøknadValidator()
 }

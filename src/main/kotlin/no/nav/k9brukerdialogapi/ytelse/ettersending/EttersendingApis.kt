@@ -10,9 +10,9 @@ import no.nav.k9brukerdialogapi.ETTERSENDING_URL
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING
-import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,16 +20,16 @@ import org.slf4j.LoggerFactory
 private val logger: Logger = LoggerFactory.getLogger("ytelse.ettersending.ettersendingApis.kt")
 
 fun Route.ettersendingApis(
+    innsendingService: InnsendingService,
     idTokenProvider: IdTokenProvider,
-    ettersendingService: EttersendingService
 ){
     route(ETTERSENDING_URL){
         post(INNSENDING_URL){
-            val søknad =  call.receive<Søknad>()
-            logger.info(formaterStatuslogging(ETTERSENDING, søknad.søknadId, "mottatt."))
-            logger.info("Ettersending for ytelse ${søknad.søknadstype}")
-            ettersendingService.registrer(søknad, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
-            registrerMottattSøknad(ETTERSENDING)
+            val ettersendelse =  call.receive<Ettersendelse>()
+            logger.info(formaterStatuslogging(ettersendelse.ytelse(), ettersendelse.søknadId, "mottatt."))
+            logger.info("Ettersending for ytelse ${ettersendelse.søknadstype}")
+            innsendingService.registrer(ettersendelse, call.getCallId(),  idTokenProvider.getIdToken(call), call.getMetadata())
+            registrerMottattSøknad(ettersendelse.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }

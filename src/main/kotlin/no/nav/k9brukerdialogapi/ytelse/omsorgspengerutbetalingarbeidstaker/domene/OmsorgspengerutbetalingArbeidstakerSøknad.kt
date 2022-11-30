@@ -53,23 +53,26 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
 
     override fun somKomplettSøknad(
         søker: Søker,
-        k9Format: no.nav.k9.søknad.Søknad?,
+        k9Format: no.nav.k9.søknad.Innsending?,
         titler: List<String>
-    ) = OmsorgspengerutbetalingArbeidstakerKomplettSøknad(
-        søknadId = søknadId,
-        språk = språk,
-        mottatt = mottatt,
-        søker = søker,
-        bosteder = bosteder,
-        opphold = opphold,
-        arbeidsgivere = arbeidsgivere,
-        bekreftelser = bekreftelser,
-        vedleggId = vedlegg.map { it.vedleggId() },
-        titler = titler,
-        hjemmePgaSmittevernhensyn = hjemmePgaSmittevernhensyn,
-        hjemmePgaStengtBhgSkole = hjemmePgaStengtBhgSkole,
-        k9Format = k9Format!!
-    )
+    ): OmsorgspengerutbetalingArbeidstakerKomplettSøknad {
+        requireNotNull(k9Format)
+        return OmsorgspengerutbetalingArbeidstakerKomplettSøknad(
+            søknadId = søknadId,
+            språk = språk,
+            mottatt = mottatt,
+            søker = søker,
+            bosteder = bosteder,
+            opphold = opphold,
+            arbeidsgivere = arbeidsgivere,
+            bekreftelser = bekreftelser,
+            vedleggId = vedlegg.map { it.vedleggId() },
+            titler = titler,
+            hjemmePgaSmittevernhensyn = hjemmePgaSmittevernhensyn,
+            hjemmePgaStengtBhgSkole = hjemmePgaStengtBhgSkole,
+            k9Format = k9Format as no.nav.k9.søknad.Søknad
+        )
+    }
 
     override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
         return K9Søknad(
@@ -88,7 +91,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         )
     }
 
-    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerUtbetalingSøknadValidator()
+    override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerUtbetalingSøknadValidator()
     override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
     override fun søknadId(): String = søknadId
     override fun vedlegg(): List<URL> = vedlegg
