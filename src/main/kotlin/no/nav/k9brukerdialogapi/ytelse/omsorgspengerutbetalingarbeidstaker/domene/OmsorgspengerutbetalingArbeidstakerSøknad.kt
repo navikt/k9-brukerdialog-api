@@ -71,8 +71,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         k9Format = k9Format!!
     )
 
-    override fun somK9Format(søker: Søker?): no.nav.k9.søknad.Søknad {
-        requireNotNull(søker)
+    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
         return K9Søknad(
             SøknadId.of(søknadId),
             k9FormatVersjon,

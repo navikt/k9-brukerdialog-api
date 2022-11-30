@@ -46,10 +46,9 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
         }
     }
 
-    override fun somK9Format(søker: Søker?): K9Søknad {
+    override fun somK9Format(søker: Søker): K9Søknad {
         // Innsendt søknad blir splittet opp i 1 søknad per barn. Derfor skal det kun være et barn i lista.
         require(barn.size == 1) { "Søknad etter splitt kan kun inneholdet et barn" }
-        requireNotNull(søker)
 
         return K9Søknad()
             .medSøknadId(SøknadId(søknadId))

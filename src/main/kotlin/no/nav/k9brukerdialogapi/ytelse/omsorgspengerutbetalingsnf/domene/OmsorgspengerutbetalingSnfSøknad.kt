@@ -83,8 +83,7 @@ class OmsorgspengerutbetalingSnfSøknad(
         barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
-    override fun somK9Format(søker: Søker?): no.nav.k9.søknad.Søknad {
-        requireNotNull(søker)
+    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
         return K9Søknad(
             søknadId,
             k9FormatVersjon,

@@ -43,8 +43,7 @@ class OmsorgspengerKroniskSyktBarnSøknad(
         if (barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
     }
 
-    override fun somK9Format(søker: Søker?): K9Søknad {
-        requireNotNull(søker)
+    override fun somK9Format(søker: Søker): K9Søknad {
         return K9Søknad(
             SøknadId.of(søknadId),
             k9FormatVersjon,

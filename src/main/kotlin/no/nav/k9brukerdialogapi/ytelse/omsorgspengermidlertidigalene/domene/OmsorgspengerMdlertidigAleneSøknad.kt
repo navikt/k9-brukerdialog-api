@@ -34,8 +34,7 @@ class OmsorgspengerMdlertidigAleneSøknad(
         private val k9FormatVersjon = Versjon.of("1.0.0")
     }
 
-    override fun somK9Format(søker: Søker?): no.nav.k9.søknad.Søknad {
-        requireNotNull(søker)
+    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
         return K9Søknad(
             SøknadId.of(søknadId),
             k9FormatVersjon,
