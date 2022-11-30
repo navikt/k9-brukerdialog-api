@@ -17,7 +17,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
 
     @Test
     fun `Oppdatering av identitetsnummer på barn fungerer`() {
-        val søknad = Søknad(
+        val søknad = OmsorgsdagerAleneOmOmsorgenSøknad(
             barn = listOf(
                 Barn(
                     navn = "Barn1",
@@ -66,7 +66,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
         val barn1 = Barn("Barn1", TypeBarn.FRA_OPPSLAG, "123", "12345", TidspunktForAleneomsorg.TIDLIGERE)
         val barn2 = Barn("Barn2", TypeBarn.FRA_OPPSLAG, "321", "54321", TidspunktForAleneomsorg.TIDLIGERE)
 
-        val søknad = Søknad(
+        val søknad = OmsorgsdagerAleneOmOmsorgenSøknad(
             barn = listOf(barn1, barn2),
             språk = "nb",
             harForståttRettigheterOgPlikter = true,
@@ -90,7 +90,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
 
     @Test
     fun `Mapping av K9Format blir som forventet`(){
-        val søknad = Søknad(
+        val søknad = OmsorgsdagerAleneOmOmsorgenSøknad(
             mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
             barn = listOf(
                 Barn(
@@ -138,7 +138,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
     @Test
     fun `Gir valideringsfeil dersom harBekreftetOpplysninger og harForståttRettigheterOgPlikter er false`(){
         assertThrows<Throwblem> {
-            Søknad(
+            OmsorgsdagerAleneOmOmsorgenSøknad(
                 barn = listOf(
                     Barn(
                         navn = "Barn1",
@@ -161,7 +161,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
     @Test
     fun `Gir valideringsfeil dersom liste med barn er tom`(){
         assertThrows<Throwblem> {
-            Søknad(
+            OmsorgsdagerAleneOmOmsorgenSøknad(
                 barn = listOf(),
                 språk = "nb",
                 harForståttRettigheterOgPlikter = true,

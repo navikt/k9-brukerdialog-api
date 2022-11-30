@@ -71,20 +71,23 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         k9Format = k9Format!!
     )
 
-    override fun somK9Format(søker: Søker) = K9Søknad(
-        SøknadId.of(søknadId),
-        k9FormatVersjon,
-        mottatt,
-        søker.somK9Søker(),
-        OmsorgspengerUtbetaling(
-            null,
-            OpptjeningAktivitet(),
-            arbeidsgivere.somK9Fraværsperiode(),
-            null,
-            bosteder.somK9Bosteder(),
-            opphold.somK9Utenlandsopphold()
+    override fun somK9Format(søker: Søker?): no.nav.k9.søknad.Søknad {
+        requireNotNull(søker)
+        return K9Søknad(
+            SøknadId.of(søknadId),
+            k9FormatVersjon,
+            mottatt,
+            søker.somK9Søker(),
+            OmsorgspengerUtbetaling(
+                null,
+                OpptjeningAktivitet(),
+                arbeidsgivere.somK9Fraværsperiode(),
+                null,
+                bosteder.somK9Bosteder(),
+                opphold.somK9Utenlandsopphold()
+            )
         )
-    )
+    }
 
     override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerUtbetalingSøknadValidator()
     override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER

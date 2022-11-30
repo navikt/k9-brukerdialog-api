@@ -96,7 +96,8 @@ class PilsSøknad(
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    override fun somK9Format(søker: Søker): K9Søknad {
+    override fun somK9Format(søker: Søker?): K9Søknad {
+        requireNotNull(søker)
         val ytelse = PleipengerLivetsSluttfase()
             .medSøknadsperiode(Periode(fraOgMed, tilOgMed))
             .medPleietrengende(pleietrengende.somK9Pleietrengende())

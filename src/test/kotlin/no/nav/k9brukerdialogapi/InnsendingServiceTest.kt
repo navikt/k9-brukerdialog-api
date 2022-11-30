@@ -57,13 +57,9 @@ internal class InnsendingServiceTest{
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        ettersendingSøknadService = EttersendingService(
-            kafkaProducer, søkerService, vedleggService
-        )
+        ettersendingSøknadService = EttersendingService(kafkaProducer, søkerService, vedleggService)
+        innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
 
-        innsendingService = InnsendingService(
-            søkerService, kafkaProducer, vedleggService
-        )
         assertNotNull(kafkaProducer)
         assertNotNull(ettersendingSøknadService)
         assertNotNull(innsendingService)
