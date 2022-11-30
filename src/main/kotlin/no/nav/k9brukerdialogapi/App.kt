@@ -36,6 +36,7 @@ import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.AccessTokenClientResolver
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.mellomlagring.K9BrukerdialogCacheGateway
 import no.nav.k9brukerdialogapi.mellomlagring.MellomlagringService
@@ -172,6 +173,8 @@ fun Application.k9BrukerdialogApi() {
             k9BrukerdialogCacheGateway = k9BrukerdialogCacheGateway
         )
 
+        val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
+
         environment!!.monitor.subscribe(ApplicationStopping) {
             logger.info("Stopper Kafka Producer.")
             kafkaProducer.close()
@@ -184,7 +187,8 @@ fun Application.k9BrukerdialogApi() {
                 kafkaProdusent = kafkaProducer,
                 søkerService = søkerService,
                 barnService = barnService,
-                vedleggService = vedleggService
+                vedleggService = vedleggService,
+                innsendingService = innsendingService
             )
 
             oppslagRoutes(

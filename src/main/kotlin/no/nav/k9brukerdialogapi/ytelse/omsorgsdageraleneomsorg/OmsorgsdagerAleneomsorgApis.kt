@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory
 private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgsdageraleneomsorg.omsorgsdagerAleneomsorgApis.kt")
 
 fun Route.omsorgsdagerAleneomsorgApis(
-    idTokenProvider: IdTokenProvider,
     innsendingService: InnsendingService,
-    barnService: BarnService
+    barnService: BarnService,
+    idTokenProvider: IdTokenProvider,
 ){
     route(OMSORGSDAGER_ALENEOMSORG_URL){
         post(INNSENDING_URL){

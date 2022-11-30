@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory
 private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgspengerutbetalingarbeidstaker.omsorgspengerUtbetalingArbeidstakerApi.kt")
 
 fun Route.omsorgspengerUtbetalingArbeidstakerApi(
+    innsendingService: InnsendingService,
     idTokenProvider: IdTokenProvider,
-    innsendingService: InnsendingService
 ) {
     route(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL){
         post(INNSENDING_URL){

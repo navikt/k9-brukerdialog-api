@@ -19,23 +19,18 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.pleiepengerLiv
 
 fun Route.ytelseRoutes(
     idTokenProvider: IdTokenProvider,
+    innsendingService: InnsendingService,
     kafkaProdusent: KafkaProducer,
     barnService: BarnService,
     søkerService: SøkerService,
     vedleggService: VedleggService
 ){
-    val innsendingService = InnsendingService(søkerService, kafkaProdusent, vedleggService)
-
-    pleiepengerLivetsSluttfaseApi(idTokenProvider, innsendingService)
+    pleiepengerLivetsSluttfaseApi(innsendingService, idTokenProvider)
     omsorgspengerUtvidetRettApis(innsendingService, barnService, idTokenProvider)
-    omsorgspengerUtbetalingSnfApis(idTokenProvider, barnService, innsendingService)
-    omsorgspengerUtbetalingArbeidstakerApi(idTokenProvider, innsendingService)
+    omsorgspengerUtbetalingSnfApis(innsendingService, barnService, idTokenProvider)
+    omsorgspengerUtbetalingArbeidstakerApi(innsendingService, idTokenProvider)
     omsorgspengerMidlertidigAleneApis(innsendingService, barnService, idTokenProvider)
-    omsorgsdagerMeldingApi(idTokenProvider, innsendingService, barnService)
-    omsorgsdagerAleneomsorgApis(idTokenProvider, innsendingService, barnService)
-
-    ettersendingApis(
-        idTokenProvider,
-        EttersendingService(kafkaProdusent, søkerService, vedleggService)
-    )
+    omsorgsdagerMeldingApi(innsendingService, barnService, idTokenProvider)
+    omsorgsdagerAleneomsorgApis(innsendingService, barnService, idTokenProvider)
+    ettersendingApis(idTokenProvider, EttersendingService(kafkaProdusent, søkerService, vedleggService))
 }

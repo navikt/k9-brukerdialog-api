@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory
 private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgsdagermelding.omsorgsdagerMeldingApi")
 
 fun Route.omsorgsdagerMeldingApi(
-    idTokenProvider: IdTokenProvider,
     innsendingService: InnsendingService,
     barnService: BarnService,
+    idTokenProvider: IdTokenProvider,
 ) {
     post(OMSORGSDAGER_MELDING_FORDELING_URL + INNSENDING_URL) {
         mottaMelding(innsendingService, barnService, idTokenProvider)

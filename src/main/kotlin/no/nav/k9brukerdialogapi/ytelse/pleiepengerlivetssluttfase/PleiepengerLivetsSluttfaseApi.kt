@@ -12,15 +12,14 @@ import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PilsSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 fun Route.pleiepengerLivetsSluttfaseApi(
+    innsendingService: InnsendingService,
     idTokenProvider: IdTokenProvider,
-    service: InnsendingService
 ){
     val logger: Logger = LoggerFactory.getLogger("ytelse.pleiepengerlivetssluttfase.pleiepengerLivetsSluttfaseApi.kt")
 
@@ -28,7 +27,7 @@ fun Route.pleiepengerLivetsSluttfaseApi(
         post(INNSENDING_URL){
             val pilsSøknad = call.receive<PilsSøknad>()
             logger.info(formaterStatuslogging(pilsSøknad.ytelse(), pilsSøknad.søknadId, "mottatt."))
-            service.registrer(pilsSøknad, call.getCallId(), idTokenProvider.getIdToken(call), call.getMetadata())
+            innsendingService.registrer(pilsSøknad, call.getCallId(), idTokenProvider.getIdToken(call), call.getMetadata())
             registrerMottattSøknad(pilsSøknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
