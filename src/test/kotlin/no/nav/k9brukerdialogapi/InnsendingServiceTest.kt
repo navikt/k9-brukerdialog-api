@@ -19,7 +19,6 @@ import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
-import no.nav.k9brukerdialogapi.ytelse.ettersending.EttersendingService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
@@ -50,18 +49,14 @@ internal class InnsendingServiceTest{
 
     @RelaxedMockK
     lateinit var vedleggService: VedleggService
-
-    lateinit var ettersendingSøknadService: EttersendingService
     lateinit var innsendingService: InnsendingService
 
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        ettersendingSøknadService = EttersendingService(kafkaProducer, søkerService, vedleggService)
         innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
 
         assertNotNull(kafkaProducer)
-        assertNotNull(ettersendingSøknadService)
         assertNotNull(innsendingService)
     }
 
@@ -79,8 +74,8 @@ internal class InnsendingServiceTest{
 
                 every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
 
-                ettersendingSøknadService.registrer(
-                    søknad = no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad(
+                innsendingService.registrer(
+                    innsending = no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse(
                         språk = "nb",
                         mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
                         vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),

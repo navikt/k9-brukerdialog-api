@@ -56,29 +56,32 @@ class PilsSøknad(
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
     }
 
-    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = PilsKomplettSøknad(
-        søknadId = søknadId,
-        søker = søker,
-        språk = språk,
-        fraOgMed = fraOgMed,
-        tilOgMed = tilOgMed,
-        mottatt = mottatt,
-        vedleggId = vedleggUrls.map { it.vedleggId() },
-        opplastetIdVedleggId = opplastetIdVedleggUrls.map { it.vedleggId() },
-        medlemskap = medlemskap,
-        pleietrengende = pleietrengende,
-        utenlandsoppholdIPerioden = utenlandsoppholdIPerioden,
-        ferieuttakIPerioden = ferieuttakIPerioden,
-        frilans = frilans,
-        arbeidsgivere = arbeidsgivere,
-        opptjeningIUtlandet = opptjeningIUtlandet,
-        utenlandskNæring = utenlandskNæring,
-        selvstendigNæringsdrivende = selvstendigNæringsdrivende,
-        harVærtEllerErVernepliktig = harVærtEllerErVernepliktig,
-        harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
-        harBekreftetOpplysninger = harBekreftetOpplysninger,
-        k9Format = k9Format!!
-    )
+    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): PilsKomplettSøknad {
+        requireNotNull(k9Format)
+        return PilsKomplettSøknad(
+            søknadId = søknadId,
+            søker = søker,
+            språk = språk,
+            fraOgMed = fraOgMed,
+            tilOgMed = tilOgMed,
+            mottatt = mottatt,
+            vedleggId = vedleggUrls.map { it.vedleggId() },
+            opplastetIdVedleggId = opplastetIdVedleggUrls.map { it.vedleggId() },
+            medlemskap = medlemskap,
+            pleietrengende = pleietrengende,
+            utenlandsoppholdIPerioden = utenlandsoppholdIPerioden,
+            ferieuttakIPerioden = ferieuttakIPerioden,
+            frilans = frilans,
+            arbeidsgivere = arbeidsgivere,
+            opptjeningIUtlandet = opptjeningIUtlandet,
+            utenlandskNæring = utenlandskNæring,
+            selvstendigNæringsdrivende = selvstendigNæringsdrivende,
+            harVærtEllerErVernepliktig = harVærtEllerErVernepliktig,
+            harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
+            harBekreftetOpplysninger = harBekreftetOpplysninger,
+            k9Format = k9Format as no.nav.k9.søknad.Søknad
+        )
+    }
 
     override fun valider() = mutableListOf<String>().apply {
         addAll(medlemskap.valider())
@@ -161,5 +164,5 @@ class PilsSøknad(
         addAll(opplastetIdVedleggUrls)
     }
 
-    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = PleiepengerLivetsSluttfaseSøknadValidator()
+    override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = PleiepengerLivetsSluttfaseSøknadValidator()
 }

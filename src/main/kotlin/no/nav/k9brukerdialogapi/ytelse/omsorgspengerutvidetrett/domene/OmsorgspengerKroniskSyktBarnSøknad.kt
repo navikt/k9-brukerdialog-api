@@ -56,21 +56,24 @@ class OmsorgspengerKroniskSyktBarnSøknad(
         )
     }
 
-    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = OmsorgspengerKroniskSyktBarnKomplettSøknad(
-        språk = språk,
-        søknadId = søknadId,
-        mottatt = mottatt,
-        kroniskEllerFunksjonshemming = kroniskEllerFunksjonshemming,
-        søker = søker,
-        barn = barn,
-        relasjonTilBarnet = relasjonTilBarnet,
-        sammeAdresse = sammeAdresse,
-        legeerklæringVedleggId = legeerklæring.map { it.vedleggId() },
-        samværsavtaleVedleggId = samværsavtale?.map { it.vedleggId() } ?: listOf(),
-        harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
-        harBekreftetOpplysninger = harBekreftetOpplysninger,
-        k9FormatSøknad = k9Format!!
-    )
+    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): OmsorgspengerKroniskSyktBarnKomplettSøknad {
+        requireNotNull(k9Format)
+        return OmsorgspengerKroniskSyktBarnKomplettSøknad(
+            språk = språk,
+            søknadId = søknadId,
+            mottatt = mottatt,
+            kroniskEllerFunksjonshemming = kroniskEllerFunksjonshemming,
+            søker = søker,
+            barn = barn,
+            relasjonTilBarnet = relasjonTilBarnet,
+            sammeAdresse = sammeAdresse,
+            legeerklæringVedleggId = legeerklæring.map { it.vedleggId() },
+            samværsavtaleVedleggId = samværsavtale?.map { it.vedleggId() } ?: listOf(),
+            harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
+            harBekreftetOpplysninger = harBekreftetOpplysninger,
+            k9FormatSøknad = k9Format as no.nav.k9.søknad.Søknad
+        )
+    }
 
     override fun valider() = mutableListOf<String>().apply {
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
@@ -84,7 +87,7 @@ class OmsorgspengerKroniskSyktBarnSøknad(
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerKroniskSyktBarnSøknadValidator()
+    override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerKroniskSyktBarnSøknadValidator()
     override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTVIDET_RETT
     override fun søknadId(): String = søknadId
     override fun vedlegg(): List<URL> = mutableListOf<URL>().apply {

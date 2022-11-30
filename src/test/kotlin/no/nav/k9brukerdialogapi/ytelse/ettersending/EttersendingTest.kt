@@ -10,7 +10,7 @@ import no.nav.k9brukerdialogapi.*
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
 import no.nav.k9brukerdialogapi.wiremock.*
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
@@ -79,7 +79,7 @@ class EttersendingTest {
     @Test
     fun `Innsending av gyldig søknad`() {
         val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
-        val søknad = Søknad(
+        val søknad = Ettersendelse(
             språk = "nb",
             vedlegg = setOf<URL>(vedlegg).toList(),
             beskrivelse = "Sykt barn...",
@@ -106,7 +106,7 @@ class EttersendingTest {
 
     @Test
     fun `Innsending av ugyldig søknad som får valideringsfeil`() {
-        val søknad = Søknad(
+        val søknad = Ettersendelse(
             språk = "nb",
             vedlegg = listOf(),
             søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,

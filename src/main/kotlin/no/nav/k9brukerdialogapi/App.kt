@@ -184,10 +184,7 @@ fun Application.k9BrukerdialogApi() {
         authenticate(*allIssuers.toTypedArray()) {
             ytelseRoutes(
                 idTokenProvider = idTokenProvider,
-                kafkaProdusent = kafkaProducer,
-                søkerService = søkerService,
                 barnService = barnService,
-                vedleggService = vedleggService,
                 innsendingService = innsendingService
             )
 

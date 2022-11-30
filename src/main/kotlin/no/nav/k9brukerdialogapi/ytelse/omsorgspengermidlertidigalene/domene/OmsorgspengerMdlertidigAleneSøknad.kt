@@ -48,18 +48,21 @@ class OmsorgspengerMdlertidigAleneSøknad(
         )
     }
 
-    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = OmsorgspengerMdlertidigAleneKomplettSøknad(
-        mottatt = mottatt,
-        søker = søker,
-        søknadId = søknadId,
-        id = id,
-        språk = språk,
-        annenForelder = annenForelder,
-        barn = barn,
-        k9Format = k9Format!!,
-        harBekreftetOpplysninger = harBekreftetOpplysninger,
-        harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter
-    )
+    override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): OmsorgspengerMdlertidigAleneKomplettSøknad {
+        requireNotNull(k9Format)
+        return OmsorgspengerMdlertidigAleneKomplettSøknad(
+            mottatt = mottatt,
+            søker = søker,
+            søknadId = søknadId,
+            id = id,
+            språk = språk,
+            annenForelder = annenForelder,
+            barn = barn,
+            k9Format = k9Format as no.nav.k9.søknad.Søknad,
+            harBekreftetOpplysninger = harBekreftetOpplysninger,
+            harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter
+        )
+    }
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
         barn.forEach { barn ->
@@ -80,5 +83,5 @@ class OmsorgspengerMdlertidigAleneSøknad(
     override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE
     override fun søknadId(): String = søknadId
     override fun vedlegg(): List<URL> = listOf()
-    override fun validator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerMidlertidigAleneSøknadValidator()
+    override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerMidlertidigAleneSøknadValidator()
 }
