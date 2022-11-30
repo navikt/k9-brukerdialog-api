@@ -9,7 +9,6 @@ import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.EttersendingService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.ettersendingApis
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.OmsorgsdagerAleneomsorgService
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.omsorgsdagerAleneomsorgApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.omsorgsdagerMeldingApi
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.omsorgspengerMidlertidigAleneApis
@@ -33,13 +32,10 @@ fun Route.ytelseRoutes(
     omsorgspengerUtbetalingArbeidstakerApi(idTokenProvider, innsendingService)
     omsorgspengerMidlertidigAleneApis(innsendingService, barnService, idTokenProvider)
     omsorgsdagerMeldingApi(idTokenProvider, innsendingService, barnService)
+    omsorgsdagerAleneomsorgApis(idTokenProvider, innsendingService, barnService)
 
     ettersendingApis(
         idTokenProvider,
         EttersendingService(kafkaProdusent, søkerService, vedleggService)
-    )
-    omsorgsdagerAleneomsorgApis(
-        idTokenProvider,
-        OmsorgsdagerAleneomsorgService(kafkaProdusent, søkerService, barnService)
     )
 }

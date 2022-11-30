@@ -15,7 +15,7 @@ import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.OmsorgsdagerAleneOmOmsorgenSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TidspunktForAleneomsorg
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.TypeBarn
 import no.nav.security.mock.oauth2.MockOAuth2Server
@@ -82,7 +82,7 @@ class OmsorgsdagerAleneomsorgTest {
 
     @Test
     fun `Innsending av gyldig søknad`() {
-        val søknad = Søknad(
+        val søknad = OmsorgsdagerAleneOmOmsorgenSøknad(
             barn = listOf(
                 Barn(
                     navn = "Barn1",
@@ -107,14 +107,14 @@ class OmsorgsdagerAleneomsorgTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSDAGER_ALENEOMSORG)
         assertEquals(
-            søknad.somKomplettSøknad(SøknadUtils.søker),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker)),
             hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
         )
     }
 
     @Test
     fun `Innsending av ugyldig søknad gir valideringsfeil`() {
-        val søknad = Søknad(
+        val søknad = OmsorgsdagerAleneOmOmsorgenSøknad(
             barn = listOf(
                 Barn(
                     navn = " ",

@@ -34,17 +34,19 @@ class OmsorgspengerMdlertidigAleneSøknad(
         private val k9FormatVersjon = Versjon.of("1.0.0")
     }
 
-    override fun somK9Format(søker: Søker) = K9Søknad(
-        SøknadId.of(søknadId),
-        k9FormatVersjon,
-        mottatt,
-        søker.somK9Søker(),
-        OmsorgspengerMidlertidigAlene(
-            barn.map { it.somK9Barn() },
-            annenForelder.somK9AnnenForelder(),
-            null
+    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
+        return K9Søknad(
+            SøknadId.of(søknadId),
+            k9FormatVersjon,
+            mottatt,
+            søker.somK9Søker(),
+            OmsorgspengerMidlertidigAlene(
+                barn.map { it.somK9Barn() },
+                annenForelder.somK9AnnenForelder(),
+                null
+            )
         )
-    )
+    }
 
     override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = OmsorgspengerMdlertidigAleneKomplettSøknad(
         mottatt = mottatt,

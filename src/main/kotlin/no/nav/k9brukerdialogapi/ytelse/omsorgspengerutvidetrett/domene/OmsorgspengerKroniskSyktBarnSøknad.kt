@@ -43,16 +43,18 @@ class OmsorgspengerKroniskSyktBarnSøknad(
         if (barn.manglerIdentifikator()) barn.leggTilIdentifikatorHvisMangler(barnFraOppslag)
     }
 
-    override fun somK9Format(søker: Søker): K9Søknad = K9Søknad(
-        SøknadId.of(søknadId),
-        k9FormatVersjon,
-        mottatt,
-        søker.somK9Søker(),
-        OmsorgspengerKroniskSyktBarn(
-            barn.somK9Barn(),
-            kroniskEllerFunksjonshemming
+    override fun somK9Format(søker: Søker): K9Søknad {
+        return K9Søknad(
+            SøknadId.of(søknadId),
+            k9FormatVersjon,
+            mottatt,
+            søker.somK9Søker(),
+            OmsorgspengerKroniskSyktBarn(
+                barn.somK9Barn(),
+                kroniskEllerFunksjonshemming
+            )
         )
-    )
+    }
 
     override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Søknad?, titler: List<String>) = OmsorgspengerKroniskSyktBarnKomplettSøknad(
         språk = språk,

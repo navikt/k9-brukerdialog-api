@@ -10,9 +10,10 @@ import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSDAGER_ALENEOMSORG_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_ALENEOMSORG
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.Søknad
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.OmsorgsdagerAleneOmOmsorgenSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,14 +22,29 @@ private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgsdageraleneom
 
 fun Route.omsorgsdagerAleneomsorgApis(
     idTokenProvider: IdTokenProvider,
-    omsorgsdagerAleneomsorgService: OmsorgsdagerAleneomsorgService
+    innsendingService: InnsendingService,
+    barnService: BarnService
 ){
     route(OMSORGSDAGER_ALENEOMSORG_URL){
         post(INNSENDING_URL){
-            val søknad = call.receive<Søknad>()
-            logger.info(formaterStatuslogging(OMSORGSDAGER_ALENEOMSORG, søknad.søknadId, "mottatt."))
-            omsorgsdagerAleneomsorgService.registrer(søknad, call.getCallId(), call.getMetadata(), idTokenProvider.getIdToken(call))
-            registrerMottattSøknad(OMSORGSDAGER_ALENEOMSORG)
+            val søknad = call.receive<OmsorgsdagerAleneOmOmsorgenSøknad>()
+            val callId = call.getCallId()
+            val metadata = call.getMetadata()
+            val idToken = idTokenProvider.getIdToken(call)
+            logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
+
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
+
+            if (søknad.gjelderFlereBarn()) {
+                val søknader = søknad.splittTilEgenSøknadPerBarn()
+                logger.info("SøknadId:${søknad.søknadId} splittet ut til ${søknader.map { it.søknadId }}")
+                søknader.forEach {
+                    innsendingService.registrer(it, callId, idToken, metadata)
+                }
+            } else {
+                innsendingService.registrer(søknad, callId, idToken, metadata)
+            }
+            registrerMottattSøknad(søknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }

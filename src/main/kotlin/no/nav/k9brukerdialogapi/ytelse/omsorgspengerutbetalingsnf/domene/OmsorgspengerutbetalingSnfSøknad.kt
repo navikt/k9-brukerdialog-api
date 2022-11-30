@@ -83,20 +83,22 @@ class OmsorgspengerutbetalingSnfSøknad(
         barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
-    override fun somK9Format(søker: Søker) = K9Søknad(
-        søknadId,
-        k9FormatVersjon,
-        mottatt,
-        søker.somK9Søker(),
-        OmsorgspengerUtbetaling(
-            barn.somK9BarnListe(),
-            byggK9OpptjeningAktivitet(),
-            utbetalingsperioder.somK9FraværPeriode(),
-            null,
-            bosteder.somK9Bosteder(),
-            opphold.somK9Utenlandsopphold()
+    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
+        return K9Søknad(
+            søknadId,
+            k9FormatVersjon,
+            mottatt,
+            søker.somK9Søker(),
+            OmsorgspengerUtbetaling(
+                barn.somK9BarnListe(),
+                byggK9OpptjeningAktivitet(),
+                utbetalingsperioder.somK9FraværPeriode(),
+                null,
+                bosteder.somK9Bosteder(),
+                opphold.somK9Utenlandsopphold()
+            )
         )
-    )
+    }
 
     private fun byggK9OpptjeningAktivitet() = OpptjeningAktivitet().apply {
         frilans?.let { medFrilanser(it.somK9Frilanser()) }
