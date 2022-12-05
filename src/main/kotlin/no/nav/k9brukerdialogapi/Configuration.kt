@@ -73,4 +73,8 @@ data class Configuration(val config : ApplicationConfig) {
             .maximumSize(maxSize)
             .build()
     }
+
+    fun getInnSendingCacheExpiryMinutes(): Long {
+        return config.getRequiredString("nav.cache.innsending.expiry_in_minutes", secret = false).toLong()
+    }
 }
