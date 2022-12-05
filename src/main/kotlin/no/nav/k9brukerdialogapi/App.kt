@@ -36,6 +36,7 @@ import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.dusseldorf.ktor.metrics.init
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.AccessTokenClientResolver
+import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.mellomlagring.K9BrukerdialogCacheGateway
@@ -173,7 +174,9 @@ fun Application.k9BrukerdialogApi() {
             k9BrukerdialogCacheGateway = k9BrukerdialogCacheGateway
         )
 
-        val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
+        val innsendingCache = InnsendingCache(expireMinutes = configuration.getInnSendingCacheExpiryMinutes())
+
+        val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService, innsendingCache)
 
         environment!!.monitor.subscribe(ApplicationStopping) {
             logger.info("Stopper Kafka Producer.")

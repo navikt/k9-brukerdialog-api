@@ -10,6 +10,7 @@ import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.testsupport.jws.Azure
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
+import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
@@ -48,13 +49,16 @@ internal class InnsendingServiceTest{
     lateinit var barnService: BarnService
 
     @RelaxedMockK
+    lateinit var innsendingCache: InnsendingCache
+
+    @RelaxedMockK
     lateinit var vedleggService: VedleggService
     lateinit var innsendingService: InnsendingService
 
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
+        innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService, innsendingCache)
 
         assertNotNull(kafkaProducer)
         assertNotNull(innsendingService)

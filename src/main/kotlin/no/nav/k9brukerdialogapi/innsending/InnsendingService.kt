@@ -27,12 +27,17 @@ class InnsendingService(
     private val søkerService: SøkerService,
     private val kafkaProdusent: KafkaProducer,
     private val vedleggService: VedleggService,
+    private val innsendingCache: InnsendingCache
 ) {
 
     internal suspend fun registrer(innsending: Innsending, callId: CallId, idToken: IdToken, metadata: Metadata) {
+        val søker = søkerService.hentSøker(idToken, callId)
+        val cacheKey = "${søker.somK9Søker().personIdent.verdi}_${innsending.ytelse()}"
+
+        innsendingCache.put(cacheKey)
+
         logger.info(formaterStatuslogging(innsending.ytelse(), innsending.søknadId(), "registreres."))
 
-        val søker = søkerService.hentSøker(idToken, callId)
         søker.valider()
 
         innsending.valider()
@@ -98,7 +103,7 @@ class InnsendingService(
     }
 
     fun validerK9Format(innsending: Innsending, k9Format: no.nav.k9.søknad.Innsending) {
-        val feil = when(k9Format) {
+        val feil = when (k9Format) {
             is Søknad -> innsending.søknadValidator()?.valider(k9Format)
             is Ettersendelse -> innsending.ettersendelseValidator()?.valider(k9Format)
             else -> null
