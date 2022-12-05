@@ -14,7 +14,7 @@ class InnsendingCache(expireMinutes: Long) {
     private val cache: Cache<String, String> = Caffeine.newBuilder()
         .maximumSize(1000)
         .expireAfterWrite(Duration.ofMinutes(expireMinutes))
-        .evictionListener<String, String?> { key, value, cause -> logger.info("Evicting expired key: {}", key) }
+        .evictionListener<String, String> { _, _, _ -> logger.info("Tømmer cache for ugått innsending.") }
         .build()
 
     companion object {

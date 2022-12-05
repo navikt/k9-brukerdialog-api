@@ -176,7 +176,7 @@ fun Application.k9BrukerdialogApi() {
 
         val innsendingCache = InnsendingCache(expireMinutes = configuration.getInnSendingCacheExpiryMinutes())
 
-        val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService, innsendingCache)
+        val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
 
         environment!!.monitor.subscribe(ApplicationStopping) {
             logger.info("Stopper Kafka Producer.")
@@ -188,7 +188,8 @@ fun Application.k9BrukerdialogApi() {
             ytelseRoutes(
                 idTokenProvider = idTokenProvider,
                 barnService = barnService,
-                innsendingService = innsendingService
+                innsendingService = innsendingService,
+                innsendingCache = innsendingCache
             )
 
             oppslagRoutes(

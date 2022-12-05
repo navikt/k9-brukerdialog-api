@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse
 
 import io.ktor.server.routing.Route
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
+import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.ettersendingApis
@@ -16,14 +17,15 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.pleiepengerLiv
 fun Route.ytelseRoutes(
     idTokenProvider: IdTokenProvider,
     innsendingService: InnsendingService,
-    barnService: BarnService
+    barnService: BarnService,
+    innsendingCache: InnsendingCache
 ){
-    pleiepengerLivetsSluttfaseApi(innsendingService, idTokenProvider)
-    omsorgspengerUtbetalingArbeidstakerApi(innsendingService, idTokenProvider)
-    ettersendingApis(innsendingService, idTokenProvider)
-    omsorgspengerUtvidetRettApis(innsendingService, barnService, idTokenProvider)
-    omsorgspengerUtbetalingSnfApis(innsendingService, barnService, idTokenProvider)
-    omsorgspengerMidlertidigAleneApis(innsendingService, barnService, idTokenProvider)
-    omsorgsdagerMeldingApi(innsendingService, barnService, idTokenProvider)
-    omsorgsdagerAleneomsorgApis(innsendingService, barnService, idTokenProvider)
+    pleiepengerLivetsSluttfaseApi(innsendingService, innsendingCache, idTokenProvider)
+    omsorgspengerUtbetalingArbeidstakerApi(innsendingService, innsendingCache, idTokenProvider)
+    ettersendingApis(innsendingService, innsendingCache, idTokenProvider)
+    omsorgspengerUtvidetRettApis(innsendingService, barnService, innsendingCache, idTokenProvider)
+    omsorgspengerUtbetalingSnfApis(innsendingService, barnService, innsendingCache, idTokenProvider)
+    omsorgspengerMidlertidigAleneApis(innsendingService, barnService, innsendingCache, idTokenProvider)
+    omsorgsdagerMeldingApi(innsendingService, barnService, innsendingCache, idTokenProvider)
+    omsorgsdagerAleneomsorgApis(innsendingService, barnService, innsendingCache, idTokenProvider)
 }

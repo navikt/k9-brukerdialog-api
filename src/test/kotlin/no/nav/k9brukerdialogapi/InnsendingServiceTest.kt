@@ -49,16 +49,13 @@ internal class InnsendingServiceTest{
     lateinit var barnService: BarnService
 
     @RelaxedMockK
-    lateinit var innsendingCache: InnsendingCache
-
-    @RelaxedMockK
     lateinit var vedleggService: VedleggService
     lateinit var innsendingService: InnsendingService
 
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService, innsendingCache)
+        innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
 
         assertNotNull(kafkaProducer)
         assertNotNull(innsendingService)

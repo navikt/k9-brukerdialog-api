@@ -26,15 +26,11 @@ import org.slf4j.LoggerFactory
 class InnsendingService(
     private val søkerService: SøkerService,
     private val kafkaProdusent: KafkaProducer,
-    private val vedleggService: VedleggService,
-    private val innsendingCache: InnsendingCache
+    private val vedleggService: VedleggService
 ) {
 
     internal suspend fun registrer(innsending: Innsending, callId: CallId, idToken: IdToken, metadata: Metadata) {
         val søker = søkerService.hentSøker(idToken, callId)
-        val cacheKey = "${søker.somK9Søker().personIdent.verdi}_${innsending.ytelse()}"
-
-        innsendingCache.put(cacheKey)
 
         logger.info(formaterStatuslogging(innsending.ytelse(), innsending.søknadId(), "registreres."))
 

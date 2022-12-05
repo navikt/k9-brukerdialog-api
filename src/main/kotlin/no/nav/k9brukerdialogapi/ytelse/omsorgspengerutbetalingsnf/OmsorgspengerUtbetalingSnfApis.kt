@@ -10,6 +10,7 @@ import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSPENGER_UTBETALING_SNF_URL
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.general.getCallId
+import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
@@ -23,6 +24,7 @@ private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgspengerutbeta
 fun Route.omsorgspengerUtbetalingSnfApis(
     innsendingService: InnsendingService,
     barnService: BarnService,
+    innsendingCache: InnsendingCache,
     idTokenProvider: IdTokenProvider,
 ) {
     route(OMSORGSPENGER_UTBETALING_SNF_URL){
@@ -31,6 +33,9 @@ fun Route.omsorgspengerUtbetalingSnfApis(
             val callId = call.getCallId()
             val metadata = call.getMetadata()
             val idToken = idTokenProvider.getIdToken(call)
+
+            val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${søknad.ytelse()}"
+            innsendingCache.put(cacheKey)
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId.id, "mottatt."))
             søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
