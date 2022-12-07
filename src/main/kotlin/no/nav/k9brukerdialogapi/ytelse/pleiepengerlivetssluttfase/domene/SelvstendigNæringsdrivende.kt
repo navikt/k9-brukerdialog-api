@@ -1,10 +1,11 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.Arbeidsforhold.Companion.somK9ArbeidstidInfo
 import java.time.LocalDate
 
 class SelvstendigNæringsdrivende(
-    val virksomhet: no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.SelvstendigNæringsdrivende,
+    val virksomhet: Virksomhet,
     val arbeidsforhold: Arbeidsforhold
 ) {
     internal fun valider(felt: String = "selvstendigNæringsdrivende") = mutableListOf<String>().apply{

@@ -2,14 +2,13 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
 import java.time.LocalDate
 
 class UtenlandskNæring(
     private val næringstype: Næringstype,
     private val navnPåVirksomheten: String,
-    private val land: Land,
+    private val land: no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land,
     private val organisasjonsnummer: String? = null,
     private val fraOgMed: LocalDate,
     private val tilOgMed: LocalDate? = null

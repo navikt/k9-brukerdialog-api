@@ -20,6 +20,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.somK9Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.somK9Utenlandsopphold
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode.Companion.somK9FraværPeriode
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode.Companion.valider
@@ -45,7 +46,7 @@ class OmsorgspengerutbetalingSnfSøknad(
     private val erArbeidstakerOgså: Boolean,
     private val barn: List<Barn>,
     private val frilans: Frilans? = null,
-    private val selvstendigNæringsdrivende: SelvstendigNæringsdrivende? = null,
+    private val selvstendigNæringsdrivende: Virksomhet? = null,
     internal val vedlegg: List<URL> = listOf()
 ): Innsending {
 

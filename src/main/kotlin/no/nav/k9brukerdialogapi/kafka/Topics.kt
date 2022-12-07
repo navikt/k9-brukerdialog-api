@@ -8,6 +8,7 @@ import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAK
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_SNF_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_SYKT_BARN_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
 import org.apache.kafka.common.serialization.Serializer
@@ -22,6 +23,7 @@ object Topics {
     const val OMSORGSPENGER_UTBETALING_SNF_TOPIC = "dusseldorf.privat-omsorgspengerutbetalingsoknad-mottatt-v2"
     const val OMSORGSDAGER_MELDING_TOPIC = "dusseldorf.privat-omsorgsdager-melding-mottatt"
     const val PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC = "dusseldorf.privat-pp-livets-sluttfase-mottatt"
+    const val PLEIEPENGER_SYKT_BARN_TOPIC = "dusseldorf.privat-pleiepengesoknad-mottatt-v2"
 }
 
 data class TopicEntry<V>(
@@ -38,6 +40,7 @@ internal fun hentTopicForYtelse(ytelse: Ytelse) = when(ytelse){
     OMSORGSPENGER_UTBETALING_ARBEIDSTAKER -> OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
     OMSORGSPENGER_UTBETALING_SNF -> OMSORGSPENGER_UTBETALING_SNF_TOPIC
     OMSORGSDAGER_MELDING, OMSORGSDAGER_MELDING_FORDELING, OMSORGSDAGER_MELDING_OVERFORING, OMSORGSDAGER_MELDING_KORONAOVERFORING -> OMSORGSDAGER_MELDING_TOPIC
+    PLEIEPENGER_SYKT_BARN -> PLEIEPENGER_SYKT_BARN_TOPIC
 }
 
 internal class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {

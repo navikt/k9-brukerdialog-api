@@ -205,7 +205,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
     fun `Ugyldig selvstendigNæringsdrivende skal gi valideringsfeil`() {
         assertThrows<Throwblem> {
             genererSøknadForOmsUtSnf(
-                selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+                selvstendigNæringsdrivende = Virksomhet(
                     fraOgMed = LocalDate.parse("2022-01-01"),
                     tilOgMed = LocalDate.parse("2022-10-01"),
                     næringstype = Næringstype.DAGMAMMA,
@@ -284,7 +284,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                 sluttdato = LocalDate.parse("2022-10-01"),
                 jobberFortsattSomFrilans = true
             ),
-            selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+            selvstendigNæringsdrivende = Virksomhet(
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-10-01"),
                 næringstype = Næringstype.JORDBRUK_SKOGBRUK,

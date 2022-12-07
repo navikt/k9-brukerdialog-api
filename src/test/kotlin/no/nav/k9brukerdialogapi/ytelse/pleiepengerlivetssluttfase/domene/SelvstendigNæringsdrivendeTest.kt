@@ -3,10 +3,10 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Regnskapsfører
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.VarigEndring
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.YrkesaktivSisteTreFerdigliknedeArene
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Regnskapsfører
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.VarigEndring
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import org.json.JSONObject
@@ -18,8 +18,8 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `Mapping til k9Format blir som forventet`(){
-        val k9SelvstendigNæringsdrivende = SelvstendigNæringsdrivende(
-            virksomhet = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.SelvstendigNæringsdrivende(
+        val k9Virksomhet = SelvstendigNæringsdrivende(
+            virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-10-01"),
                 næringstype = Næringstype.DAGMAMMA,
@@ -69,7 +69,7 @@ class SelvstendigNæringsdrivendeTest {
             }
         """.trimIndent()
 
-        JSONAssert.assertEquals(JSONObject(forventet), JSONObject(k9SelvstendigNæringsdrivende.somJson()), true)
+        JSONAssert.assertEquals(JSONObject(forventet), JSONObject(k9Virksomhet.somJson()), true)
     }
 
     @Test
@@ -77,7 +77,7 @@ class SelvstendigNæringsdrivendeTest {
         val mandag = LocalDate.parse("2022-08-01")
         val fredag = mandag.plusDays(5)
         val arbeidstidInfo = SelvstendigNæringsdrivende(
-            virksomhet = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.SelvstendigNæringsdrivende(
+            virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-10-01"),
                 næringstype = Næringstype.DAGMAMMA,
@@ -103,7 +103,7 @@ class SelvstendigNæringsdrivendeTest {
     @Test
     fun `Gyldig SelvstendigNæringsdrivende gir ingen valideringsfeil`(){
         SelvstendigNæringsdrivende(
-            virksomhet = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.SelvstendigNæringsdrivende(
+            virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-10-01"),
                 næringstype = Næringstype.DAGMAMMA,
@@ -133,7 +133,7 @@ class SelvstendigNæringsdrivendeTest {
     @Test
     fun `SelvstendigNæringsdrivende med feil i virksomhet og arbeidsforhold skal gi valideringsfeil`(){
         SelvstendigNæringsdrivende(
-            virksomhet = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.SelvstendigNæringsdrivende(
+            virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-10-01"),
                 næringstype = Næringstype.DAGMAMMA,

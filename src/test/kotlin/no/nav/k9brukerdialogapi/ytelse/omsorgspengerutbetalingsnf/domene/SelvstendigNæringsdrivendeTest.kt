@@ -3,7 +3,12 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype.DAGMAMMA
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Regnskapsfører
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype.DAGMAMMA
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.VarigEndring
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
@@ -13,7 +18,7 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `SelvstendigNæringsdrivende blir mappet til riktig K9SelvstendigNæringsdrivende`(){
-        val k9SelvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+        val k9Virksomhet = Virksomhet(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
             næringstype = DAGMAMMA,
@@ -62,12 +67,12 @@ class SelvstendigNæringsdrivendeTest {
             }
         """.trimIndent()
 
-        JSONAssert.assertEquals(JSONObject(forventet), JSONObject(k9SelvstendigNæringsdrivende), true)
+        JSONAssert.assertEquals(JSONObject(forventet), JSONObject(k9Virksomhet), true)
     }
 
     @Test
     fun `Gyldig sn gir ingen valideringsfeil`(){
-        SelvstendigNæringsdrivende(
+        Virksomhet(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
             næringstype = DAGMAMMA,
@@ -94,7 +99,7 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `Sn med ugyldig organisasjonsnummer gir valideringsfeil`(){
-        SelvstendigNæringsdrivende(
+        Virksomhet(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
             næringstype = DAGMAMMA,
@@ -109,12 +114,13 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `Sn med ugyldig registrertIUtlandet gir valideringsfeil`(){
-        SelvstendigNæringsdrivende(
+        Virksomhet(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-10-01"),
             næringstype = DAGMAMMA,
             navnPåVirksomheten = "Kiwi ASA",
             organisasjonsnummer = "975959171",
+            registrertINorge = false,
             registrertIUtlandet = Land("ABC", "Nederland"),
             erNyoppstartet = true,
             harFlereAktiveVirksomheter = false
@@ -124,7 +130,7 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `Sn med fraOgMed etter tilOgMed gir valideringsfeil`(){
-        SelvstendigNæringsdrivende(
+        Virksomhet(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2021-01-01"),
             næringstype = DAGMAMMA,
@@ -139,7 +145,7 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `Sn med harFlereAktiveVirksomheter som null gir valideringsfeil`(){
-        SelvstendigNæringsdrivende(
+        Virksomhet(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-01"),
             næringstype = DAGMAMMA,
@@ -154,7 +160,7 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `Sn med erNyoppstartet=true men fraOgMed som er over 4 år gammel gir valideringsfeil`(){
-        SelvstendigNæringsdrivende(
+        Virksomhet(
             fraOgMed = LocalDate.parse("2015-01-01"),
             tilOgMed = LocalDate.parse("2022-01-01"),
             næringstype = DAGMAMMA,
@@ -164,12 +170,12 @@ class SelvstendigNæringsdrivendeTest {
             erNyoppstartet = true,
             harFlereAktiveVirksomheter = false
         ).valider("sn")
-            .verifiserFeil(1, listOf("sn.fraOgMed Dersom nyOppstartet er true må fraOgMed være maks 4 år siden."))
+            .verifiserFeil(1, listOf("sn.nyOppstartet er true. sn.fraOgMed må være maks 4 år siden"))
     }
 
     @Test
     fun `Sn med erNyoppstartet=false men fraOgMed som er under 4 år gammel gir valideringsfeil`(){
-        SelvstendigNæringsdrivende(
+        Virksomhet(
             fraOgMed = LocalDate.parse("2022-01-01"),
             tilOgMed = LocalDate.parse("2022-01-01"),
             næringstype = DAGMAMMA,
@@ -179,6 +185,6 @@ class SelvstendigNæringsdrivendeTest {
             erNyoppstartet = false,
             harFlereAktiveVirksomheter = false
         ).valider("sn")
-            .verifiserFeil(1, listOf("sn.fraOgMed Dersom nyOppstartet er false må fraOgMed være over 4 år siden."))
+            .verifiserFeil(1, listOf("sn.nyOppstartet er false. sn.fraOgMed må være over 4 år siden"))
     }
 }

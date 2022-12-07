@@ -1,8 +1,8 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import no.nav.k9.søknad.felles.opptjening.SelvstendigNæringsdrivende
 
-class Regnskapsfører(
+data class Regnskapsfører(
     private val navn: String,
     private val telefon: String
 ) {

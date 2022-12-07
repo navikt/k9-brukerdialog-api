@@ -4,8 +4,8 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
@@ -69,7 +69,7 @@ class PilsSøknadTest {
                     )
                 ),
                 selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
-                    virksomhet = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.SelvstendigNæringsdrivende(
+                    virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
                         fraOgMed = LocalDate.parse("2015-01-01"),
                         tilOgMed = LocalDate.parse("2021-01-01"),
                         næringstype = Næringstype.ANNEN,
@@ -128,7 +128,7 @@ class PilsSøknadTest {
                           "bruttoInntekt": 9656876,
                           "erNyoppstartet": false,
                           "registrertIUtlandet": true,
-                          "landkode": "ABW"
+                          "landkode": "CUB"
                         }
                       },
                       "virksomhetNavn": "Bjarnes Bakeri"

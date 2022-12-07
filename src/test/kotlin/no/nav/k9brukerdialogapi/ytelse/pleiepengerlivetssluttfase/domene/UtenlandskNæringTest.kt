@@ -2,8 +2,8 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype.FISKE
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype.FISKE
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.UtenlandskNæring.Companion.valider
 import java.time.LocalDate
 import kotlin.test.Test

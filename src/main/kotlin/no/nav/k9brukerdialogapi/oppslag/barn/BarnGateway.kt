@@ -51,7 +51,7 @@ class BarnGateway(
 
         )
 
-        val oppslagRespons = Retry.retry(
+        val oppslagRespons: BarnOppslagResponsListe = Retry.retry(
             operation = HENTE_BARN_OPERATION,
             initialDelay = Duration.ofMillis(200),
             factor = 2.0,
