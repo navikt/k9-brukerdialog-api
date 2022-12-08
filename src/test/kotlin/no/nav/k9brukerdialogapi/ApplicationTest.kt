@@ -108,7 +108,7 @@ class ApplicationTest {
         fun tearDown() {
             logger.info("Tearing down")
             wireMockServer.stop()
-            kafkaEnvironment.tearDown()
+            kafkaEnvironment.stop()
             mockOAuth2Server.shutdown()
             K9BrukerdialogCacheResponseTransformer.mellomlagredeVerdierCache.clear()
             logger.info("Tear down complete")

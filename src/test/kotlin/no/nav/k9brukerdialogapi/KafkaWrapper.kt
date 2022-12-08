@@ -1,7 +1,5 @@
 package no.nav.k9brukerdialogapi
 
-import no.nav.common.JAASCredential
-import no.nav.common.KafkaEnvironment
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.kafka.TopicEntry
 import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
@@ -15,51 +13,64 @@ import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.hentTopicForYtelse
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.clients.CommonClientConfigs
+import org.apache.kafka.clients.admin.AdminClient
+import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.common.config.SaslConfigs
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.json.JSONObject
+import org.testcontainers.containers.KafkaContainer
+import org.testcontainers.utility.DockerImageName
 import java.time.Duration
 import kotlin.test.assertEquals
 
-private const val username = "srvkafkaclient"
-private const val password = "kafkaclient"
+private lateinit var kafkaContainer: KafkaContainer
+private const val confluentVersion = "7.2.1"
 
 object KafkaWrapper {
-    fun bootstrap() : KafkaEnvironment {
-        val kafkaEnvironment = KafkaEnvironment(
-            users = listOf(JAASCredential(username, password)),
-            autoStart = true,
-            withSchemaRegistry = false,
-            withSecurity = true,
-            topicNames= listOf(
-                OMSORGSPENGER_UTVIDET_RETT_TOPIC,
-                OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC,
-                ETTERSENDING_TOPIC,
-                OMSORGSDAGER_ALENEOMSORG_TOPIC,
-                OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
-                OMSORGSPENGER_UTBETALING_SNF_TOPIC,
-                OMSORGSDAGER_MELDING_TOPIC,
-                PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
-            )
+    fun bootstrap(): KafkaContainer {
+        kafkaContainer = KafkaContainer(
+            DockerImageName.parse("confluentinc/cp-kafka:$confluentVersion")
         )
-        return kafkaEnvironment
+        kafkaContainer.start()
+        kafkaContainer.createTopicsForTest()
+        return kafkaContainer
     }
 }
 
-private fun KafkaEnvironment.testConsumerProperties() : MutableMap<String, Any>?  {
+private fun KafkaContainer.createTopicsForTest() {
+    // Dette er en workaround for att testcontainers (pr. versjon 1.17.5) ikke håndterer autocreate topics
+    AdminClient.create(testProducerProperties("admin")).createTopics(
+        listOf(
+            NewTopic(OMSORGSPENGER_UTVIDET_RETT_TOPIC, 1, 1),
+            NewTopic(OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC, 1, 1),
+            NewTopic(OMSORGSDAGER_ALENEOMSORG_TOPIC, 1, 1),
+            NewTopic(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC, 1, 1),
+            NewTopic(OMSORGSPENGER_UTBETALING_SNF_TOPIC, 1, 1),
+            NewTopic(OMSORGSDAGER_MELDING_TOPIC, 1, 1),
+            NewTopic(PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC, 1, 1),
+            NewTopic(ETTERSENDING_TOPIC, 1, 1),
+        )
+    )
+}
+
+private fun KafkaContainer.testProducerProperties(clientId: String): MutableMap<String, Any>? {
     return HashMap<String, Any>().apply {
-        put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, brokersURL)
-        put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
-        put(SaslConfigs.SASL_MECHANISM, "PLAIN")
-        put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";")
+        put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+        put(ProducerConfig.CLIENT_ID_CONFIG, clientId)
+    }
+}
+
+private fun KafkaContainer.testConsumerProperties() : MutableMap<String, Any>?  {
+    return HashMap<String, Any>().apply {
+        put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
         put(ConsumerConfig.GROUP_ID_CONFIG, "k9-brukerdialogapi")
     }
 }
 
-internal fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<JSONObject>> {
+internal fun KafkaContainer.testConsumer() : KafkaConsumer<String, TopicEntry<JSONObject>> {
     val consumer = KafkaConsumer(
         testConsumerProperties(),
         StringDeserializer(),

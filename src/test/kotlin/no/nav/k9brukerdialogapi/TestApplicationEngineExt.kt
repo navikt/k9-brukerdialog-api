@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi
 
-import com.github.tomakehurst.wiremock.http.Cookie
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.testing.*
