@@ -11,7 +11,6 @@ import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.engine.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.callid.*
@@ -65,9 +64,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
 
-fun main(args: Array<String>) {
-    embeddedServer(Netty, module = Application::k9BrukerdialogApi).start(wait = true)
-}
+fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 fun Application.k9BrukerdialogApi() {
     val logger: Logger = LoggerFactory.getLogger("nav.k9BrukerdialogApi")
