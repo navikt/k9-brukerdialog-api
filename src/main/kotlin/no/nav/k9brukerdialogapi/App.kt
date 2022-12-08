@@ -11,12 +11,16 @@ import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.engine.*
 import io.ktor.server.metrics.micrometer.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.openapi.*
 import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.plugins.swagger.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.prometheus.client.hotspot.DefaultExports
@@ -61,8 +65,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
-
+fun main(args: Array<String>) {
+    embeddedServer(Netty, module = Application::k9BrukerdialogApi)
+}
 
 fun Application.k9BrukerdialogApi() {
     val logger: Logger = LoggerFactory.getLogger("nav.k9BrukerdialogApi")
@@ -79,12 +84,66 @@ fun Application.k9BrukerdialogApi() {
     val accessTokenClientResolver = AccessTokenClientResolver(environment.config.clients())
     val tokenxClient = CachedAccessTokenClient(accessTokenClientResolver.tokenxClient)
 
+    val k9MellomlagringGateway = K9MellomlagringGateway(
+            baseUrl = configuration.getK9MellomlagringUrl(),
+            accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,
+            exchangeTokenClient = tokenxClient,
+            k9MellomlagringScope = configuration.getK9MellomlagringScopes(),
+            k9MellomlagringTokenxAudience = configuration.getK9MellomlagringTokenxAudience()
+    )
+
+    val vedleggService = VedleggService(
+            k9MellomlagringGateway
+    )
+
+    val søkerService = SøkerService(
+            SøkerGateway(
+                    baseUrl = configuration.getK9OppslagUrl(),
+                    accessTokenClient = tokenxClient,
+                    k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+            )
+    )
+
+    val barnService = BarnService(
+            barnGateway = BarnGateway(
+                    baseUrl = configuration.getK9OppslagUrl(),
+                    accessTokenClient = tokenxClient,
+                    k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+            ),
+            cache = configuration.cache()
+    )
+
+    val arbeidsgiverService = ArbeidsgiverService(
+            ArbeidsgiverGateway(
+                    baseUrl = configuration.getK9OppslagUrl(),
+                    accessTokenClient = tokenxClient,
+                    k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
+            )
+    )
+
+    val kafkaProducer = KafkaProducer(configuration.getKafkaConfig())
+
+    val k9BrukerdialogCacheGateway = K9BrukerdialogCacheGateway(
+            tokenxClient = tokenxClient,
+            k9BrukerdialogCacheTokenxAudience = configuration.getK9BrukerdialogCacheTokenxAudience(),
+            baseUrl = configuration.getK9BrukerdialogCacheUrl()
+    )
+
+    val mellomlagringService = MellomlagringService(
+            mellomlagretTidTimer = configuration.getSoknadMellomlagringTidTimer(),
+            k9BrukerdialogCacheGateway = k9BrukerdialogCacheGateway
+    )
+
+    val innsendingCache = InnsendingCache(expireSeconds = configuration.getInnSendingCacheExpiryInSeconds())
+
+    val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
+
     install(ContentNegotiation) {
         jackson {
             dusseldorfConfigured()
-                .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
-                .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
-                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                    .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
+                    .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
+                    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         }
     }
 
@@ -108,12 +167,12 @@ fun Application.k9BrukerdialogApi() {
     install(Authentication) {
         allIssuers.forEach { issuer: String ->
             tokenValidationSupport(
-                name = issuer,
-                config = config,
-                requiredClaims = RequiredClaims(
-                    issuer = issuer,
-                    claimMap = arrayOf("acr=Level4")
-                )
+                    name = issuer,
+                    config = config,
+                    requiredClaims = RequiredClaims(
+                            issuer = issuer,
+                            claimMap = arrayOf("acr=Level4")
+                    )
             )
         }
     }
@@ -124,121 +183,71 @@ fun Application.k9BrukerdialogApi() {
         IdTokenStatusPages()
     }
 
-    install(Routing) {
-        val k9MellomlagringGateway = K9MellomlagringGateway(
-            baseUrl = configuration.getK9MellomlagringUrl(),
-            accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient,
-            exchangeTokenClient = tokenxClient,
-            k9MellomlagringScope = configuration.getK9MellomlagringScopes(),
-            k9MellomlagringTokenxAudience = configuration.getK9MellomlagringTokenxAudience()
-        )
-        val vedleggService = VedleggService(
-            k9MellomlagringGateway
-        )
-
-        val søkerService = SøkerService(
-            SøkerGateway(
-                baseUrl = configuration.getK9OppslagUrl(),
-                accessTokenClient = tokenxClient,
-                k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
-            )
-        )
-
-        val barnService = BarnService(
-            barnGateway = BarnGateway(
-                baseUrl = configuration.getK9OppslagUrl(),
-                accessTokenClient = tokenxClient,
-                k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
-            ),
-            cache = configuration.cache()
-        )
-
-        val arbeidsgiverService = ArbeidsgiverService(
-            ArbeidsgiverGateway(
-                baseUrl = configuration.getK9OppslagUrl(),
-                accessTokenClient = tokenxClient,
-                k9SelvbetjeningOppslagTokenxAudience = configuration.getK9SelvbetjeningOppslagTokenxAudience()
-            )
-        )
-
-        val kafkaProducer = KafkaProducer(configuration.getKafkaConfig())
-
-        val k9BrukerdialogCacheGateway = K9BrukerdialogCacheGateway(
-            tokenxClient = tokenxClient,
-            k9BrukerdialogCacheTokenxAudience = configuration.getK9BrukerdialogCacheTokenxAudience(),
-            baseUrl = configuration.getK9BrukerdialogCacheUrl()
-        )
-
-        val mellomlagringService = MellomlagringService(
-            mellomlagretTidTimer = configuration.getSoknadMellomlagringTidTimer(),
-            k9BrukerdialogCacheGateway = k9BrukerdialogCacheGateway
-        )
-
-        val innsendingCache = InnsendingCache(expireSeconds = configuration.getInnSendingCacheExpiryInSeconds())
-
-        val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
-
-        environment!!.monitor.subscribe(ApplicationStopping) {
-            logger.info("Stopper Kafka Producer.")
-            kafkaProducer.close()
-            logger.info("Kafka Producer Stoppet.")
-        }
+    routing {
+        swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
+        openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
 
         authenticate(*allIssuers.toTypedArray()) {
             ytelseRoutes(
-                idTokenProvider = idTokenProvider,
-                barnService = barnService,
-                innsendingService = innsendingService,
-                innsendingCache = innsendingCache
+                    idTokenProvider = idTokenProvider,
+                    barnService = barnService,
+                    innsendingService = innsendingService,
+                    innsendingCache = innsendingCache
             )
 
             oppslagRoutes(
-                idTokenProvider = idTokenProvider,
-                søkerService = søkerService,
-                barnservice = barnService,
-                arbeidsgiverService = arbeidsgiverService
+                    idTokenProvider = idTokenProvider,
+                    søkerService = søkerService,
+                    barnservice = barnService,
+                    arbeidsgiverService = arbeidsgiverService
             )
 
             vedleggApis(
-                vedleggService = vedleggService,
-                idTokenProvider = idTokenProvider
+                    vedleggService = vedleggService,
+                    idTokenProvider = idTokenProvider
             )
 
             mellomlagringApis(
-                mellomlagringService = mellomlagringService,
-                idTokenProvider = idTokenProvider
+                    mellomlagringService = mellomlagringService,
+                    idTokenProvider = idTokenProvider
             )
         }
 
         val healthService = HealthService(
-            healthChecks = setOf(
-                kafkaProducer,
-                HttpRequestHealthCheck(
-                    mapOf(
-                        Url.buildURL(
-                            baseUrl = configuration.getK9MellomlagringUrl(),
-                            pathParts = listOf("health")
-                        ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK),
-                        Url.buildURL(
-                            baseUrl = configuration.getK9BrukerdialogCacheUrl(),
-                            pathParts = listOf("actuator", "health")
-                        ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK)
-                    )
+                healthChecks = setOf(
+                        kafkaProducer,
+                        HttpRequestHealthCheck(
+                                mapOf(
+                                        Url.buildURL(
+                                                baseUrl = configuration.getK9MellomlagringUrl(),
+                                                pathParts = listOf("health")
+                                        ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK),
+                                        Url.buildURL(
+                                                baseUrl = configuration.getK9BrukerdialogCacheUrl(),
+                                                pathParts = listOf("actuator", "health")
+                                        ) to HttpRequestHealthConfig(expectedStatus = HttpStatusCode.OK)
+                                )
+                        )
                 )
-            )
         )
 
         HealthReporter(
-            app = appId,
-            healthService = healthService,
-            frequency = Duration.ofMinutes(1)
+                app = appId,
+                healthService = healthService,
+                frequency = Duration.ofMinutes(1)
         )
 
         DefaultProbeRoutes()
         MetricsRoute()
         HealthRoute(
-            healthService = healthService
+                healthService = healthService
         )
+    }
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        logger.info("Stopper Kafka Producer.")
+        kafkaProducer.close()
+        logger.info("Kafka Producer Stoppet.")
     }
 
     install(MicrometerMetrics) {

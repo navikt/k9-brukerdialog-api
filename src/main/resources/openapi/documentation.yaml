@@ -1,0 +1,343 @@
+openapi: "3.0.3"
+info:
+  title: "k9_brukerdialog_api API"
+  description: "k9_brukerdialog_api API"
+  version: "1.0.0"
+servers:
+- url: "https://k9_brukerdialog_api"
+paths:
+  /ettersending/innsending:
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /mellomlagring/{ytelse}:
+    delete:
+      description: ""
+      parameters:
+      - name: "ytelse"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    get:
+      description: ""
+      parameters:
+      - name: "ytelse"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
+    post:
+      description: ""
+      parameters:
+      - name: "ytelse"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    put:
+      description: ""
+      parameters:
+      - name: "ytelse"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "204":
+          description: "No Content"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /omsorgsdager-aleneomsorg/innsending:
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /omsorgsdager-melding-fordeling/innsending:
+    post:
+      description: ""
+  /omsorgsdager-melding-koronaoverforing/innsending:
+    post:
+      description: ""
+  /omsorgsdager-melding-overforing/innsending:
+    post:
+      description: ""
+  /omsorgspenger-midlertidig-alene/innsending:
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /omsorgspenger-utbetaling-arbeidstaker/innsending:
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /omsorgspenger-utbetaling-snf/innsending:
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /omsorgspenger-utvidet-rett/innsending:
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /oppslag/arbeidsgiver:
+    get:
+      description: ""
+      parameters:
+      - name: "fra_og_med"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      - name: "til_og_med"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      - name: "private_arbeidsgivere"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      - name: "frilansoppdrag"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Arbeidsgivere"
+  /oppslag/barn:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BarnOppslagListe"
+  /oppslag/soker:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Søker"
+  /pleiepenger-livets-sluttfase/innsending:
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /vedlegg:
+    post:
+      description: ""
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /vedlegg/{vedleggId}:
+    delete:
+      description: ""
+      parameters:
+      - name: "vedleggId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "204":
+          description: "No Content"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    get:
+      description: ""
+      parameters:
+      - name: "vedleggId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+                format: "byte"
+  /vedlegg/valider:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VedleggListe"
+components:
+  schemas:
+    Organisasjon:
+      type: "object"
+      properties:
+        organisasjonsnummer:
+          type: "string"
+        navn:
+          type: "string"
+        ansattFom:
+          type: "string"
+          format: "date"
+        ansattTom:
+          type: "string"
+          format: "date"
+    PrivatArbeidsgiver:
+      type: "object"
+      properties:
+        offentligIdent:
+          type: "string"
+        ansattFom:
+          type: "string"
+          format: "date"
+        ansattTom:
+          type: "string"
+          format: "date"
+    Frilansoppdrag:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+        organisasjonsnummer:
+          type: "string"
+        navn:
+          type: "string"
+        offentligIdent:
+          type: "string"
+        ansattFom:
+          type: "string"
+          format: "date"
+        ansattTom:
+          type: "string"
+          format: "date"
+    Arbeidsgivere:
+      type: "object"
+      properties:
+        organisasjoner:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Organisasjon"
+        privateArbeidsgivere:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PrivatArbeidsgiver"
+        frilansoppdrag:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Frilansoppdrag"
+    BarnOppslag:
+      type: "object"
+      properties:
+        fødselsdato:
+          type: "string"
+          format: "date"
+        fornavn:
+          type: "string"
+        mellomnavn:
+          type: "string"
+        etternavn:
+          type: "string"
+        aktørId:
+          type: "string"
+        identitetsnummer:
+          type: "string"
+    BarnOppslagListe:
+      type: "object"
+      properties:
+        barn:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/BarnOppslag"
+    Søker:
+      type: "object"
+      properties: {}
+    VedleggListe:
+      type: "object"
+      properties:
+        vedleggUrl:
+          type: "array"
+          items:
+            type: "string"
+            format: "url"
