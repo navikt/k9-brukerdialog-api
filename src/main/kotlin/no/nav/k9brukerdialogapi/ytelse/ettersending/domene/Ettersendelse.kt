@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending.domene
 
+import kotlinx.serialization.Serializable
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.ettersendelse.EttersendelseValidator
@@ -16,15 +17,16 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 
-class Ettersendelse(
-    internal val søknadId: String = UUID.randomUUID().toString(),
-    private val språk: String,
-    private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-    internal val vedlegg: List<URL>,
-    private val beskrivelse: String? = null,
-    internal val søknadstype: Søknadstype,
-    private val harBekreftetOpplysninger: Boolean,
-    private val harForståttRettigheterOgPlikter: Boolean
+@Serializable
+data class Ettersendelse(
+    val søknadId: String = UUID.randomUUID().toString(),
+    val språk: String,
+    val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+    val vedlegg: List<URL>,
+    val beskrivelse: String? = null,
+    val søknadstype: Søknadstype,
+    val harBekreftetOpplysninger: Boolean,
+    val harForståttRettigheterOgPlikter: Boolean
 ): Innsending {
 
     override fun valider() = mutableListOf<String>().apply {

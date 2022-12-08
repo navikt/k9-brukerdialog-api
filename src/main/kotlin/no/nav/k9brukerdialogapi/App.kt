@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory
 import java.time.Duration
 
 fun main(args: Array<String>) {
-    embeddedServer(Netty, module = Application::k9BrukerdialogApi)
+    embeddedServer(Netty, module = Application::k9BrukerdialogApi).start(wait = true)
 }
 
 fun Application.k9BrukerdialogApi() {
