@@ -181,8 +181,8 @@ fun Application.k9BrukerdialogApi() {
     }
 
     routing {
-        swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
-        openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
+        swaggerUI(path = "swagger")
+        openAPI(path = "openapi")
 
         authenticate(*allIssuers.toTypedArray()) {
             ytelseRoutes(
