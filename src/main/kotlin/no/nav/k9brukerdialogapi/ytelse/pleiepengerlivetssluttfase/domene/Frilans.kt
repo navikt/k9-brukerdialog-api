@@ -26,8 +26,8 @@ class Frilans(
     }
 
     internal fun somK9Frilanser() = Frilanser().apply {
-        medStartDato(this@Frilans.startdato)
-        this@Frilans.sluttdato?.let { medSluttDato(this@Frilans.sluttdato) }
+        medStartdato(this@Frilans.startdato)
+        this@Frilans.sluttdato?.let { medSluttdato(this@Frilans.sluttdato) }
     }
 
     internal fun somK9Arbeidstid(fraOgMed: LocalDate, tilOgMed: LocalDate) = arbeidsforhold.somK9ArbeidstidInfo(fraOgMed, tilOgMed)
