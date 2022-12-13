@@ -21,7 +21,7 @@ internal fun Søknad.byggK9OpptjeningAktivitet(): OpptjeningAktivitet {
 
 internal fun Frilans.tilK9Frilanser(): Frilanser {
     val frilanser = Frilanser()
-    frilanser.medStartDato(startdato)
-    sluttdato?.let { frilanser.medSluttDato(it) }
+    frilanser.medStartdato(startdato)
+    sluttdato?.let { frilanser.medSluttdato(it) }
     return frilanser
 }
