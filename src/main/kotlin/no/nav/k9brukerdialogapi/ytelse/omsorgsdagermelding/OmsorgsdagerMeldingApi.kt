@@ -55,9 +55,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
     val callId = call.getCallId()
     val metadata = call.getMetadata()
     val idToken = idTokenProvider.getIdToken(call)
-
     val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${melding.ytelse()}"
-    innsendingCache.put(cacheKey)
 
     logger.info(formaterStatuslogging(melding.ytelse(), melding.søknadId, "mottatt."))
 
@@ -65,5 +63,6 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
 
     innsendingService.registrer(melding, callId, idToken, metadata)
     registrerMottattSøknad(melding.ytelse())
+    innsendingCache.put(cacheKey)
     call.respond(HttpStatusCode.Accepted)
 }
