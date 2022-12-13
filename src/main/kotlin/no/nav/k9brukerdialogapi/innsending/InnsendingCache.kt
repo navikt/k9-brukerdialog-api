@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory
 import java.net.URI
 import java.time.Duration
 
-class InnsendingCache(expireMinutes: Long) {
+class InnsendingCache(expireSeconds: Long) {
 
     private val cache: Cache<String, String> = Caffeine.newBuilder()
         .maximumSize(1000)
-        .expireAfterWrite(Duration.ofMinutes(expireMinutes))
+        .expireAfterWrite(Duration.ofSeconds(expireSeconds))
         .evictionListener<String, String> { _, _, _ -> logger.info("Tømmer cache for ugått innsending.") }
         .build()
 

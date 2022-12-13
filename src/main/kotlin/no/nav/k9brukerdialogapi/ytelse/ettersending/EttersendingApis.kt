@@ -29,14 +29,14 @@ fun Route.ettersendingApis(
         post(INNSENDING_URL){
             val ettersendelse =  call.receive<Ettersendelse>()
             val idToken = idTokenProvider.getIdToken(call)
-
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${ettersendelse.ytelse()}"
-            innsendingCache.put(cacheKey)
+
 
             logger.info(formaterStatuslogging(ettersendelse.ytelse(), ettersendelse.søknadId, "mottatt."))
             logger.info("Ettersending for ytelse ${ettersendelse.søknadstype}")
             innsendingService.registrer(ettersendelse, call.getCallId(), idToken, call.getMetadata())
             registrerMottattSøknad(ettersendelse.ytelse())
+            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }

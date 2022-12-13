@@ -33,15 +33,14 @@ fun Route.omsorgspengerUtvidetRettApis(
             val callId = call.getCallId()
             val idToken = idTokenProvider.getIdToken(call)
             val metadata = call.getMetadata()
-
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${søknad.ytelse()}"
-            innsendingCache.put(cacheKey)
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
             søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
 
             innsendingService.registrer(søknad, callId, idToken, metadata)
             registrerMottattSøknad(søknad.ytelse())
+            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }
