@@ -289,6 +289,7 @@ class ApplicationTest {
         @ParameterizedTest
         @ValueSource(
             strings = [
+                "PLEIEPENGER_SYKT_BARN",
                 "OMSORGSPENGER_UTVIDET_RETT",
                 "OMSORGSPENGER_MIDLERTIDIG_ALENE",
                 "ETTERSENDING",
