@@ -174,7 +174,7 @@ fun Application.k9BrukerdialogApi() {
             k9BrukerdialogCacheGateway = k9BrukerdialogCacheGateway
         )
 
-        val innsendingCache = InnsendingCache(expireMinutes = configuration.getInnSendingCacheExpiryMinutes())
+        val innsendingCache = InnsendingCache(expireSeconds = configuration.getInnSendingCacheExpiryInSeconds())
 
         val innsendingService = InnsendingService(søkerService, kafkaProducer, vedleggService)
 

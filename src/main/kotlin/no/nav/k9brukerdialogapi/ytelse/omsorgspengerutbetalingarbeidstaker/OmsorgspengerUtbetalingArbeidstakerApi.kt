@@ -29,14 +29,13 @@ fun Route.omsorgspengerUtbetalingArbeidstakerApi(
         post(INNSENDING_URL){
             val søknad =  call.receive<OmsorgspengerutbetalingArbeidstakerSøknad>()
             val idToken = idTokenProvider.getIdToken(call)
-
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${søknad.ytelse()}"
-            innsendingCache.put(cacheKey)
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
 
             innsendingService.registrer(søknad, call.getCallId(), idToken, call.getMetadata())
             registrerMottattSøknad(søknad.ytelse())
+            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }
