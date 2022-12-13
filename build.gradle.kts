@@ -8,13 +8,13 @@ val kafkaTestcontainerVersion = "1.17.6"
 val kafkaVersion = "3.3.1"
 val k9FormatVersion = "7.0.4"
 val fuelVersion = "2.3.1"
-val tokenSupportVersion = "2.1.8"
+val tokenSupportVersion = "3.0.2"
 val mockOauth2ServerVersion = "0.5.6"
 val junitVersion = "5.9.1"
 val jakartaElVersion = "3.0.4"
 
 plugins {
-    kotlin("jvm") version "1.7.21"
+    kotlin("jvm") version "1.7.22"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -34,7 +34,9 @@ dependencies {
     }
 
     // NAV
-    implementation("no.nav.security:token-validation-ktor-v2:$tokenSupportVersion")
+    implementation("no.nav.security:token-validation-ktor-v2:$tokenSupportVersion"){
+        exclude("jakarta.validation", "jakarta.validation-api")
+    }
     testImplementation("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
 
     // Client
@@ -78,7 +80,6 @@ repositories {
     mavenCentral()
 
     maven("https://jitpack.io")
-    maven("https://packages.confluent.io/maven/")
 }
 
 java {
