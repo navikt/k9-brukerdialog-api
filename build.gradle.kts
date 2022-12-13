@@ -6,7 +6,7 @@ val dusseldorfKtorVersion = "3.2.2.1-4942135"
 val ktorVersion = "2.2.1"
 val kafkaTestcontainerVersion = "1.17.6"
 val kafkaVersion = "3.3.1"
-val k9FormatVersion = "7.0.4"
+val k9FormatVersion = "8.0.0"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.0.2"
 val mockOauth2ServerVersion = "0.5.6"
@@ -63,7 +63,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation("org.skyscreamer:jsonassert:1.5.1")
-    testImplementation("io.mockk:mockk:1.13.2")
+    testImplementation("io.mockk:mockk:1.13.3")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 
