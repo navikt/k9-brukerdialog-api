@@ -37,8 +37,6 @@ data class Utenlandsopphold(
         krever(fraOgMed.isBefore(tilOgMed), "$felt.fraOgMed må være før $felt.tilOgMed")
         krever(landkode.isNotEmpty(), "$felt.landkode kan ikke være tomt")
         krever(landnavn.isNotEmpty(), "$felt.landnavn kan ikke være tomt")
-        kreverIkkeNull(erUtenforEøs, "$felt.erUtenforEøs kan ikke være null")
-        kreverIkkeNull(erBarnetInnlagt, "$felt.erBarnetInnlagt kan ikke være null")
 
         if (erBarnetInnlagt == true) {
             krever(årsak != null, "$felt.årsak må være satt når $felt.erBarnetInnlagt er true")
