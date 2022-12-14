@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.kafka.TopicEntry
 import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.MOTTATT_ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSDAGER_ALENEOMSORG_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
@@ -84,7 +85,8 @@ internal fun KafkaContainer.testConsumer() : KafkaConsumer<String, TopicEntry<JS
         OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
         OMSORGSPENGER_UTBETALING_SNF_TOPIC,
         PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC,
-        PLEIEPENGER_SYKT_BARN_TOPIC
+        PLEIEPENGER_SYKT_BARN_TOPIC,
+        MOTTATT_ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
     ))
     return consumer
 }

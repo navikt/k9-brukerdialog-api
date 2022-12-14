@@ -4,7 +4,8 @@ import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.UtenlandskNæring.Companion.valider
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandskNæring
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandskNæring.Companion.valider
 import java.time.LocalDate
 import kotlin.test.Test
 

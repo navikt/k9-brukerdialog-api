@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.ytelse.psb.v1.tilsyn.TilsynPeriodeInfo
@@ -6,9 +6,9 @@ import no.nav.k9.søknad.ytelse.psb.v1.tilsyn.Tilsynsordning
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.ukedagerTilOgMed
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.OmsorgstilbudSvarFremtid.JA
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.OmsorgstilbudSvarFremtid.NEI
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.OmsorgstilbudSvarFremtid.USIKKER
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.OmsorgstilbudSvarFremtid.JA
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.OmsorgstilbudSvarFremtid.NEI
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.OmsorgstilbudSvarFremtid.USIKKER
 import java.time.DayOfWeek
 import java.time.DayOfWeek.FRIDAY
 import java.time.DayOfWeek.MONDAY

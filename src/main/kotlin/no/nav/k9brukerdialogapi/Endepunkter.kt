@@ -11,6 +11,7 @@ const val VEDLEGG_URL = "/vedlegg"
 const val MELLOMLAGRING_URL = "/mellomlagring/{ytelse}"
 
 const val INNSENDING_URL = "/innsending"
+const val ENDRINGSMELDING_URL = "/endringsmelding"
 const val VALIDERING_URL = "/valider"
 
 const val ETTERSENDING_URL = "/ettersending"

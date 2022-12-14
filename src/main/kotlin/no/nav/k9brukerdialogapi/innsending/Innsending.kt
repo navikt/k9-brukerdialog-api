@@ -6,6 +6,7 @@ import no.nav.k9.søknad.SøknadValidator
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import java.net.URL
+import no.nav.k9.søknad.felles.type.Periode as K9Periode
 
 interface Innsending {
     fun ytelse(): Ytelse
@@ -24,4 +25,5 @@ interface Innsending {
 
     fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad>? = null
     fun ettersendelseValidator(): SøknadValidator<Ettersendelse>? = null
+    fun gyldigeEndringsPerioder(): List<K9Periode>? = null
 }

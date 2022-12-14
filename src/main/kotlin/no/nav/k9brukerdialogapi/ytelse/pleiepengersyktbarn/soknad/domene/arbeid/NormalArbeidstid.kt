@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid
 
 import java.time.Duration
 

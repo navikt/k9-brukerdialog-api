@@ -7,6 +7,7 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.getTokendingsWellKnownUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9BrukerdialogCacheUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9MellomlagringUrl
 import no.nav.k9brukerdialogapi.wiremock.getK9OppslagUrl
+import no.nav.k9brukerdialogapi.wiremock.getSifInnsynApiUrl
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.testcontainers.containers.KafkaContainer
 
@@ -17,6 +18,7 @@ object TestConfiguration {
         kafkaEnvironment: KafkaContainer? = null,
         port: Int = 8080,
         k9OppslagUrl: String? = wireMockServer?.getK9OppslagUrl(),
+        sifInnaynApiUrl: String? = wireMockServer?.getSifInnsynApiUrl(),
         k9MellomlagringUrl: String? = wireMockServer?.getK9MellomlagringUrl(),
         k9BrukerdialogCacheUrl: String? = wireMockServer?.getK9BrukerdialogCacheUrl(),
         corsAdresses: String = "http://localhost:8080",
@@ -29,6 +31,7 @@ object TestConfiguration {
             Pair("nav.gateways.k9_oppslag_url","$k9OppslagUrl"),
             Pair("nav.gateways.k9_mellomlagring_url", "$k9MellomlagringUrl"),
             Pair("nav.gateways.k9_brukerdialog_cache_url", "$k9BrukerdialogCacheUrl"),
+            Pair("nav.gateways.sif_innsyn_api_url", "$sifInnaynApiUrl"),
             Pair("nav.cors.addresses", corsAdresses),
         )
 

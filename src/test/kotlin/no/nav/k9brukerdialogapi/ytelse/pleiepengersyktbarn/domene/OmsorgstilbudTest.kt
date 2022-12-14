@@ -1,7 +1,11 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
 import no.nav.k9.søknad.felles.type.Periode
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.NULL_TIMER
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Omsorgstilbud
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.OmsorgstilbudSvarFortid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.OmsorgstilbudSvarFremtid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.PlanUkedager
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test

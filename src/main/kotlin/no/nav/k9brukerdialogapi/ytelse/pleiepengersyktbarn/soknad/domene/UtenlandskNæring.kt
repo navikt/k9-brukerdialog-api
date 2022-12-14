@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land

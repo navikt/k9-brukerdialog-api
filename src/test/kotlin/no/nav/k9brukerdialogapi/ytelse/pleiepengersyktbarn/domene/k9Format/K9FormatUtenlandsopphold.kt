@@ -1,10 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.k9Format
 
 import no.nav.k9brukerdialogapi.somJson
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Periode
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Utenlandsopphold
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.UtenlandsoppholdIPerioden
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Årsak
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Periode
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Utenlandsopphold
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Årsak
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import kotlin.test.Test

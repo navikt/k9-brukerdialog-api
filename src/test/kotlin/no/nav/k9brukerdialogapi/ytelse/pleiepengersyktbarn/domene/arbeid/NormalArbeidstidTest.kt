@@ -1,5 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid
 
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import java.time.Duration
 import kotlin.test.Test
 import kotlin.test.assertEquals

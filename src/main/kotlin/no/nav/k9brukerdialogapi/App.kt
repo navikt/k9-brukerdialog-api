@@ -52,6 +52,8 @@ import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.AccessTokenClientResolver
 import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
+import no.nav.k9brukerdialogapi.innsyn.InnsynGateway
+import no.nav.k9brukerdialogapi.innsyn.InnsynService
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.mellomlagring.K9BrukerdialogCacheGateway
 import no.nav.k9brukerdialogapi.mellomlagring.MellomlagringService
@@ -209,7 +211,10 @@ fun Application.k9BrukerdialogApi() {
                 idTokenProvider = idTokenProvider,
                 barnService = barnService,
                 innsendingService = innsendingService,
-                innsendingCache = innsendingCache
+                innsendingCache = innsendingCache,
+                innsynService = InnsynService(
+                    innsynGateway = InnsynGateway(baseUrl = configuration.getSifInnsynApiUrl())
+                ),
             )
 
             oppslagRoutes(
