@@ -28,8 +28,10 @@ data class Nattevåk(
 
     fun valider(felt: String) = mutableListOf<String>().apply {
         kreverIkkeNull(harNattevåk, "$felt.harNattevåk kan ikke være null")
-        krever(tilleggsinformasjon !== null && tilleggsinformasjon.length < MAX_FRITEKST_TEGN,
-            "$felt.tilleggsinformasjon kan være max $MAX_FRITEKST_TEGN tegn, men var ${tilleggsinformasjon?.length}")
+        if (harNattevåk == true) {
+            krever(tilleggsinformasjon !== null && tilleggsinformasjon.length < MAX_FRITEKST_TEGN,
+                "$felt.tilleggsinformasjon kan være max $MAX_FRITEKST_TEGN tegn, men var ${tilleggsinformasjon?.length}")
+        }
 
     }
 }
