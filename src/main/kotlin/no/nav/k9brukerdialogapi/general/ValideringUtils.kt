@@ -35,5 +35,5 @@ internal fun MutableList<String>.validerIdentifikator(identifikator: String?, fe
     }
 }
 
-internal fun LocalDate.erLikEllerEtter(tilOgMedDato: LocalDate) = this.isEqual(tilOgMedDato) || this.isAfter(tilOgMedDato)
-internal fun LocalDate.erFørEllerLik(tilOgMedDato: LocalDate) = this.isBefore(tilOgMedDato) || this.isEqual(tilOgMedDato)
+internal fun LocalDate.erLikEllerEtter(tilOgMedDato: LocalDate) = this >= tilOgMedDato
+internal fun LocalDate.erFørEllerLik(tilOgMedDato: LocalDate) = this <= tilOgMedDato
