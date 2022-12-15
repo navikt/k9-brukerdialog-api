@@ -59,6 +59,7 @@ spec:
         - application: deling-omsorgsdager
         - application: omsorgspengerutbetaling-soknad
         - application: pleiepenger-i-livets-sluttfase-soknad
+        - application: pleiepengesoknad
     outbound:
       rules:
         - application: k9-mellomlagring

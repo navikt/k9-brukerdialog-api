@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import java.net.URL
@@ -89,14 +89,14 @@ internal fun gyldigPILSSøknad(
         )
     ),
     selvstendigNæringsdrivende: SelvstendigNæringsdrivende = SelvstendigNæringsdrivende(
-        virksomhet = no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.SelvstendigNæringsdrivende(
+        virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
             fraOgMed = LocalDate.parse("2015-01-01"),
             tilOgMed = LocalDate.parse("2021-01-01"),
             næringstype = Næringstype.ANNEN,
             fiskerErPåBladB = true,
             navnPåVirksomheten = "Bjarnes Bakeri",
             registrertINorge = false,
-            registrertIUtlandet = Land("ABW", "Aruba"),
+            registrertIUtlandet = Land("CUB", "Cuba"),
             næringsinntekt = 9656876,
             erNyoppstartet = false,
             harFlereAktiveVirksomheter = false

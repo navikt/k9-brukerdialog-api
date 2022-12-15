@@ -6,7 +6,7 @@ import no.nav.k9.søknad.felles.type.Landkode
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.personopplysninger.Utenlandsopphold as K9Utenlandsopphold
 

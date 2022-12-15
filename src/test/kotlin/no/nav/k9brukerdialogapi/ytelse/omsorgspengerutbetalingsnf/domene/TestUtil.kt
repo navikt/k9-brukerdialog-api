@@ -34,7 +34,7 @@ internal fun genererSøknadForOmsUtSnf(
         sluttdato = LocalDate.parse("2022-10-01"),
         jobberFortsattSomFrilans = true
     ),
-    selvstendigNæringsdrivende: SelvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+    selvstendigNæringsdrivende: Virksomhet = Virksomhet(
         fraOgMed = LocalDate.parse("2022-01-01"),
         tilOgMed = LocalDate.parse("2022-10-01"),
         næringstype = Næringstype.DAGMAMMA,

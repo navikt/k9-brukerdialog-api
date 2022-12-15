@@ -1,11 +1,11 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.k9.søknad.felles.opptjening.SelvstendigNæringsdrivende
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class VarigEndring(
+data class VarigEndring(
     @JsonFormat(pattern = "yyyy-MM-dd")
     private val dato: LocalDate,
     private val inntektEtterEndring: Int,

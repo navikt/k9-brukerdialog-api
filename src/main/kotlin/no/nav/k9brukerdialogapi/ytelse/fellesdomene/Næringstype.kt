@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
+package no.nav.k9brukerdialogapi.ytelse.fellesdomene
 
 import no.nav.k9.søknad.felles.type.VirksomhetType
 

@@ -10,10 +10,9 @@ import no.nav.k9.søknad.ytelse.pls.v1.Pleietrengende as K9Pleietrengende
 
 class Pleietrengende(
     private val norskIdentitetsnummer: String? = null,
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private val fødselsdato: LocalDate? = null,
+    @JsonFormat(pattern = "yyyy-MM-dd") private val fødselsdato: LocalDate? = null,
+    private val navn: String,
     private val årsakManglerIdentitetsnummer: ÅrsakManglerIdentitetsnummer? = null,
-    private val navn: String
 ) {
     internal fun somK9Pleietrengende(): K9Pleietrengende = when {
         norskIdentitetsnummer != null -> K9Pleietrengende().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentitetsnummer))

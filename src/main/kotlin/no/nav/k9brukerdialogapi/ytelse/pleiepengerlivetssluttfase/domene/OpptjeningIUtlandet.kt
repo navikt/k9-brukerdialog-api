@@ -2,13 +2,12 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Land
 import java.time.LocalDate
 
-class OpptjeningIUtlandet (
+class OpptjeningIUtlandet(
     private val navn: String,
     private val opptjeningType: OpptjeningType,
-    private val land: Land,
+    private val land: no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land,
     private val fraOgMed: LocalDate,
     private val tilOgMed: LocalDate
 ) {

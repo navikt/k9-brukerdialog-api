@@ -29,6 +29,7 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBar
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnSøknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.gyldigPILSSøknad
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils.Companion
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
@@ -327,6 +328,39 @@ internal class InnsendingServiceTest{
 
                 innsendingService.registrer(
                     innsending = gyldigPILSSøknad(listOf()),
+                    metadata = Metadata(
+                        version = 1,
+                        correlationId = "123"
+                    ),
+                    idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
+                    callId = CallId("abc")
+                )
+            }
+        }
+
+        coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
+    }
+
+    @Test
+    internal fun `Verifiser at søknadservice for pleiepenger sykt barn fjerner hold på persistert vedlegg dersom kafka feiler`(){
+        assertThrows<MeldingRegistreringFeiletException> {
+            runBlocking {
+                coEvery {søkerService.hentSøker(any(), any()) } returns Søker(
+                    aktørId = "123",
+                    fødselsdato = LocalDate.parse("2000-01-01"),
+                    fødselsnummer = "02119970078"
+                )
+
+                coEvery { vedleggService.hentVedlegg(vedleggUrls = any(), any(), any()) } returns listOf(Vedlegg("bytearray".toByteArray(), "vedlegg", "vedlegg", DokumentEier("290990123456")))
+
+                every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
+
+                innsendingService.registrer(
+                    innsending = no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils.defaultSøknad().copy(
+                        fraOgMed = LocalDate.parse("2021-01-01"),
+                        tilOgMed = LocalDate.parse("2022-01-10"),
+                        fødselsattestVedleggUrls = listOf()
+                    ),
                     metadata = Metadata(
                         version = 1,
                         correlationId = "123"

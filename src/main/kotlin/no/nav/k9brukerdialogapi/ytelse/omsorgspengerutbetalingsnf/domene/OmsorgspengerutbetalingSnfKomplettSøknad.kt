@@ -7,6 +7,7 @@ import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -27,7 +28,7 @@ class OmsorgspengerutbetalingSnfKomplettSøknad(
     private val erArbeidstakerOgså: Boolean,
     private val barn: List<Barn>,
     private val frilans: Frilans? = null,
-    private val selvstendigNæringsdrivende: SelvstendigNæringsdrivende? = null,
+    private val selvstendigNæringsdrivende: Virksomhet? = null,
     private val vedleggId: List<String> = listOf(),
     private val titler: List<String>,
     private val k9FormatSøknad: Søknad
