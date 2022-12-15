@@ -135,7 +135,6 @@ data class Søknad(
         addAll(utenlandsoppholdIPerioden.valider("utenlandsoppholdIPerioden"))
         krever(harBekreftetOpplysninger, "Opplysningene må bekreftes for å sende inn søknad")
         krever(harForståttRettigheterOgPlikter, "Må ha forstått rettigheter og plikter for å sende inn søknad")
-        kreverIkkeNull(harMedsøker, "harMedsøker kan ikke være null")
 
         omsorgstilbud?.let { addAll(it.valider("omsorgstilbud")) }
         ferieuttakIPerioden?.let { addAll(it.valider(("ferieuttakIPerioden"))) }
