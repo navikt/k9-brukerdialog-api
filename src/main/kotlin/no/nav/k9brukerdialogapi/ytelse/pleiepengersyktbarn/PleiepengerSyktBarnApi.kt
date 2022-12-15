@@ -34,15 +34,14 @@ fun Route.pleiepengerSyktBarnApi(
             val søknad = call.receive<Søknad>()
             val idToken = idTokenProvider.getIdToken(call)
             val callId = call.getCallId()
-
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${søknad.ytelse()}"
-            innsendingCache.put(cacheKey)
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
             søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
 
             innsendingService.registrer(søknad, callId, idToken, call.getMetadata())
             registrerMottattSøknad(søknad.ytelse())
+            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }
