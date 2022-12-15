@@ -79,5 +79,6 @@ data class Configuration(val config : ApplicationConfig) {
     }
 
     internal fun getSifInnsynApiUrl() = URI(config.getRequiredString("nav.gateways.sif_innsyn_api_url", secret = false))
+    fun getSifInnsynApiTokenxAudience(): Set<String> = getScopesFor("sif_innsyn_api_tokenx_audience")
 
 }

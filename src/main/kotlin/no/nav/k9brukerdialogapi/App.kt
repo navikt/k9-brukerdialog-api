@@ -213,7 +213,11 @@ fun Application.k9BrukerdialogApi() {
                 innsendingService = innsendingService,
                 innsendingCache = innsendingCache,
                 innsynService = InnsynService(
-                    innsynGateway = InnsynGateway(baseUrl = configuration.getSifInnsynApiUrl())
+                    innsynGateway = InnsynGateway(
+                        baseUrl = configuration.getSifInnsynApiUrl(),
+                        exchangeTokenClient = tokenxClient,
+                        sifInnsynAudience = configuration.getSifInnsynApiTokenxAudience(),
+                    )
                 ),
             )
 

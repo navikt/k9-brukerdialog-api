@@ -11,8 +11,10 @@ import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.Retry
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.Operation
+import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.general.CallId
+import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -21,6 +23,8 @@ import java.time.LocalDate
 
 class InnsynGateway(
     val baseUrl: URI,
+    private val exchangeTokenClient: CachedAccessTokenClient,
+    private val sifInnsynAudience: Set<String>
 ) {
 
     private companion object {
@@ -72,10 +76,12 @@ class InnsynGateway(
         url: String,
         callId: CallId
     ): Request {
+        val exchangeToken = IdToken(exchangeTokenClient.getAccessToken(sifInnsynAudience, idToken.value).token)
+        logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
         return url
             .httpGet()
             .header(
-                HttpHeaders.Authorization to "Bearer ${idToken.value}",
+                HttpHeaders.Authorization to "Bearer ${exchangeToken.value}",
                 HttpHeaders.Accept to "application/json",
                 HttpHeaders.XCorrelationId to callId.value
             )
