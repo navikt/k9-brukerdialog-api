@@ -99,7 +99,7 @@ data class Søknad(
             opptjeningIUtlandet = opptjeningIUtlandet,
             utenlandskNæring = utenlandskNæring,
             utenlandsoppholdIPerioden = utenlandsoppholdIPerioden,
-            harMedsøker = harMedsøker!!,
+            harMedsøker = harMedsøker,
             samtidigHjemme = samtidigHjemme,
             harBekreftetOpplysninger = harBekreftetOpplysninger,
             harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
