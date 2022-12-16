@@ -60,9 +60,10 @@ class InnsendingService(
         metadata: Metadata,
     ) {
         try {
+            val komplettInnsending = innsending.somKomplettSøknad(søker, k9Format)
             kafkaProdusent.produserKafkaMelding(
                 metadata,
-                JSONObject(innsending.somKomplettSøknad(søker, k9Format).somJson()),
+                JSONObject(komplettInnsending.somJson()),
                 innsending.ytelse()
             )
         } catch (exception: Exception) {
