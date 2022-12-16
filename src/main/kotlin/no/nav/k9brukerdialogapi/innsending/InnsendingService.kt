@@ -94,7 +94,7 @@ class InnsendingService(
                 innsending.ytelse()
             )
         } catch (exception: Exception) {
-            logger.error("Feilet ved å legge melding på Kafka.")
+            logger.error("Feilet ved å legge melding på Kafka.", exception)
             logger.info("Fjerner hold på persisterte vedlegg")
             fjernHoldPåPersisterteVedlegg(innsending, callId, dokumentEier)
             throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
