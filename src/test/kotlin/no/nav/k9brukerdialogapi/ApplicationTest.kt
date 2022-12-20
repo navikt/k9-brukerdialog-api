@@ -26,7 +26,6 @@ import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagArbeidsgivere
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.wiremock.stubOppslagHealth
-import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterAll
