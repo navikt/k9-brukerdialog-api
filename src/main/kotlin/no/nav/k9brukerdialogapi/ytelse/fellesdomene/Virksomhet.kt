@@ -52,7 +52,7 @@ data class Virksomhet(
     private fun MutableList<String>.validerErNyoppstartet(felt: String) {
         val fireÅrSiden = LocalDate.now().minusYears(4)
         if(erNyoppstartet) krever(fraOgMed.erLikEllerEtter(fireÅrSiden), "$felt.nyOppstartet er true. $felt.fraOgMed må være maks 4 år siden")
-        if(!erNyoppstartet) krever(fraOgMed.isBefore(fireÅrSiden), "$felt.nyOppstartet er false. $felt.fraOgMed må være over 4 år siden")
+        if(!erNyoppstartet) krever(fraOgMed < fireÅrSiden, "$felt.nyOppstartet er false. $felt.fraOgMed må være over 4 år siden")
     }
 
     fun somK9SelvstendigNæringsdrivende() = K9SelvstendigNæringsdrivende().apply {
