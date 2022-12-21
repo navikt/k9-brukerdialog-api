@@ -1,4 +1,9 @@
 # K9 Brukerdialog API
+![LINE](https://img.shields.io/badge/line--coverage-92.16%25-brightgreen.svg)
+![BRANCH](https://img.shields.io/badge/branch--coverage-69.73%25-yellow.svg)
+![COMPLEXITY](https://img.shields.io/badge/complexity-1.90-brightgreen.svg)
+![METHOD](https://img.shields.io/badge/method--coverage-84.15%25-brightgreen.svg)
+![CLASS](https://img.shields.io/badge/class--coverage-95.77%25-brightgreen.svg)
 
 API som understøtter søknadsprosessen for ytelser i folketrygdloven kapittel 9.
 
