@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.k9.søknad.ytelse.psb.v1.LovbestemtFerie
+import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.type.Periode as K9Periode
@@ -44,7 +45,6 @@ data class Ferieuttak(
     }
 
     fun valider(felt: String) = mutableListOf<String>().apply {
-        krever(fraOgMed.isBefore(tilOgMed), "$felt.fraOgMed må være før $felt.tilOgMed")
-
+        krever(fraOgMed.erFørEllerLik(tilOgMed), "$felt.fraOgMed må være før $felt.tilOgMed")
     }
 }
