@@ -1,9 +1,11 @@
 # K9 Brukerdialog API
-![LINE](https://img.shields.io/badge/line--coverage-92.16%25-brightgreen.svg)
-![BRANCH](https://img.shields.io/badge/branch--coverage-69.73%25-yellow.svg)
-![COMPLEXITY](https://img.shields.io/badge/complexity-1.90-brightgreen.svg)
-![METHOD](https://img.shields.io/badge/method--coverage-84.15%25-brightgreen.svg)
-![CLASS](https://img.shields.io/badge/class--coverage-95.77%25-brightgreen.svg)
+![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=ncloc)
+![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=alert_status)
+![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=coverage)
+![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=code_smells)
+![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=sqale_index)
+![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=duplicated_lines_density)
+![Bugs](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=bugs)
 
 API som understøtter søknadsprosessen for ytelser i folketrygdloven kapittel 9.
 

@@ -16,7 +16,7 @@ val jakartaElVersion = "3.0.4"
 plugins {
     kotlin("jvm") version "1.7.22"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("com.github.dawnwords.jacoco.badge") version "0.2.4"
+    id("org.sonarqube") version "3.3"
     jacoco
 }
 
@@ -115,7 +115,7 @@ tasks.withType<Wrapper> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport, tasks.generateJacocoBadge) // report is always generated after tests run
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
 tasks.jacocoTestReport {
@@ -126,9 +126,12 @@ tasks.jacocoTestReport {
     }
 }
 
-jacocoBadgeGenSetting {
-    // since v0.2.0, percentage limitation (0-100) for different type of coverage
-    limit = mapOf(
-        "instruction" to 0, "branch" to 0, "line" to 0, "method" to 0, "class" to 0
-    )
+sonarqube {
+    properties {
+        property("sonar.projectKey", "navikt_k9-brukerdialog-api")
+        property("sonar.organization", "navikt")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.login", System.getenv("SONAR_TOKEN"))
+        property("sonar.sourceEncoding", "UTF-8")
+    }
 }
