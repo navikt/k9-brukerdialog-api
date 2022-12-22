@@ -38,9 +38,9 @@ fun Route.omsorgspengerUtbetalingSnfApis(
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId.id, "mottatt."))
             søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
 
+            innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, callId, idToken, metadata)
             registrerMottattSøknad(søknad.ytelse())
-            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }

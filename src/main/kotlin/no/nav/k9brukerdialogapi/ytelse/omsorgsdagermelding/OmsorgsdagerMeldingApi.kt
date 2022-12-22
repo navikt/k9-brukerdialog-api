@@ -61,8 +61,8 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
 
     melding.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
 
+    innsendingCache.put(cacheKey)
     innsendingService.registrer(melding, callId, idToken, metadata)
     registrerMottattSøknad(melding.ytelse())
-    innsendingCache.put(cacheKey)
     call.respond(HttpStatusCode.Accepted)
 }

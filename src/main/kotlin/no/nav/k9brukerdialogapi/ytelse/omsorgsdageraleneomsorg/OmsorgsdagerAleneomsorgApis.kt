@@ -49,8 +49,8 @@ fun Route.omsorgsdagerAleneomsorgApis(
             } else {
                 innsendingService.registrer(søknad, callId, idToken, metadata)
             }
-            registrerMottattSøknad(søknad.ytelse())
             innsendingCache.put(cacheKey)
+            registrerMottattSøknad(søknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }

@@ -34,9 +34,9 @@ fun Route.ettersendingApis(
 
             logger.info(formaterStatuslogging(ettersendelse.ytelse(), ettersendelse.søknadId, "mottatt."))
             logger.info("Ettersending for ytelse ${ettersendelse.søknadstype}")
+            innsendingCache.put(cacheKey)
             innsendingService.registrer(ettersendelse, call.getCallId(), idToken, call.getMetadata())
             registrerMottattSøknad(ettersendelse.ytelse())
-            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }

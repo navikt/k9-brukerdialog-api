@@ -32,9 +32,9 @@ fun Route.pleiepengerLivetsSluttfaseApi(
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${pilsSøknad.ytelse()}"
 
             logger.info(formaterStatuslogging(pilsSøknad.ytelse(), pilsSøknad.søknadId, "mottatt."))
+            innsendingCache.put(cacheKey)
             innsendingService.registrer(pilsSøknad, call.getCallId(), idToken, call.getMetadata())
             registrerMottattSøknad(pilsSøknad.ytelse())
-            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }

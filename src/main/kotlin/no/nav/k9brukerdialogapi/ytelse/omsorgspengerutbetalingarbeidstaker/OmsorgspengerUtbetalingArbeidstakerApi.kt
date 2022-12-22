@@ -33,9 +33,9 @@ fun Route.omsorgspengerUtbetalingArbeidstakerApi(
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
 
+            innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, call.getCallId(), idToken, call.getMetadata())
             registrerMottattSøknad(søknad.ytelse())
-            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }
