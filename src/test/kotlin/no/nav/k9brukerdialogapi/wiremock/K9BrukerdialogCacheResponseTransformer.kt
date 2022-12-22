@@ -17,6 +17,7 @@ import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.k9BrukerdialogCacheKonfigurert
 import no.nav.k9brukerdialogapi.mellomlagring.CacheRequest
 import no.nav.k9brukerdialogapi.somJson
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 import kotlin.collections.mutableMapOf
@@ -65,7 +66,7 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
                     logger.info("Lagret i cache: {}", cache)
                     Response.Builder.like(response)
                         .status(HttpStatusCode.Created.value)
-                        .headers(HttpHeaders(HttpHeader.httpHeader("Content-Type", "application/json")))
+                        .headers(HttpHeaders(HttpHeader.httpHeader("Content-Type", APPLICATION_JSON)))
                         .body(cache.somJson())
                         .build()
                 }
@@ -81,7 +82,7 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
                     logger.info("Cache hentet: {}", cache)
                     Response.Builder.like(response)
                         .status(HttpStatusCode.OK.value)
-                        .headers(HttpHeaders(HttpHeader.httpHeader("Content-Type", "application/json")))
+                        .headers(HttpHeaders(HttpHeader.httpHeader("Content-Type", APPLICATION_JSON)))
                         .body(cache)
                         .build()
                 } else {
@@ -104,7 +105,7 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
                     logger.info("Cache oppdatert med: {}", cache)
                     Response.Builder.like(response)
                         .status(HttpStatusCode.OK.value)
-                        .headers(HttpHeaders(HttpHeader.httpHeader("Content-Type", "application/json")))
+                        .headers(HttpHeaders(HttpHeader.httpHeader("Content-Type", APPLICATION_JSON)))
                         .body(cache.somJson())
                         .build()
                 } else {

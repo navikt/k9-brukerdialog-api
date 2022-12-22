@@ -44,27 +44,30 @@ fun Route.vedleggApis(
     route(VEDLEGG_URL) {
         post {
             logger.info("Lagrer vedlegg")
-            if (!call.request.isFormMultipart()) return@post call.respondProblemDetails(
-                hasToBeMultipartTypeProblemDetails
-            )
-
             val eier = idTokenProvider.getIdToken(call).getNorskIdentifikasjonsnummer()
             val vedlegg: Vedlegg = call.receiveMultipart().getVedlegg(DokumentEier(eier))
                 ?: return@post call.respondProblemDetails(vedleggNotAttachedProblemDetails)
 
-            if (!vedlegg.isSupportedContentType()) return@post call.respondProblemDetails(
-                vedleggContentTypeNotSupportedProblemDetails
-            )
-            if (vedlegg.content.size > MAX_VEDLEGG_SIZE) return@post call.respondProblemDetails(
-                vedleggTooLargeProblemDetails
-            )
-            val vedleggId = vedleggService.lagreVedlegg(
-                vedlegg = vedlegg,
-                idToken = idTokenProvider.getIdToken(call),
-                callId = call.getCallId()
-            )
-            logger.info("Lagret vedlegg med id:$vedleggId")
-            call.respondVedlegg(VedleggId(vedleggId))
+            when {
+                !call.request.isFormMultipart() -> return@post call.respondProblemDetails(
+                    hasToBeMultipartTypeProblemDetails
+                )
+                !vedlegg.isSupportedContentType() -> return@post call.respondProblemDetails(
+                    vedleggContentTypeNotSupportedProblemDetails
+                )
+                vedlegg.content.size > MAX_VEDLEGG_SIZE -> return@post call.respondProblemDetails(
+                    vedleggTooLargeProblemDetails
+                )
+                else -> {
+                    val vedleggId = vedleggService.lagreVedlegg(
+                        vedlegg = vedlegg,
+                        idToken = idTokenProvider.getIdToken(call),
+                        callId = call.getCallId()
+                    )
+                    logger.info("Lagret vedlegg med id:$vedleggId")
+                    call.respondVedlegg(VedleggId(vedleggId))
+                }
+            }
         }
 
         get(VEDLEGGID_URL){

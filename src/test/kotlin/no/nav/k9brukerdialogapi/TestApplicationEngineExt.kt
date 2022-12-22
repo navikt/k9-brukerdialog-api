@@ -12,6 +12,9 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.utils.io.streams.asInput
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_PDF
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_JPEG
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_PNG
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -20,7 +23,7 @@ fun TestApplicationEngine.handleRequestUploadImage(
     jwtToken: String? = null,
     vedlegg: ByteArray = "vedlegg/iPhone_6.jpg".fromResources().readBytes(),
     fileName: String = "iPhone_6.jpg",
-    contentType: String = "image/jpeg",
+    contentType: String = IMAGE_JPEG,
     expectedCode: HttpStatusCode = HttpStatusCode.Created
 ): String {
     val boundary = "***vedlegg***"
@@ -73,7 +76,7 @@ fun TestApplicationEngine.jpegUrl(
         jwtToken = jwtToken,
         vedlegg = "vedlegg/nav-logo.png".fromResources().readBytes(),
         fileName = "nav-logo.png",
-        contentType = "image/png"
+        contentType = IMAGE_PNG
     )
 }
 
@@ -86,6 +89,6 @@ fun TestApplicationEngine.pdUrl(
         jwtToken = jwtToken,
         vedlegg = "vedlegg/test.pdf".fromResources().readBytes(),
         fileName = "test.pdf",
-        contentType = "application/pdf"
+        contentType = APPLICATION_PDF
     )
 }

@@ -26,6 +26,9 @@ import no.nav.helse.dusseldorf.oauth2.client.AccessTokenClient
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.k9MellomlagringKonfigurert
+import no.nav.k9brukerdialogapi.utils.LoggingUtils.logTokenExchange
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.TEXT_PLAIN
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
@@ -87,16 +90,15 @@ class K9MellomlagringGateway(
             ) {
                 val contentStream = { ByteArrayInputStream(body) }
                 val exchangeToken = IdToken(exchangeTokenClient.getAccessToken(k9MellomlagringTokenxAudience, idToken.value).token)
-                logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
-
+                logger.logTokenExchange(idToken, exchangeToken)
                 komplettUrl
                     .toString()
                     .httpPost()
                     .body(contentStream)
                     .header(
                         HttpHeaders.Authorization to "Bearer ${exchangeToken.value}",
-                        HttpHeaders.ContentType to "application/json",
-                        HttpHeaders.Accept to "application/json",
+                        HttpHeaders.ContentType to APPLICATION_JSON,
+                        HttpHeaders.Accept to APPLICATION_JSON,
                         HttpHeaders.XCorrelationId to callId.value
                     )
                     .awaitStringResponseResult()
@@ -106,7 +108,7 @@ class K9MellomlagringGateway(
                 { error ->
                     logger.error(
                         "Error response = '${
-                            error.response.body().asString("text/plain")
+                            error.response.body().asString(TEXT_PLAIN)
                         }' fra '${request.url}'"
                     )
                     logger.error(error.toString())
@@ -128,7 +130,7 @@ class K9MellomlagringGateway(
         )
 
         val exchangeToken = IdToken(exchangeTokenClient.getAccessToken(k9MellomlagringTokenxAudience, idToken.value).token)
-        logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
+        logger.logTokenExchange(idToken, exchangeToken)
 
         val httpRequest = urlMedId
             .toString()
@@ -137,7 +139,7 @@ class K9MellomlagringGateway(
             .header(
                 HttpHeaders.Authorization to "Bearer ${exchangeToken.value}",
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON
             )
         return requestSlettVedlegg(httpRequest)
     }
@@ -162,7 +164,7 @@ class K9MellomlagringGateway(
                 true
             },
             { error ->
-                logger.error("Error response = '${error.response.body().asString("text/plain")}' fra '${request.url}'")
+                logger.error("Error response = '${error.response.body().asString(TEXT_PLAIN)}' fra '${request.url}'")
                 logger.error(error.toString())
                 throw IllegalStateException("Feil ved sletting av vedlegg.")
             }
@@ -193,7 +195,7 @@ class K9MellomlagringGateway(
                 else {
                     logger.error(
                         "Error response = '${
-                            error.response.body().asString("text/plain")
+                            error.response.body().asString(TEXT_PLAIN)
                         }' fra '${request.url}'"
                     )
                     logger.error(error.toString())
@@ -247,7 +249,7 @@ class K9MellomlagringGateway(
             .header(
                 HttpHeaders.Authorization to authorizationHeader,
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON
             )
 
         val (request, _, result) = Operation.monitored(
@@ -261,7 +263,7 @@ class K9MellomlagringGateway(
         result.fold(
             { _ -> logger.info("Vellykket persistering av vedlegg") },
             { error ->
-                logger.error("Error response = '${error.response.body().asString("text/plain")}' fra '${request.url}'")
+                logger.error("Error response = '${error.response.body().asString(TEXT_PLAIN)}' fra '${request.url}'")
                 logger.error("Feil ved persistering av vedlegg. $error")
                 throw IllegalStateException("Feil ved persistering av vedlegg.")
             }
@@ -312,7 +314,7 @@ class K9MellomlagringGateway(
             .header(
                 HttpHeaders.Authorization to authorizationHeader,
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON
             )
 
         val (request, _, result) = Operation.monitored(
@@ -327,7 +329,7 @@ class K9MellomlagringGateway(
         result.fold(
             { _ -> logger.info("Vellykket fjerning av hold på persistert vedlegg") },
             { error ->
-                logger.error("Error response = '${error.response.body().asString("text/plain")}' fra '${request.url}'")
+                logger.error("Error response = '${error.response.body().asString(TEXT_PLAIN)}' fra '${request.url}'")
                 logger.error("Feil ved fjerning av hold påpersistert vedlegg. $error")
             }
         )
@@ -342,7 +344,7 @@ class K9MellomlagringGateway(
         )
 
         val exchangeToken = IdToken(exchangeTokenClient.getAccessToken(k9MellomlagringTokenxAudience, idToken.value).token)
-        logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
+        logger.logTokenExchange(idToken, exchangeToken)
 
         val httpRequest = urlMedId
             .toString()
@@ -351,8 +353,8 @@ class K9MellomlagringGateway(
             .header(
                 HttpHeaders.Authorization to "Bearer ${exchangeToken.value}",
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json",
-                HttpHeaders.Accept to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON,
+                HttpHeaders.Accept to APPLICATION_JSON
             )
         return requestHentVedlegg(httpRequest)
     }

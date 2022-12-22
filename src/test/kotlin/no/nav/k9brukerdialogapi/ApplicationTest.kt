@@ -17,6 +17,8 @@ import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
 import no.nav.k9brukerdialogapi.TestUtils.Companion.requestAndAssert
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_PNG
 import no.nav.k9brukerdialogapi.vedlegg.VedleggListe
 import no.nav.k9brukerdialogapi.wiremock.K9BrukerdialogCacheResponseTransformer
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
@@ -663,7 +665,7 @@ class ApplicationTest {
             engine.handleRequestUploadImage(
                 cookie = cookie,
                 vedlegg = "jwkset.json".fromResources().readBytes(),
-                contentType = "application/json",
+                contentType = APPLICATION_JSON,
                 fileName = "jwkset.json",
                 expectedCode = HttpStatusCode.BadRequest
             )
@@ -674,7 +676,7 @@ class ApplicationTest {
             engine.handleRequestUploadImage(
                 cookie = cookie,
                 vedlegg = ByteArray(8 * 1024 * 1024 + 10),
-                contentType = "image/png",
+                contentType = IMAGE_PNG,
                 fileName = "big_picture.png",
                 expectedCode = HttpStatusCode.PayloadTooLarge
             )
@@ -696,7 +698,7 @@ class ApplicationTest {
                     HttpMethod.Post, VEDLEGG_URL + VALIDERING_URL,
                 ) {
                     addHeader(HttpHeaders.Authorization, "Bearer $tokenXToken")
-                    addHeader(HttpHeaders.ContentType, "application/json")
+                    addHeader(HttpHeaders.ContentType, APPLICATION_JSON)
                     setBody(vedleggListe.somJson())
                 }.apply {
                     assertEquals(

@@ -1,8 +1,11 @@
 package no.nav.k9brukerdialogapi.vedlegg
 
 import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_PDF
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_JPEG
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_PNG
 
-val supportedContentTypes = listOf("application/pdf", "image/jpeg", "image/png")
+val supportedContentTypes = listOf(APPLICATION_PDF, IMAGE_JPEG, IMAGE_PNG)
 val hasToBeMultipartTypeProblemDetails = DefaultProblemDetails(
     title = "multipart-form-required",
     status = 400,

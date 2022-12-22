@@ -11,6 +11,7 @@ import com.github.tomakehurst.wiremock.http.Request
 import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.github.tomakehurst.wiremock.http.Response
 import no.nav.k9brukerdialogapi.k9MellomlagringKonfigurert
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggId
 import java.util.*
@@ -45,7 +46,7 @@ class K9MellomlagringResponseTransformer() : ResponseTransformer() {
                         .status(200)
                         .headers(
                             HttpHeaders(
-                                HttpHeader.httpHeader("Content-Type", "application/json")
+                                HttpHeader.httpHeader("Content-Type", APPLICATION_JSON)
                             )
                         )
                         .body(objectMapper.writeValueAsString(storage[vedleggId]))
@@ -66,7 +67,7 @@ class K9MellomlagringResponseTransformer() : ResponseTransformer() {
                     .headers(
                         HttpHeaders(
                             HttpHeader.httpHeader("Location", "http://localhost:8080/v1/dokument/${vedleggId.value}"),
-                            HttpHeader.httpHeader("Content-Type", "application/json")
+                            HttpHeader.httpHeader("Content-Type", APPLICATION_JSON)
                         )
                     )
                     .body(
@@ -89,7 +90,7 @@ class K9MellomlagringResponseTransformer() : ResponseTransformer() {
                                 "Location",
                                 "http://localhost:8080/v1/dokument/${vedleggId.value}/persister"
                             ),
-                            HttpHeader.httpHeader("Content-Type", "application/json")
+                            HttpHeader.httpHeader("Content-Type", APPLICATION_JSON)
                         )
                     )
                     .body(

@@ -8,6 +8,7 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -67,8 +68,8 @@ class TestUtils {
                     if (cookie != null) addHeader(HttpHeaders.Cookie, cookie)
                     if (jwtToken != null) addHeader(HttpHeaders.Authorization, "Bearer $jwtToken")
                     logger.info("Request Entity = $requestEntity")
-                    addHeader(HttpHeaders.Accept, "application/json")
-                    if (requestEntity != null) addHeader(HttpHeaders.ContentType, "application/json")
+                    addHeader(HttpHeaders.Accept, APPLICATION_JSON)
+                    if (requestEntity != null) addHeader(HttpHeaders.ContentType, APPLICATION_JSON)
                     if (requestEntity != null) setBody(requestEntity)
                 }.apply {
                     logger.info("Response Entity = ${response.content}")

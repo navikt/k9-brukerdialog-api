@@ -11,6 +11,7 @@ import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.k9SelvbetjeningOppslagKonfigurert
 import no.nav.k9brukerdialogapi.oppslag.genererOppslagHttpRequest
 import no.nav.k9brukerdialogapi.oppslag.throwable
+import no.nav.k9brukerdialogapi.utils.LoggingUtils.logTokenExchange
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -40,7 +41,7 @@ class BarnGateway(
         callId: CallId
     ): List<BarnOppslagRespons> {
         val exchangeToken = IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
-        logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
+        logger.logTokenExchange(idToken, exchangeToken)
 
         val httpRequest = genererOppslagHttpRequest(
             baseUrl = baseUrl,

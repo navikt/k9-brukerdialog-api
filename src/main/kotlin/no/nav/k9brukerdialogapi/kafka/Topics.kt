@@ -69,7 +69,4 @@ internal class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {
             .toString()
             .toByteArray()
     }
-
-    override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
-    override fun close() {}
 }

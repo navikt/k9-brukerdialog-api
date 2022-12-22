@@ -8,6 +8,7 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.util.pipeline.PipelineContext
+import kotlinx.coroutines.async
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSDAGER_MELDING_FORDELING_URL
@@ -33,24 +34,24 @@ fun Route.omsorgsdagerMeldingApi(
     idTokenProvider: IdTokenProvider,
 ) {
     post(OMSORGSDAGER_MELDING_FORDELING_URL + INNSENDING_URL) {
-        mottaMelding(innsendingService, barnService, innsendingCache, idTokenProvider)
+        mottaMelding(innsendingService, barnService, innsendingCache, idTokenProvider).await()
     }
 
     post(OMSORGSDAGER_MELDING_OVERFORING_URL + INNSENDING_URL) {
-        mottaMelding(innsendingService, barnService, innsendingCache, idTokenProvider)
+        mottaMelding(innsendingService, barnService, innsendingCache, idTokenProvider).await()
     }
 
     post(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL + INNSENDING_URL) {
-        mottaMelding(innsendingService, barnService, innsendingCache, idTokenProvider)
+        mottaMelding(innsendingService, barnService, innsendingCache, idTokenProvider).await()
     }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
+private fun PipelineContext<Unit, ApplicationCall>.mottaMelding(
     innsendingService: InnsendingService,
     barnService: BarnService,
     innsendingCache: InnsendingCache,
     idTokenProvider: IdTokenProvider
-) {
+) = async {
     val melding = call.receive<OmsorgsdagerMelding>()
     val callId = call.getCallId()
     val metadata = call.getMetadata()

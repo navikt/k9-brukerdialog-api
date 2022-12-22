@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.matching.AnythingPattern
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
 
 internal const val k9OppslagPath = "/k9-selvbetjening-oppslag-mock"
 private const val k9MellomlagringPath = "/k9-mellomlagring-mock"
@@ -27,7 +28,7 @@ internal fun WireMockServer.stubK9OppslagSoker(
     responseBody: String? = null
     ) : WireMockServer {
     val responseBuilder = WireMock.aResponse()
-        .withHeader("Content-Type", "application/json")
+        .withHeader("Content-Type", APPLICATION_JSON)
         .withStatus(statusCode.value)
     WireMock.stubFor(
         WireMock.get(WireMock.urlPathMatching("$k9OppslagPath/.*"))
@@ -56,7 +57,7 @@ internal fun WireMockServer.stubK9OppslagBarn(simulerFeil: Boolean = false): Wir
             .withQueryParam("a", equalTo("barn[].fødselsdato"))
             .willReturn(
                 WireMock.aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader("Content-Type", APPLICATION_JSON)
                     .withStatus(if (simulerFeil) 500 else 200)
                     .withTransformers("k9-oppslag-barn")
             )
@@ -74,7 +75,7 @@ internal fun WireMockServer.stubK9OppslagArbeidsgivere(simulerFeil: Boolean = fa
             .withQueryParam("tom", AnythingPattern()) // vurder regex som validerer dato-format
             .willReturn(
                 WireMock.aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader("Content-Type", APPLICATION_JSON)
                     .withStatus(if (simulerFeil) 500 else 200)
                     .withTransformers("k9-oppslag-arbeidsgivere")
             )
