@@ -6,16 +6,21 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.tomakehurst.wiremock.common.FileSource
 import com.github.tomakehurst.wiremock.extension.Parameters
 import com.github.tomakehurst.wiremock.extension.ResponseTransformer
-import com.github.tomakehurst.wiremock.http.*
+import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.http.HttpHeaders
-import io.ktor.http.*
+import com.github.tomakehurst.wiremock.http.Request
+import com.github.tomakehurst.wiremock.http.RequestMethod
+import com.github.tomakehurst.wiremock.http.Response
 import io.ktor.http.HttpHeaders.Authorization
+import io.ktor.http.HttpStatusCode
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.k9BrukerdialogCacheKonfigurert
 import no.nav.k9brukerdialogapi.mellomlagring.CacheRequest
 import no.nav.k9brukerdialogapi.somJson
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
 

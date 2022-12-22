@@ -1,17 +1,14 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid
 
+import no.nav.k9.søknad.felles.type.Periode
+import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
+import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
+import no.nav.k9brukerdialogapi.utils.ikkeErHelg
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_IKKE
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_TIMER_I_SNITT_PER_UKE
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_ULIKE_UKER_TIMER
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_VANLIG
-import no.nav.k9.søknad.felles.type.Periode
-import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
-import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
-import no.nav.k9brukerdialogapi.utils.ikkeErHelg
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.tilDuration
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.ArbeidUtils.tilTimerPerDag
 import java.time.LocalDate
 import java.util.*
 import kotlin.time.toJavaDuration

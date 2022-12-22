@@ -1,6 +1,5 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test

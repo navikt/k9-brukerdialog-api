@@ -1,8 +1,12 @@
 package no.nav.k9brukerdialogapi
 
 import com.github.tomakehurst.wiremock.http.Request
-import io.ktor.http.*
-import io.ktor.server.testing.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.Assert.assertEquals

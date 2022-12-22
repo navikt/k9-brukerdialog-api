@@ -1,6 +1,8 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_FORDELING
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_KORONAOVERFORING
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_OVERFORING
 
 enum class Meldingstype {
     FORDELING,

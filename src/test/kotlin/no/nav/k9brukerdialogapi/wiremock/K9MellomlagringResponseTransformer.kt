@@ -5,7 +5,11 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.tomakehurst.wiremock.common.FileSource
 import com.github.tomakehurst.wiremock.extension.Parameters
 import com.github.tomakehurst.wiremock.extension.ResponseTransformer
-import com.github.tomakehurst.wiremock.http.*
+import com.github.tomakehurst.wiremock.http.HttpHeader
+import com.github.tomakehurst.wiremock.http.HttpHeaders
+import com.github.tomakehurst.wiremock.http.Request
+import com.github.tomakehurst.wiremock.http.RequestMethod
+import com.github.tomakehurst.wiremock.http.Response
 import no.nav.k9brukerdialogapi.k9MellomlagringKonfigurert
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggId

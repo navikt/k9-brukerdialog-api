@@ -10,7 +10,21 @@ import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_SYKT_BARN_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.*
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING_OMP
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING_PLEIEPENGER_LIVETS_SLUTTFASE
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING_PLEIEPENGER_SYKT_BARN
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_ALENEOMSORG
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_FORDELING
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_KORONAOVERFORING
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_OVERFORING
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTBETALING_SNF
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTVIDET_RETT
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.PLEIEPENGER_SYKT_BARN
 import org.apache.kafka.common.serialization.Serializer
 import org.json.JSONObject
 

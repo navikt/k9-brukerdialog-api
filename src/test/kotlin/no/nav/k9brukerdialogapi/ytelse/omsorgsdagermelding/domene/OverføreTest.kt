@@ -2,7 +2,9 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Mottaker.*
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Mottaker.EKTEFELLE
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Mottaker.SAMBOER
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Mottaker.SAMVÆRSFORELDER
 import kotlin.test.Test
 
 class OverføreTest {

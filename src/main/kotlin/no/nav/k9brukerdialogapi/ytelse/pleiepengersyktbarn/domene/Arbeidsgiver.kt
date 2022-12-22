@@ -1,10 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
 import no.nav.helse.dusseldorf.ktor.core.erGyldigOrganisasjonsnummer
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.Arbeidsforhold
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.Arbeidsforhold.Companion.k9ArbeidstidInfoMedNullTimer
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
 import no.nav.k9brukerdialogapi.general.krever
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.Arbeidsforhold
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.Arbeidsforhold.Companion.k9ArbeidstidInfoMedNullTimer
 import java.time.LocalDate
 
 data class Arbeidsgiver(

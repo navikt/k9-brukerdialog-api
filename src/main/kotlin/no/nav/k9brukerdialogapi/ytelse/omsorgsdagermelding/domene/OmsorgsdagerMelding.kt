@@ -1,7 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
-import no.nav.k9.søknad.Søknad
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
@@ -12,7 +11,9 @@ import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Barn.Companion.valider
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Meldingstype.*
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Meldingstype.FORDELING
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Meldingstype.KORONA
+import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Meldingstype.OVERFORING
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime

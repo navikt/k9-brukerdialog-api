@@ -2,8 +2,8 @@ package no.nav.k9brukerdialogapi.oppslag
 
 import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.core.Request
-import io.ktor.server.application.*
-import io.ktor.server.request.*
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.request.path
 import no.nav.helse.dusseldorf.ktor.core.DefaultProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.respondProblemDetails
 import org.slf4j.Logger

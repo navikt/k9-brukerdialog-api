@@ -20,10 +20,10 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.somK9Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.somK9Utenlandsopphold
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode.Companion.somK9FraværPeriode
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode.Companion.valider
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn.Companion.somK9BarnListe
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn.Companion.valider
 import java.net.URL

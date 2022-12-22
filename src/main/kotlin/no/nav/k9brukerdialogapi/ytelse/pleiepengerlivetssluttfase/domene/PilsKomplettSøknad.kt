@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
-import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
+import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import no.nav.k9.søknad.Søknad as K9Søknad

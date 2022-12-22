@@ -1,9 +1,16 @@
 package no.nav.k9brukerdialogapi
 
-import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.server.testing.*
-import io.ktor.utils.io.streams.*
+import io.ktor.http.ContentDisposition
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.PartData
+import io.ktor.http.headersOf
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
+import io.ktor.utils.io.streams.asInput
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

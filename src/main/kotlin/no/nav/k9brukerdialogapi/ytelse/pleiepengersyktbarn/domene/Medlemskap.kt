@@ -1,8 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.personopplysninger.Bosteder
 import no.nav.k9.søknad.felles.type.Landkode
 import no.nav.k9brukerdialogapi.general.erFørEllerLik

@@ -1,6 +1,6 @@
 package no.nav.k9brukerdialogapi
 
-import io.ktor.server.testing.*
+import io.ktor.server.testing.testApplication
 import no.nav.helse.dusseldorf.testsupport.asArguments
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig

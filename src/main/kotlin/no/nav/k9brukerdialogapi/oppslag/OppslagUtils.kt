@@ -2,7 +2,8 @@ package no.nav.k9brukerdialogapi.oppslag
 
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.httpGet
-import io.ktor.http.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.Url
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.k9brukerdialogapi.general.CallId

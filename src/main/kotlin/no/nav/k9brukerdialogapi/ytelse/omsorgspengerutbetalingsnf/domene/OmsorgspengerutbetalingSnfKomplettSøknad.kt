@@ -7,8 +7,8 @@ import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
