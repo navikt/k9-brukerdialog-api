@@ -14,7 +14,7 @@ val junitVersion = "5.9.1"
 val jakartaElVersion = "3.0.4"
 
 plugins {
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.sonarqube") version "3.3"
     jacoco
