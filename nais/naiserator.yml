@@ -56,7 +56,6 @@ spec:
         - application: sif-ettersending
         - application: omsorgspengerutbetaling-arbeidstaker-soknad
         - application: omsorgsdager-aleneomsorg-dialog
-        - application: deling-omsorgsdager
         - application: omsorgspengerutbetaling-soknad
         - application: pleiepenger-i-livets-sluttfase-soknad
         - application: pleiepengesoknad

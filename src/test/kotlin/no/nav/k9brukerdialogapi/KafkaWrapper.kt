@@ -4,7 +4,6 @@ import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.kafka.TopicEntry
 import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSDAGER_ALENEOMSORG_TOPIC
-import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSDAGER_MELDING_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_SNF_TOPIC
@@ -50,7 +49,6 @@ private fun KafkaContainer.createTopicsForTest() {
             NewTopic(OMSORGSDAGER_ALENEOMSORG_TOPIC, 1, 1),
             NewTopic(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC, 1, 1),
             NewTopic(OMSORGSPENGER_UTBETALING_SNF_TOPIC, 1, 1),
-            NewTopic(OMSORGSDAGER_MELDING_TOPIC, 1, 1),
             NewTopic(PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC, 1, 1),
             NewTopic(ETTERSENDING_TOPIC, 1, 1),
             NewTopic(PLEIEPENGER_SYKT_BARN_TOPIC, 1, 1)
@@ -85,7 +83,6 @@ internal fun KafkaContainer.testConsumer() : KafkaConsumer<String, TopicEntry<JS
         OMSORGSDAGER_ALENEOMSORG_TOPIC,
         OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC,
         OMSORGSPENGER_UTBETALING_SNF_TOPIC,
-        OMSORGSDAGER_MELDING_TOPIC,
         PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC,
         PLEIEPENGER_SYKT_BARN_TOPIC
     ))

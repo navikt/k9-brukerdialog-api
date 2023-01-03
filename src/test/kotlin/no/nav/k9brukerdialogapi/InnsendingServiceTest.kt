@@ -25,11 +25,6 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Arbeidssituasjon
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Fordele
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Meldingstype
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Mottaker
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.OmsorgsdagerMelding
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak
@@ -182,7 +177,7 @@ internal class InnsendingServiceTest{
                                     arbeidsgiverHarUtbetaltLønn = true,
                                     perioder = listOf(
                                         Utbetalingsperiode(
-                                            fraOgMed = LocalDate.now().minusDays(4),
+                                            fraOgMed = LocalDate.now().minusDays(2),
                                             tilOgMed = LocalDate.now(),
                                             årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
                                             aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
@@ -267,57 +262,6 @@ internal class InnsendingServiceTest{
         coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
     }
 
-    @Test
-    internal fun `Verifiser at søknadservice for omsorgsdager-melding fjerner hold på persistert vedlegg dersom kafka feiler`() {
-        assertThrows<MeldingRegistreringFeiletException> {
-            runBlocking {
-                coEvery {søkerService.hentSøker(any(), any()) } returns Søker(
-                    aktørId = "123",
-                    fødselsdato = LocalDate.parse("2000-01-01"),
-                    fødselsnummer = "02119970078"
-                )
-
-                coEvery { vedleggService.hentVedlegg(vedleggUrls = any(), any(), any()) } returns listOf(Vedlegg("bytearray".toByteArray(), "vedlegg", "vedlegg", DokumentEier("290990123456")))
-
-                every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
-
-                innsendingService.registrer(
-                    innsending = OmsorgsdagerMelding(
-                        id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
-                        språk = "nb",
-                        mottakerFnr = "26104500284",
-                        mottakerNavn = "Navnesen",
-                        barn = listOf(
-                            no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Barn(
-                                identitetsnummer = "02119970078",
-                                fødselsdato = LocalDate.now(),
-                                navn = "Navnesen",
-                                aleneOmOmsorgen = true,
-                                utvidetRett = true
-                            )
-                        ),
-                        harUtvidetRett = true,
-                        harAleneomsorg = true,
-                        erYrkesaktiv = true,
-                        arbeiderINorge = true,
-                        arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER),
-                        type = Meldingstype.FORDELING,
-                        fordeling = Fordele(Mottaker.SAMVÆRSFORELDER, listOf(URL("http://localhost:8080/vedlegg/1"))),
-                        harForståttRettigheterOgPlikter = true,
-                        harBekreftetOpplysninger = true
-                    ),
-                    metadata = Metadata(
-                        version = 1,
-                        correlationId = "123"
-                    ),
-                    idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
-                    callId = CallId("abc")
-                )
-            }
-        }
-
-        coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
-    }
 
     @Test
     internal fun `Verifiser at søknadservice for pleiepenger livets sluttfase fjerner hold på persistert vedlegg dersom kafka feiler`(){

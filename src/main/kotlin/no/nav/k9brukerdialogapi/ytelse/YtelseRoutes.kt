@@ -7,7 +7,6 @@ import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.ettersendingApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.omsorgsdagerAleneomsorgApis
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.omsorgsdagerMeldingApi
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.omsorgspengerMidlertidigAleneApis
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.omsorgspengerUtbetalingArbeidstakerApi
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.omsorgspengerUtbetalingSnfApis
@@ -27,7 +26,6 @@ fun Route.ytelseRoutes(
     omsorgspengerUtvidetRettApis(innsendingService, barnService, innsendingCache, idTokenProvider)
     omsorgspengerUtbetalingSnfApis(innsendingService, barnService, innsendingCache, idTokenProvider)
     omsorgspengerMidlertidigAleneApis(innsendingService, barnService, innsendingCache, idTokenProvider)
-    omsorgsdagerMeldingApi(innsendingService, barnService, innsendingCache, idTokenProvider)
     omsorgsdagerAleneomsorgApis(innsendingService, barnService, innsendingCache, idTokenProvider)
     pleiepengerSyktBarnApi(innsendingService, barnService, innsendingCache, idTokenProvider)
 }

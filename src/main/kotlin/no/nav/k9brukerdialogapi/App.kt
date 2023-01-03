@@ -68,10 +68,6 @@ import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_ALENEOMSORG
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_FORDELING
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_KORONAOVERFORING
-import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_MELDING_OVERFORING
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTBETALING_SNF
@@ -298,10 +294,6 @@ fun Application.k9BrukerdialogApi() {
                 request.contains(OMSORGSDAGER_ALENEOMSORG_URL.removePrefix("/")) -> OMSORGSDAGER_ALENEOMSORG.name.lowercase()
                 request.contains(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL.removePrefix("/")) -> OMSORGSPENGER_UTBETALING_ARBEIDSTAKER.name.lowercase()
                 request.contains(OMSORGSPENGER_UTBETALING_SNF_URL.removePrefix("/")) -> OMSORGSPENGER_UTBETALING_SNF.name.lowercase()
-                request.contains(OMSORGSDAGER_MELDING_FORDELING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_FORDELING.name.lowercase()
-                request.contains(OMSORGSDAGER_MELDING_OVERFORING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_OVERFORING.name.lowercase()
-                request.contains(OMSORGSDAGER_MELDING_KORONAOVERFORING_URL.removePrefix("/")) -> OMSORGSDAGER_MELDING_KORONAOVERFORING.name.lowercase()
-                request.contains(OMSORGSDAGER_MELDING.name) -> OMSORGSDAGER_MELDING.name.lowercase()
                 request.contains(PLEIEPENGER_LIVETS_SLUTTFASE_URL.removePrefix("/")) -> PLEIEPENGER_LIVETS_SLUTTFASE.name.lowercase()
                 else -> null
             }
