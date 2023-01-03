@@ -21,7 +21,3 @@ const val OMSORGSPENGER_MIDLERTIDIG_ALENE_URL = "/omsorgspenger-midlertidig-alen
 const val OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL = "/omsorgspenger-utbetaling-arbeidstaker"
 const val PLEIEPENGER_LIVETS_SLUTTFASE_URL = "/pleiepenger-livets-sluttfase"
 const val PLEIEPENGER_SYKT_BARN_URL = "/pleiepenger-sykt-barn"
-
-const val OMSORGSDAGER_MELDING_FORDELING_URL = "/omsorgsdager-melding-fordeling"
-const val OMSORGSDAGER_MELDING_OVERFORING_URL = "/omsorgsdager-melding-overforing"
-const val OMSORGSDAGER_MELDING_KORONAOVERFORING_URL = "/omsorgsdager-melding-koronaoverforing"
