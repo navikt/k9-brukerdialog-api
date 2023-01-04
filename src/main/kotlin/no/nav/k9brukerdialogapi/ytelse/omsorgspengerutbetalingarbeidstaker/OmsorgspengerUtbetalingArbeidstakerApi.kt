@@ -1,10 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL
@@ -33,9 +35,9 @@ fun Route.omsorgspengerUtbetalingArbeidstakerApi(
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
 
+            innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, call.getCallId(), idToken, call.getMetadata())
             registrerMottattSøknad(søknad.ytelse())
-            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }

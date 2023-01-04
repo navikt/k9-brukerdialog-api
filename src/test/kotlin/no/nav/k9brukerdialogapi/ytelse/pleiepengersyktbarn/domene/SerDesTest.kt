@@ -1,8 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.k9brukerdialogapi.k9BrukerdialogKonfiguert
 import no.nav.k9brukerdialogapi.objectMapper
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land

@@ -15,7 +15,6 @@ import no.nav.k9.søknad.ytelse.psb.v1.tilsyn.TilsynPeriodeInfo
 import no.nav.k9.søknad.ytelse.psb.v1.tilsyn.Tilsynsordning
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
-import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.innsending.Innsending
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker

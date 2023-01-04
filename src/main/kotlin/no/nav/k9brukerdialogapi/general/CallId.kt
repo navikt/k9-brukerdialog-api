@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.general
 
-import io.ktor.server.application.*
-import io.ktor.server.plugins.callid.*
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.plugins.callid.callId
 
 data class CallId(val value : String)
 

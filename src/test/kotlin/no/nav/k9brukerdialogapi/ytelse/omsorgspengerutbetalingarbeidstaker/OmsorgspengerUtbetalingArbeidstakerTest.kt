@@ -1,20 +1,37 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker
 
 import com.typesafe.config.ConfigFactory
-import io.ktor.http.*
-import io.ktor.server.config.*
-import io.ktor.server.testing.*
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.config.ApplicationConfig
+import io.ktor.server.config.HoconApplicationConfig
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.createTestEnvironment
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
-import no.nav.k9brukerdialogapi.*
+import no.nav.k9brukerdialogapi.INNSENDING_URL
+import no.nav.k9brukerdialogapi.KafkaWrapper
+import no.nav.k9brukerdialogapi.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL
+import no.nav.k9brukerdialogapi.SøknadUtils
+import no.nav.k9brukerdialogapi.TestConfiguration
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
 import no.nav.k9brukerdialogapi.TestUtils.Companion.requestAndAssert
+import no.nav.k9brukerdialogapi.hentSøknad
+import no.nav.k9brukerdialogapi.jpegUrl
+import no.nav.k9brukerdialogapi.somJson
+import no.nav.k9brukerdialogapi.somOmsorgspengerUtbetalingArbeidstakerKomplettSøknad
+import no.nav.k9brukerdialogapi.testConsumer
 import no.nav.k9brukerdialogapi.wiremock.k9BrukerdialogApiConfig
 import no.nav.k9brukerdialogapi.wiremock.stubK9Mellomlagring
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak
@@ -106,7 +123,7 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                     arbeidsgiverHarUtbetaltLønn = true,
                     perioder = listOf(
                         Utbetalingsperiode(
-                            fraOgMed = LocalDate.now().minusDays(4),
+                            fraOgMed = LocalDate.now().minusDays(2),
                             tilOgMed = LocalDate.now(),
                             årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
                             aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)

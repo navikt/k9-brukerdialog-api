@@ -1,11 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.Arbeidsforhold
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
+import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.Arbeidsforhold
 import java.time.LocalDate
 
 data class Frilans(
@@ -21,7 +22,7 @@ data class Frilans(
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         if(arbeidsforhold != null) addAll(arbeidsforhold.valider("$felt.arbeidsforhold"))
         if(sluttdato != null && startdato != null){
-            krever(startdato.isBefore(sluttdato) || startdato.isEqual(sluttdato), "$felt.sluttdato kan ikke være etter startdato")
+            krever(startdato.erFørEllerLik(sluttdato), "$felt.sluttdato kan ikke være etter startdato")
         }
         if(harInntektSomFrilanser){
             kreverIkkeNull(startdato, "$felt.startdao kan ikke være null dersom harInntektSomFrilanser=true")

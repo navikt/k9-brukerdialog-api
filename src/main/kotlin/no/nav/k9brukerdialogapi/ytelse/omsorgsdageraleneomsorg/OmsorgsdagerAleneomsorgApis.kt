@@ -1,10 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.OMSORGSDAGER_ALENEOMSORG_URL
@@ -49,8 +51,8 @@ fun Route.omsorgsdagerAleneomsorgApis(
             } else {
                 innsendingService.registrer(søknad, callId, idToken, metadata)
             }
-            registrerMottattSøknad(søknad.ytelse())
             innsendingCache.put(cacheKey)
+            registrerMottattSøknad(søknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }

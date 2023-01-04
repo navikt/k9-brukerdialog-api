@@ -2,7 +2,6 @@ package no.nav.k9brukerdialogapi.kafka
 
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.security.auth.SecurityProtocol
 import org.slf4j.Logger
@@ -43,10 +42,7 @@ private fun Properties.medTrustStore(trustStore: Pair<String, String>?) {
             put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, it.second)
             logger.info("Truststore på '${it.first}' konfigurert.")
         } catch (cause: Throwable) {
-            logger.error(
-                "Feilet for konfigurering av truststore på '${it.first}'",
-                cause
-            )
+            logger.error("Feilet for konfigurering av truststore på '${it.first}'", cause)
         }
     }
 }
@@ -58,6 +54,8 @@ private fun Properties.medKeyStore(keyStore: Pair<String, String>?) {
             put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, File(it.first).absolutePath)
             put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, it.second)
             logger.info("Keystore på '${it.first}' konfigurert.")
-        } catch (cause: Throwable) {}
+        } catch (cause: Throwable) {
+            logger.error("Feilet for konfigurering av keystore på '${it.first}'", cause)
+        }
     }
 }

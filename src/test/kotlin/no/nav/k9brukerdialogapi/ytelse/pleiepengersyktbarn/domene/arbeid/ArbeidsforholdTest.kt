@@ -1,12 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid
 
-import no.nav.k9.søknad.felles.type.Periode as K9Periode
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Periode
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import no.nav.k9.søknad.felles.type.Periode as K9Periode
 
 class ArbeidsforholdTest {
 

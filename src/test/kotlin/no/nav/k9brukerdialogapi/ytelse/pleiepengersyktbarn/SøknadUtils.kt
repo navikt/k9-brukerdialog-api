@@ -1,15 +1,15 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn
 
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Regnskapsfører
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.VarigEndring
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Arbeidsgiver
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.BarnDetaljer
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.BarnRelasjon
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Regnskapsfører
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.VarigEndring
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Beredskap
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Enkeltdag

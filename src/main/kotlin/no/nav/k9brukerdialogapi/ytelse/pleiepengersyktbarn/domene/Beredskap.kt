@@ -2,7 +2,6 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
 import no.nav.k9.søknad.ytelse.psb.v1.Beredskap.BeredskapPeriodeInfo
 import no.nav.k9brukerdialogapi.general.krever
-import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9.søknad.felles.type.Periode as K9Periode
 import no.nav.k9.søknad.ytelse.psb.v1.Beredskap as K9Beredskap
 

@@ -10,6 +10,8 @@ import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.k9SelvbetjeningOppslagKonfigurert
 import no.nav.k9brukerdialogapi.oppslag.genererOppslagHttpRequest
+import no.nav.k9brukerdialogapi.utils.LoggingUtils.logTokenExchange
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -31,7 +33,7 @@ class ArbeidsgiverGateway(
         attributter: List<Pair<String, List<String>>>
     ): Arbeidsgivere {
         val exchangeToken = IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
-        logger.info("Utvekslet token fra {} med token fra {}.", idToken.issuer(), exchangeToken.issuer())
+        logger.logTokenExchange(idToken, exchangeToken)
 
         val httpRequest = genererOppslagHttpRequest(
             baseUrl = baseUrl, idToken = exchangeToken, callId = callId, pathParts = "meg",
@@ -55,7 +57,7 @@ class ArbeidsgiverGateway(
                 { error ->
                     logger.error(
                         "Error response = '${
-                            error.response.body().asString("text/plain")
+                            error.response.body().asString(MediaTypeUtils.TEXT_PLAIN)
                         }' fra '${request.url}'"
                     )
                     logger.error(error.toString())

@@ -7,7 +7,11 @@ import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.*
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.ANNET
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.FENGSEL
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.INNLAGT_I_HELSEINSTITUSJON
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.SYKDOM
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.UTØVER_VERNEPLIKT
 import java.time.LocalDate
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.AnnenForelder as K9AnnenForelder
 

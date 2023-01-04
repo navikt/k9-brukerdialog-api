@@ -1,6 +1,6 @@
 package no.nav.k9brukerdialogapi.kafka
 
-import io.ktor.server.application.*
+import io.ktor.server.application.ApplicationCall
 import no.nav.k9brukerdialogapi.general.getCallId
 
 data class Metadata(

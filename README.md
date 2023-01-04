@@ -1,4 +1,11 @@
 # K9 Brukerdialog API
+![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=ncloc)
+![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=alert_status)
+![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=coverage)
+![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=code_smells)
+![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=sqale_index)
+![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=duplicated_lines_density)
+![Bugs](https://sonarcloud.io/api/project_badges/measure?project=navikt_k9-brukerdialog-api&metric=bugs)
 
 API som understøtter søknadsprosessen for ytelser i folketrygdloven kapittel 9.
 
@@ -12,7 +19,6 @@ Støtte for følgende ytelser:
 | Omsorgsdager aleneomsorg | Ja | https://github.com/navikt/omsorgsdager-aleneomsorg-prosessering | https://github.com/navikt/omsorgsdager-aleneomsorg-dialog |
 | Omsorgspenger utbetaling arbeidstaker | Ja | https://github.com/navikt/omsorgspengerutbetalingsoknad-arbeidstaker-prosessering | https://github.com/navikt/omsorgspengerutbetaling-arbeidstaker-soknad |
 | Omsorgspenger utbetaling snf | Ja | https://github.com/navikt/omsorgspengerutbetalingsoknad-prosessering | https://github.com/navikt/omsorgspengerutbetaling-soknad |
-| Omsorgsdager melding | Ja | https://github.com/navikt/omsorgsdager-melding-prosessering | https://github.com/navikt/omsorgsdager-deling-dialog |
 | Pleiepenger livets sluttfase | Ja | https://github.com/navikt/pleiepenger-livets-sluttfase-prosessering | https://github.com/navikt/pleiepenger-i-livets-sluttfase-soknad |
 | | | | |
 

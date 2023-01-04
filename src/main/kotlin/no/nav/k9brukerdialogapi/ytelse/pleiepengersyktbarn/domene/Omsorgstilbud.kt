@@ -82,7 +82,9 @@ data class Omsorgstilbud(
         when (svarFortid) {
             OmsorgstilbudSvarFortid.JA -> beregnFraPlanUkedager(tilsynsordning, periode.fraOgMed, gjeldendeTilOgMed)
             OmsorgstilbudSvarFortid.NEI -> tilsynsordning.medNullTimer(Periode(periode.fraOgMed, gjeldendeTilOgMed))
-            null -> {}
+            null -> {
+                //Hvis svarFortid er null, så er det ikke satt noe svar. Da skal vi ikke beregne noe.
+            }
         }
     }
 
@@ -93,7 +95,9 @@ data class Omsorgstilbud(
         when (svarFremtid) {
             JA -> beregnFraPlanUkedager(tilsynsordning, gjeldendeFraOgMed, periode.tilOgMed)
             NEI, USIKKER -> tilsynsordning.medNullTimer(Periode(gjeldendeFraOgMed, periode.tilOgMed))
-            null -> {}
+            null -> {
+                //Hvis svarFremtid er null, så er det ikke satt noe svar. Da skal vi ikke beregne noe.
+            }
         }
     }
 

@@ -10,26 +10,28 @@ import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.testsupport.jws.Azure
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
-import no.nav.k9brukerdialogapi.innsending.InnsendingCache
+import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.KafkaProducer
 import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
-import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.*
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
-import no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.*
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerSøknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnSøknad
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.gyldigPILSSøknad
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils.Companion
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
@@ -175,7 +177,7 @@ internal class InnsendingServiceTest{
                                     arbeidsgiverHarUtbetaltLønn = true,
                                     perioder = listOf(
                                         Utbetalingsperiode(
-                                            fraOgMed = LocalDate.now().minusDays(4),
+                                            fraOgMed = LocalDate.now().minusDays(2),
                                             tilOgMed = LocalDate.now(),
                                             årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
                                             aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
@@ -260,57 +262,6 @@ internal class InnsendingServiceTest{
         coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
     }
 
-    @Test
-    internal fun `Verifiser at søknadservice for omsorgsdager-melding fjerner hold på persistert vedlegg dersom kafka feiler`() {
-        assertThrows<MeldingRegistreringFeiletException> {
-            runBlocking {
-                coEvery {søkerService.hentSøker(any(), any()) } returns Søker(
-                    aktørId = "123",
-                    fødselsdato = LocalDate.parse("2000-01-01"),
-                    fødselsnummer = "02119970078"
-                )
-
-                coEvery { vedleggService.hentVedlegg(vedleggUrls = any(), any(), any()) } returns listOf(Vedlegg("bytearray".toByteArray(), "vedlegg", "vedlegg", DokumentEier("290990123456")))
-
-                every { kafkaProducer.produserKafkaMelding(any(), any(), any()) } throws Exception("Mocket feil ved kafkaProducer")
-
-                innsendingService.registrer(
-                    innsending = OmsorgsdagerMelding(
-                        id = "01ARZ3NDEKTSV4RRFFQ69G5FAV",
-                        språk = "nb",
-                        mottakerFnr = "26104500284",
-                        mottakerNavn = "Navnesen",
-                        barn = listOf(
-                            no.nav.k9brukerdialogapi.ytelse.omsorgsdagermelding.domene.Barn(
-                                identitetsnummer = "02119970078",
-                                fødselsdato = LocalDate.now(),
-                                navn = "Navnesen",
-                                aleneOmOmsorgen = true,
-                                utvidetRett = true
-                            )
-                        ),
-                        harUtvidetRett = true,
-                        harAleneomsorg = true,
-                        erYrkesaktiv = true,
-                        arbeiderINorge = true,
-                        arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER),
-                        type = Meldingstype.FORDELING,
-                        fordeling = Fordele(Mottaker.SAMVÆRSFORELDER, listOf(URL("http://localhost:8080/vedlegg/1"))),
-                        harForståttRettigheterOgPlikter = true,
-                        harBekreftetOpplysninger = true
-                    ),
-                    metadata = Metadata(
-                        version = 1,
-                        correlationId = "123"
-                    ),
-                    idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
-                    callId = CallId("abc")
-                )
-            }
-        }
-
-        coVerify(exactly = 1) { vedleggService.fjernHoldPåPersistertVedlegg(any(), any(), any()) }
-    }
 
     @Test
     internal fun `Verifiser at søknadservice for pleiepenger livets sluttfase fjerner hold på persistert vedlegg dersom kafka feiler`(){

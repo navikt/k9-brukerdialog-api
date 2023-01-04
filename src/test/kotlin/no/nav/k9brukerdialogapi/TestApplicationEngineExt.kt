@@ -1,10 +1,20 @@
 package no.nav.k9brukerdialogapi
 
-import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.server.testing.*
-import io.ktor.utils.io.streams.*
+import io.ktor.http.ContentDisposition
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.PartData
+import io.ktor.http.headersOf
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
+import io.ktor.utils.io.streams.asInput
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_PDF
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_JPEG
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_PNG
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -13,7 +23,7 @@ fun TestApplicationEngine.handleRequestUploadImage(
     jwtToken: String? = null,
     vedlegg: ByteArray = "vedlegg/iPhone_6.jpg".fromResources().readBytes(),
     fileName: String = "iPhone_6.jpg",
-    contentType: String = "image/jpeg",
+    contentType: String = IMAGE_JPEG,
     expectedCode: HttpStatusCode = HttpStatusCode.Created
 ): String {
     val boundary = "***vedlegg***"
@@ -66,7 +76,7 @@ fun TestApplicationEngine.jpegUrl(
         jwtToken = jwtToken,
         vedlegg = "vedlegg/nav-logo.png".fromResources().readBytes(),
         fileName = "nav-logo.png",
-        contentType = "image/png"
+        contentType = IMAGE_PNG
     )
 }
 
@@ -79,6 +89,6 @@ fun TestApplicationEngine.pdUrl(
         jwtToken = jwtToken,
         vedlegg = "vedlegg/test.pdf".fromResources().readBytes(),
         fileName = "test.pdf",
-        contentType = "application/pdf"
+        contentType = APPLICATION_PDF
     )
 }

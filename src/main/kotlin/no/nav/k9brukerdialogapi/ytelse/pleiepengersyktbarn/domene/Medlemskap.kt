@@ -1,10 +1,9 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.helse.dusseldorf.ktor.core.ParameterType
-import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.søknad.felles.personopplysninger.Bosteder
 import no.nav.k9.søknad.felles.type.Landkode
+import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import java.time.LocalDate
@@ -60,7 +59,7 @@ data class Bosted(
     }
 
     fun valider(felt: String) = mutableListOf<String>().apply {
-        krever(fraOgMed.isBefore(tilOgMed), "$felt.fraOgMed må være før $felt.tilOgMed")
+        krever(fraOgMed.erFørEllerLik(tilOgMed), "$felt.fraOgMed må være før $felt.tilOgMed")
         krever(landkode.isNotEmpty(), "$felt.landkode kan ikke være tomt")
         krever(landnavn.isNotEmpty(), "$felt.landnavn kan ikke være tomt")
     }

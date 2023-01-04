@@ -9,7 +9,7 @@ class FraOgMedTilOgMedValidator {
     companion object {
         fun valider(
             fraOgMed: String?,
-            tilOgMed: String?
+            tilOgMed: String?,
         ): Set<Violation> {
             val feil = mutableSetOf<Violation>()
             val parsedFraOgMed: LocalDate? = feil.parseDato(fraOgMed, "fra_og_med")
@@ -37,17 +37,15 @@ class FraOgMedTilOgMedValidator {
                 )
             }
 
-            if (parsedTilOgMed != null && parsedFraOgMed != null) {
-                if (parsedTilOgMed.isBefore(parsedFraOgMed)) {
-                    feil.add(
-                        Violation(
-                            parameterName = "fra_og_med og til_og_med",
-                            parameterType = ParameterType.QUERY,
-                            reason = "til_og_med kan ikke være før fra_og_med",
-                            invalidValue = "fra_og_med=$parsedFraOgMed og til_og_med=$parsedTilOgMed"
-                        )
+            if (parsedTilOgMed != null && parsedFraOgMed != null && parsedTilOgMed.isBefore(parsedFraOgMed)) {
+                feil.add(
+                    Violation(
+                        parameterName = "fra_og_med og til_og_med",
+                        parameterType = ParameterType.QUERY,
+                        reason = "til_og_med kan ikke være før fra_og_med",
+                        invalidValue = "fra_og_med=$parsedFraOgMed og til_og_med=$parsedTilOgMed"
                     )
-                }
+                )
             }
 
             return feil

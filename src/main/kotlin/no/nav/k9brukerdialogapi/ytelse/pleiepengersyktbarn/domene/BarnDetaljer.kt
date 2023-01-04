@@ -6,10 +6,10 @@ import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
-import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
+import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
 
 private val logger: Logger =
     LoggerFactory.getLogger("no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.BarnDetaljer")

@@ -7,13 +7,17 @@ import com.github.kittinunf.fuel.httpDelete
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpPut
-import io.ktor.http.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.Url
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.metrics.Operation.Companion.monitored
 import no.nav.helse.dusseldorf.oauth2.client.CachedAccessTokenClient
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.k9BrukerdialogCacheKonfigurert
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
+import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.TEXT_PLAIN
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -55,8 +59,8 @@ class K9BrukerdialogCacheGateway(
             .header(
                 HttpHeaders.Authorization to "Bearer ${exchangeToken.token}",
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json",
-                HttpHeaders.Accept to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON,
+                HttpHeaders.Accept to APPLICATION_JSON
             )
 
         val (request, response, result) = monitored(
@@ -75,7 +79,7 @@ class K9BrukerdialogCacheGateway(
                 else {
                     logger.error(
                         "Error response = '${
-                            error.response.body().asString("text/plain")
+                            error.response.body().asString(TEXT_PLAIN)
                         }' fra '${request.url}'"
                     )
                     logger.error(error.toString())
@@ -99,8 +103,8 @@ class K9BrukerdialogCacheGateway(
             .header(
                 HttpHeaders.Authorization to "Bearer ${exchangeToken.token}",
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json",
-                HttpHeaders.Accept to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON,
+                HttpHeaders.Accept to APPLICATION_JSON
             )
 
         val (request, response, result) = monitored(
@@ -119,7 +123,7 @@ class K9BrukerdialogCacheGateway(
                 else {
                     logger.error(
                         "Error response = '${
-                            error.response.body().asString("text/plain")
+                            error.response.body().asString(TEXT_PLAIN)
                         }' fra '${request.url}'"
                     )
                     logger.error(error.toString())
@@ -151,8 +155,8 @@ class K9BrukerdialogCacheGateway(
             .header(
                 HttpHeaders.Authorization to "Bearer ${exchangeToken.token}",
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json",
-                HttpHeaders.Accept to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON,
+                HttpHeaders.Accept to APPLICATION_JSON
             )
 
         val (request, response, result) = monitored(
@@ -171,7 +175,7 @@ class K9BrukerdialogCacheGateway(
                 else {
                     logger.error(
                         "Error response = '${
-                            error.response.body().asString("text/plain")
+                            error.response.body().asString(TEXT_PLAIN)
                         }' fra '${request.url}'"
                     )
                     logger.error(error.toString())
@@ -195,8 +199,8 @@ class K9BrukerdialogCacheGateway(
             .header(
                 HttpHeaders.Authorization to "Bearer ${exchangeToken.token}",
                 HttpHeaders.XCorrelationId to callId.value,
-                HttpHeaders.ContentType to "application/json",
-                HttpHeaders.Accept to "application/json"
+                HttpHeaders.ContentType to APPLICATION_JSON,
+                HttpHeaders.Accept to APPLICATION_JSON
             )
 
         val (request, response, result) = monitored(
@@ -206,7 +210,7 @@ class K9BrukerdialogCacheGateway(
         ) { httpRequest.awaitStringResponseResult() }
 
         return result.fold(
-            { success ->
+            { _ ->
                 logger.info("Suksess ved sletting av mellomlagret søknad")
                 true
             },
@@ -215,7 +219,7 @@ class K9BrukerdialogCacheGateway(
                 else {
                     logger.error(
                         "Error response = '${
-                            error.response.body().asString("text/plain")
+                            error.response.body().asString(TEXT_PLAIN)
                         }' fra '${request.url}'"
                     )
                     logger.error(error.toString())

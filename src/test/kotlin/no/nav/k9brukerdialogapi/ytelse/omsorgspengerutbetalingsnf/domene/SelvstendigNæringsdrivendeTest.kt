@@ -4,11 +4,11 @@ import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype.DAGMAMMA
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Regnskapsfører
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.VarigEndring
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype.DAGMAMMA
-import no.nav.k9brukerdialogapi.ytelse.fellesdomene.VarigEndring
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate

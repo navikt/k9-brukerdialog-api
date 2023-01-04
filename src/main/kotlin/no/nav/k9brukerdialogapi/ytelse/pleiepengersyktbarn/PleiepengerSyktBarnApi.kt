@@ -39,9 +39,9 @@ fun Route.pleiepengerSyktBarnApi(
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
             søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
 
+            innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, callId, idToken, call.getMetadata())
             registrerMottattSøknad(søknad.ytelse())
-            innsendingCache.put(cacheKey)
             call.respond(HttpStatusCode.Accepted)
         }
     }
