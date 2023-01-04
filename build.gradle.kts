@@ -2,21 +2,21 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.2.1-4942135"
-val ktorVersion = "2.2.1"
+val dusseldorfKtorVersion = "3.2.2.2-2f78c17"
+val ktorVersion = "2.2.2"
 val kafkaTestcontainerVersion = "1.17.6"
 val kafkaVersion = "3.3.1"
 val k9FormatVersion = "8.0.0"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.0.2"
-val mockOauth2ServerVersion = "0.5.6"
+val mockOauth2ServerVersion = "0.5.7"
 val junitVersion = "5.9.1"
 val jakartaElVersion = "3.0.4"
 
 plugins {
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.sonarqube") version "3.3"
+    id("org.sonarqube") version "3.5.0.2730"
     jacoco
 }
 
