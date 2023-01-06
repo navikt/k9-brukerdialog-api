@@ -3,7 +3,7 @@
   "cluster": "dev-gcp",
   "namespace": "dusseldorf",
   "team": "dusseldorf",
-  "minReplicas": "1",
+  "minReplicas": "2",
   "maxReplicas": "2",
   "tenant": "trygdeetaten.no",
   "kafka-pool": "nav-dev",
