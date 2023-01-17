@@ -25,6 +25,7 @@ class PilsKomplettSøknad(
     private val utenlandskNæring: List<UtenlandskNæring>,
     private val selvstendigNæringsdrivende: SelvstendigNæringsdrivende?,
     private val harVærtEllerErVernepliktig: Boolean?,
+    private val pleierDuDenSykeHjemme: Boolean? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
     private val k9Format: K9Søknad

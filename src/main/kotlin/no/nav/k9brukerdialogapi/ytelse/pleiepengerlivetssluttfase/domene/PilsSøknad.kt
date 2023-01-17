@@ -49,6 +49,7 @@ class PilsSøknad(
     private val opptjeningIUtlandet: List<OpptjeningIUtlandet>,
     private val utenlandskNæring: List<UtenlandskNæring>,
     private val harVærtEllerErVernepliktig: Boolean? = null,
+    private val pleierDuDenSykeHjemme: Boolean? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean
 ): Innsending {
