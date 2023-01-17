@@ -94,7 +94,10 @@ class PleiepengerLivetsSluttfaseTest {
     @Test
     fun `Innsending av gyldig søknad`(){
         val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
-        val søknad = gyldigPILSSøknad(vedleggUrls = listOf(vedlegg), opplastetIdVedleggUrls = listOf(vedlegg))
+        val søknad = gyldigPILSSøknad(
+            vedleggUrls = listOf(vedlegg),
+            opplastetIdVedleggUrls = listOf(vedlegg)
+        )
         requestAndAssert(
             HttpMethod.Post,
             PLEIEPENGER_LIVETS_SLUTTFASE_URL+ INNSENDING_URL,
@@ -120,6 +123,7 @@ class PleiepengerLivetsSluttfaseTest {
             vedleggUrls = listOf(vedlegg),
             opplastetIdVedleggUrls = listOf(vedlegg),
             pleietrengende = Pleietrengende(norskIdentitetsnummer = "123", navn = " "),
+            pleierDuDenSykeHjemme = false
         )
         requestAndAssert(
             HttpMethod.Post,
@@ -134,7 +138,8 @@ class PleiepengerLivetsSluttfaseTest {
                   "instance": "about:blank",
                   "invalid_parameters": [
                     "pleietrengende.navn kan ikke være tomt eller blankt.",
-                    "pleietrengende.norskIdentitetsnummer er ikke gyldig identifikator, '123*****'. Forventet at personidentifikator kun var siffer, men var 123****** (3)"
+                    "pleietrengende.norskIdentitetsnummer er ikke gyldig identifikator, '123*****'. Forventet at personidentifikator kun var siffer, men var 123****** (3)",
+                    "pleierDuDenSykeHjemme må være true."
                   ]
                 }
             """.trimIndent(),

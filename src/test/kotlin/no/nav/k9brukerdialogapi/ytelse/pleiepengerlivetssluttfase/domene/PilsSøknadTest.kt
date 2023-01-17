@@ -82,7 +82,8 @@ class PilsSøknadTest {
                         harFlereAktiveVirksomheter = false
                     ),
                     arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, emptyList()))
-                )
+                ),
+                pleierDuDenSykeHjemme = false
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("medlemskap.harBoddIUtlandetSiste12Mnd kan ikke være null.")}
@@ -241,6 +242,6 @@ class PilsSøknadTest {
               }
             }
         """.trimIndent()
-        JSONAssert.assertEquals(forventet, gyldigPILSSøknad().somK9Format(søker).somJson(), true)
+        JSONAssert.assertEquals(forventet, gyldigPILSSøknad(pleierDuDenSykeHjemme = false).somK9Format(søker).somJson(), true)
     }
 }

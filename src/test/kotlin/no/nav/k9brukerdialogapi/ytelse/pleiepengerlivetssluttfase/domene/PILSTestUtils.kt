@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
+import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import java.net.URL
@@ -13,7 +14,7 @@ import java.time.ZonedDateTime
 internal fun gyldigPILSSøknad(
     vedleggUrls: List<URL> = listOf(URL("http://localhost:8080/vedlegg/1")),
     opplastetIdVedleggUrls: List<URL> = listOf(URL("http://localhost:8080/vedlegg/2")),
-    pleietrengende: Pleietrengende =  Pleietrengende(norskIdentitetsnummer = "06098523047", navn = "Bjarne"),
+    pleietrengende: Pleietrengende = Pleietrengende(norskIdentitetsnummer = "06098523047", navn = "Bjarne"),
     medlemskap: Medlemskap = Medlemskap(
         harBoddIUtlandetSiste12Mnd = true,
         utenlandsoppholdSiste12Mnd = listOf(
@@ -89,7 +90,7 @@ internal fun gyldigPILSSøknad(
         )
     ),
     selvstendigNæringsdrivende: SelvstendigNæringsdrivende = SelvstendigNæringsdrivende(
-        virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
+        virksomhet = Virksomhet(
             fraOgMed = LocalDate.parse("2015-01-01"),
             tilOgMed = LocalDate.parse("2021-01-01"),
             næringstype = Næringstype.ANNEN,
@@ -102,7 +103,8 @@ internal fun gyldigPILSSøknad(
             harFlereAktiveVirksomheter = false
         ),
         arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR))
-    )
+    ),
+    pleierDuDenSykeHjemme: Boolean = true
 ) = PilsSøknad(
     søknadId = "4e62f8de-1ff6-40e9-bdcd-10485c789094",
     mottatt = ZonedDateTime.of(2022, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
@@ -124,6 +126,7 @@ internal fun gyldigPILSSøknad(
     selvstendigNæringsdrivende = selvstendigNæringsdrivende,
     opptjeningIUtlandet = opptjeningIUtlandet,
     utenlandskNæring = utenlandskNæring,
+    pleierDuDenSykeHjemme = pleierDuDenSykeHjemme,
     harForståttRettigheterOgPlikter = true,
     harBekreftetOpplysninger = true
 )

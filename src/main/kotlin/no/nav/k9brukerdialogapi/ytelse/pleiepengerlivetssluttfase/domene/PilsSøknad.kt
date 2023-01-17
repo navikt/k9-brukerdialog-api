@@ -78,6 +78,7 @@ class PilsSøknad(
             utenlandskNæring = utenlandskNæring,
             selvstendigNæringsdrivende = selvstendigNæringsdrivende,
             harVærtEllerErVernepliktig = harVærtEllerErVernepliktig,
+            pleierDuDenSykeHjemme = pleierDuDenSykeHjemme,
             harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
             harBekreftetOpplysninger = harBekreftetOpplysninger,
             k9Format = k9Format as no.nav.k9.søknad.Søknad
@@ -95,6 +96,7 @@ class PilsSøknad(
         frilans?.let { addAll(it.valider()) }
         selvstendigNæringsdrivende?.let { addAll(it.valider()) }
 
+        pleierDuDenSykeHjemme?.let { krever(it, "pleierDuDenSykeHjemme må være true.") }
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true.")
         krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true.")
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
