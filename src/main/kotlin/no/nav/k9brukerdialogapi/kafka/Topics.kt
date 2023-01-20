@@ -10,6 +10,7 @@ import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_SYKT_BARN_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING_OMP
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING_PLEIEPENGER_LIVETS_SLUTTFASE

@@ -7,7 +7,6 @@ import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
 import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid.Arbeidsforhold
 import java.time.LocalDate
 
 data class Frilans(
