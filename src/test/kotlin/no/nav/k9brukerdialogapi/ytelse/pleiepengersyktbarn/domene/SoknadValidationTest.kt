@@ -19,7 +19,7 @@ class SoknadValidationTest {
     fun `Feiler på søknad dersom utenlandsopphold har til og fra dato som ikke kommer i rett rekkefølge`() {
         Assertions.assertThrows(Throwblem::class.java) {
             val søknad = soknad(
-                harMedsoker = false, medlemskap =  Medlemskap(
+                medlemskap = Medlemskap(
                     harBoddIUtlandetSiste12Mnd = false,
                     skalBoIUtlandetNeste12Mnd = true,
                     utenlandsoppholdNeste12Mnd = listOf(
@@ -39,7 +39,7 @@ class SoknadValidationTest {
     fun `Feiler på søknad dersom utenlandsopphold mangler landkode`() {
         Assertions.assertThrows(Throwblem::class.java) {
             val søknad = soknad(
-                harMedsoker = false, medlemskap = Medlemskap(
+                medlemskap = Medlemskap(
                     harBoddIUtlandetSiste12Mnd = false,
                     skalBoIUtlandetNeste12Mnd = true,
                     utenlandsoppholdNeste12Mnd = listOf(
@@ -58,9 +58,7 @@ class SoknadValidationTest {
     @Test
     fun `Skal feile dersom barnRelasjon er ANNET men barnRelasjonBeskrivelse er tom`() {
         Assertions.assertThrows(Throwblem::class.java) {
-            val søknad = soknad(
-                harMedsoker = false
-            ).copy(
+            val søknad = soknad().copy(
                 barnRelasjon = BarnRelasjon.ANNET,
                 barnRelasjonBeskrivelse = null
             )
@@ -70,8 +68,6 @@ class SoknadValidationTest {
     }
 
     private fun soknad(
-        harMedsoker: Boolean = true,
-        samtidigHjemme: Boolean? = false,
         medlemskap: Medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = false,
             skalBoIUtlandetNeste12Mnd = true,
@@ -82,7 +78,7 @@ class SoknadValidationTest {
                     "US", "USA"
                 )
             )
-        )
+        ),
     ) = Søknad(
         newVersion = null,
         språk = Språk.nb,
@@ -128,11 +124,12 @@ class SoknadValidationTest {
         fraOgMed = LocalDate.now(),
         tilOgMed = LocalDate.now(),
         medlemskap = medlemskap,
-        harMedsøker = harMedsoker,
-        samtidigHjemme = samtidigHjemme,
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
-        utenlandsoppholdIPerioden = UtenlandsoppholdIPerioden(skalOppholdeSegIUtlandetIPerioden = false, opphold = listOf()),
+        utenlandsoppholdIPerioden = UtenlandsoppholdIPerioden(
+            skalOppholdeSegIUtlandetIPerioden = false,
+            opphold = listOf()
+        ),
         ferieuttakIPerioden = FerieuttakIPerioden(skalTaUtFerieIPerioden = false, ferieuttak = listOf()),
         barnRelasjon = null,
         barnRelasjonBeskrivelse = null,

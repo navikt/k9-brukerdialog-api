@@ -173,12 +173,10 @@ class SøknadUtils {
                     )
                 )
             ),
-            harMedsøker = true,
             beredskap = Beredskap(
                 beredskap = true,
                 tilleggsinformasjon = "Ikke beredskap"
             ),
-            samtidigHjemme = true,
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true,
             utenlandsoppholdIPerioden = UtenlandsoppholdIPerioden(

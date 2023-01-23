@@ -55,8 +55,6 @@ data class Søknad(
     val ferieuttakIPerioden: FerieuttakIPerioden?,
     val opptjeningIUtlandet: List<OpptjeningIUtlandet>,
     val utenlandskNæring: List<UtenlandskNæring>,
-    val harMedsøker: Boolean? = null,
-    val samtidigHjemme: Boolean? = null,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val omsorgstilbud: Omsorgstilbud? = null,
@@ -98,8 +96,6 @@ data class Søknad(
             opptjeningIUtlandet = opptjeningIUtlandet,
             utenlandskNæring = utenlandskNæring,
             utenlandsoppholdIPerioden = utenlandsoppholdIPerioden,
-            harMedsøker = harMedsøker,
-            samtidigHjemme = samtidigHjemme,
             harBekreftetOpplysninger = harBekreftetOpplysninger,
             harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
             omsorgstilbud = omsorgstilbud,
@@ -196,8 +192,8 @@ data class Søknad(
     fun byggK9DataBruktTilUtledning(): DataBruktTilUtledning = DataBruktTilUtledning(
         harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger,
-        samtidigHjemme,
-        harMedsøker,
+        null,
+        null,
         null
     )
 
