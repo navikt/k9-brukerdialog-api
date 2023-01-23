@@ -76,7 +76,6 @@ internal class SerDesTest {
               "søknadId" : "$søknadsId",
               "mottatt" : "2021-01-10T03:04:05.000000006Z",
               "språk": "nb",
-              "samtidigHjemme": true,
               "barn": {
                 "fødselsnummer": "03028104560",
                 "navn": "Barn Barnesen",
@@ -239,7 +238,6 @@ internal class SerDesTest {
                 }
               ],
               "utenlandskNæring" : [],
-              "harMedsøker": true,
               "harBekreftetOpplysninger": true,
               "harForståttRettigheterOgPlikter": true,
               "ferieuttakIPerioden": {
@@ -323,7 +321,6 @@ internal class SerDesTest {
                 "fornavn": "Ola",
                 "mellomnavn": null
               },
-              "samtidigHjemme": true,
               "barn": {
                 "fødselsnummer": "03028104560",
                 "navn": "Barn Barnesen",
@@ -489,7 +486,6 @@ internal class SerDesTest {
                   "tilOgMed": "2022-01-10"
                 }
               ],
-              "harMedsøker": true,
               "harBekreftetOpplysninger": true,
               "harForståttRettigheterOgPlikter": true,
               "ferieuttakIPerioden": {
@@ -646,12 +642,10 @@ internal class SerDesTest {
                     )
                 )
             ),
-            harMedsøker = true,
             beredskap = Beredskap(
                 beredskap = true,
                 tilleggsinformasjon = "Ikke beredskap"
             ),
-            samtidigHjemme = true,
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true,
             opptjeningIUtlandet = listOf(

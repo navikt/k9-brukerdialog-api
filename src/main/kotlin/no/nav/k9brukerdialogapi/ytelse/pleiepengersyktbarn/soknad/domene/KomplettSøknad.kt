@@ -23,8 +23,6 @@ data class KomplettSøknad(
     val opptjeningIUtlandet: List<OpptjeningIUtlandet>,
     val utenlandskNæring: List<UtenlandskNæring>,
     val ferieuttakIPerioden: FerieuttakIPerioden?,
-    val harMedsøker: Boolean? = null,
-    val samtidigHjemme: Boolean?,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val omsorgstilbud: Omsorgstilbud? = null,

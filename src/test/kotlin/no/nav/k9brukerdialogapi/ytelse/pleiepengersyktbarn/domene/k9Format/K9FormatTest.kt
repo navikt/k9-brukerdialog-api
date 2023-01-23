@@ -129,8 +129,8 @@ class K9FormatTest {
                 "dataBruktTilUtledning": {
                   "harForståttRettigheterOgPlikter": true,
                   "harBekreftetOpplysninger": true,
-                  "samtidigHjemme": true,
-                  "harMedsøker": true,
+                  "samtidigHjemme": null,
+                  "harMedsøker": null,
                   "bekrefterPeriodeOver8Uker": null
                 },
                 "infoFraPunsj": null,
