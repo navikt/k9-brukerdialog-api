@@ -35,11 +35,11 @@ jobs:
       - name: Test Code
         run: ./gradlew check
 
-      - name: SonarCloud Scan
-        run: ./gradlew test jacocoTestReport sonarqube
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
+#      - name: SonarCloud Scan
+#        run: ./gradlew test jacocoTestReport sonarqube
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#          SONAR_HOST_URL: https://sonarcloud.io
 
   build-code-and-push-docker:
     name: Build code and push docker image
