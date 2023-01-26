@@ -1,5 +1,8 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.BarnDetaljer
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.valider
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.ÅrsakManglerIdentitetsnummer
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 

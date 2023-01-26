@@ -77,4 +77,8 @@ data class Configuration(val config : ApplicationConfig) {
     fun getInnSendingCacheExpiryInSeconds(): Long {
         return config.getRequiredString("nav.cache.innsending.expiry_in_seconds", secret = false).toLong()
     }
+
+    internal fun getSifInnsynApiUrl() = URI(config.getRequiredString("nav.gateways.sif_innsyn_api_url", secret = false))
+    fun getSifInnsynApiTokenxAudience(): Set<String> = getScopesFor("sif_innsyn_api_tokenx_audience")
+
 }

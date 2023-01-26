@@ -1,5 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Enkeltdag
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Omsorgstilbud
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.OmsorgstilbudSvarFortid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.OmsorgstilbudSvarFremtid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.PlanUkedager
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test

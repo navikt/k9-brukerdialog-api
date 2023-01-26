@@ -7,6 +7,7 @@ import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.Søknad
+import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarnSøknadValidator
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
@@ -19,6 +20,7 @@ import no.nav.k9brukerdialogapi.vedlegg.DokumentEier
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.valider
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -26,7 +28,7 @@ import org.slf4j.LoggerFactory
 class InnsendingService(
     private val søkerService: SøkerService,
     private val kafkaProdusent: KafkaProducer,
-    private val vedleggService: VedleggService
+    private val vedleggService: VedleggService,
 ) {
 
     internal suspend fun registrer(innsending: Innsending, callId: CallId, idToken: IdToken, metadata: Metadata) {
@@ -58,13 +60,14 @@ class InnsendingService(
         metadata: Metadata,
     ) {
         try {
+            val komplettInnsending = innsending.somKomplettSøknad(søker, k9Format)
             kafkaProdusent.produserKafkaMelding(
                 metadata,
-                JSONObject(innsending.somKomplettSøknad(søker, k9Format).somJson()),
+                JSONObject(komplettInnsending.somJson()),
                 innsending.ytelse()
             )
         } catch (exception: Exception) {
-            logger.error("Feilet ved å legge melding på Kafka.")
+            logger.error("Feilet ved å legge melding på Kafka.", exception)
             throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }
     }
@@ -91,16 +94,34 @@ class InnsendingService(
                 innsending.ytelse()
             )
         } catch (exception: Exception) {
-            logger.error("Feilet ved å legge melding på Kafka.")
+            logger.error("Feilet ved å legge melding på Kafka.", exception)
             logger.info("Fjerner hold på persisterte vedlegg")
             fjernHoldPåPersisterteVedlegg(innsending, callId, dokumentEier)
             throw MeldingRegistreringFeiletException("Feilet ved å legge melding på Kafka")
         }
     }
 
-    fun validerK9Format(innsending: Innsending, k9Format: no.nav.k9.søknad.Innsending) {
+    fun validerK9Format(
+        innsending: Innsending,
+        k9Format: no.nav.k9.søknad.Innsending
+    ) {
         val feil = when (k9Format) {
-            is Søknad -> innsending.søknadValidator()?.valider(k9Format)
+            is Søknad -> {
+                when (innsending.ytelse()) {
+                    Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN -> {
+                        requireNotNull(innsending.gyldigeEndringsPerioder()) {
+                            "GyldigeEndringsPerioder kan ikke være null for ${Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN}"
+                        }
+                        val søknadValidator = innsending.søknadValidator() as PleiepengerSyktBarnSøknadValidator
+                        søknadValidator.valider(k9Format, innsending.gyldigeEndringsPerioder())
+                    }
+
+                    else -> {
+                        innsending.søknadValidator()?.valider(k9Format)
+                    }
+                }
+            }
+
             is Ettersendelse -> innsending.ettersendelseValidator()?.valider(k9Format)
             else -> null
         }?.map {
@@ -112,7 +133,7 @@ class InnsendingService(
             )
         }?.toMutableSet()
 
-        if (feil != null && feil.isNotEmpty()) {
+        if (!feil.isNullOrEmpty()) {
             throw Throwblem(ValidationProblemDetails(feil))
         }
     }

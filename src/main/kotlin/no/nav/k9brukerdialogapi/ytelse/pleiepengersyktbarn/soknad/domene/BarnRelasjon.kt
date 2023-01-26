@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 
 enum class BarnRelasjon {
     MOR,

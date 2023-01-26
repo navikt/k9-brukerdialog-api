@@ -1,10 +1,10 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.k9Format
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Format
 
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstaker
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Arbeidsgiver
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Arbeidsgiver
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import java.time.DayOfWeek
 import java.time.LocalDate
 

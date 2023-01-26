@@ -9,13 +9,13 @@ import no.nav.k9.søknad.felles.personopplysninger.Søker as K9Søker
 
 private const val MYNDIG_ALDER = 18L
 
-class Søker (
-    private val aktørId: String,
-    private val fødselsdato: LocalDate,
-    private val fødselsnummer: String,
-    private val fornavn: String? = null,
-    private val mellomnavn: String? = null,
-    private val etternavn: String? = null
+data class Søker (
+    val aktørId: String,
+    val fødselsdato: LocalDate,
+    val fødselsnummer: String,
+    val fornavn: String? = null,
+    val mellomnavn: String? = null,
+    val etternavn: String? = null
 ) {
     fun erMyndig(): Boolean {
         val attenÅrSiden = LocalDate.now().minusYears(MYNDIG_ALDER)

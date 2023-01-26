@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.fpsak.tidsserie.LocalDateTimeline
@@ -29,7 +29,7 @@ data class Utenlandsopphold(
     fun somUtenlandsoppholdPeriodeInfo() = UtenlandsoppholdPeriodeInfo()
             .medLand(Landkode.of(landkode))
             .apply {
-                if (årsak != null && årsak != no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Årsak.ANNET) {
+                if (årsak != null && årsak != no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Årsak.ANNET) {
                     medÅrsak(årsak.tilK9Årsak())
                 }
             }

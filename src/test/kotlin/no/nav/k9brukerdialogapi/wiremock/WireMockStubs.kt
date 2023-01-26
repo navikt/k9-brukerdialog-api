@@ -8,10 +8,15 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
+import no.nav.k9.søknad.Søknad
+import no.nav.k9brukerdialogapi.innsyn.K9SakInnsynSøknad
+import org.json.JSONArray
+import org.json.JSONObject
 
 internal const val k9OppslagPath = "/k9-selvbetjening-oppslag-mock"
 private const val k9MellomlagringPath = "/k9-mellomlagring-mock"
 internal const val k9BrukerdialogCachePath = "/k9-brukerdialog-cache-mock"
+private const val sifInnsynApiPath = "/sif-innsyn-api-mock"
 
 internal fun WireMockBuilder.k9BrukerdialogApiConfig() = wireMockConfiguration {
     it
@@ -124,6 +129,27 @@ internal fun WireMockServer.stubK9BrukerdialogCache(): WireMockServer {
     return this
 }
 
+internal fun WireMockServer.stubSifInnsynApi(k9SakInnsynSøknader: List<K9SakInnsynSøknad>): WireMockServer {
+    WireMock.stubFor(
+        WireMock.any(WireMock.urlMatching(".*$sifInnsynApiPath/innsyn/sak"))
+            .willReturn(
+                WireMock.aResponse()
+                    .withBody(k9SakInnsynSøknader.somJsonArray().toString())
+            )
+    )
+    return this
+}
+
+private fun List<K9SakInnsynSøknad>.somJsonArray(): JSONArray = JSONArray(map {
+    JSONObject(
+        mapOf(
+            "barn" to it.barn,
+            "søknad" to JSONObject(Søknad.SerDes.serialize(it.søknad))
+        )
+    )
+})
+
 internal fun WireMockServer.getK9OppslagUrl() = baseUrl() + k9OppslagPath
 internal fun WireMockServer.getK9MellomlagringUrl() = baseUrl() + k9MellomlagringPath + "/v1/dokument"
 internal fun WireMockServer.getK9BrukerdialogCacheUrl() = baseUrl() + k9BrukerdialogCachePath
+internal fun WireMockServer.getSifInnsynApiUrl() = baseUrl() + sifInnsynApiPath

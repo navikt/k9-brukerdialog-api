@@ -19,12 +19,14 @@
     "CORS_ADDRESSES": "https://www.nav.no",
     "COOKIE_NAME": "selvbetjening-idtoken",
     "K9_OPPSLAG_REGISTER_URL": "http://k9-selvbetjening-oppslag",
+    "SIF_INNSYN_API_URL": "http://sif-innsyn-api",
     "K9_SELVBETJENING_OPPSLAG_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-selvbetjening-oppslag",
     "K9_MELLOMLAGRING_SERVICE_DISCOVERY": "http://k9-mellomlagring",
     "K9_MELLOMLAGRING_CLIENT_ID": "19aaf0b2-f40a-4a64-bf7f-fd2dd62f0552/.default",
     "K9_MELLOMLAGRING_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-mellomlagring",
     "K9_BRUKERDIALOG_CACHE_SERVICE_DISCOVERY": "http://k9-brukerdialog-cache",
-    "K9_BRUKERDIALOG_CACHE_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-brukerdialog-cache"
+    "K9_BRUKERDIALOG_CACHE_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:k9-brukerdialog-cache",
+    "SIF_INNSYN_API_TOKENX_AUDIENCE": "prod-gcp:dusseldorf:sif-innsyn-api"
   },
   "slack-channel": "sif-alerts",
   "slack-notify-type": "<!channel> | k9-brukerdialog-api | ",

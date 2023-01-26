@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -16,7 +16,7 @@ import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.Søknad
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

@@ -8,7 +8,7 @@ data class BarnOppslag(
     val fornavn: String,
     val mellomnavn: String?,
     val etternavn: String,
-    val aktørId: String?,
+    val aktørId: String,
     @JsonIgnore var identitetsnummer: String
 )
 

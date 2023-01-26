@@ -16,15 +16,17 @@
     "login.microsoftonline.com"
   ],
   "env": {
-    "CORS_ADDRESSES": "https://omsorgspengesoknad.dev.nav.no,https://ekstra-omsorgsdager-andre-forelder-ikke-tilsyn.dev.nav.no,https://k9-ettersending-soknad.dev.nav.no,https://omsorgsdager-aleneomsorg-dialog.dev.nav.no,https://omsorgspengerutbetaling-arbeidstaker-soknad.dev.nav.no,https://omsorgspengerutbetaling-soknad.dev.nav.no,https://pleiepenger-i-livets-sluttfase.dev.nav.no,https://pleiepengesoknad.dev.nav.no",
+    "CORS_ADDRESSES": "https://omsorgspengesoknad.dev.nav.no,https://ekstra-omsorgsdager-andre-forelder-ikke-tilsyn.dev.nav.no,https://k9-ettersending-soknad.dev.nav.no,https://omsorgsdager-aleneomsorg-dialog.dev.nav.no,https://omsorgspengerutbetaling-arbeidstaker-soknad.dev.nav.no,https://omsorgspengerutbetaling-soknad.dev.nav.no,https://pleiepenger-i-livets-sluttfase.dev.nav.no,https://pleiepengesoknad.dev.nav.no,https://endringsmelding-pleiepenger.dev.nav.no",
     "COOKIE_NAME": "selvbetjening-idtoken",
     "K9_OPPSLAG_REGISTER_URL": "http://k9-selvbetjening-oppslag",
+    "SIF_INNSYN_API_URL": "http://sif-innsyn-api",
     "K9_SELVBETJENING_OPPSLAG_TOKENX_AUDIENCE": "dev-gcp:dusseldorf:k9-selvbetjening-oppslag",
     "K9_MELLOMLAGRING_SERVICE_DISCOVERY": "http://k9-mellomlagring",
     "K9_MELLOMLAGRING_CLIENT_ID": "8d0460bd-ea81-4b08-b524-cf04874a794c/.default",
     "K9_MELLOMLAGRING_TOKENX_AUDIENCE": "dev-gcp:dusseldorf:k9-mellomlagring",
     "K9_BRUKERDIALOG_CACHE_SERVICE_DISCOVERY": "http://k9-brukerdialog-cache",
-    "K9_BRUKERDIALOG_CACHE_TOKENX_AUDIENCE": "dev-gcp:dusseldorf:k9-brukerdialog-cache"
+    "K9_BRUKERDIALOG_CACHE_TOKENX_AUDIENCE": "dev-gcp:dusseldorf:k9-brukerdialog-cache",
+    "SIF_INNSYN_API_TOKENX_AUDIENCE": "dev-gcp:dusseldorf:sif-innsyn-api"
   },
   "slack-channel": "sif-alerts-dev",
   "slack-notify-type": "<!here> | k9-brukerdialog-api | ",

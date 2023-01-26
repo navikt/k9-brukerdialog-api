@@ -1,4 +1,4 @@
-package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
+package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.fpsak.tidsserie.LocalDateInterval
@@ -20,9 +20,9 @@ import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.UtenlandskNæring.Companion.valider
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.k9Format.byggK9Arbeidstid
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.k9Format.byggK9OpptjeningAktivitet
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandskNæring.Companion.valider
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Format.byggK9Arbeidstid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Format.byggK9OpptjeningAktivitet
 import java.net.URL
 import java.time.Duration
 import java.time.LocalDate
