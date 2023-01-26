@@ -14,8 +14,6 @@ import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstaker
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
-import no.nav.k9.søknad.ytelse.psb.v1.tilsyn.TilsynPeriodeInfo
-import no.nav.k9.søknad.ytelse.psb.v1.tilsyn.Tilsynsordning
 import no.nav.k9brukerdialogapi.innsyn.InnsynBarn
 import no.nav.k9brukerdialogapi.innsyn.K9SakInnsynSøknad
 import java.time.Duration
@@ -24,8 +22,33 @@ import java.time.ZonedDateTime
 import java.util.*
 
 fun defaultK9FormatPSB(
-    søknadId: UUID = UUID.randomUUID(), søknadsPeriode:
-    Periode = Periode(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-01-01"))
+    søknadId: UUID = UUID.randomUUID(),
+    søknadsPeriode: List<Periode> = listOf(Periode(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-01-01"))),
+    arbeidstid: Arbeidstid = Arbeidstid().medArbeidstaker(
+        listOf(
+            Arbeidstaker()
+                .medNorskIdentitetsnummer(NorskIdentitetsnummer.of("12345678910"))
+                .medOrganisasjonsnummer(Organisasjonsnummer.of("926032925"))
+                .medArbeidstidInfo(
+                    ArbeidstidInfo().medPerioder(
+                        mapOf(
+                            Periode(
+                                LocalDate.parse("2018-01-01"),
+                                LocalDate.parse("2020-01-05")
+                            ) to ArbeidstidPeriodeInfo()
+                                .medJobberNormaltTimerPerDag(Duration.ofHours(8))
+                                .medFaktiskArbeidTimerPerDag(Duration.ofHours(4)),
+                            Periode(
+                                LocalDate.parse("2020-01-06"),
+                                LocalDate.parse("2020-01-10")
+                            ) to ArbeidstidPeriodeInfo()
+                                .medJobberNormaltTimerPerDag(Duration.ofHours(8))
+                                .medFaktiskArbeidTimerPerDag(Duration.ofHours(2))
+                        )
+                    )
+                )
+        )
+    ),
 ) = Søknad(
 
     SøknadId.of(søknadId.toString()),
@@ -36,47 +59,7 @@ fun defaultK9FormatPSB(
         .medSøknadsperiode(søknadsPeriode)
         .medSøknadInfo(DataBruktTilUtledning(true, true, true, true, true))
         .medBarn(Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of("02119970079")))
-        .medTilsynsordning(
-            Tilsynsordning().medPerioder(
-                mapOf(
-                    Periode(
-                        LocalDate.parse("2020-01-01"),
-                        LocalDate.parse("2020-01-05")
-                    ) to TilsynPeriodeInfo().medEtablertTilsynTimerPerDag(Duration.ofHours(8)),
-                    Periode(
-                        LocalDate.parse("2020-01-06"),
-                        LocalDate.parse("2020-01-10")
-                    ) to TilsynPeriodeInfo().medEtablertTilsynTimerPerDag(Duration.ofHours(4))
-                )
-            )
-        )
-        .medArbeidstid(
-            Arbeidstid().medArbeidstaker(
-                listOf(
-                    Arbeidstaker()
-                        .medNorskIdentitetsnummer(NorskIdentitetsnummer.of("12345678910"))
-                        .medOrganisasjonsnummer(Organisasjonsnummer.of("926032925"))
-                        .medArbeidstidInfo(
-                            ArbeidstidInfo().medPerioder(
-                                mapOf(
-                                    Periode(
-                                        LocalDate.parse("2018-01-01"),
-                                        LocalDate.parse("2020-01-05")
-                                    ) to ArbeidstidPeriodeInfo()
-                                        .medJobberNormaltTimerPerDag(Duration.ofHours(8))
-                                        .medFaktiskArbeidTimerPerDag(Duration.ofHours(4)),
-                                    Periode(
-                                        LocalDate.parse("2020-01-06"),
-                                        LocalDate.parse("2020-01-10")
-                                    ) to ArbeidstidPeriodeInfo()
-                                        .medJobberNormaltTimerPerDag(Duration.ofHours(8))
-                                        .medFaktiskArbeidTimerPerDag(Duration.ofHours(2))
-                                )
-                            )
-                    )
-                )
-            )
-        )
+        .medArbeidstid(arbeidstid)
 )
 
 fun defaultK9SakInnsynSøknad(barn: InnsynBarn, søknad: Søknad) = K9SakInnsynSøknad(

@@ -59,7 +59,7 @@ fun Route.endringsmeldingApis(
             val søknadsopplysninger = innsynService.hentSøknadsopplysningerForBarn(idToken, callId, barn.aktørId)
 
             val ytelse = søknadsopplysninger.søknad.getYtelse<PleiepengerSyktBarn>()
-            endringsmelding.gyldigeEndringsPerioder = mutableListOf(ytelse.søknadsperiode)
+            endringsmelding.gyldigeEndringsPerioder = ytelse.søknadsperiodeList
 
             innsendingService.registrer(endringsmelding, callId, idToken, metadata)
             innsendingCache.put(cacheKey)

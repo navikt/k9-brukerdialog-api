@@ -9,6 +9,13 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.createTestEnvironment
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
+import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
+import no.nav.k9.søknad.felles.type.Organisasjonsnummer
+import no.nav.k9.søknad.felles.type.Periode
+import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstaker
+import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
+import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
+import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
 import no.nav.k9brukerdialogapi.ENDRINGSMELDING_URL
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.KafkaWrapper
@@ -35,6 +42,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.time.Duration
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
@@ -42,7 +50,7 @@ import kotlin.test.Test
 
 class EndringsmeldingPleiepengerSyktBarnTest {
 
-    private companion object{
+    private companion object {
         private val logger: Logger = LoggerFactory.getLogger(EndringsmeldingPleiepengerSyktBarnTest::class.java)
         private val søkerMedBarn = "02119970078"
         private val barnIdentitetsnummer = "18909798651"
@@ -328,8 +336,124 @@ class EndringsmeldingPleiepengerSyktBarnTest {
             logger = logger
         )
     }
+
+    @Test
+    fun `Gitt Sammenslått søknad med flere søknadsperioder, skal endring av periode utenfor eksisterende perioder feile`() {
+        val søknadId = UUID.randomUUID().toString()
+        val mottattDato = ZonedDateTime.parse("2021-11-03T07:12:05.530Z")
+
+        wireMockServer.stubSifInnsynApi(
+            k9SakInnsynSøknader = listOf(
+                defaultK9SakInnsynSøknad(
+                    barn = InnsynBarn(
+                        fødselsdato = LocalDate.parse("2000-08-27"),
+                        fornavn = "BARNESEN",
+                        mellomnavn = "EN",
+                        etternavn = "BARNESEN",
+                        aktørId = "1000000000001",
+                        identitetsnummer = barnIdentitetsnummer
+                    ),
+                    søknad = defaultK9FormatPSB(
+                        søknadsPeriode = listOf(
+                            Periode(LocalDate.parse("2022-12-05"), LocalDate.parse("2022-12-06")),
+                            Periode(LocalDate.parse("2022-12-08"), LocalDate.parse("2022-12-09"))
+                        ),
+                        arbeidstid = Arbeidstid().medArbeidstaker(
+                            listOf(
+                                Arbeidstaker()
+                                    .medNorskIdentitetsnummer(NorskIdentitetsnummer.of("12345678910"))
+                                    .medOrganisasjonsnummer(Organisasjonsnummer.of("926032925"))
+                                    .medArbeidstidInfo(
+                                        ArbeidstidInfo().medPerioder(
+                                            mapOf(
+                                                Periode(
+                                                    LocalDate.parse("2022-12-05"),
+                                                    LocalDate.parse("2022-12-06")
+                                                ) to ArbeidstidPeriodeInfo()
+                                                    .medJobberNormaltTimerPerDag(Duration.ofHours(8))
+                                                    .medFaktiskArbeidTimerPerDag(Duration.ofHours(4)),
+                                                Periode(
+                                                    LocalDate.parse("2022-12-08"),
+                                                    LocalDate.parse("2022-12-09")
+                                                ) to ArbeidstidPeriodeInfo()
+                                                    .medJobberNormaltTimerPerDag(Duration.ofHours(8))
+                                                    .medFaktiskArbeidTimerPerDag(Duration.ofHours(2))
+                                            )
+                                        )
+                                    )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+
+        //language=json
+        val endringsmelding = """
+                {
+                  "søknadId": "$søknadId",
+                  "språk": "nb",
+                  "mottattDato": "$mottattDato",
+                  "harBekreftetOpplysninger": true,
+                  "harForståttRettigheterOgPlikter": true,
+                  "ytelse": {
+                    "type": "PLEIEPENGER_SYKT_BARN",
+                    "barn": {
+                      "norskIdentitetsnummer": "$barnIdentitetsnummer"
+                    },
+                    "arbeidstid": {
+                      "arbeidstakerList": [
+                        {
+                          "organisasjonsnummer": "917755736",
+                          "arbeidstidInfo": {
+                            "perioder": {
+                              "2022-12-07/2022-12-07": {
+                                "jobberNormaltTimerPerDag": "PT1H0M",
+                                "faktiskArbeidTimerPerDag": "PT0H"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+            """.trimIndent()
+        requestAndAssert(
+            httpMethod = HttpMethod.Post,
+            path = PLEIEPENGER_SYKT_BARN_URL + ENDRINGSMELDING_URL + INNSENDING_URL,
+            jwtToken = mockOAuth2Server.issueToken(fnr = søkerMedBarn),
+            expectedCode = HttpStatusCode.BadRequest,
+            expectedResponse =
+            //language=json
+            """
+                {
+                  "type": "/problem-details/invalid-request-parameters",
+                  "title": "invalid-request-parameters",
+                  "status": 400,
+                  "detail": "Requesten inneholder ugyldige paramtere.",
+                  "instance": "about:blank",
+                  "invalid_parameters": [
+                    {
+                      "type": "entity",
+                      "name": "ytelse.arbeidstid.arbeidstakerList[0].perioder",
+                      "reason": "Perioden er utenfor gyldig interval. Gyldig interva: ([[2022-12-05, 2022-12-06], [2022-12-08, 2022-12-09]]), Ugyldig periode: 2022-12-07/2022-12-07",
+                      "invalid_value": "K9-format feilkode: ugyldigPeriode"
+                    }
+                  ]
+                }
+            """.trimIndent(),
+            requestEntity = endringsmelding,
+            engine = engine,
+            logger = logger
+        )
+    }
+
     private fun hentOgAsserEndringsmelding(forventenEndringsmelding: String, endringsmelding: JSONObject) {
-        val komplettEndringsmelding = kafkaKonsumer.hentSøknad(endringsmelding.getString("søknadId"), Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN)
+        val komplettEndringsmelding = kafkaKonsumer.hentSøknad(
+            endringsmelding.getString("søknadId"),
+            Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
+        )
 
         JSONAssert.assertEquals(
             forventenEndringsmelding,
