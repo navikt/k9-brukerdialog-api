@@ -325,7 +325,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                     {
                       "type": "entity",
                       "name": "ytelse.arbeidstid.arbeidstakerList[0].perioder",
-                      "reason": "Perioden er utenfor gyldig interval. Gyldig interva: ([[2018-01-01, 2021-01-01]]), Ugyldig periode: 2021-01-07/2021-01-07",
+                      "reason": "Perioden er utenfor gyldig interval. Gyldig interva: ([[2021-01-01, 2021-01-01]]), Ugyldig periode: 2021-01-07/2021-01-07",
                       "invalid_value": "K9-format feilkode: ugyldigPeriode"
                     }
                   ]
@@ -446,6 +446,22 @@ class EndringsmeldingPleiepengerSyktBarnTest {
             requestEntity = endringsmelding,
             engine = engine,
             logger = logger
+        )
+
+        wireMockServer.stubSifInnsynApi(
+            k9SakInnsynSøknader = listOf(
+                defaultK9SakInnsynSøknad(
+                    barn = InnsynBarn(
+                        fødselsdato = LocalDate.parse("2000-08-27"),
+                        fornavn = "BARNESEN",
+                        mellomnavn = "EN",
+                        etternavn = "BARNESEN",
+                        aktørId = "1000000000001",
+                        identitetsnummer = barnIdentitetsnummer
+                    ),
+                    søknad = defaultK9FormatPSB()
+                )
+            )
         )
     }
 

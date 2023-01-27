@@ -27,7 +27,7 @@ data class Beredskap(
 
     fun valider(felt: String) = mutableListOf<String>().apply {
         if (beredskap) {
-            krever(tilleggsinformasjon !== null && tilleggsinformasjon.length < MAX_FRITEKST_TEGN,
+            krever(tilleggsinformasjon !== null && tilleggsinformasjon.length <= MAX_FRITEKST_TEGN,
                 "$felt.tilleggsinformasjon kan være max $MAX_FRITEKST_TEGN tegn, men var ${tilleggsinformasjon?.length}")
         }
     }
