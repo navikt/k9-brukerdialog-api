@@ -68,6 +68,7 @@ import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.vedlegg.K9MellomlagringGateway
 import no.nav.k9brukerdialogapi.vedlegg.VedleggService
 import no.nav.k9brukerdialogapi.vedlegg.vedleggApis
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSDAGER_ALENEOMSORG
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE
@@ -75,6 +76,7 @@ import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTA
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTBETALING_SNF
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.OMSORGSPENGER_UTVIDET_RETT
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.PLEIEPENGER_SYKT_BARN
 import no.nav.k9brukerdialogapi.ytelse.ytelseRoutes
 import no.nav.security.token.support.v2.RequiredClaims
 import no.nav.security.token.support.v2.asIssuerProps
@@ -304,6 +306,8 @@ fun Application.k9BrukerdialogApi() {
                 request.contains(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL.removePrefix("/")) -> OMSORGSPENGER_UTBETALING_ARBEIDSTAKER.name.lowercase()
                 request.contains(OMSORGSPENGER_UTBETALING_SNF_URL.removePrefix("/")) -> OMSORGSPENGER_UTBETALING_SNF.name.lowercase()
                 request.contains(PLEIEPENGER_LIVETS_SLUTTFASE_URL.removePrefix("/")) -> PLEIEPENGER_LIVETS_SLUTTFASE.name.lowercase()
+                request.contains(PLEIEPENGER_SYKT_BARN_URL.removePrefix("/")) -> PLEIEPENGER_SYKT_BARN.name.lowercase()
+                request.contains((PLEIEPENGER_SYKT_BARN_URL + ENDRINGSMELDING_URL).removePrefix("/")) -> ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN.name.lowercase()
                 else -> null
             }
         }
