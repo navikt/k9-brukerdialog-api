@@ -16,7 +16,10 @@ data class Frilans(
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
     val jobberFortsattSomFrilans: Boolean? = null,
-    val arbeidsforhold: Arbeidsforhold? = null
+    val arbeidsforhold: Arbeidsforhold? = null,
+    val frilansTyper: List<FrilansType>? = null,
+    val misterHonorarer: Boolean? = null,
+    val misterHonorarerIPerioden: MisterHonorarerFraVervIPerioden? = null
 ) {
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
@@ -27,6 +30,9 @@ data class Frilans(
         if(harInntektSomFrilanser){
             kreverIkkeNull(startdato, "$felt.startdao kan ikke være null dersom harInntektSomFrilanser=true")
             kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom harInntektSomFrilanser=true")
+        }
+        if (misterHonorarer != null && misterHonorarer) {
+            kreverIkkeNull(misterHonorarerIPerioden, "$felt.misterHonorarerIPerioden kan ikke være null dersom misterHonorarer=true")
         }
     }
 
@@ -84,4 +90,13 @@ data class Frilans(
     private fun sluttetISøknadsperioden(tilOgMed: LocalDate?) = (sluttdato != null && sluttdato.isBefore(tilOgMed))
     private fun startetISøknadsperioden(fraOgMed: LocalDate) = startdato?.isAfter(fraOgMed) ?: false
     private fun startetOgSluttetISøknadsperioden(fraOgMed: LocalDate, tilOgMed: LocalDate?) = sluttetISøknadsperioden(tilOgMed) && startetISøknadsperioden(fraOgMed)
+}
+
+enum class MisterHonorarerFraVervIPerioden {
+    MISTER_ALLE_HONORARER, MISTER_DELER_AV_HONORARER
+}
+
+enum class FrilansType {
+    FRILANS,
+    STYREVERV
 }

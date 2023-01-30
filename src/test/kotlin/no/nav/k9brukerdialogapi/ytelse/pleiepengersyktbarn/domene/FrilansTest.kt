@@ -9,6 +9,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import java.time.Duration
 import java.time.LocalDate
@@ -17,7 +18,7 @@ import kotlin.test.assertEquals
 
 class FrilansTest {
 
-    companion object{
+    companion object {
         private val syvOgEnHalvTime = Duration.ofHours(7).plusMinutes(30)
         val mandag = LocalDate.parse("2022-01-03")
         val tirsdag = mandag.plusDays(1)
@@ -36,7 +37,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans med valideringsfeil i arbeidsforhold`(){
+    fun `Frilans med valideringsfeil i arbeidsforhold`() {
         Frilans(
             startdato = LocalDate.parse("2020-01-01"),
             sluttdato = null,
@@ -49,16 +50,19 @@ class FrilansTest {
                 arbeidIPeriode = ArbeidIPeriode(
                     type = ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT,
                     arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG,
-                   prosentAvNormalt = null
+                    prosentAvNormalt = null
                 )
             )
         )
             .valider("test")
-            .verifiserFeil(1, listOf("test.arbeidsforhold.arbeidIPeriode.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT"))
+            .verifiserFeil(
+                1,
+                listOf("test.arbeidsforhold.arbeidIPeriode.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT")
+            )
     }
 
     @Test
-    fun `Frilans hvor sluttdato er før startdato skal gi valideringsfeil`(){
+    fun `Frilans hvor sluttdato er før startdato skal gi valideringsfeil`() {
         Frilans(
             startdato = LocalDate.parse("2020-01-01"),
             sluttdato = LocalDate.parse("2019-01-01"),
@@ -71,7 +75,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans hvor sluttdato og startdato er lik skal ikke gi valideringsfeil`(){
+    fun `Frilans hvor sluttdato og startdato er lik skal ikke gi valideringsfeil`() {
         Frilans(
             startdato = LocalDate.parse("2020-01-01"),
             sluttdato = LocalDate.parse("2020-01-01"),
@@ -82,7 +86,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans hvor sluttdato er etter startdato skal ikke gi valideringsfeil`(){
+    fun `Frilans hvor sluttdato er etter startdato skal ikke gi valideringsfeil`() {
         Frilans(
             startdato = LocalDate.parse("2020-01-01"),
             sluttdato = LocalDate.parse("2021-01-01"),
@@ -93,7 +97,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans hvor harInntektSomFrilanser er true med startdato og jobberFortsattSomFrilans som null gir feil`(){
+    fun `Frilans hvor harInntektSomFrilanser er true med startdato og jobberFortsattSomFrilans som null gir feil`() {
         Frilans(
             startdato = null,
             sluttdato = LocalDate.parse("2029-01-01"),
@@ -102,14 +106,16 @@ class FrilansTest {
             arbeidsforhold = null
         )
             .valider("test")
-            .verifiserFeil(2, listOf(
-                "test.startdao kan ikke være null dersom harInntektSomFrilanser=true",
-                "test.jobberFortsattSomFrilans kan ikke være null dersom harInntektSomFrilanser=true"
-            ))
+            .verifiserFeil(
+                2, listOf(
+                    "test.startdao kan ikke være null dersom harInntektSomFrilanser=true",
+                    "test.jobberFortsattSomFrilans kan ikke være null dersom harInntektSomFrilanser=true"
+                )
+            )
     }
 
     @Test
-    fun `Frilans jobber som vanlig i hele søknadsperioden`(){
+    fun `Frilans jobber som vanlig i hele søknadsperioden`() {
         val frilans = Frilans(
             startdato = LocalDate.parse("2020-01-01"),
             sluttdato = null,
@@ -126,7 +132,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans uten arbeidsforhold, forventer at hele søknadsperioden fylles med 0-0 timer`(){
+    fun `Frilans uten arbeidsforhold, forventer at hele søknadsperioden fylles med 0-0 timer`() {
         val frilans = Frilans(
             harInntektSomFrilanser = false
         )
@@ -139,7 +145,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans som sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`(){
+    fun `Frilans som sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`() {
         val frilans = Frilans(
             startdato = mandag,
             sluttdato = torsdag,
@@ -159,7 +165,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans som sluttet første dag i søknadsperioden med normaltid oppgitt som snittPerUke`(){
+    fun `Frilans som sluttet første dag i søknadsperioden med normaltid oppgitt som snittPerUke`() {
         val frilans = Frilans(
             startdato = mandag,
             sluttdato = mandag,
@@ -179,7 +185,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans som sluttet siste dag i søknadsperioden med normaltid oppgitt som snittPerUke`(){
+    fun `Frilans som sluttet siste dag i søknadsperioden med normaltid oppgitt som snittPerUke`() {
         val frilans = Frilans(
             startdato = mandag,
             sluttdato = fredag,
@@ -196,7 +202,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans som sluttet etter søknadsperioden med normaltid oppgitt som snittPerUke`(){
+    fun `Frilans som sluttet etter søknadsperioden med normaltid oppgitt som snittPerUke`() {
         val frilans = Frilans(
             startdato = mandag,
             sluttdato = fredag,
@@ -213,7 +219,7 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans som startet etter søknadsperioden startet med normaltid oppgitt som snittPerUke`(){
+    fun `Frilans som startet etter søknadsperioden startet med normaltid oppgitt som snittPerUke`() {
         val frilans = Frilans(
             startdato = onsdag,
             jobberFortsattSomFrilans = true,
@@ -227,12 +233,12 @@ class FrilansTest {
         assertEquals(NULL_TIMER, perioder[Periode(mandag, tirsdag)]!!.jobberNormaltTimerPerDag)
         assertEquals(NULL_TIMER, perioder[Periode(mandag, tirsdag)]!!.faktiskArbeidTimerPerDag)
 
-        assertEquals(syvOgEnHalvTime, perioder[Periode(onsdag, fredag )]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(onsdag, fredag)]!!.jobberNormaltTimerPerDag)
         assertEquals(syvOgEnHalvTime, perioder[Periode(onsdag, fredag)]!!.faktiskArbeidTimerPerDag)
     }
 
     @Test
-    fun `Frilans som startet og sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`(){
+    fun `Frilans som startet og sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`() {
         val frilans = Frilans(
             startdato = tirsdag,
             sluttdato = torsdag,
@@ -251,5 +257,24 @@ class FrilansTest {
 
         assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, torsdag)]!!.jobberNormaltTimerPerDag)
         assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, torsdag)]!!.faktiskArbeidTimerPerDag)
+    }
+
+    @Test
+    fun `Frilanser som mister honorarer må ha misterHonorarerIPerioden satt`() {
+        Frilans(
+            startdato = LocalDate.parse("2020-01-01"),
+            sluttdato = null,
+            jobberFortsattSomFrilans = true,
+            harInntektSomFrilanser = true,
+            arbeidsforhold = arbeidsforholdMedNormaltidSomSnittPerUke,
+            frilansTyper = listOf(FrilansType.STYREVERV, FrilansType.FRILANS),
+            misterHonorarer = true,
+            misterHonorarerIPerioden = null
+        ).valider("test")
+            .verifiserFeil(
+                1, listOf(
+                    "test.misterHonorarerIPerioden kan ikke være null dersom misterHonorarer=true",
+                )
+            )
     }
 }
