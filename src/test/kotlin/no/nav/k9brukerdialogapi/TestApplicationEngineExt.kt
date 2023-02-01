@@ -15,6 +15,7 @@ import no.nav.helse.dusseldorf.ktor.core.fromResources
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_PDF
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_JPEG
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.IMAGE_PNG
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -29,6 +30,7 @@ fun TestApplicationEngine.handleRequestUploadImage(
     val boundary = "***vedlegg***"
 
     handleRequest(HttpMethod.Post, VEDLEGG_URL) {
+        addHeader(HttpHeaders.XCorrelationId, UUID.randomUUID().toString())
         cookie?.let { addHeader("Cookie", cookie) }
         jwtToken?.let { addHeader("Authorization", "Bearer $jwtToken") }
         addHeader(
