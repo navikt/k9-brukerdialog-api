@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Url
@@ -20,6 +21,7 @@ import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.authenticate
 import io.ktor.server.metrics.micrometer.MicrometerMetrics
 import io.ktor.server.plugins.callid.CallId
+import io.ktor.server.plugins.callid.callIdMdc
 import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
@@ -35,8 +37,6 @@ import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthConfig
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.DefaultProbeRoutes
 import no.nav.helse.dusseldorf.ktor.core.DefaultStatusPages
-import no.nav.helse.dusseldorf.ktor.core.correlationIdAndRequestIdInMdc
-import no.nav.helse.dusseldorf.ktor.core.generated
 import no.nav.helse.dusseldorf.ktor.core.id
 import no.nav.helse.dusseldorf.ktor.core.log
 import no.nav.helse.dusseldorf.ktor.core.logProxyProperties
@@ -84,6 +84,7 @@ import no.nav.security.token.support.v2.tokenValidationSupport
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
+import java.util.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -281,11 +282,13 @@ fun Application.k9BrukerdialogApi() {
     }
 
     install(CallId) {
-        generated()
+        header(HttpHeaders.XCorrelationId)
+        generate { "generated-${UUID.randomUUID()}" }
+        verify { callId: String -> callId.isNotEmpty() }
     }
 
     install(CallLogging) {
-        correlationIdAndRequestIdInMdc()
+        callIdMdc("correlation_id")
         logRequests()
         mdc("id_token_jti") { call ->
             try {

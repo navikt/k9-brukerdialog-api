@@ -14,6 +14,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.skyscreamer.jsonassert.JSONAssert
 import org.slf4j.Logger
+import java.util.UUID
 import kotlin.test.assertContains
 
 class TestUtils {
@@ -69,6 +70,7 @@ class TestUtils {
                     if (jwtToken != null) addHeader(HttpHeaders.Authorization, "Bearer $jwtToken")
                     logger.info("Request Entity = $requestEntity")
                     addHeader(HttpHeaders.Accept, APPLICATION_JSON)
+                    addHeader(HttpHeaders.XCorrelationId, UUID.randomUUID().toString())
                     if (requestEntity != null) addHeader(HttpHeaders.ContentType, APPLICATION_JSON)
                     if (requestEntity != null) setBody(requestEntity)
                 }.apply {
