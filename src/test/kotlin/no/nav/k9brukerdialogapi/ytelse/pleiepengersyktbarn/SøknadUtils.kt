@@ -233,7 +233,6 @@ class SøknadUtils {
                 )
             ),
             frilans = Frilans(
-                jobberFortsattSomFrilans = true,
                 harInntektSomFrilanser = true,
                 startdato = LocalDate.parse("2018-01-01"),
                 frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
