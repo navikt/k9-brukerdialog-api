@@ -71,6 +71,7 @@ class TestUtils {
                     logger.info("Request Entity = $requestEntity")
                     addHeader(HttpHeaders.Accept, APPLICATION_JSON)
                     addHeader(HttpHeaders.XCorrelationId, UUID.randomUUID().toString())
+                    addHeader("X-K9-Brukerdialog", "søknads-dialog")
                     if (requestEntity != null) addHeader(HttpHeaders.ContentType, APPLICATION_JSON)
                     if (requestEntity != null) setBody(requestEntity)
                 }.apply {

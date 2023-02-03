@@ -31,6 +31,7 @@ fun TestApplicationEngine.handleRequestUploadImage(
 
     handleRequest(HttpMethod.Post, VEDLEGG_URL) {
         addHeader(HttpHeaders.XCorrelationId, UUID.randomUUID().toString())
+        addHeader("X-K9-Brukerdialog", "søknads-dialog")
         cookie?.let { addHeader("Cookie", cookie) }
         jwtToken?.let { addHeader("Authorization", "Bearer $jwtToken") }
         addHeader(
