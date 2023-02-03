@@ -26,6 +26,7 @@ import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.header
 import io.ktor.server.request.uri
 import io.ktor.server.routing.Routing
 import io.prometheus.client.hotspot.DefaultExports
@@ -290,6 +291,9 @@ fun Application.k9BrukerdialogApi() {
     install(CallLogging) {
         callIdMdc("correlation_id")
         logRequests()
+        mdc("k9_brukerdialog") {
+            it.request.header("X-K9-Brukerdialog") ?: "N/A"
+        }
         mdc("id_token_jti") { call ->
             try {
                 val idToken = idTokenProvider.getIdToken(call)
