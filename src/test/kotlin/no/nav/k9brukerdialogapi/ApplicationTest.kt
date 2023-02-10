@@ -671,7 +671,7 @@ class ApplicationTest {
         fun `Test opplasting av for stort vedlegg`() {
             engine.handleRequestUploadImage(
                 cookie = cookie,
-                vedlegg = ByteArray(8 * 1024 * 1024 + 10),
+                vedlegg = ByteArray(10 * 1024 * 1024 + 10),
                 contentType = IMAGE_PNG,
                 fileName = "big_picture.png",
                 expectedCode = HttpStatusCode.PayloadTooLarge
