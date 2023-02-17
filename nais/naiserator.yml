@@ -59,6 +59,7 @@ spec:
         - application: omsorgspengerutbetaling-soknad
         - application: pleiepenger-i-livets-sluttfase-soknad
         - application: pleiepengesoknad
+        - application: sif-innsyn
     outbound:
       rules:
         - application: k9-mellomlagring
