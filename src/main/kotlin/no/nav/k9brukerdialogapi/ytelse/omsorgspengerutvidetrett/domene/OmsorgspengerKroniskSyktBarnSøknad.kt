@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
@@ -53,7 +54,7 @@ class OmsorgspengerKroniskSyktBarnSøknad(
                 barn.somK9Barn(),
                 kroniskEllerFunksjonshemming
             )
-        )
+        ).medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
 
     override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): OmsorgspengerKroniskSyktBarnKomplettSøknad {

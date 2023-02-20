@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.fpsak.tidsserie.LocalDateInterval
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.psb.v1.DataBruktTilUtledning
@@ -179,6 +180,7 @@ data class Søknad(
         }
 
         return K9Søknad(SøknadId.of(søknadId), k9FormatVersjon, mottatt, søker.somK9Søker(), psb)
+            .medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
 
     fun byggK9Uttak(periode: K9Periode): Uttak {

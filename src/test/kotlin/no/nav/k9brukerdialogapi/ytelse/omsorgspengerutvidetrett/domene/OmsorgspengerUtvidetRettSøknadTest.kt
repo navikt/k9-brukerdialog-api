@@ -132,7 +132,8 @@ class OmsorgspengerUtvidetRettSøknadTest {
                   "begrunnelseForInnsending": {
                     "tekst": null
                   },
-                  "versjon": "1.0.0"
+                  "versjon": "1.0.0",
+                  "kildesystem": "søknadsdialog"
                 }
             """.trimIndent()
         )

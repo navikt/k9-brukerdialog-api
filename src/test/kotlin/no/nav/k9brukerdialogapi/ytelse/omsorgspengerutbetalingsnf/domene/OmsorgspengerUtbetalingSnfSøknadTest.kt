@@ -419,7 +419,8 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
               "journalposter": [],
               "begrunnelseForInnsending": {
                 "tekst": null
-              }
+              },
+              "kildesystem": "søknadsdialog"
             }
         """.trimIndent()
         JSONAssert.assertEquals(forventetK9Format, k9Format, true)

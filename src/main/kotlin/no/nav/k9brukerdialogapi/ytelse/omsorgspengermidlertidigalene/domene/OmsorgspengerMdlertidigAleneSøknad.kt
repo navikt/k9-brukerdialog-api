@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerMidlertidigAlene
@@ -45,7 +46,7 @@ class OmsorgspengerMdlertidigAleneSøknad(
                 annenForelder.somK9AnnenForelder(),
                 null
             )
-        )
+        ).medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
 
     override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): OmsorgspengerMdlertidigAleneKomplettSøknad {

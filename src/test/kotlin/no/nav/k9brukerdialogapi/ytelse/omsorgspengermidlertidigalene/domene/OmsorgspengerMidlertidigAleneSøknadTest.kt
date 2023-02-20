@@ -151,7 +151,8 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
               "begrunnelseForInnsending" : {
                 "tekst" : null
               },
-              "journalposter": []
+              "journalposter": [],
+              "kildesystem": "søknadsdialog"
             }
         """.trimIndent()
         JSONAssert.assertEquals(forventetK9Format, faktiskK9Format, true)

@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.endringsmelding.dome
 
 import no.nav.k9.søknad.Søknad
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.type.Periode
@@ -51,6 +52,7 @@ data class Endringsmelding(
             Språk.of(språk),
             ytelse
         )
+            .medKildesystem(Kildesystem.ENDRINGSDIALOG)
     }
 
     override fun gyldigeEndringsPerioder(): List<Periode>? = gyldigeEndringsPerioder

@@ -263,7 +263,8 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                "journalposter": [],
                "begrunnelseForInnsending": {
                  "tekst": null
-               }
+               },
+               "kildesystem": "endringsdialog"
              }
            }
             """.trimIndent(),

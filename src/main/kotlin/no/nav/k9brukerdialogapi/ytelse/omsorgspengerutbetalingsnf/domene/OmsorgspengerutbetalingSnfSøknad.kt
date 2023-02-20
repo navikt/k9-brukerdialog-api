@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.SøknadId
@@ -98,7 +99,7 @@ class OmsorgspengerutbetalingSnfSøknad(
                 bosteder.somK9Bosteder(),
                 opphold.somK9Utenlandsopphold()
             )
-        )
+        ).medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
 
     private fun byggK9OpptjeningAktivitet() = OpptjeningAktivitet().apply {

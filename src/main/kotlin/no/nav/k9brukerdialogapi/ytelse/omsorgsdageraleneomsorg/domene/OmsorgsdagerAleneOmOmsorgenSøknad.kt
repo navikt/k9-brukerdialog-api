@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.felles.type.SøknadId
@@ -55,6 +56,7 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
             .medMottattDato(mottatt)
             .medVersjon(Versjon.of("1.0.0"))
             .medSøker(søker.somK9Søker())
+            .medKildesystem(Kildesystem.SØKNADSDIALOG)
             .medYtelse(
                 OmsorgspengerAleneOmsorg(
                     barn.first().somK9Barn(),

@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.Periode
@@ -127,6 +128,7 @@ class PilsSøknad(
             .medSøknadId(SøknadId(søknadId))
             .medSøker(søker.somK9Søker())
             .medYtelse(ytelse)
+            .medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
 
     private fun byggK9Uttak() = Uttak().medPerioder(mapOf(Periode(fraOgMed, tilOgMed) to UttakPeriodeInfo(SYV_OG_EN_HALV_TIME)))

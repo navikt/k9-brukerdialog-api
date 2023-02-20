@@ -263,7 +263,8 @@ class K9FormatTest {
               "journalposter": [],
               "begrunnelseForInnsending": {
                 "tekst": null
-              }
+              },
+              "kildesystem": "søknadsdialog"
             }
         """.trimIndent()
 

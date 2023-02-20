@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9.søknad.SøknadValidator
+import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.SøknadId
@@ -88,7 +89,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
                 bosteder.somK9Bosteder(),
                 opphold.somK9Utenlandsopphold()
             )
-        )
+        ).medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
 
     override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerUtbetalingSøknadValidator()

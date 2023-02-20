@@ -239,7 +239,8 @@ class PilsSøknadTest {
               "journalposter": [],
               "begrunnelseForInnsending": {
                 "tekst": null
-              }
+              },
+              "kildesystem": "søknadsdialog"
             }
         """.trimIndent()
         JSONAssert.assertEquals(forventet, gyldigPILSSøknad(pleierDuDenSykeHjemme = false).somK9Format(søker).somJson(), true)
