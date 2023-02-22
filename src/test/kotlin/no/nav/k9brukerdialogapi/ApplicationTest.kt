@@ -148,28 +148,6 @@ class ApplicationTest {
     inner class SøkerOppslagTest {
 
         @Test
-        fun `Hente søker med loginservice token som cookie`() {
-            requestAndAssert(
-                engine = engine,
-                logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = OPPSLAG_URL + SØKER_URL,
-                expectedCode = HttpStatusCode.OK,
-                expectedResponse = """
-                    {
-                        "etternavn": "MORSEN",
-                        "fornavn": "MOR",
-                        "mellomnavn": "HEISANN",
-                        "fødselsnummer": "$gyldigFødselsnummerA",
-                        "aktørId": "12345",
-                        "fødselsdato": "1999-11-02"
-                    }
-                """.trimIndent(),
-                cookie = cookie
-            )
-        }
-
-        @Test
         fun `Hente søker med tokenX token som authorization header`() {
             requestAndAssert(
                 engine = engine,
@@ -189,47 +167,6 @@ class ApplicationTest {
             """.trimIndent(),
                 jwtToken = tokenXToken
             )
-        }
-
-        @Test
-        fun `Hente søker som ikke er myndig`() {
-            wireMockServer.stubK9OppslagSoker(
-                statusCode = HttpStatusCode.fromValue(451),
-                responseBody =
-                //language=json
-                """
-            {
-                "detail": "Policy decision: DENY - Reason: (NAV-bruker er i live AND NAV-bruker er ikke myndig)",
-                "instance": "/meg",
-                "type": "/problem-details/tilgangskontroll-feil",
-                "title": "tilgangskontroll-feil",
-                "status": 451
-            }
-            """.trimIndent()
-            )
-
-            requestAndAssert(
-                engine = engine,
-                logger = logger,
-                httpMethod = HttpMethod.Get,
-                path = OPPSLAG_URL + SØKER_URL,
-                expectedCode = HttpStatusCode.fromValue(451),
-                cookie = mockOAuth2Server.issueToken(issuerId = "login-service", fnr = ikkeMyndigFnr, somCookie = true),
-                expectedResponse =
-                //language=json
-                """
-            {
-                "type": "/problem-details/tilgangskontroll-feil",
-                "title": "tilgangskontroll-feil",
-                "status": 451,
-                "instance": "/oppslag/soker",
-                "detail": "Tilgang nektet."
-            }
-            """.trimIndent(),
-            )
-
-            wireMockServer.stubK9OppslagSoker() // reset til default mapping
-
         }
 
         @Test
@@ -475,7 +412,7 @@ class ApplicationTest {
                 httpMethod = HttpMethod.Get,
                 path = OPPSLAG_URL + BARN_URL,
                 expectedCode = HttpStatusCode.OK,
-                cookie = cookie,
+                jwtToken = tokenXToken,
                 //language=json
                 expectedResponse = """
             {
@@ -519,11 +456,7 @@ class ApplicationTest {
                         "barn": []
                     }
                     """.trimIndent(),
-                cookie = mockOAuth2Server.issueToken(
-                    issuerId = "login-service",
-                    fnr = "26104500284",
-                    somCookie = true
-                )
+                jwtToken = tokenXToken,
             )
             wireMockServer.stubK9OppslagBarn()
         }
@@ -616,7 +549,7 @@ class ApplicationTest {
           "frilansoppdrag": null
         }
         """.trimIndent(),
-                cookie = cookie
+                jwtToken = tokenXToken,
             )
         }
     }
@@ -630,24 +563,24 @@ class ApplicationTest {
             with(engine) {
                 // LASTER OPP VEDLEGG
                 val url = handleRequestUploadImage(
-                    cookie = cookie,
+                    jwtToken = tokenXToken,
                     vedlegg = jpeg
                 )
                 val path = Url(url).fullPath
                 // HENTER OPPLASTET VEDLEGG
                 handleRequest(HttpMethod.Get, path) {
-                    addHeader("Cookie", cookie.toString())
+                   addHeader("Authorization", "Bearer $tokenXToken")
                 }.apply {
                     assertEquals(HttpStatusCode.OK, response.status())
                     assertTrue(Arrays.equals(jpeg, response.byteContent))
                     // SLETTER OPPLASTET VEDLEGG
                     handleRequest(HttpMethod.Delete, path) {
-                        addHeader("Cookie", cookie.toString())
+                       addHeader("Authorization", "Bearer $tokenXToken")
                     }.apply {
                         assertEquals(HttpStatusCode.NoContent, response.status())
                         // VERIFISERER AT VEDLEGG ER SLETTET
                         handleRequest(HttpMethod.Get, path) {
-                            addHeader("Cookie", cookie.toString())
+                           addHeader("Authorization", "Bearer $tokenXToken")
                         }.apply {
                             assertEquals(HttpStatusCode.NotFound, response.status())
                         }
@@ -659,7 +592,7 @@ class ApplicationTest {
         @Test
         fun `Test opplasting av ikke støttet vedleggformat`() {
             engine.handleRequestUploadImage(
-                cookie = cookie,
+                jwtToken = tokenXToken,
                 vedlegg = "jwkset.json".fromResources().readBytes(),
                 contentType = APPLICATION_JSON,
                 fileName = "jwkset.json",
@@ -670,7 +603,7 @@ class ApplicationTest {
         @Test
         fun `Test opplasting av for stort vedlegg`() {
             engine.handleRequestUploadImage(
-                cookie = cookie,
+                jwtToken = tokenXToken,
                 vedlegg = ByteArray(10 * 1024 * 1024 + 10),
                 contentType = IMAGE_PNG,
                 fileName = "big_picture.png",
@@ -684,7 +617,7 @@ class ApplicationTest {
                 val vedleggSomIkkeFinnes = URL("http://localhost:8085/vedlegg/finnesIkke.jpg")
                 val vedleggSomFinnes = URL(
                     handleRequestUploadImage(
-                        cookie = cookie,
+                        jwtToken = tokenXToken,
                         vedlegg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
                     )
                 )
