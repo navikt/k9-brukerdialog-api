@@ -71,12 +71,6 @@ class ApplicationTest {
         private val gyldigFodselsnummerB = "02119970079"
         private const val ikkeMyndigFnr = "12125012345"
 
-        private val cookie = mockOAuth2Server.issueToken(
-            issuerId = "login-service",
-            fnr = gyldigFødselsnummerA,
-            somCookie = true
-        )
-
         private val tokenXToken = mockOAuth2Server.issueToken(fnr = gyldigFødselsnummerA)
 
         fun getConfig(): ApplicationConfig {
@@ -456,7 +450,7 @@ class ApplicationTest {
                         "barn": []
                     }
                     """.trimIndent(),
-                jwtToken = tokenXToken,
+                jwtToken = mockOAuth2Server.issueToken(fnr = "26104500284"),
             )
             wireMockServer.stubK9OppslagBarn()
         }
