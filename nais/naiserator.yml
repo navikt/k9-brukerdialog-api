@@ -60,6 +60,7 @@ spec:
         - application: pleiepenger-i-livets-sluttfase-soknad
         - application: pleiepengesoknad
         - application: sif-innsyn
+        - application: endringsmelding-pleiepenger
     outbound:
       rules:
         - application: k9-mellomlagring
@@ -76,6 +77,5 @@ spec:
       value: "{{this}}"
   {{/each}}
   envFrom:
-    - configmap: loginservice-idporten
     - secret: {{app}}
 

@@ -52,11 +52,6 @@ object TestConfiguration {
             map["no.nav.security.jwt.issuers.0.discoveryurl"] = "${mockOAuth2Server.wellKnownUrl("tokendings")}"
             map["no.nav.security.jwt.issuers.0.accepted_audience"] = "dev-gcp:dusseldorf:k9-brukerdialog-api"
 
-            map["no.nav.security.jwt.issuers.1.issuer_name"] = "login-service"
-            map["no.nav.security.jwt.issuers.1.discoveryurl"] = "${mockOAuth2Server.wellKnownUrl("login-service")}"
-            map["no.nav.security.jwt.issuers.1.accepted_audience"] = "dev-gcp:dusseldorf:k9-brukerdialog-api"
-            map["no.nav.security.jwt.issuers.1.cookie_name"] = "selvbetjening-idtoken"
-
             // scopes
             map["nav.auth.scopes.k9-mellomlagring-client-id"] = "k9-mellomlagring-client-id/.default"
             map["nav.auth.scopes.k9_mellomlagring_tokenx_audience"] = "dev-gcp:dusseldorf:k9-mellomlagring"
