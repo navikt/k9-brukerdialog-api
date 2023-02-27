@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.2.2-3189f02"
+val dusseldorfKtorVersion = "3.2.2.3-64ddf9c"
 val ktorVersion = "2.2.2"
 val kafkaTestcontainerVersion = "1.17.6"
 val kafkaVersion = "3.4.0"
