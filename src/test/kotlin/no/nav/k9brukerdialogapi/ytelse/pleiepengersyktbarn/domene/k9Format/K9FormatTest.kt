@@ -131,6 +131,7 @@ class K9FormatTest {
                   "harBekreftetOpplysninger": true,
                   "samtidigHjemme": null,
                   "harMedsøker": null,
+                  "soknadDialogCommitSha": null,
                   "bekrefterPeriodeOver8Uker": null
                 },
                 "infoFraPunsj": null,

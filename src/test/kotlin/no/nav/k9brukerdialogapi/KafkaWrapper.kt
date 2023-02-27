@@ -121,7 +121,8 @@ private class OutgoingDeserialiser : Deserializer<TopicEntry<JSONObject>> {
         return TopicEntry(
             metadata = Metadata(
                 version = metadata.getInt("version"),
-                correlationId = metadata.getString("correlationId")
+                correlationId = metadata.getString("correlationId"),
+                soknadDialogCommitSha = "abc-123"
             ),
             data = json.getJSONObject("data")
         )

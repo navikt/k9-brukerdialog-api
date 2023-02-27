@@ -2,15 +2,15 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.2.2-2f78c17"
+val dusseldorfKtorVersion = "3.2.2.2-3189f02"
 val ktorVersion = "2.2.2"
 val kafkaTestcontainerVersion = "1.17.6"
-val kafkaVersion = "3.3.1"
-val k9FormatVersion = "8.0.6"
+val kafkaVersion = "3.4.0"
+val k9FormatVersion = "8.0.7"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.0.2"
 val mockOauth2ServerVersion = "0.5.7"
-val junitVersion = "5.9.1"
+val junitVersion = "5.9.2"
 val jakartaElVersion = "3.0.4"
 
 plugins {
@@ -65,7 +65,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation("org.skyscreamer:jsonassert:1.5.1")
-    testImplementation("io.mockk:mockk:1.13.3")
+    testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 

@@ -196,6 +196,7 @@ data class Søknad(
         harBekreftetOpplysninger,
         null,
         null,
+        null,
         null
     )
 

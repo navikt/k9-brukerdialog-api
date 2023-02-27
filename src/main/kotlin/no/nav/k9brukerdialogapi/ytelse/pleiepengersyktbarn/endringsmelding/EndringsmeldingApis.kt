@@ -8,11 +8,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import no.nav.helse.dusseldorf.ktor.auth.IdTokenProvider
-import no.nav.k9.søknad.Søknad
-import no.nav.k9.søknad.felles.Versjon
-import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
-import no.nav.k9.søknad.felles.type.Språk
-import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarn
 import no.nav.k9brukerdialogapi.ENDRINGSMELDING_URL
 import no.nav.k9brukerdialogapi.INNSENDING_URL
@@ -25,14 +20,9 @@ import no.nav.k9brukerdialogapi.innsyn.InnsynService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
-import no.nav.k9brukerdialogapi.oppslag.søker.Søker
-import no.nav.k9brukerdialogapi.oppslag.søker.SøkerService
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.endringsmelding.domene.Endringsmelding
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.endringsmelding.domene.KomplettEndringsmelding
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.*
-import no.nav.k9.søknad.felles.personopplysninger.Søker as K9Søker
 
 private val logger: Logger = LoggerFactory.getLogger("no.nav.helse.endringsmelding.EndringsmeldingApisKt")
 

@@ -90,7 +90,8 @@ internal class InnsendingServiceTest{
                     ),
                     metadata = Metadata(
                         version = 1,
-                        correlationId = "123"
+                        correlationId = "123",
+                        soknadDialogCommitSha = "abc-123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "ikke-authorized-client", audience = "omsorgsdager-melding-api")),
                     callId = CallId("abc")
@@ -132,7 +133,8 @@ internal class InnsendingServiceTest{
                     ),
                     metadata = Metadata(
                         version = 1,
-                        correlationId = "123"
+                        correlationId = "123",
+                        soknadDialogCommitSha = "abc-123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "ikke-authorized-client", audience = "omsorgsdager-melding-api")),
                     callId = CallId("abc")
@@ -190,7 +192,8 @@ internal class InnsendingServiceTest{
                     ),
                     metadata = Metadata(
                         version = 1,
-                        correlationId = "123"
+                        correlationId = "123",
+                        soknadDialogCommitSha = "abc-123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "omsorgsdager-melding-api")),
                     callId = CallId("abc")
@@ -251,7 +254,8 @@ internal class InnsendingServiceTest{
                     ),
                     metadata = Metadata(
                         version = 1,
-                        correlationId = "123"
+                        correlationId = "123",
+                        soknadDialogCommitSha = "abc-123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
                     callId = CallId("abc")
@@ -281,7 +285,8 @@ internal class InnsendingServiceTest{
                     innsending = gyldigPILSSøknad(listOf()),
                     metadata = Metadata(
                         version = 1,
-                        correlationId = "123"
+                        correlationId = "123",
+                        soknadDialogCommitSha = "abc-123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
                     callId = CallId("abc")
@@ -314,7 +319,8 @@ internal class InnsendingServiceTest{
                     ),
                     metadata = Metadata(
                         version = 1,
-                        correlationId = "123"
+                        correlationId = "123",
+                        soknadDialogCommitSha = "abc-123"
                     ),
                     idToken = IdToken(Azure.V2_0.generateJwt(clientId = "authorized-client", audience = "k9-brukerdialog-api")),
                     callId = CallId("abc")
