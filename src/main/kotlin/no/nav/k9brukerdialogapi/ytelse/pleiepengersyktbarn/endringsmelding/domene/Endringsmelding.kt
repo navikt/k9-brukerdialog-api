@@ -25,6 +25,7 @@ data class Endringsmelding(
     val søknadId: String = UUID.randomUUID().toString(),
     val mottattDato: ZonedDateTime? = ZonedDateTime.now(UTC),
     val språk: String,
+    var pleietrengendeNavn: String? = null,
     var gyldigeEndringsPerioder: List<Periode>? = null,
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean,
@@ -64,6 +65,7 @@ data class Endringsmelding(
     ): KomplettInnsending = KomplettEndringsmelding(
         søknadId = søknadId,
         søker = søker,
+        pleietrengendeNavn = pleietrengendeNavn!!,
         harBekreftetOpplysninger = harBekreftetOpplysninger,
         harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
         k9Format = k9Format as Søknad
@@ -77,4 +79,5 @@ data class KomplettEndringsmelding(
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean,
     val k9Format: Søknad,
+    val pleietrengendeNavn: String,
 ) : KomplettInnsending

@@ -9,8 +9,13 @@ data class BarnOppslag(
     val mellomnavn: String?,
     val etternavn: String,
     val aktørId: String,
-    @JsonIgnore var identitetsnummer: String
-)
+    @JsonIgnore var identitetsnummer: String,
+) {
+    fun navn(): String = when (mellomnavn) {
+        null -> "$fornavn $etternavn"
+        else -> "$fornavn $mellomnavn $etternavn"
+    }
+}
 
 data class BarnOppslagRespons(
     val identitetsnummer: String,
@@ -18,7 +23,7 @@ data class BarnOppslagRespons(
     val fornavn: String,
     val mellomnavn: String? = null,
     val etternavn: String,
-    val aktør_id: String
+    val aktør_id: String,
 ) {
     fun tilBarnOppslag() = BarnOppslag(
         identitetsnummer = identitetsnummer,

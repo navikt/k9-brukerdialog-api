@@ -50,6 +50,7 @@ fun Route.endringsmeldingApis(
 
             val ytelse = søknadsopplysninger.søknad.getYtelse<PleiepengerSyktBarn>()
             endringsmelding.gyldigeEndringsPerioder = ytelse.søknadsperiodeList
+            endringsmelding.pleietrengendeNavn = barn.navn()
 
             innsendingService.registrer(endringsmelding, callId, idToken, metadata)
             innsendingCache.put(cacheKey)
