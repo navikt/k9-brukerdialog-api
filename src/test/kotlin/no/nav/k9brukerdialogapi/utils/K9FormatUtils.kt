@@ -57,7 +57,7 @@ fun defaultK9FormatPSB(
     Søker(NorskIdentitetsnummer.of("12345678910")),
     PleiepengerSyktBarn()
         .medSøknadsperiode(søknadsPeriode)
-        .medSøknadInfo(DataBruktTilUtledning(true, true, true, true, true))
+        .medSøknadInfo(DataBruktTilUtledning(true, true, true, true, null, true))
         .medBarn(Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of("02119970079")))
         .medArbeidstid(arbeidstid)
 )
