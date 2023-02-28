@@ -58,6 +58,7 @@ class KafkaProducer(
 
     private fun sendMeldingTilTopic(metadata: Metadata, komplettSøknadSomJson: JSONObject, ytelse: Ytelse) {
         val topic = hentTopicForYtelse(ytelse)
+        logger.info("DEBUG metadata: {}", metadata)
         val recordMetaData = produsent.send(
             ProducerRecord(
                 topic,
