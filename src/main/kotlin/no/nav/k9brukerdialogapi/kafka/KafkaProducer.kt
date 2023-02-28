@@ -59,15 +59,16 @@ class KafkaProducer(
     private fun sendMeldingTilTopic(metadata: Metadata, komplettSøknadSomJson: JSONObject, ytelse: Ytelse) {
         val topic = hentTopicForYtelse(ytelse)
         logger.info("DEBUG metadata: {}", metadata)
-        val recordMetaData = produsent.send(
-            ProducerRecord(
-                topic,
-                komplettSøknadSomJson.getString("søknadId"),
-                TopicEntry(
-                    metadata = metadata,
-                    data = komplettSøknadSomJson
-                )
+        val producerRecord = ProducerRecord(
+            topic,
+            komplettSøknadSomJson.getString("søknadId"),
+            TopicEntry(
+                metadata = metadata,
+                data = komplettSøknadSomJson
             )
+        )
+        val recordMetaData = produsent.send(
+            producerRecord
         ).get()
         logger.info(formaterStatuslogging(ytelse, komplettSøknadSomJson.getString("søknadId"), "sendes til topic ${topic} med offset '${recordMetaData.offset()}' til partition '${recordMetaData.partition()}'"))
     }
