@@ -61,6 +61,7 @@ internal class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {
         val metadata = JSONObject()
             .put("correlationId", data.metadata.correlationId)
             .put("version", data.metadata.version)
+            .put("soknadDialogCommitSha", data.metadata.soknadDialogCommitSha)
 
         return JSONObject()
             .put("metadata", metadata)

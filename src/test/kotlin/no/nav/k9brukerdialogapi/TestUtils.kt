@@ -72,6 +72,7 @@ class TestUtils {
                     addHeader(HttpHeaders.Accept, APPLICATION_JSON)
                     addHeader(HttpHeaders.XCorrelationId, UUID.randomUUID().toString())
                     addHeader("X-K9-Brukerdialog", "søknads-dialog")
+                    addHeader("X-Brukerdialog-Git-Sha", "abc-123")
                     if (requestEntity != null) addHeader(HttpHeaders.ContentType, APPLICATION_JSON)
                     if (requestEntity != null) setBody(requestEntity)
                 }.apply {
