@@ -30,6 +30,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Opptjen
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Periode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.SelvstendigNæringsdrivende
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Språk
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.StønadGodtgjørelse
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandskNæring
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Utenlandsopphold
@@ -270,6 +271,11 @@ internal class SerDesTest {
                     "arbeidsuker": null
                   }
                 }
+              },
+              "stønadGodtgjørelse": {
+                "mottarStønadGodtgjørelse": true,
+                "startdato": "2018-01-01",
+                "sluttdato": "2018-02-01"
               },
               "nattevåk": {
                 "harNattevåk": true,
@@ -532,6 +538,11 @@ internal class SerDesTest {
                     }
                   }
                 },
+              "stønadGodtgjørelse": {
+                "mottarStønadGodtgjørelse": true,
+                "startdato": "2018-01-01",
+                "sluttdato": "2018-02-01"
+              },
               "nattevåk": {
                 "harNattevåk": true,
                 "tilleggsinformasjon": "Har nattevåk"
@@ -748,6 +759,11 @@ internal class SerDesTest {
                         arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
                     )
                 )
+            ),
+            stønadGodtgjørelse = StønadGodtgjørelse(
+                mottarStønadGodtgjørelse = true,
+                startdato = LocalDate.parse("2018-01-01"),
+                sluttdato = LocalDate.parse("2018-02-01")
             ),
             harVærtEllerErVernepliktig = true,
             k9FormatSøknad = null

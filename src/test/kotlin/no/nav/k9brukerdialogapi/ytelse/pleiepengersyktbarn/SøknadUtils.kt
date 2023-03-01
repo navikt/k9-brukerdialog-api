@@ -25,6 +25,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Opptjen
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Periode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.SelvstendigNæringsdrivende
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Språk
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.StønadGodtgjørelse
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Utenlandsopphold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
@@ -243,6 +244,11 @@ class SøknadUtils {
                         arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
                     )
                 )
+            ),
+            stønadGodtgjørelse = StønadGodtgjørelse(
+                mottarStønadGodtgjørelse = true,
+                startdato = LocalDate.parse("2018-01-01"),
+                sluttdato = LocalDate.parse("2018-02-01")
             ),
             opptjeningIUtlandet = listOf(
                 OpptjeningIUtlandet(
