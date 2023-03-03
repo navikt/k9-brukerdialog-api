@@ -9,7 +9,7 @@
   "kafka-pool": "nav-dev",
   "ingresses": [
     "https://k9-brukerdialog-api.dev.nav.no",
-    "https://k9-brukerdialog-api.ekstern.dev.nav.no"
+    "https://k9-brukerdialog-api.intern.dev.nav.no"
   ],
   "externalHosts": [
     "api-gw-q1.oera.no",
