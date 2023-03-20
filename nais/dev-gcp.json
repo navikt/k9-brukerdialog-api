@@ -11,8 +11,6 @@
     "https://k9-brukerdialog-api.dev.nav.no"
   ],
   "externalHosts": [
-    "api-gw-q1.oera.no",
-    "oauth2.googleapis.com",
     "login.microsoftonline.com"
   ],
   "env": {
