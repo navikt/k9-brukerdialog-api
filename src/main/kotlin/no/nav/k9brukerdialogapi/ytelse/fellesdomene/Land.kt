@@ -10,7 +10,9 @@ data class Land(
 ) {
     companion object{
         // ISO 3166 alpha-3 landkode - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
-        internal val LANDKODER: MutableSet<String> = Locale.getISOCountries(Locale.IsoCountryCode.PART1_ALPHA3)
+        internal val LANDKODER: MutableSet<String> = Locale.getISOCountries(Locale.IsoCountryCode.PART1_ALPHA3).toMutableSet().also {
+            it.add("XXK") // Kode for "Kosovo
+        }
     }
 
     override fun equals(other: Any?) = this === other || other is Land && this.equals(other)
