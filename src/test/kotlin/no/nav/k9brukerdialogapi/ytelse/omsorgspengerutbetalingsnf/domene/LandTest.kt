@@ -3,13 +3,23 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.Test
 
 class LandTest {
 
-    @Test
-    fun `Gyldig Land gir ingen valideringsfeil`() {
-        Land(landkode = "NLD", landnavn = "Nederland").valider("land").verifiserIngenFeil()
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "NLD", "SWE", "DNK", "NOR", "FIN", "ISL", "GBR", "FRA", "DEU", "BEL", "LUX", "ITA", "ESP",
+            "PRT", "GRC", "CYP", "MLT", "AUT", "HUN", "SVK", "SVN", "CZE", "POL", "EST", "LVA", "LTU", "BLR", "UKR", "MDA",
+            "ROU", "BGR", "HRV", "BIH", "SRB", "MNE", "ALB", "MKD", "GEO", "ARM", "AZE", "TUR", "CYP", "GIB", "GGY", "JEY",
+            "IMN", "LIE", "CHE", "XXK"
+        ]
+    )
+    fun `Gyldig Land gir ingen valideringsfeil`(landkode: String) {
+        Land(landkode = landkode, landnavn = "Uviktig").valider("land").verifiserIngenFeil()
     }
 
     @Test
