@@ -6,10 +6,6 @@ metadata:
     team: {{team}}
   namespace: {{namespace}}
 spec:
-  receivers:
-    slack:
-      channel: {{slack-channel}}
-      prependText: "{{{slack-notify-type}}}"
   groups:
     - name: {{app}}-alerts
       rules:
