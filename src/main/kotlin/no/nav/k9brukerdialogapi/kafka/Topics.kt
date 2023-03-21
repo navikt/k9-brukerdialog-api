@@ -34,7 +34,7 @@ object Topics {
         "dusseldorf.privat-omsorgspengerutbetalingsoknad-arbeidstaker-mottatt-v2"
     const val OMSORGSPENGER_UTBETALING_SNF_TOPIC = "dusseldorf.privat-omsorgspengerutbetalingsoknad-mottatt-v2"
     const val PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC = "dusseldorf.privat-pp-livets-sluttfase-mottatt"
-    const val PLEIEPENGER_SYKT_BARN_TOPIC = "dusseldorf.privat-pleiepengesoknad-mottatt-v2"
+    const val PLEIEPENGER_SYKT_BARN_TOPIC = "dusseldorf.pp-sykt-barn-soknad-mottatt"
     const val MOTTATT_ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN_TOPIC =
         "dusseldorf.privat-endringsmelding-pleiepenger-sykt-barn-mottatt"
 }
