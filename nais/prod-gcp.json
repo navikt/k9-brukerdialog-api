@@ -8,7 +8,8 @@
   "tenant": "nav.no",
   "kafka-pool": "nav-prod",
   "ingresses": [
-    "https://k9-brukerdialog-api.nav.no"
+    "https://k9-brukerdialog-api.nav.no",
+    "https://k9-brukerdialog-api.intern.nav.no"
   ],
   "externalHosts": [
     "login.microsoftonline.com"
