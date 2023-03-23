@@ -15,7 +15,7 @@
     "login.microsoftonline.com"
   ],
   "env": {
-    "CORS_ADDRESSES": "https://omsorgspengesoknad.dev.nav.no,https://ekstra-omsorgsdager-andre-forelder-ikke-tilsyn.dev.nav.no,https://k9-ettersending-soknad.dev.nav.no,https://omsorgsdager-aleneomsorg-dialog.dev.nav.no,https://omsorgspengerutbetaling-arbeidstaker-soknad.dev.nav.no,https://omsorgspengerutbetaling-soknad.dev.nav.no,https://pleiepenger-i-livets-sluttfase.dev.nav.no,https://pleiepengesoknad.dev.nav.no,https://endringsmelding-pleiepenger.dev.nav.no",
+    "CORS_ADDRESSES": "https://omsorgspengesoknad.dev.nav.no,https://ekstra-omsorgsdager-andre-forelder-ikke-tilsyn.dev.nav.no,https://k9-ettersending-soknad.dev.nav.no,https://omsorgsdager-aleneomsorg-dialog.dev.nav.no,https://omsorgspengerutbetaling-arbeidstaker-soknad.dev.nav.no,https://omsorgspengerutbetaling-soknad.intern.dev.nav.no,https://pleiepenger-i-livets-sluttfase.dev.nav.no,https://pleiepengesoknad.dev.nav.no,https://endringsmelding-pleiepenger.dev.nav.no",
     "COOKIE_NAME": "selvbetjening-idtoken",
     "K9_OPPSLAG_REGISTER_URL": "http://k9-selvbetjening-oppslag",
     "SIF_INNSYN_API_URL": "http://sif-innsyn-api",
