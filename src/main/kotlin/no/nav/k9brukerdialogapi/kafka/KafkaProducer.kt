@@ -6,11 +6,14 @@ import no.nav.helse.dusseldorf.ktor.health.Result
 import no.nav.helse.dusseldorf.ktor.health.UnHealthy
 import no.nav.k9brukerdialogapi.general.formaterStatuslogging
 import no.nav.k9brukerdialogapi.kafka.Topics.ETTERSENDING_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.MOTTATT_ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSDAGER_ALENEOMSORG_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTBETALING_SNF_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
+import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_SYKT_BARN_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -79,6 +82,10 @@ class KafkaProducer(
             produsent.partitionsFor(OMSORGSDAGER_ALENEOMSORG_TOPIC)
             produsent.partitionsFor(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC)
             produsent.partitionsFor(OMSORGSPENGER_UTBETALING_SNF_TOPIC)
+            produsent.partitionsFor(PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC)
+            produsent.partitionsFor(MOTTATT_ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN_TOPIC)
+            produsent.partitionsFor(PLEIEPENGER_SYKT_BARN_TOPIC)
+
             Healthy(NAME, "Tilkobling til Kafka OK!")
         } catch (cause: Throwable) {
             logger.error("Feil ved tilkobling til Kafka", cause)
