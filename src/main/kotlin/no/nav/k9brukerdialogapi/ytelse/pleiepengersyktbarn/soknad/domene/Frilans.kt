@@ -31,6 +31,36 @@ data class Frilans(
             kreverIkkeNull(startdato, "$felt.startdao kan ikke være null dersom harInntektSomFrilanser=true")
             kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom harInntektSomFrilanser=true")
         }
+        if (frilansTyper != null) {
+            krever(frilansTyper.isNotEmpty(), "$felt.frilansTyper kan ikke være tom dersom den er ulik null")
+
+            if (frilansTyper.isNotEmpty()) {
+                val harStyreverv = frilansTyper.contains(FrilansType.STYREVERV)
+
+                if (harStyreverv) {
+                    if (misterHonorarer == true) {
+                        kreverIkkeNull(
+                            misterHonorarerIPerioden,
+                            "$felt.misterHonorarerIPerioden kan ikke være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er true"
+                        )
+                    } else {
+                        krever(
+                            misterHonorarerIPerioden == null,
+                            "$felt.misterHonorarerIPerioden må være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er false"
+                        )
+                    }
+                } else {
+                    krever(
+                        misterHonorarer == null,
+                        "$felt.misterHonorarer må være null dersom frilansTyper ikke inneholder STYREVERV"
+                    )
+                    krever(
+                        misterHonorarerIPerioden == null,
+                        "$felt.misterHonorarerIPerioden må være null dersom frilansTyper ikke inneholder STYREVERV"
+                    )
+                }
+            }
+        }
     }
 
     fun k9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
