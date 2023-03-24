@@ -15,6 +15,9 @@ data class Frilans(
     val startdato: LocalDate? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
+    val misterHonorarer: Boolean? = null,
+    val misterHonorarerIPerioden: HonorarerIPerioden? = null,
+    val frilansTyper: List<FrilansType>? = null,
     val jobberFortsattSomFrilans: Boolean? = null,
     val arbeidsforhold: Arbeidsforhold? = null
 ) {
@@ -84,4 +87,13 @@ data class Frilans(
     private fun sluttetISøknadsperioden(tilOgMed: LocalDate?) = (sluttdato != null && sluttdato.isBefore(tilOgMed))
     private fun startetISøknadsperioden(fraOgMed: LocalDate) = startdato?.isAfter(fraOgMed) ?: false
     private fun startetOgSluttetISøknadsperioden(fraOgMed: LocalDate, tilOgMed: LocalDate?) = sluttetISøknadsperioden(tilOgMed) && startetISøknadsperioden(fraOgMed)
+}
+
+enum class FrilansType {
+    FRILANS, STYREVERV
+}
+
+enum class HonorarerIPerioden {
+    MISTER_ALLE_HONORARER,
+    MISTER_DELER_AV_HONORARER,
 }

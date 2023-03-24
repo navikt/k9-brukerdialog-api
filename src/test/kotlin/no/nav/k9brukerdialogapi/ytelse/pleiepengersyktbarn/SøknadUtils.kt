@@ -16,6 +16,8 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Enkeltd
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Ferieuttak
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FerieuttakIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.HonorarerIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Medlemskap
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Nattevåk
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Omsorgstilbud
@@ -235,6 +237,9 @@ class SøknadUtils {
                 jobberFortsattSomFrilans = true,
                 harInntektSomFrilanser = true,
                 startdato = LocalDate.parse("2018-01-01"),
+                misterHonorarer = true,
+                misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER,
+                frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
                 arbeidsforhold = Arbeidsforhold(
                     normalarbeidstid = NormalArbeidstid(
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)

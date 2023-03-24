@@ -22,6 +22,8 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Ferieuttak
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FerieuttakIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.HonorarerIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.KomplettSøknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Medlemskap
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Nattevåk
@@ -259,6 +261,9 @@ internal class SerDesTest {
                 "sluttdato": null,
                 "jobberFortsattSomFrilans": true,
                 "harInntektSomFrilanser": true,
+                "frilansTyper": ["FRILANS", "STYREVERV"],
+                "misterHonorarer": true,
+                "misterHonorarerIPerioden": "MISTER_DELER_AV_HONORARER",
                 "arbeidsforhold": {
                   "normalarbeidstid": {
                     "timerPerUkeISnitt": "PT37H30M"
@@ -525,6 +530,9 @@ internal class SerDesTest {
                   "harInntektSomFrilanser": true,
                   "startdato": "2018-01-01",
                   "sluttdato": null,
+                  "frilansTyper": ["FRILANS", "STYREVERV"],
+                  "misterHonorarer": true,
+                  "misterHonorarerIPerioden": "MISTER_DELER_AV_HONORARER",
                   "arbeidsforhold": {
                     "normalarbeidstid": {
                       "timerPerUkeISnitt": "PT37H30M"
@@ -750,6 +758,9 @@ internal class SerDesTest {
                 harInntektSomFrilanser = true,
                 jobberFortsattSomFrilans = true,
                 startdato = LocalDate.parse("2018-01-01"),
+                misterHonorarer = true,
+                misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER,
+                frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
                 arbeidsforhold = Arbeidsforhold(
                     normalarbeidstid = NormalArbeidstid(
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
