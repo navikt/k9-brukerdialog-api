@@ -42,7 +42,7 @@ class ArbeidsforholdTest {
                 prosentAvNormalt = null
             )
         )
-            .valider("test")
+            .valider("test", true)
             .verifiserFeil(1, listOf("test.arbeidIPeriode.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT"))
     }
 

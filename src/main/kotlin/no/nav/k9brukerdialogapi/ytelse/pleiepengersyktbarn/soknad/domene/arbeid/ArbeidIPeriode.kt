@@ -9,13 +9,16 @@ import java.time.Duration
 
 data class ArbeidIPeriode(
     val type: ArbeidIPeriodeType,
-    val arbeiderIPerioden: ArbeiderIPeriodenSvar,
+    val arbeiderIPerioden: ArbeiderIPeriodenSvar? = null,
     val prosentAvNormalt: Double? = null,
     val timerPerUke: Duration? = null,
     val arbeidsuker: List<ArbeidsUke>? = null
 ) {
 
-    internal fun valider(felt: String) = mutableListOf<String>().apply {
+    internal fun valider(felt: String, harKunStyreverv: Boolean = false) = mutableListOf<String>().apply {
+        if (!harKunStyreverv) {
+            kreverIkkeNull(arbeiderIPerioden, "$felt.arbeiderIPerioden må være satt dersom søker har annen arbeid enn kun styreverv.")
+        }
         when(type){
             ARBEIDER_PROSENT_AV_NORMALT -> kreverIkkeNull(prosentAvNormalt, "$felt.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT")
             ARBEIDER_TIMER_I_SNITT_PER_UKE -> kreverIkkeNull(timerPerUke, "$felt.timerPerUke må være satt dersom type=ARBEIDER_TIMER_I_SNITT_PER_UKE")

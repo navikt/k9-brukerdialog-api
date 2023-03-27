@@ -23,7 +23,8 @@ data class Frilans(
 ) {
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
-        if(arbeidsforhold != null) addAll(arbeidsforhold.valider("$felt.arbeidsforhold"))
+        val harKunStyreverv = frilansTyper?.all { it == FrilansType.STYREVERV} ?: false
+        if(arbeidsforhold != null) addAll(arbeidsforhold.valider(felt = "$felt.arbeidsforhold", harKunStyreverv = harKunStyreverv))
         if(sluttdato != null && startdato != null){
             krever(startdato.erFørEllerLik(sluttdato), "$felt.sluttdato kan ikke være etter startdato")
         }

@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid
 
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
+import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
@@ -41,5 +42,14 @@ class ArbeidIPeriodeTest {
             arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
             arbeidsuker = null
         ).valider("test").verifiserFeil(1, listOf("test.arbeidsuker må være satt dersom type=ARBEIDER_ULIKE_UKER_TIMER"))
+    }
+
+    @Test
+    fun `Skal ikke gi feil dersom arbeiderIPerioden er null, og søker har kun styreverv`() {
+        ArbeidIPeriode(
+            type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
+            arbeiderIPerioden = null,
+            arbeidsuker = null
+        ).valider("test", harKunStyreverv = true).verifiserIngenFeil()
     }
 }
