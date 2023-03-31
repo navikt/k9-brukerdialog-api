@@ -2,22 +2,22 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.2.2-3189f02"
-val ktorVersion = "2.2.2"
+val dusseldorfKtorVersion = "3.2.2.4-f09ec97"
+val ktorVersion = "2.2.4"
 val kafkaTestcontainerVersion = "1.17.6"
 val kafkaVersion = "3.4.0"
-val k9FormatVersion = "8.0.7"
+val k9FormatVersion = "8.0.8"
 val fuelVersion = "2.3.1"
-val tokenSupportVersion = "3.0.2"
-val mockOauth2ServerVersion = "0.5.7"
+val tokenSupportVersion = "3.0.9"
+val mockOauth2ServerVersion = "0.5.8"
 val junitVersion = "5.9.2"
 val jakartaElVersion = "3.0.4"
 
 plugins {
-    kotlin("jvm") version "1.8.0"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.sonarqube") version "3.5.0.2730"
-    jacoco
+    kotlin("jvm") version "1.8.10"
+    id("org.sonarqube") version "4.0.0.2929"
+    id("jacoco")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 dependencies {
@@ -110,7 +110,7 @@ tasks.withType<ShadowJar> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "7.5.1"
+    gradleVersion = "8.0.2"
 }
 
 tasks.withType<Test> {
