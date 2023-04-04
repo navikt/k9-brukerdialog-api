@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
 val dusseldorfKtorVersion = "3.2.2.4-f09ec97"
 val ktorVersion = "2.2.4"
-val kafkaTestcontainerVersion = "1.17.6"
+val kafkaTestcontainerVersion = "1.18.0"
 val kafkaVersion = "3.4.0"
 val k9FormatVersion = "8.0.8"
 val fuelVersion = "2.3.1"
