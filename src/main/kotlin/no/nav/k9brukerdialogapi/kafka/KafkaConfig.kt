@@ -20,7 +20,8 @@ class KafkaConfig(
 ) {
     private val producer = Properties().apply {
         put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-        put("transactional.id", transactionalId)
+        put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionalId)
+        put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true")
         medTrustStore(trustStore)
         medKeyStore(keyStore)
     }
