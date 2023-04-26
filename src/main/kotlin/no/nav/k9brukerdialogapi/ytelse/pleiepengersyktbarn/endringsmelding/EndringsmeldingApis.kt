@@ -21,6 +21,7 @@ import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.endringsmelding.domene.Endringsmelding
+import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -54,6 +55,7 @@ fun Route.endringsmeldingApis(
 
             innsendingService.registrer(endringsmelding, callId, idToken, metadata)
             innsendingCache.put(cacheKey)
+            registrerMottattSøknad(endringsmelding.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }
     }
