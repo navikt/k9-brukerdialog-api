@@ -28,10 +28,21 @@ data class Frilans(
         if(sluttdato != null && startdato != null){
             krever(startdato.erFørEllerLik(sluttdato), "$felt.sluttdato kan ikke være etter startdato")
         }
-        if(harInntektSomFrilanser){
-            kreverIkkeNull(startdato, "$felt.startdao kan ikke være null dersom harInntektSomFrilanser=true")
-            kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom harInntektSomFrilanser=true")
+
+        if(harInntektSomFrilanser) {
+            kreverIkkeNull(frilansTyper, "$felt.frilansTyper kan ikke være null dersom søker har inntekt som frilanser")
         }
+
+        if (harKunStyreverv && misterHonorarer == true) {
+            kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom søker kun har styreverv og mister honorarer")
+            kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom søker kun har styreverv og mister honorarer")
+        }
+
+        if (!frilansTyper.isNullOrEmpty() && frilansTyper.contains(FrilansType.FRILANS)) {
+            kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom søker har frilans")
+            kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom frilanstyper inneholder FRILANS")
+        }
+
         if (frilansTyper != null) {
             krever(frilansTyper.isNotEmpty(), "$felt.frilansTyper kan ikke være tom dersom den er ulik null")
 
