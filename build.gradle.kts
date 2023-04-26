@@ -10,7 +10,7 @@ val k9FormatVersion = "8.0.8"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.0.11"
 val mockOauth2ServerVersion = "0.5.8"
-val junitVersion = "5.9.2"
+val junitVersion = "5.9.3"
 val jakartaElVersion = "3.0.4"
 
 plugins {
