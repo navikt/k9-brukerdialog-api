@@ -20,7 +20,7 @@ data class Arbeidsgiver(
     }
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
-        if(arbeidsforhold != null) addAll(arbeidsforhold.valider("$felt.arbeidsforhold"))
+        if(arbeidsforhold != null) addAll(arbeidsforhold.valider("$felt.arbeidsforhold", true))
         krever(organisasjonsnummer.erGyldigOrganisasjonsnummer(), "$felt.organisasjonsnummer må være gyldig")
         krever(!navn.isNullOrBlank(), "$felt.navn kan ikke være tomt eller kun whitespace")
     }

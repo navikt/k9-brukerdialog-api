@@ -17,7 +17,7 @@ data class SelvstendigNæringsdrivende(
             kreverIkkeNull(arbeidsforhold, "$felt.arbeidsforhold må være satt når man har harInntektSomSelvstendig.")
             kreverIkkeNull(virksomhet, "$felt.virksomhet må være satt når man har harInntektSomSelvstendig.")
         }
-        arbeidsforhold?.let { addAll(it.valider("$felt.arbeidsforhold")) }
+        arbeidsforhold?.let { addAll(it.valider("$felt.arbeidsforhold", true)) }
         virksomhet?.let { addAll(it.valider("$felt.virksomhet")) }
     }
 

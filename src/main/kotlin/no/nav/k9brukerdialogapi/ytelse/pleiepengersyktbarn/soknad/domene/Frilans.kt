@@ -15,18 +15,52 @@ data class Frilans(
     val startdato: LocalDate? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
+    val misterHonorarer: Boolean? = null,
+    val misterHonorarerIPerioden: HonorarerIPerioden? = null,
+    val frilansTyper: List<FrilansType>? = null,
     val jobberFortsattSomFrilans: Boolean? = null,
     val arbeidsforhold: Arbeidsforhold? = null
 ) {
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
-        if(arbeidsforhold != null) addAll(arbeidsforhold.valider("$felt.arbeidsforhold"))
+        val harKunStyreverv = frilansTyper?.all { it == FrilansType.STYREVERV} ?: false
+        if(arbeidsforhold != null) addAll(arbeidsforhold.valider(felt = "$felt.arbeidsforhold", harKunStyreverv = harKunStyreverv))
         if(sluttdato != null && startdato != null){
             krever(startdato.erFørEllerLik(sluttdato), "$felt.sluttdato kan ikke være etter startdato")
         }
         if(harInntektSomFrilanser){
             kreverIkkeNull(startdato, "$felt.startdao kan ikke være null dersom harInntektSomFrilanser=true")
             kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom harInntektSomFrilanser=true")
+        }
+        if (frilansTyper != null) {
+            krever(frilansTyper.isNotEmpty(), "$felt.frilansTyper kan ikke være tom dersom den er ulik null")
+
+            if (frilansTyper.isNotEmpty()) {
+                val harStyreverv = frilansTyper.contains(FrilansType.STYREVERV)
+
+                if (harStyreverv) {
+                    if (misterHonorarer == true) {
+                        kreverIkkeNull(
+                            misterHonorarerIPerioden,
+                            "$felt.misterHonorarerIPerioden kan ikke være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er true"
+                        )
+                    } else {
+                        krever(
+                            misterHonorarerIPerioden == null,
+                            "$felt.misterHonorarerIPerioden må være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er false"
+                        )
+                    }
+                } else {
+                    krever(
+                        misterHonorarer == null,
+                        "$felt.misterHonorarer må være null dersom frilansTyper ikke inneholder STYREVERV"
+                    )
+                    krever(
+                        misterHonorarerIPerioden == null,
+                        "$felt.misterHonorarerIPerioden må være null dersom frilansTyper ikke inneholder STYREVERV"
+                    )
+                }
+            }
         }
     }
 
@@ -84,4 +118,13 @@ data class Frilans(
     private fun sluttetISøknadsperioden(tilOgMed: LocalDate?) = (sluttdato != null && sluttdato.isBefore(tilOgMed))
     private fun startetISøknadsperioden(fraOgMed: LocalDate) = startdato?.isAfter(fraOgMed) ?: false
     private fun startetOgSluttetISøknadsperioden(fraOgMed: LocalDate, tilOgMed: LocalDate?) = sluttetISøknadsperioden(tilOgMed) && startetISøknadsperioden(fraOgMed)
+}
+
+enum class FrilansType {
+    FRILANS, STYREVERV
+}
+
+enum class HonorarerIPerioden {
+    MISTER_ALLE_HONORARER,
+    MISTER_DELER_AV_HONORARER,
 }
