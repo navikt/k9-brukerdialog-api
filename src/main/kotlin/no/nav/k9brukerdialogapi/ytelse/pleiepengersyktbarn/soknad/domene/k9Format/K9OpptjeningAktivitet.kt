@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Form
 import no.nav.k9.søknad.felles.opptjening.Frilanser
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.DAGER_PER_UKE
 
@@ -13,7 +14,9 @@ internal fun Søknad.byggK9OpptjeningAktivitet(): OpptjeningAktivitet {
     if (selvstendigNæringsdrivende.harInntektSomSelvstendig) {
         opptjeningAktivitet.medSelvstendigNæringsdrivende(selvstendigNæringsdrivende.tilK9SelvstendigNæringsdrivende())
     }
-    if (frilans.harInntektSomFrilanser) {
+
+    val erFrilanserMedInntenkt = frilans.harInntektSomFrilanser && !frilans.frilansTyper.isNullOrEmpty() && frilans.frilansTyper.contains(FrilansType.FRILANS)
+    if (erFrilanserMedInntenkt) {
         opptjeningAktivitet.medFrilanser(frilans.tilK9Frilanser())
     }
     return opptjeningAktivitet

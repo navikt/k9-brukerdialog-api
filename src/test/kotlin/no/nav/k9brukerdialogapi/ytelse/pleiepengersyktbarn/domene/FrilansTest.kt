@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
@@ -12,10 +13,15 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.HonorarerIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Format.byggK9OpptjeningAktivitet
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Format.tilK9Frilanser
 import java.time.Duration
 import java.time.LocalDate
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class FrilansTest {
 
@@ -345,5 +351,40 @@ class FrilansTest {
                 "test.misterHonorarer må være null dersom frilansTyper ikke inneholder STYREVERV",
                 "test.misterHonorarerIPerioden må være null dersom frilansTyper ikke inneholder STYREVERV",
             ))
+    }
+    @Test
+    fun `Frilans som kun har styreverv skal ikke mappes til k9Format`(){
+        val frilans = Frilans(
+            startdato = null,
+            sluttdato = null,
+            harInntektSomFrilanser = true,
+            frilansTyper = listOf(FrilansType.STYREVERV),
+            misterHonorarer = true,
+            misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
+        )
+
+        val opptjeningAktivitet = SøknadUtils.defaultSøknad(UUID.randomUUID().toString())
+            .copy(frilans = frilans)
+            .byggK9OpptjeningAktivitet()
+
+        assertNull(opptjeningAktivitet.frilanser)
+    }
+    @Test
+    fun `Frilans som også har styreverv skal mappes til k9Format`(){
+        val frilans = Frilans(
+            startdato = LocalDate.now(),
+            sluttdato = null,
+            harInntektSomFrilanser = true,
+            jobberFortsattSomFrilans = true,
+            frilansTyper = listOf(FrilansType.STYREVERV, FrilansType.FRILANS),
+            misterHonorarer = true,
+            misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
+        )
+
+        val opptjeningAktivitet = SøknadUtils.defaultSøknad(UUID.randomUUID().toString())
+            .copy(frilans = frilans)
+            .byggK9OpptjeningAktivitet()
+
+        assertNotNull(opptjeningAktivitet.frilanser)
     }
 }
