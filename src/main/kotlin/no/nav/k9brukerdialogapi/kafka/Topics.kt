@@ -31,7 +31,7 @@ object Topics {
     const val ETTERSENDING_TOPIC = "dusseldorf.ettersendelse-mottatt"
     const val OMSORGSDAGER_ALENEOMSORG_TOPIC = "dusseldorf.privat-omsorgsdager-aleneomsorg-mottatt"
     const val OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC = "dusseldorf.omp-utbetaling-at-soknad-mottatt"
-    const val OMSORGSPENGER_UTBETALING_SNF_TOPIC = "dusseldorf.privat-omsorgspengerutbetalingsoknad-mottatt-v2"
+    const val OMSORGSPENGER_UTBETALING_SNF_TOPIC = "dusseldorf.omp-utbetaling-snf-soknad-mottatt"
     const val PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC = "dusseldorf.pp-i-livets-sluttfase-soknad-mottatt"
     const val PLEIEPENGER_SYKT_BARN_TOPIC = "dusseldorf.pp-sykt-barn-soknad-mottatt"
     const val MOTTATT_ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN_TOPIC =
