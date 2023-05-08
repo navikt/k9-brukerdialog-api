@@ -29,7 +29,7 @@ object Topics {
     const val OMSORGSPENGER_UTVIDET_RETT_TOPIC = "dusseldorf.omp-utv-kronisk-sykt-barn-soknad-mottatt"
     const val OMSORGSPENGER_MIDLERTIDIG_ALENE_TOPIC = "dusseldorf.omp-ma-soknad-mottatt"
     const val ETTERSENDING_TOPIC = "dusseldorf.ettersendelse-mottatt"
-    const val OMSORGSDAGER_ALENEOMSORG_TOPIC = "dusseldorf.privat-omsorgsdager-aleneomsorg-mottatt"
+    const val OMSORGSDAGER_ALENEOMSORG_TOPIC = "dusseldorf.omp-ao-soknad-mottatt"
     const val OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_TOPIC = "dusseldorf.omp-utbetaling-at-soknad-mottatt"
     const val OMSORGSPENGER_UTBETALING_SNF_TOPIC = "dusseldorf.omp-utbetaling-snf-soknad-mottatt"
     const val PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC = "dusseldorf.pp-i-livets-sluttfase-soknad-mottatt"
