@@ -52,7 +52,8 @@ class PilsSøknad(
     private val harVærtEllerErVernepliktig: Boolean? = null,
     private val pleierDuDenSykeHjemme: Boolean? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
-    private val harBekreftetOpplysninger: Boolean
+    private val harBekreftetOpplysninger: Boolean,
+    private val flereSokere: FlereSokereSvar? = null
 ): Innsending {
     companion object{
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
@@ -82,6 +83,7 @@ class PilsSøknad(
             pleierDuDenSykeHjemme = pleierDuDenSykeHjemme,
             harForståttRettigheterOgPlikter = harForståttRettigheterOgPlikter,
             harBekreftetOpplysninger = harBekreftetOpplysninger,
+            flereSokere = flereSokere,
             k9Format = k9Format as no.nav.k9.søknad.Søknad
         )
     }
