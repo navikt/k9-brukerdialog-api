@@ -28,6 +28,7 @@ class PilsKomplettSøknad(
     private val pleierDuDenSykeHjemme: Boolean? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
+    private val flereSokere: FlereSokereSvar? = null,
     private val k9Format: K9Søknad
 ): KomplettInnsending {
     override fun equals(other: Any?) = this === other || other is PilsKomplettSøknad && this.equals(other)
