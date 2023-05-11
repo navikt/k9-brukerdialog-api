@@ -15,6 +15,7 @@ jobs:
   analyze:
     name: Analyze
     uses: navikt/sif-gha-workflows/.github/workflows/codeql-analysis.yml@main
+    secrets: inherit
     with:
       language: "java"
       package-command: './gradlew shadowjar'
