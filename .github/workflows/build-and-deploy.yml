@@ -11,6 +11,7 @@ on:
       - '.github/workflows/apply-alerts.yml'
       - '.github/workflows/snyk.yml'
       - '.github/workflows/dependency-submission.yml'
+      - '.github/workflows/codeql.yml'
     branches:
 
 env:
