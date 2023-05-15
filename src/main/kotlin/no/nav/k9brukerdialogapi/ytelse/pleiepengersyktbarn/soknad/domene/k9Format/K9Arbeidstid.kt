@@ -14,7 +14,7 @@ internal fun Søknad.byggK9Arbeidstid(): Arbeidstid = Arbeidstid().apply {
 
     medFrilanserArbeidstid(frilans.k9ArbeidstidInfo(fraOgMed, tilOgMed))
     selvstendigNæringsdrivende.arbeidsforhold?.let {
-        medSelvstendigNæringsdrivendeArbeidstidInfo(selvstendigNæringsdrivende.somK9ArbeidstidInfo(fraOgMed, tilOgMed))
+        medSelvstendigNæringsdrivendeArbeidstidInfo(selvstendigNæringsdrivende.k9ArbeidstidInfo(fraOgMed, tilOgMed))
     }
 }
 

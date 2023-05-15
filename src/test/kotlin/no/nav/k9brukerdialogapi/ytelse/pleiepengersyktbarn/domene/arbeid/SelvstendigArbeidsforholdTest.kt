@@ -10,12 +10,12 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class SelvstendigArbeidsforholdTest {
 
@@ -26,6 +26,15 @@ class SelvstendigArbeidsforholdTest {
         val onsdag = tirsdag.plusDays(1)
         val torsdag = onsdag.plusDays(1)
         val fredag = torsdag.plusDays(1)
+        val arbeidsforholdMedNormaltidSomSnittPerUke = Arbeidsforhold(
+            normalarbeidstid = NormalArbeidstid(
+                timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
+            ),
+            arbeidIPeriode = ArbeidIPeriode(
+                type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
+                arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+            )
+        )
     }
 
     @Test
@@ -59,18 +68,173 @@ class SelvstendigArbeidsforholdTest {
             )
         )
 
-        val k9ArbeidstidInfo = selvstendig.somK9ArbeidstidInfo(mandag, fredag)
-        val perioder = k9ArbeidstidInfo!!.perioder
+        val k9ArbeidstidInfo = selvstendig.k9ArbeidstidInfo(mandag, fredag)
+        val perioder = k9ArbeidstidInfo.perioder
         assertEquals(1, perioder.size)
         assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
         assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
     }
 
     @Test
-    fun `Selvstendig næringsdrivende uten arbeidsforhold, forventer null`(){
+    fun `Selvstendig næringsdrivende uten arbeidsforhold, forventer at hele søknadsperioden fylles med 0-0 timer`(){
         val selvstendig = SelvstendigNæringsdrivende(
             harInntektSomSelvstendig = false
         )
-        assertNull(selvstendig.somK9ArbeidstidInfo(mandag, fredag))
+        val k9ArbeidstidInfo = selvstendig.k9ArbeidstidInfo(mandag, fredag)
+        val perioder = k9ArbeidstidInfo.perioder
+        assertEquals(1, perioder.size)
+        assertEquals(NULL_TIMER, perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(NULL_TIMER, perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
+    }
+
+    @Test
+    fun `Selvstendig næringsdrivende som sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`() {
+        val selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+            harInntektSomSelvstendig = true,
+            virksomhet = Virksomhet(
+                fraOgMed = mandag,
+                tilOgMed = torsdag,
+                næringstype = Næringstype.JORDBRUK_SKOGBRUK,
+                navnPåVirksomheten = "TullOgTøys",
+                organisasjonsnummer = "101010",
+                erNyoppstartet = true
+            ),
+            arbeidsforhold = arbeidsforholdMedNormaltidSomSnittPerUke
+        )
+
+        val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
+        val perioder = k9ArbeidstidInfo.perioder
+        assertEquals(2, perioder.size)
+
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, torsdag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, torsdag)]!!.faktiskArbeidTimerPerDag)
+
+        assertEquals(NULL_TIMER, perioder[Periode(fredag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(NULL_TIMER, perioder[Periode(fredag, fredag)]!!.faktiskArbeidTimerPerDag)
+    }
+
+    @Test
+    fun `Selvstendig næringsdrivende som sluttet første dag i søknadsperioden med normaltid oppgitt som snittPerUke`() {
+        val selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+            harInntektSomSelvstendig = true,
+            virksomhet = Virksomhet(
+                fraOgMed = mandag,
+                tilOgMed = mandag,
+                næringstype = Næringstype.JORDBRUK_SKOGBRUK,
+                navnPåVirksomheten = "TullOgTøys",
+                organisasjonsnummer = "101010",
+                erNyoppstartet = true
+            ),
+            arbeidsforhold = arbeidsforholdMedNormaltidSomSnittPerUke
+        )
+
+        val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
+        val perioder = k9ArbeidstidInfo.perioder
+        assertEquals(2, perioder.size)
+
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, mandag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, mandag)]!!.faktiskArbeidTimerPerDag)
+
+        assertEquals(NULL_TIMER, perioder[Periode(tirsdag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(NULL_TIMER, perioder[Periode(tirsdag, fredag)]!!.faktiskArbeidTimerPerDag)
+    }
+
+    @Test
+    fun `Selvstendig næringsdrivende som sluttet siste dag i søknadsperioden med normaltid oppgitt som snittPerUke`() {
+        val selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+            harInntektSomSelvstendig = true,
+            virksomhet = Virksomhet(
+                fraOgMed = mandag,
+                tilOgMed = fredag,
+                næringstype = Næringstype.JORDBRUK_SKOGBRUK,
+                navnPåVirksomheten = "TullOgTøys",
+                organisasjonsnummer = "101010",
+                erNyoppstartet = true
+            ),
+            arbeidsforhold = arbeidsforholdMedNormaltidSomSnittPerUke
+        )
+
+        val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
+        val perioder = k9ArbeidstidInfo.perioder
+        assertEquals(1, perioder.size)
+
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
+    }
+
+    @Test
+    fun `Selvstendig næringsdrivende som sluttet etter søknadsperioden med normaltid oppgitt som snittPerUke`() {
+        val selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+            harInntektSomSelvstendig = true,
+            virksomhet = Virksomhet(
+                fraOgMed = mandag,
+                tilOgMed = fredag,
+                næringstype = Næringstype.JORDBRUK_SKOGBRUK,
+                navnPåVirksomheten = "TullOgTøys",
+                organisasjonsnummer = "101010",
+                erNyoppstartet = true
+            ),
+            arbeidsforhold = arbeidsforholdMedNormaltidSomSnittPerUke
+        )
+
+        val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, torsdag)
+        val perioder = k9ArbeidstidInfo.perioder
+        assertEquals(1, perioder.size)
+
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, torsdag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, torsdag)]!!.faktiskArbeidTimerPerDag)
+    }
+
+    @Test
+    fun `Selvstendig næringsdrivende som startet etter søknadsperioden startet med normaltid oppgitt som snittPerUke`() {
+        val selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+            harInntektSomSelvstendig = true,
+            virksomhet = Virksomhet(
+                fraOgMed = onsdag,
+                næringstype = Næringstype.JORDBRUK_SKOGBRUK,
+                navnPåVirksomheten = "TullOgTøys",
+                organisasjonsnummer = "101010",
+                erNyoppstartet = true
+            ),
+            arbeidsforhold = arbeidsforholdMedNormaltidSomSnittPerUke
+        )
+
+        val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
+        val perioder = k9ArbeidstidInfo.perioder
+        assertEquals(2, perioder.size)
+
+        assertEquals(NULL_TIMER, perioder[Periode(mandag, tirsdag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(NULL_TIMER, perioder[Periode(mandag, tirsdag)]!!.faktiskArbeidTimerPerDag)
+
+        assertEquals(syvOgEnHalvTime, perioder[Periode(onsdag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(onsdag, fredag)]!!.faktiskArbeidTimerPerDag)
+    }
+
+    @Test
+    fun `Selvstendig næringsdrivende  som startet og sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`() {
+        val selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
+            harInntektSomSelvstendig = true,
+            virksomhet = Virksomhet(
+                fraOgMed = tirsdag,
+                tilOgMed = torsdag,
+                næringstype = Næringstype.JORDBRUK_SKOGBRUK,
+                navnPåVirksomheten = "TullOgTøys",
+                organisasjonsnummer = "101010",
+                erNyoppstartet = true
+            ),
+            arbeidsforhold = arbeidsforholdMedNormaltidSomSnittPerUke
+        )
+
+        val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
+        val perioder = k9ArbeidstidInfo.perioder
+        assertEquals(3, perioder.size)
+
+        listOf(mandag, fredag).forEach { dag ->
+            assertEquals(NULL_TIMER, perioder[Periode(dag, dag)]!!.jobberNormaltTimerPerDag)
+            assertEquals(NULL_TIMER, perioder[Periode(dag, dag)]!!.faktiskArbeidTimerPerDag)
+        }
+
+        assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, torsdag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, torsdag)]!!.faktiskArbeidTimerPerDag)
     }
 }
