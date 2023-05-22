@@ -138,7 +138,7 @@ data class Arbeidsforhold(
         return arbeidstidInfo
     }
 
-    private fun ArbeidsUke.periodeUtenHelg() = periode.fraOgMed.datesUntil(periode.tilOgMed.plusDays(1))
+    private fun ArbeidsUke.periodeUtenHelg() = periode.fraOgMed.datesUntil(periode.tilOgMed)
         .filter { it.ikkeErHelg() }
         .toList()
         .toSortedSet()
