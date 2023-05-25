@@ -2,15 +2,15 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "3.2.3.0-f979367"
+val dusseldorfKtorVersion = "3.2.3.0-9c2889c"
 val ktorVersion = "2.3.0"
-val kafkaTestcontainerVersion = "1.18.0"
+val kafkaTestcontainerVersion = "1.18.1"
 val kafkaVersion = "3.4.0"
-val k9FormatVersion = "8.0.9"
+val k9FormatVersion = "8.1.0"
 val fuelVersion = "2.3.1"
-val tokenSupportVersion = "3.0.11"
+val tokenSupportVersion = "3.1.0"
 val mockOauth2ServerVersion = "0.5.8"
-val junitVersion = "5.9.2"
+val junitVersion = "5.9.3"
 val jakartaElVersion = "3.0.4"
 
 plugins {
