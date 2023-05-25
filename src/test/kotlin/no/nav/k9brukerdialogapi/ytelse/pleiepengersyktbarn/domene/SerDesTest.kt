@@ -42,6 +42,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 import java.time.Duration
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -51,8 +52,9 @@ internal class SerDesTest {
     @Test
     fun `Test reserialisering av request`() {
         val søknadId = UUID.randomUUID().toString()
-        val søknad = SøknadUtils.defaultSøknad(søknadId)
-        val søknadJson = søknadJson(søknadId)
+        val mottatt = ZonedDateTime.parse("2021-01-10T03:04:05.000000006Z")
+        val søknad = SøknadUtils.defaultSøknad(søknadId).copy(mottatt = mottatt)
+        val søknadJson = søknadJson(søknadId, mottatt)
         JSONAssert.assertEquals(søknadJson, søknad.somJson(), true)
         assertEquals(søknad, objectMapper.readValue(søknadJson))
     }
@@ -60,8 +62,9 @@ internal class SerDesTest {
     @Test
     fun `Test serialisering av request til mottak`() {
         val søknadId = UUID.randomUUID().toString()
-        val komplettSøknad = komplettSøknad(søknadId)
-        val komplettSøknadJson = komplettSøknadJson(søknadId)
+        val mottatt = ZonedDateTime.parse("2021-01-10T03:04:05.000000006Z")
+        val komplettSøknad = komplettSøknad(søknadId).copy(mottatt = mottatt)
+        val komplettSøknadJson = komplettSøknadJson(søknadId, mottatt)
 
         JSONAssert.assertEquals(komplettSøknadJson, komplettSøknad.somJson(), true)
         assertEquals(komplettSøknad, objectMapper.readValue(komplettSøknadJson))
@@ -70,14 +73,14 @@ internal class SerDesTest {
     private companion object {
         fun Søknad.somJson(): String = objectMapper.writeValueAsString(this)
         fun KomplettSøknad.somJson(): String = objectMapper.writeValueAsString(this)
-        fun søknadJson(søknadsId: String) =
+        fun søknadJson(søknadsId: String, mottatt: ZonedDateTime) =
             //language=json
             """
             {
               "newVersion": null,
               "apiDataVersjon": "1.0.0",
               "søknadId" : "$søknadsId",
-              "mottatt" : "2021-01-10T03:04:05.000000006Z",
+              "mottatt" : "$mottatt",
               "språk": "nb",
               "barn": {
                 "fødselsnummer": "03028104560",
@@ -316,11 +319,11 @@ internal class SerDesTest {
             }
         """.trimIndent()
 
-        fun komplettSøknadJson(søknadsId: String) =
+        fun komplettSøknadJson(søknadsId: String, mottatt: ZonedDateTime) =
             //language=json
             """
         {
-              "mottatt": "2020-05-05T00:00:00Z",
+              "mottatt": "$mottatt",
               "språk": "nb",
               "apiDataVersjon": "1.0.0",
               "søknadId" : "$søknadsId",

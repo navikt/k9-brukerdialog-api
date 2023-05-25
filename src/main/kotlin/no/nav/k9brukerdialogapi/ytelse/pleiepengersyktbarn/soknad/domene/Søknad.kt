@@ -199,6 +199,7 @@ data class Søknad(
         null,
         null,
         null,
+        null,
         null
     )
 
