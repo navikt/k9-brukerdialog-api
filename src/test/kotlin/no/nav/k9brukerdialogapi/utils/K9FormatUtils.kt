@@ -8,8 +8,11 @@ import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.type.Organisasjonsnummer
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.psb.v1.ArbeiderIPeriodenSvar
 import no.nav.k9.søknad.ytelse.psb.v1.DataBruktTilUtledning
+import no.nav.k9.søknad.ytelse.psb.v1.NormalArbeidstid
 import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarn
+import no.nav.k9.søknad.ytelse.psb.v1.UkjentArbeidsforhold
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstaker
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
@@ -57,7 +60,14 @@ fun defaultK9FormatPSB(
     Søker(NorskIdentitetsnummer.of("12345678910")),
     PleiepengerSyktBarn()
         .medSøknadsperiode(søknadsPeriode)
-        .medSøknadInfo(DataBruktTilUtledning(true, true, true, true, null, true))
+        .medSøknadInfo(DataBruktTilUtledning(true, true, true, true, null, true,
+            listOf(
+                UkjentArbeidsforhold()
+                    .medOrganisasjonsnummer(Organisasjonsnummer.of("926032925"))
+                    .medErAnsatt(true)
+                    .medArbeiderIPerioden(ArbeiderIPeriodenSvar.HELT_FRAVÆR)
+                    .medNormalarbeidstid(NormalArbeidstid().medTimerPerUke(Duration.ofHours(8)))
+            )))
         .medBarn(Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of("02119970079")))
         .medArbeidstid(arbeidstid)
 )

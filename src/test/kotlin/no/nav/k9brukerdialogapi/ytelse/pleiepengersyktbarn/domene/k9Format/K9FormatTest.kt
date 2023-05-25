@@ -132,7 +132,8 @@ class K9FormatTest {
                   "samtidigHjemme": null,
                   "harMedsøker": null,
                   "soknadDialogCommitSha": null,
-                  "bekrefterPeriodeOver8Uker": null
+                  "bekrefterPeriodeOver8Uker": null,
+                  "ukjenteArbeidsforhold": null
                 },
                 "infoFraPunsj": null,
                 "bosteder": {
