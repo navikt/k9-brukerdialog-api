@@ -15,7 +15,7 @@ data class Arbeidsgiver(
     val arbeidsforhold: Arbeidsforhold? = null
 ) {
     fun k9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
-        return arbeidsforhold?.tilK9ArbeidstidInfo(fraOgMed, tilOgMed)
+        return arbeidsforhold?.tilK9ArbeidstidInfo(fraOgMed, tilOgMed, true)
             ?: k9ArbeidstidInfoMedNullTimer(fraOgMed, tilOgMed)
     }
 
