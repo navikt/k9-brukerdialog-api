@@ -24,7 +24,6 @@ class OmsorgspengerutbetalingSnfKomplettSøknad(
     private val harDekketTiFørsteDagerSelv: Boolean? = null,
     private val bekreftelser: Bekreftelser,
     private val utbetalingsperioder: List<Utbetalingsperiode>,
-    @Deprecated("Kan fjernes etter lansering") private val andreUtbetalinger: List<AndreUtbetalinger>? = null,
     private val erArbeidstakerOgså: Boolean,
     private val barn: List<Barn>,
     private val frilans: Frilans? = null,
