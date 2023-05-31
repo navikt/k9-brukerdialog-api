@@ -84,6 +84,7 @@ class ArbeidsgiverTest {
             {
               "norskIdentitetsnummer": null,
               "organisasjonsnummer": "991346066",
+              "organisasjonsnavn": "Fiskeriet AS",
               "arbeidstidInfo": {
                 "perioder": {
                   "2022-01-01/2022-01-10": {

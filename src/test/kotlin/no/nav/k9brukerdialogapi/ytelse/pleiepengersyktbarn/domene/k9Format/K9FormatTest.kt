@@ -210,6 +210,7 @@ class K9FormatTest {
                     {
                       "norskIdentitetsnummer": null,
                       "organisasjonsnummer": "917755736",
+                      "organisasjonsnavn": "Org",
                       "arbeidstidInfo": {
                          "perioder": {
                            "2021-01-01/2021-01-10": {
@@ -222,6 +223,7 @@ class K9FormatTest {
                     {
                       "norskIdentitetsnummer": null,
                       "organisasjonsnummer": "977155436",
+                      "organisasjonsnavn": "JobberIkkeHerLenger",
                       "arbeidstidInfo": {
                         "perioder": {
                           "2021-01-01/2021-01-10": {
