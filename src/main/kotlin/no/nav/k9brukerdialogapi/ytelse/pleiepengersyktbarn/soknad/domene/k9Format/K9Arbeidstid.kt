@@ -25,6 +25,7 @@ fun List<Arbeidsgiver>.tilK9Arbeidstaker(
     return this.map {
             Arbeidstaker()
                 .medOrganisasjonsnummer(Organisasjonsnummer.of(it.organisasjonsnummer))
+                .medOrganisasjonsnavn(it.navn)
                 .medArbeidstidInfo(it.k9ArbeidstidInfo(fraOgMed, tilOgMed))
     }
 }

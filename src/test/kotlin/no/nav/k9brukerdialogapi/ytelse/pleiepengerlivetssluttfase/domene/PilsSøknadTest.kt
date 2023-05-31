@@ -168,6 +168,7 @@ class PilsSøknadTest {
                     {
                       "norskIdentitetsnummer": null,
                       "organisasjonsnummer": "917755736",
+                      "organisasjonsnavn": "Org",
                       "arbeidstidInfo": {
                         "perioder": {
                           "2021-01-01/2021-01-01": {
@@ -200,6 +201,7 @@ class PilsSøknadTest {
                     {
                       "norskIdentitetsnummer": null,
                       "organisasjonsnummer": "977155436",
+                      "organisasjonsnavn": "JobberIkkeHerLenger",
                       "arbeidstidInfo": {
                         "perioder": {
                           "2021-01-01/2021-01-10": {

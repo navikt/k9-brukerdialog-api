@@ -30,6 +30,7 @@ class Arbeidsgiver(
 
     fun somK9Arbeidstaker(fraOgMed: LocalDate, tilOgMed: LocalDate) = Arbeidstaker().apply {
         medOrganisasjonsnummer(Organisasjonsnummer.of(this@Arbeidsgiver.organisasjonsnummer))
+        medOrganisasjonsnavn(navn)
         medArbeidstidInfo(arbeidsforhold.somK9ArbeidstidInfo(fraOgMed, tilOgMed))
     }
 

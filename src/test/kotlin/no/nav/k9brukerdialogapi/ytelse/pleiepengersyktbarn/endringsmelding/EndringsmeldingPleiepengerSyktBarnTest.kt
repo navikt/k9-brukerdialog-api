@@ -140,6 +140,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                   "arbeidstakerList": [
                     {
                       "organisasjonsnummer": "917755736",
+                      "organisasjonsnavn": "Something Fishy AS",
                       "arbeidstidInfo": {
                         "perioder": {
                           "2021-01-01/2021-01-01": {
@@ -218,6 +219,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                    "arbeidstakerList": [
                      {
                        "organisasjonsnummer": "917755736",
+                       "organisasjonsnavn": "Something Fishy AS",
                        "norskIdentitetsnummer": null,
                        "arbeidstidInfo": {
                          "perioder": {
@@ -295,6 +297,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                       "arbeidstakerList": [
                         {
                           "organisasjonsnummer": "917755736",
+                          "organisasjonsnavn": "",
                           "arbeidstidInfo": {
                             "perioder": {
                               "2021-01-07/2021-01-07": {
@@ -365,6 +368,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                                 Arbeidstaker()
                                     .medNorskIdentitetsnummer(NorskIdentitetsnummer.of("12345678910"))
                                     .medOrganisasjonsnummer(Organisasjonsnummer.of("926032925"))
+                                    .medOrganisasjonsnavn("Something Fishy AS")
                                     .medArbeidstidInfo(
                                         ArbeidstidInfo().medPerioder(
                                             mapOf(
