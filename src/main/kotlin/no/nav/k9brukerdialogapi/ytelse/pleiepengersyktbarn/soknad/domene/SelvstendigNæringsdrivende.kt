@@ -30,9 +30,9 @@ data class SelvstendigNæringsdrivende(
     fun k9ArbeidstidInfo(søknadsperiodeStartdato: LocalDate, søknadsperiodeSluttdato: LocalDate): ArbeidstidInfo {
         return when{
             (arbeidsforhold == null) -> Arbeidsforhold.k9ArbeidstidInfoMedNullTimer(søknadsperiodeStartdato, søknadsperiodeSluttdato)
-            startetOgSluttetISøknadsperioden(søknadsperiodeStartdato, søknadsperiodeSluttdato) -> k9ArbeidstidInfoMedStartOgSluttIPerioden(søknadsperiodeStartdato, søknadsperiodeSluttdato)
+            startetOgSluttetISøknadsperioden(søknadsperiodeStartdato, søknadsperiodeSluttdato) -> k9ArbeidstidInfoMedStartOgSluttIPerioden(søknadsperiodeSluttdato)
             sluttetISøknadsperioden(søknadsperiodeSluttdato) -> k9ArbeidstidInfoMedSluttIPerioden(søknadsperiodeStartdato, søknadsperiodeSluttdato)
-            startetISøknadsperioden(søknadsperiodeStartdato) -> k9ArbeidstidInfoMedStartIPerioden(søknadsperiodeStartdato, søknadsperiodeSluttdato)
+            startetISøknadsperioden(søknadsperiodeStartdato) -> k9ArbeidstidInfoMedStartIPerioden(søknadsperiodeSluttdato)
             else -> arbeidsforhold.tilK9ArbeidstidInfo(søknadsperiodeStartdato, søknadsperiodeSluttdato)
         }
     }
@@ -45,12 +45,7 @@ data class SelvstendigNæringsdrivende(
     }
     private fun k9ArbeidstidInfoMedSluttIPerioden(søknadperiodeStartdato: LocalDate, søknadsperiodeSluttdato: LocalDate): ArbeidstidInfo {
         requireNotNull(arbeidsforhold)
-        requireNotNull(virksomhet)
-        val virksomhetSluttdato = virksomhet.tilOgMed
-        requireNotNull(virksomhetSluttdato)
-        val arbeidsforholdFørSlutt = arbeidsforhold.tilK9ArbeidstidInfo(søknadperiodeStartdato, virksomhetSluttdato)
-        val arbeidsforholdEtterSlutt = Arbeidsforhold.k9ArbeidstidInfoMedNullTimer(virksomhetSluttdato.plusDays(1), søknadsperiodeSluttdato)
-        return slåSammenArbeidstidInfo(arbeidsforholdFørSlutt, arbeidsforholdEtterSlutt)
+        return arbeidsforhold.tilK9ArbeidstidInfo(søknadperiodeStartdato, søknadsperiodeSluttdato)
     }
 
     private fun startetISøknadsperioden(søknadsperiodeStartdato: LocalDate): Boolean {
@@ -59,28 +54,22 @@ data class SelvstendigNæringsdrivende(
 
         return virksomhetStartdato.isAfter(søknadsperiodeStartdato)
     }
-    private fun k9ArbeidstidInfoMedStartIPerioden(søknadsperiodeStartdato: LocalDate, søknadsperiodeSluttdato: LocalDate): ArbeidstidInfo {
+    private fun k9ArbeidstidInfoMedStartIPerioden(søknadsperiodeSluttdato: LocalDate): ArbeidstidInfo {
         requireNotNull(arbeidsforhold)
         requireNotNull(virksomhet)
         val virksomhetStartdato = virksomhet.fraOgMed
 
-        val arbeidsforholdFørStart = Arbeidsforhold.k9ArbeidstidInfoMedNullTimer(søknadsperiodeStartdato, virksomhetStartdato.minusDays(1))
-        val arbeidsforholdEtterStart = arbeidsforhold.tilK9ArbeidstidInfo(virksomhetStartdato, søknadsperiodeSluttdato)
-        return slåSammenArbeidstidInfo(arbeidsforholdFørStart, arbeidsforholdEtterStart)
+        return arbeidsforhold.tilK9ArbeidstidInfo(virksomhetStartdato, søknadsperiodeSluttdato)
     }
 
     private fun startetOgSluttetISøknadsperioden(fraOgMed: LocalDate, tilOgMed: LocalDate?) = sluttetISøknadsperioden(tilOgMed) && startetISøknadsperioden(fraOgMed)
-    private fun k9ArbeidstidInfoMedStartOgSluttIPerioden(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
+    private fun k9ArbeidstidInfoMedStartOgSluttIPerioden(søknadsperiodeSluttdato: LocalDate): ArbeidstidInfo {
         requireNotNull(arbeidsforhold)
         requireNotNull(virksomhet)
-        val virksomhetSluttdato = virksomhet.tilOgMed
-        requireNotNull(virksomhetSluttdato)
         val virksomhetStartdato = virksomhet.fraOgMed
+        requireNotNull(virksomhetStartdato)
 
-        val arbeidsforholdFørStart = Arbeidsforhold.k9ArbeidstidInfoMedNullTimer(fraOgMed, virksomhetStartdato.minusDays(1))
-        val arbeidsforholdMedArbeid = arbeidsforhold.tilK9ArbeidstidInfo(virksomhetStartdato, virksomhetSluttdato)
-        val arbeidsforholdEtterSlutt = Arbeidsforhold.k9ArbeidstidInfoMedNullTimer(virksomhetSluttdato.plusDays(1), tilOgMed)
-        return slåSammenArbeidstidInfo(arbeidsforholdFørStart, arbeidsforholdMedArbeid, arbeidsforholdEtterSlutt)
+        return arbeidsforhold.tilK9ArbeidstidInfo(virksomhetStartdato, søknadsperiodeSluttdato)
     }
 
     private fun slåSammenArbeidstidInfo(vararg arbeidstidInfo: ArbeidstidInfo): ArbeidstidInfo {

@@ -35,12 +35,12 @@ data class Arbeidsforhold(
         addAll(arbeidIPeriode.valider(felt = "$felt.arbeidIPeriode", harKunStyreverv = harKunStyreverv))
     }
 
-    fun tilK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate, inkludertTilOgMed: Boolean = false) = when (arbeidIPeriode.type) {
+    fun tilK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate) = when (arbeidIPeriode.type) {
         ARBEIDER_VANLIG -> arbeiderVanlig(fraOgMed, tilOgMed)
         ARBEIDER_IKKE -> arbeiderIkke(fraOgMed, tilOgMed)
         ARBEIDER_TIMER_I_SNITT_PER_UKE -> arbeiderTimerISnittPerUke(fraOgMed, tilOgMed)
         ARBEIDER_PROSENT_AV_NORMALT -> arbeiderProsentAvNormalt(fraOgMed, tilOgMed)
-        ARBEIDER_ULIKE_UKER_TIMER -> arbeidsukerUlikeTimer(fraOgMed, tilOgMed, inkludertTilOgMed)
+        ARBEIDER_ULIKE_UKER_TIMER -> arbeidsukerUlikeTimer(fraOgMed, tilOgMed)
     }
 
     private fun arbeiderVanlig(fraOgMed: LocalDate, tilOgMed: LocalDate) =
@@ -108,15 +108,14 @@ data class Arbeidsforhold(
 
     internal fun arbeidsukerUlikeTimer(
         fraOgMed: LocalDate,
-        tilOgMed: LocalDate,
-        inkludertTilOgMed: Boolean = false
+        tilOgMed: LocalDate
     ): ArbeidstidInfo {
         requireNotNull(arbeidIPeriode.arbeidsuker) { "For å regne ut arbeid fra arbeidsuker må den være satt." }
         val arbeidstidInfo = ArbeidstidInfo()
 
         arbeidIPeriode.arbeidsuker.map { arbeidsuke: ArbeidsUke ->
             requireNotNull(normalarbeidstid.timerPerUkeISnitt) { "normalarbeidstid.timerPerUkeISnitt må være satt." }
-            val periodeUtenHelg: SortedSet<LocalDate> = arbeidsuke.periodeUtenHelg(inkludertTilOgMed)
+            val periodeUtenHelg: SortedSet<LocalDate> = arbeidsuke.periodeUtenHelg()
             val k9Periode = Periode(periodeUtenHelg.first(), periodeUtenHelg.last())
             val normaltArbeidstimerPerDag = normalarbeidstid.timerPerUkeISnitt.dividedBy(DAGER_PER_UKE)
 
@@ -139,9 +138,8 @@ data class Arbeidsforhold(
         return arbeidstidInfo
     }
 
-    private fun ArbeidsUke.periodeUtenHelg(inkludertSisteDag: Boolean): SortedSet<LocalDate> {
-        val tilOgMed = if (inkludertSisteDag) periode.tilOgMed.plusDays(1) else periode.tilOgMed
-        return periode.fraOgMed.datesUntil(tilOgMed)
+    private fun ArbeidsUke.periodeUtenHelg(): SortedSet<LocalDate> {
+        return periode.fraOgMed.datesUntil(periode.tilOgMed.plusDays(1))
             .filter { it.ikkeErHelg() }
             .toList()
             .toSortedSet()

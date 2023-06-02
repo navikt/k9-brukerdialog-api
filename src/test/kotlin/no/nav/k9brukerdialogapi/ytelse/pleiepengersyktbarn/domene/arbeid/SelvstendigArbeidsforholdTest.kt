@@ -133,13 +133,10 @@ class SelvstendigArbeidsforholdTest {
 
         val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
         val perioder = k9ArbeidstidInfo.perioder
-        assertEquals(2, perioder.size)
+        assertEquals(1, perioder.size)
 
-        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, torsdag)]!!.jobberNormaltTimerPerDag)
-        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, torsdag)]!!.faktiskArbeidTimerPerDag)
-
-        assertEquals(NULL_TIMER, perioder[Periode(fredag, fredag)]!!.jobberNormaltTimerPerDag)
-        assertEquals(NULL_TIMER, perioder[Periode(fredag, fredag)]!!.faktiskArbeidTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
     }
 
     @Test
@@ -159,13 +156,10 @@ class SelvstendigArbeidsforholdTest {
 
         val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
         val perioder = k9ArbeidstidInfo.perioder
-        assertEquals(2, perioder.size)
+        assertEquals(1, perioder.size)
 
-        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, mandag)]!!.jobberNormaltTimerPerDag)
-        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, mandag)]!!.faktiskArbeidTimerPerDag)
-
-        assertEquals(NULL_TIMER, perioder[Periode(tirsdag, fredag)]!!.jobberNormaltTimerPerDag)
-        assertEquals(NULL_TIMER, perioder[Periode(tirsdag, fredag)]!!.faktiskArbeidTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
     }
 
     @Test
@@ -230,17 +224,14 @@ class SelvstendigArbeidsforholdTest {
 
         val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
         val perioder = k9ArbeidstidInfo.perioder
-        assertEquals(2, perioder.size)
-
-        assertEquals(NULL_TIMER, perioder[Periode(mandag, tirsdag)]!!.jobberNormaltTimerPerDag)
-        assertEquals(NULL_TIMER, perioder[Periode(mandag, tirsdag)]!!.faktiskArbeidTimerPerDag)
+        assertEquals(1, perioder.size)
 
         assertEquals(syvOgEnHalvTime, perioder[Periode(onsdag, fredag)]!!.jobberNormaltTimerPerDag)
         assertEquals(syvOgEnHalvTime, perioder[Periode(onsdag, fredag)]!!.faktiskArbeidTimerPerDag)
     }
 
     @Test
-    fun `Selvstendig næringsdrivende  som startet og sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`() {
+    fun `Selvstendig næringsdrivende som startet og sluttet i søknadsperioden med normaltid oppgitt som snittPerUke`() {
         val selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
             harInntektSomSelvstendig = true,
             virksomhet = Virksomhet(
@@ -256,15 +247,10 @@ class SelvstendigArbeidsforholdTest {
 
         val k9ArbeidstidInfo = selvstendigNæringsdrivende.k9ArbeidstidInfo(mandag, fredag)
         val perioder = k9ArbeidstidInfo.perioder
-        assertEquals(3, perioder.size)
+        assertEquals(1, perioder.size)
 
-        listOf(mandag, fredag).forEach { dag ->
-            assertEquals(NULL_TIMER, perioder[Periode(dag, dag)]!!.jobberNormaltTimerPerDag)
-            assertEquals(NULL_TIMER, perioder[Periode(dag, dag)]!!.faktiskArbeidTimerPerDag)
-        }
-
-        assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, torsdag)]!!.jobberNormaltTimerPerDag)
-        assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, torsdag)]!!.faktiskArbeidTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, fredag)]!!.jobberNormaltTimerPerDag)
+        assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, fredag)]!!.faktiskArbeidTimerPerDag)
     }
 
     @Test
@@ -283,7 +269,7 @@ class SelvstendigArbeidsforholdTest {
                     registrertINorge = true,
                     erNyoppstartet = true
                 ),
-                arbeidsforhold = arbeidsforholdMedRedusertSnittPerUke(tirsdag, torsdag)
+                arbeidsforhold = arbeidsforholdMedRedusertSnittPerUke(tirsdag, onsdag)
             ),
             frilans = Frilans(harInntektSomFrilanser = false),
             mottatt = ZonedDateTime.now(),
@@ -332,12 +318,9 @@ class SelvstendigArbeidsforholdTest {
             psbK9FormatSøknad.getYtelse<PleiepengerSyktBarn>().arbeidstid.selvstendigNæringsdrivendeArbeidstidInfo.get()
 
         val perioder = arbeidstidInfo.perioder
-        assertEquals(2, perioder.size)
-
-        assertEquals(NULL_TIMER, perioder[Periode(torsdag, torsdag)]!!.faktiskArbeidTimerPerDag)
+        assertEquals(1, perioder.size)
 
         assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, onsdag)]!!.jobberNormaltTimerPerDag)
         assertEquals(syvOgEnHalvTime, perioder[Periode(tirsdag, onsdag)]!!.faktiskArbeidTimerPerDag)
-
     }
 }
