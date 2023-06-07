@@ -262,14 +262,6 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                  },
                  "infoFraPunsj": null,
                  "dataBruktTilUtledning": null,
-                 "annetDataBruktTilUtledning": {
-                   "harBekreftetOpplysninger": true,
-                   "harForståttRettigheterOgPlikter": true,
-                   "soknadDialogCommitSha": "abc-123",
-                   "annetData": {
-                     "key 1": "value 1"
-                   }
-                 },
                  "beredskap": {
                    "perioder": {},
                    "perioderSomSkalSlettes": {}
@@ -278,7 +270,14 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                    "perioder": {}
                  },
                  "opptjeningAktivitet": {},
-                 "annetDataBruktTilUtledning": null
+                  "annetDataBruktTilUtledning": {
+                   "harBekreftetOpplysninger": true,
+                   "harForståttRettigheterOgPlikter": true,
+                   "soknadDialogCommitSha": "abc-123",
+                   "annetData": {
+                     "key 1": "value 1"
+                   }
+                 }
                },
                "journalposter": [],
                "begrunnelseForInnsending": {
