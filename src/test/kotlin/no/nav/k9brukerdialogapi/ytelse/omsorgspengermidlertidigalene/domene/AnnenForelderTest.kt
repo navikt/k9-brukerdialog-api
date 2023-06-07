@@ -248,5 +248,4 @@ class AnnenForelderTest {
         ).valider("annenForelder")
             .verifiserFeil(1, listOf("annenForelder.periodeTilOgMed eller periodeOver6Måneder må være satt dersom situasjonen er SYKDOM"))
     }
-
 }

@@ -332,7 +332,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                       "type": "entity",
                       "name": "ytelse.arbeidstid.arbeidstakerList[0].perioder",
                       "reason": "Perioden er utenfor gyldig interval. Gyldig interva: ([[2021-01-01, 2021-01-01]]), Ugyldig periode: 2021-01-07/2021-01-07",
-                      "invalid_value": "K9-format feilkode: ugyldigPeriode"
+                      "invalid_value": "K9-format valideringsfeil"
                     }
                   ]
                 }
@@ -445,7 +445,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                       "type": "entity",
                       "name": "ytelse.arbeidstid.arbeidstakerList[0].perioder",
                       "reason": "Perioden er utenfor gyldig interval. Gyldig interva: ([[2022-12-05, 2022-12-06], [2022-12-08, 2022-12-09]]), Ugyldig periode: 2022-12-07/2022-12-07",
-                      "invalid_value": "K9-format feilkode: ugyldigPeriode"
+                      "invalid_value": "K9-format valideringsfeil"
                     }
                   ]
                 }
