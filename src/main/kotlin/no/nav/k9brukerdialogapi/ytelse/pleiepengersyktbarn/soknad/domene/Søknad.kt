@@ -19,6 +19,7 @@ import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
+import no.nav.k9brukerdialogapi.utils.StringUtils
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandskNæring.Companion.valider
@@ -213,7 +214,7 @@ data class Søknad(
                 BarnRelasjon.ANNET -> Omsorg.BarnRelasjon.ANNET
                 else -> null
             }
-        ).medBeskrivelseAvOmsorgsrollen(barnRelasjonBeskrivelse)
+        ).medBeskrivelseAvOmsorgsrollen(barnRelasjonBeskrivelse?.let { StringUtils.saniter(it) })
 }
 
 fun tilK9Tilsynsordning0Timer(periode: no.nav.k9.søknad.felles.type.Periode) = Tilsynsordning().apply {

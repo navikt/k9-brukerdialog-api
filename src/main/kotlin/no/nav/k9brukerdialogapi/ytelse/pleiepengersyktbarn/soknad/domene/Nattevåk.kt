@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 import no.nav.k9.søknad.ytelse.psb.v1.Nattevåk.NattevåkPeriodeInfo
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.utils.StringUtils
 import no.nav.k9.søknad.ytelse.psb.v1.Nattevåk as K9Nattevåk
 
 data class Nattevåk(
@@ -22,15 +23,17 @@ data class Nattevåk(
         periode: no.nav.k9.søknad.felles.type.Periode,
     ): no.nav.k9.søknad.ytelse.psb.v1.Nattevåk? = K9Nattevåk().medPerioder(
         mapOf(
-            periode to NattevåkPeriodeInfo().medTilleggsinformasjon(tilleggsinformasjon)
+            periode to NattevåkPeriodeInfo().medTilleggsinformasjon(tilleggsinformasjon?.let { StringUtils.saniter(it) })
         )
     )
 
     fun valider(felt: String) = mutableListOf<String>().apply {
         kreverIkkeNull(harNattevåk, "$felt.harNattevåk kan ikke være null")
         if (harNattevåk == true) {
-            krever(tilleggsinformasjon !== null && tilleggsinformasjon.length <= MAX_FRITEKST_TEGN,
-                "$felt.tilleggsinformasjon kan være max $MAX_FRITEKST_TEGN tegn, men var ${tilleggsinformasjon?.length}")
+            krever(
+                tilleggsinformasjon !== null && tilleggsinformasjon.length <= MAX_FRITEKST_TEGN,
+                "$felt.tilleggsinformasjon kan være max $MAX_FRITEKST_TEGN tegn, men var ${tilleggsinformasjon?.length}"
+            )
         }
 
     }
