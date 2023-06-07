@@ -146,7 +146,8 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                   "situasjonBeskrivelse": "Sitter i fengsel..",
                   "periode": "2020-01-01/2020-10-01"
                 },
-                "begrunnelse": null
+                "begrunnelse": null,
+                "dataBruktTilUtledning": null
               },
               "begrunnelseForInnsending" : {
                 "tekst" : null

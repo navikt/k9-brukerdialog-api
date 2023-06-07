@@ -235,7 +235,8 @@ class PilsSøknadTest {
                       "timerPleieAvBarnetPerDag": "PT7H30M"
                     }
                   }
-                }
+                },
+                "dataBruktTilUtledning": null
               },
               "språk": "nb",
               "journalposter": [],

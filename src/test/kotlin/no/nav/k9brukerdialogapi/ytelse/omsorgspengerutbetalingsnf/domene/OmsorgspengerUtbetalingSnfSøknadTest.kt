@@ -412,7 +412,8 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                     }
                   },
                   "perioderSomSkalSlettes": {}
-                }
+                },
+                "dataBruktTilUtledning": null
               },
               "språk": "nb",
               "journalposter": [],
