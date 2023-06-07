@@ -261,7 +261,8 @@ class K9FormatTest {
                 "omsorg": {
                   "relasjonTilBarnet": "ANNET",
                   "beskrivelseAvOmsorgsrollen": "Gudfar til barnet"
-                }
+                },
+                "annetDataBruktTilUtledning": null
               },
               "språk": "nb",
               "journalposter": [],

@@ -115,7 +115,8 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                     }
                   },
                   "perioderSomSkalSlettes": {}
-                }
+                },
+                "dataBruktTilUtledning": null
               },
               "språk": "nb",
               "journalposter": [],

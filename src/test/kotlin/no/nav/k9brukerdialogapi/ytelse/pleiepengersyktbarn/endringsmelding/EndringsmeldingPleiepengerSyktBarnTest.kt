@@ -261,7 +261,8 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                  "uttak": {
                    "perioder": {}
                  },
-                 "opptjeningAktivitet": {}
+                 "opptjeningAktivitet": {},
+                 "annetDataBruktTilUtledning": null
                },
                "journalposter": [],
                "begrunnelseForInnsending": {
