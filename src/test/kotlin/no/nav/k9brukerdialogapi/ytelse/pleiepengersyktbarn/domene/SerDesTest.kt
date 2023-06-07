@@ -287,7 +287,7 @@ internal class SerDesTest {
               },
               "nattevåk": {
                 "harNattevåk": true,
-                "tilleggsinformasjon": "Har nattevåk"
+                "tilleggsinformasjon": "Æ har nattevåk"
               },
               "omsorgstilbud": {
                 "svarFortid": "JA",

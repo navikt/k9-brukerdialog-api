@@ -96,7 +96,7 @@ class SøknadUtils {
             tilOgMed = LocalDate.parse("2021-10-01"),
             nattevåk = Nattevåk(
                 harNattevåk = true,
-                tilleggsinformasjon = "Har nattevåk"
+                tilleggsinformasjon = "Æ har nattevåk"
             ),
             selvstendigNæringsdrivende = SelvstendigNæringsdrivende(
                 harInntektSomSelvstendig = true,

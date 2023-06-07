@@ -7,6 +7,7 @@ import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
+import no.nav.k9brukerdialogapi.utils.StringUtils
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.ANNET
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.FENGSEL
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene.Situasjon.INNLAGT_I_HELSEINSTITUSJON
@@ -30,7 +31,7 @@ class AnnenForelder(
     internal fun somK9AnnenForelder(): K9AnnenForelder {
         return K9AnnenForelder()
             .medNorskIdentitetsnummer(NorskIdentitetsnummer.of(fnr))
-            .medSituasjon(situasjon.somK9SituasjonType(), situasjonBeskrivelse)
+            .medSituasjon(situasjon.somK9SituasjonType(), situasjonBeskrivelse?.let { StringUtils.saniter(it) })
             .apply {
                 if(periodeTilOgMed != null) this.medPeriode(Periode(periodeFraOgMed, periodeTilOgMed))
             }

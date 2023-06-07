@@ -125,11 +125,12 @@ class InnsendingService(
             is Ettersendelse -> innsending.ettersendelseValidator()?.valider(k9Format)
             else -> null
         }?.map {
+            logger.error("${it.felt} feilet pga. ${it.feilkode}")
             Violation(
                 parameterName = it.felt,
                 parameterType = ParameterType.ENTITY,
                 reason = it.feilmelding,
-                invalidValue = "K9-format feilkode: ${it.feilkode}"
+                invalidValue = "K9-format valideringsfeil"
             )
         }?.toMutableSet()
 

@@ -94,7 +94,7 @@ class K9FormatTest {
                 "nattevåk" : {
                   "perioder" : {
                     "2021-01-01/2021-01-10" : {
-                      "tilleggsinformasjon" : "Har nattevåk"
+                      "tilleggsinformasjon" : "Æ har nattevåk"
                     }
                   },
                   "perioderSomSkalSlettes" : { }
