@@ -268,7 +268,10 @@ class SøknadUtils {
                 )
             ),
             utenlandskNæring = listOf(),
-            harVærtEllerErVernepliktig = true
+            harVærtEllerErVernepliktig = true,
+            dataBruktTilUtledning = mutableMapOf(
+                "key 1" to "value 1"
+            )
         )
     }
 }

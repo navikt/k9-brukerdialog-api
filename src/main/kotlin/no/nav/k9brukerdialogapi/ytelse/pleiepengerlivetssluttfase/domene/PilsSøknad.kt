@@ -7,6 +7,7 @@ import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.DataBruktTilUtledning
 import no.nav.k9.søknad.ytelse.pls.v1.PleiepengerLivetsSluttfaseSøknadValidator
 import no.nav.k9.søknad.ytelse.pls.v1.PleipengerLivetsSluttfase
 import no.nav.k9.søknad.ytelse.psb.v1.LovbestemtFerie
@@ -16,6 +17,7 @@ import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.Arbeidstid
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -53,7 +55,8 @@ class PilsSøknad(
     private val pleierDuDenSykeHjemme: Boolean? = null,
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
-    private val flereSokere: FlereSokereSvar? = null
+    private val flereSokere: FlereSokereSvar? = null,
+    private val dataBruktTilUtledning: MutableMap<String, Any>? = null
 ): Innsending {
     companion object{
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
@@ -105,7 +108,7 @@ class PilsSøknad(
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
 
-    override fun somK9Format(søker: Søker): K9Søknad {
+    override fun somK9Format(søker: Søker, metadata: Metadata): K9Søknad {
         val ytelse = PleipengerLivetsSluttfase()
             .medSøknadsperiode(Periode(fraOgMed, tilOgMed))
             .medPleietrengende(pleietrengende.somK9Pleietrengende())
@@ -113,6 +116,7 @@ class PilsSøknad(
             .medOpptjeningAktivitet(byggK9OpptjeningAktivitet())
             .medUttak(byggK9Uttak())
             .medArbeidstid(byggK9Arbeidstid())
+            .medDataBruktTilUtledning(byggK9DataBruktTilUtledning(metadata)) as PleipengerLivetsSluttfase
 
         if(utenlandsoppholdIPerioden.skalOppholdeSegIUtlandetIPerioden == true){
             ytelse.medUtenlandsopphold(utenlandsoppholdIPerioden.somK9Utenlandsopphold())
@@ -132,6 +136,12 @@ class PilsSøknad(
             .medYtelse(ytelse)
             .medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
+
+    fun byggK9DataBruktTilUtledning(metadata: Metadata): DataBruktTilUtledning = DataBruktTilUtledning()
+        .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
+        .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
+        .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
+        .setAnnetData(dataBruktTilUtledning)
 
     private fun byggK9Uttak() = Uttak().medPerioder(mapOf(Periode(fraOgMed, tilOgMed) to UttakPeriodeInfo(SYV_OG_EN_HALV_TIME)))
 

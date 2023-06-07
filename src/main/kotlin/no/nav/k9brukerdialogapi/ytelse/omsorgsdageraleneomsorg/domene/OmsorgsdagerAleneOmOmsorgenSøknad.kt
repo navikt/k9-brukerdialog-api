@@ -6,11 +6,13 @@ import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.DataBruktTilUtledning
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerAleneOmsorg
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerAleneOmsorgSøknadValidator
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -27,6 +29,7 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
     private val barn: List<Barn> = listOf(),
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
+    private val dataBruktTilUtledning: MutableMap<String, Any>? = null
 ) : Innsending {
     internal fun gjelderFlereBarn() = barn.size > 1
     internal fun manglerIdentifikatorPåBarn() = barn.any { it.manglerIdentifikator() }
@@ -47,7 +50,7 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
         }
     }
 
-    override fun somK9Format(søker: Søker): K9Søknad {
+    override fun somK9Format(søker: Søker, metadata: Metadata): K9Søknad {
         // Innsendt søknad blir splittet opp i 1 søknad per barn. Derfor skal det kun være et barn i lista.
         require(barn.size == 1) { "Søknad etter splitt kan kun inneholdet et barn" }
 
@@ -61,9 +64,15 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
                 OmsorgspengerAleneOmsorg(
                     barn.first().somK9Barn(),
                     Periode(barn.first().k9PeriodeFraOgMed(), null)
-                )
+                ).medDataBruktTilUtledning(byggK9DataBruktTilUtledning(metadata)) as OmsorgspengerAleneOmsorg
             )
     }
+
+    fun byggK9DataBruktTilUtledning(metadata: Metadata): DataBruktTilUtledning = DataBruktTilUtledning()
+        .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
+        .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
+        .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
+        .setAnnetData(dataBruktTilUtledning)
 
     override fun valider() = mutableListOf<String>().apply {
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")

@@ -13,6 +13,7 @@ import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.KafkaWrapper
 import no.nav.k9brukerdialogapi.OMSORGSDAGER_ALENEOMSORG_URL
 import no.nav.k9brukerdialogapi.SøknadUtils
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.TestConfiguration
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
 import no.nav.k9brukerdialogapi.TestUtils.Companion.requestAndAssert
@@ -118,7 +119,7 @@ class OmsorgsdagerAleneomsorgTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSDAGER_ALENEOMSORG)
         assertEquals(
-            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker)),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker, metadata)),
             hentet.data.somOmsorgsdagerAleneomsorgKomplettSøknad()
         )
     }

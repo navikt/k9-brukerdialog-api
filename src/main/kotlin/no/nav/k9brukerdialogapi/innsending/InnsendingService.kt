@@ -39,7 +39,7 @@ class InnsendingService(
         søker.valider()
 
         innsending.valider()
-        val k9Format = innsending.somK9Format(søker)
+        val k9Format = innsending.somK9Format(søker, metadata)
         k9Format?.let { validerK9Format(innsending, it) }
 
         if (innsending.inneholderVedlegg()) registrerSøknadMedVedlegg(

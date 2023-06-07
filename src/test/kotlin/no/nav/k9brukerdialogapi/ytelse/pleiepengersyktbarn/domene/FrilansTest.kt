@@ -363,7 +363,7 @@ class FrilansTest {
             misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
         )
 
-        val opptjeningAktivitet = SøknadUtils.defaultSøknad(UUID.randomUUID().toString())
+        val opptjeningAktivitet = SøknadUtils.defaultSøknad()
             .copy(frilans = frilans)
             .byggK9OpptjeningAktivitet()
 
@@ -381,7 +381,7 @@ class FrilansTest {
             misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
         )
 
-        val opptjeningAktivitet = SøknadUtils.defaultSøknad(UUID.randomUUID().toString())
+        val opptjeningAktivitet = SøknadUtils.defaultSøknad()
             .copy(frilans = frilans)
             .byggK9OpptjeningAktivitet()
 

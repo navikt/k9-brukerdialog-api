@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
@@ -319,9 +320,12 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                 erNyoppstartet = true,
                 harFlereAktiveVirksomheter = true
             ),
-            vedlegg = listOf()
+            vedlegg = listOf(),
+            dataBruktTilUtledning = mutableMapOf(
+                "key 1" to "value 1"
+            )
         )
-        val k9Format = søknad.somK9Format(SøknadUtils.søker).somJson()
+        val k9Format = søknad.somK9Format(SøknadUtils.søker, metadata).somJson()
         val forventetK9Format = """
             {
               "søknadId": "${søknad.søknadId.id}",
@@ -413,6 +417,14 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                     }
                   },
                   "perioderSomSkalSlettes": {}
+                },
+                "dataBruktTilUtledning": {
+                    "harBekreftetOpplysninger": true,
+                    "harForståttRettigheterOgPlikter": true,
+                    "soknadDialogCommitSha": "abc-123",
+                    "annetData": {
+                      "key 1": "value 1"
+                  }
                 }
               },
               "språk": "nb",

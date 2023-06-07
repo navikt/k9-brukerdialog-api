@@ -5,11 +5,13 @@ import no.nav.k9.søknad.SøknadValidator
 import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.DataBruktTilUtledning
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerMidlertidigAlene
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerMidlertidigAleneSøknadValidator
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -28,14 +30,15 @@ class OmsorgspengerMdlertidigAleneSøknad(
     private val annenForelder: AnnenForelder,
     private val barn: List<Barn> = listOf(),
     private val harForståttRettigheterOgPlikter: Boolean,
-    private val harBekreftetOpplysninger: Boolean
+    private val harBekreftetOpplysninger: Boolean,
+    private val dataBruktTilUtledning: MutableMap<String, Any>? = null
 ): Innsending {
 
     companion object {
         private val k9FormatVersjon = Versjon.of("1.0.0")
     }
 
-    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
+    override fun somK9Format(søker: Søker, metadata: Metadata): no.nav.k9.søknad.Søknad {
         return K9Søknad(
             SøknadId.of(søknadId),
             k9FormatVersjon,
@@ -45,9 +48,15 @@ class OmsorgspengerMdlertidigAleneSøknad(
                 barn.map { it.somK9Barn() },
                 annenForelder.somK9AnnenForelder(),
                 null
-            )
+            ).medDataBruktTilUtledning(byggK9DataBruktTilUtledning(metadata)) as OmsorgspengerMidlertidigAlene
         ).medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
+
+    fun byggK9DataBruktTilUtledning(metadata: Metadata): DataBruktTilUtledning = DataBruktTilUtledning()
+        .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
+        .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
+        .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
+        .setAnnetData(dataBruktTilUtledning)
 
     override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): OmsorgspengerMdlertidigAleneKomplettSøknad {
         requireNotNull(k9Format)

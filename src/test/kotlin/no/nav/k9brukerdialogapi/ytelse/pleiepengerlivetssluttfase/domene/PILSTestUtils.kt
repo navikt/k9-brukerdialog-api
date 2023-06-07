@@ -128,5 +128,8 @@ internal fun gyldigPILSSøknad(
     utenlandskNæring = utenlandskNæring,
     pleierDuDenSykeHjemme = pleierDuDenSykeHjemme,
     harForståttRettigheterOgPlikter = true,
-    harBekreftetOpplysninger = true
+    harBekreftetOpplysninger = true,
+    dataBruktTilUtledning = mutableMapOf(
+        "key 1" to "value 1"
+    )
 )

@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import org.json.JSONObject
@@ -86,7 +87,10 @@ class OmsorgspengerUtvidetRettSøknadTest {
                 relasjonTilBarnet = SøkerBarnRelasjon.FAR,
                 sammeAdresse = true,
                 harBekreftetOpplysninger = false,
-                harForståttRettigheterOgPlikter = true
+                harForståttRettigheterOgPlikter = true,
+                dataBruktTilUtledning = mutableMapOf(
+                    "key 1" to "value 1"
+                )
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("harBekreftetOpplysninger må være true") }
@@ -108,9 +112,13 @@ class OmsorgspengerUtvidetRettSøknadTest {
             relasjonTilBarnet = SøkerBarnRelasjon.FOSTERFORELDER,
             kroniskEllerFunksjonshemming = true,
             harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = true
+            harBekreftetOpplysninger = true,
+            dataBruktTilUtledning = mutableMapOf(
+                "key 1" to "value 1"
+            )
         )
-        val faktiskK9Format = JSONObject(søknad.somK9Format(SøknadUtils.søker).somJson())
+        val faktiskK9Format = JSONObject(søknad.somK9Format(SøknadUtils.søker, metadata).somJson())
+        //language=json
         val forventetK9Format = JSONObject(
             """
                 {
@@ -126,7 +134,15 @@ class OmsorgspengerUtvidetRettSøknadTest {
                       "norskIdentitetsnummer": "02119970078"
                     },
                     "kroniskEllerFunksjonshemming": true,
-                    "type": "OMP_UTV_KS"
+                    "type": "OMP_UTV_KS",
+                    "dataBruktTilUtledning": {
+                        "harBekreftetOpplysninger": true,
+                        "harForståttRettigheterOgPlikter": true,
+                        "soknadDialogCommitSha": "abc-123",
+                        "annetData": {
+                          "key 1": "value 1"
+                      }
+                    }
                   },
                   "journalposter": [],
                   "begrunnelseForInnsending": {

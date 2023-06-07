@@ -158,6 +158,14 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                       "etablertTilsynTimerPerDag": "PT2H0M"
                     }
                   }
+                },
+                "annetDataBruktTilUtledning": {
+                    "harBekreftetOpplysninger": true,
+                    "harForståttRettigheterOgPlikter": true,
+                    "soknadDialogCommitSha": "abc-123",
+                    "annetData": {
+                      "key 1": "value 1"
+                  }
                 }
               }
             }
@@ -254,6 +262,14 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                  },
                  "infoFraPunsj": null,
                  "dataBruktTilUtledning": null,
+                 "annetDataBruktTilUtledning": {
+                   "harBekreftetOpplysninger": true,
+                   "harForståttRettigheterOgPlikter": true,
+                   "soknadDialogCommitSha": "abc-123",
+                   "annetData": {
+                     "key 1": "value 1"
+                   }
+                 },
                  "beredskap": {
                    "perioder": {},
                    "perioderSomSkalSlettes": {}

@@ -6,11 +6,13 @@ import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.DataBruktTilUtledning
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetalingSøknadValidator
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
@@ -48,7 +50,8 @@ class OmsorgspengerutbetalingSnfSøknad(
     private val barn: List<Barn>,
     private val frilans: Frilans? = null,
     private val selvstendigNæringsdrivende: Virksomhet? = null,
-    internal val vedlegg: List<URL> = listOf()
+    internal val vedlegg: List<URL> = listOf(),
+    private val dataBruktTilUtledning: MutableMap<String, Any>? = null
 ): Innsending {
 
     companion object {
@@ -85,7 +88,7 @@ class OmsorgspengerutbetalingSnfSøknad(
         barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
-    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
+    override fun somK9Format(søker: Søker, metadata: Metadata): no.nav.k9.søknad.Søknad {
         return K9Søknad(
             søknadId,
             k9FormatVersjon,
@@ -98,9 +101,15 @@ class OmsorgspengerutbetalingSnfSøknad(
                 null,
                 bosteder.somK9Bosteder(),
                 opphold.somK9Utenlandsopphold()
-            )
+            ).medDataBruktTilUtledning(byggK9DataBruktTilUtledning(metadata)) as OmsorgspengerUtbetaling
         ).medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
+
+    fun byggK9DataBruktTilUtledning(metadata: Metadata): DataBruktTilUtledning = DataBruktTilUtledning()
+        .medHarBekreftetOpplysninger(bekreftelser.harBekreftetOpplysninger)
+        .medHarForståttRettigheterOgPlikter(bekreftelser.harForståttRettigheterOgPlikter)
+        .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
+        .setAnnetData(dataBruktTilUtledning)
 
     private fun byggK9OpptjeningAktivitet() = OpptjeningAktivitet().apply {
         frilans?.let { medFrilanser(it.somK9Frilanser()) }

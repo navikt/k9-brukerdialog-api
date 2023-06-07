@@ -6,11 +6,13 @@ import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.opptjening.OpptjeningAktivitet
 import no.nav.k9.søknad.felles.type.SøknadId
+import no.nav.k9.søknad.ytelse.DataBruktTilUtledning
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetaling
 import no.nav.k9.søknad.ytelse.omsorgspenger.v1.OmsorgspengerUtbetalingSøknadValidator
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -40,7 +42,8 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     private val bekreftelser: Bekreftelser,
     private val arbeidsgivere: List<Arbeidsgiver>,
     private val hjemmePgaSmittevernhensyn: Boolean,
-    private val hjemmePgaStengtBhgSkole: Boolean? = null
+    private val hjemmePgaStengtBhgSkole: Boolean? = null,
+    private val dataBruktTilUtledning: MutableMap<String, Any>? = null
 ): Innsending {
     override fun valider() = mutableListOf<String>().apply {
         krever(arbeidsgivere.isNotEmpty(), "Må ha minst en arbeidsgiver satt.")
@@ -75,7 +78,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         )
     }
 
-    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Søknad {
+    override fun somK9Format(søker: Søker, metadata: Metadata): no.nav.k9.søknad.Søknad {
         return K9Søknad(
             SøknadId.of(søknadId),
             k9FormatVersjon,
@@ -88,9 +91,15 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
                 null,
                 bosteder.somK9Bosteder(),
                 opphold.somK9Utenlandsopphold()
-            )
+            ).medDataBruktTilUtledning(byggK9DataBruktTilUtledning(metadata)) as OmsorgspengerUtbetaling
         ).medKildesystem(Kildesystem.SØKNADSDIALOG)
     }
+
+    fun byggK9DataBruktTilUtledning(metadata: Metadata): DataBruktTilUtledning = DataBruktTilUtledning()
+        .medHarBekreftetOpplysninger(bekreftelser.harBekreftetOpplysninger)
+        .medHarForståttRettigheterOgPlikter(bekreftelser.harForståttRettigheterOgPlikter)
+        .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
+        .setAnnetData(dataBruktTilUtledning)
 
     override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerUtbetalingSøknadValidator()
     override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER

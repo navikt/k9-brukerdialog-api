@@ -315,7 +315,10 @@ internal class SerDesTest {
                },
               "barnRelasjon" : "ANNET",
               "barnRelasjonBeskrivelse" : "Gudfar til barnet",
-              "harVærtEllerErVernepliktig" : true
+              "harVærtEllerErVernepliktig" : true,
+              "dataBruktTilUtledning": {
+                 "key 1": "value 1"
+              }
             }
         """.trimIndent()
 

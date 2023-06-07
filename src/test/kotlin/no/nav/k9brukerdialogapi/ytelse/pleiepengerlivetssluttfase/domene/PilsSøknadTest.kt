@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
@@ -235,6 +236,14 @@ class PilsSøknadTest {
                       "timerPleieAvBarnetPerDag": "PT7H30M"
                     }
                   }
+                },
+                "dataBruktTilUtledning": {
+                    "harBekreftetOpplysninger": true,
+                    "harForståttRettigheterOgPlikter": true,
+                    "soknadDialogCommitSha": "abc-123",
+                    "annetData": {
+                      "key 1": "value 1"
+                  }
                 }
               },
               "språk": "nb",
@@ -245,6 +254,6 @@ class PilsSøknadTest {
               "kildesystem": "søknadsdialog"
             }
         """.trimIndent()
-        JSONAssert.assertEquals(forventet, gyldigPILSSøknad(pleierDuDenSykeHjemme = false).somK9Format(søker).somJson(), true)
+        JSONAssert.assertEquals(forventet, gyldigPILSSøknad(pleierDuDenSykeHjemme = false).somK9Format(søker, metadata).somJson(), true)
     }
 }
