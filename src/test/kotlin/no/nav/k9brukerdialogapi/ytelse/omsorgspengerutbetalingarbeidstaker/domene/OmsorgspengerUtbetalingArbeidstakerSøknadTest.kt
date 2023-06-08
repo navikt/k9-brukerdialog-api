@@ -71,9 +71,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
             ),
             hjemmePgaSmittevernhensyn = true,
             hjemmePgaStengtBhgSkole = true,
-            dataBruktTilUtledning = mutableMapOf(
-                "key 1" to "value 1"
-            )
+            dataBruktTilUtledning = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
         val faktiskK9Format = søknad.somK9Format(SøknadUtils.søker, metadata).somJson()
         val forventetK9Format = """
@@ -124,9 +122,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                     "harBekreftetOpplysninger": true,
                     "harForståttRettigheterOgPlikter": true,
                     "soknadDialogCommitSha": "abc-123",
-                    "annetData": {
-                      "key 1": "value 1"
-                  }
+                    "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
                 }
               },
               "språk": "nb",

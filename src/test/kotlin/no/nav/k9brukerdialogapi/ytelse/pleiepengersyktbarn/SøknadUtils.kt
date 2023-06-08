@@ -269,9 +269,7 @@ class SøknadUtils {
             ),
             utenlandskNæring = listOf(),
             harVærtEllerErVernepliktig = true,
-            dataBruktTilUtledning = mutableMapOf(
-                "key 1" to "value 1"
-            )
+            dataBruktTilUtledning = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
     }
 }

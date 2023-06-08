@@ -31,7 +31,7 @@ class OmsorgspengerMdlertidigAleneSøknad(
     private val barn: List<Barn> = listOf(),
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
-    private val dataBruktTilUtledning: MutableMap<String, Any>? = null
+    private val dataBruktTilUtledning: String? = null
 ): Innsending {
 
     companion object {
@@ -56,7 +56,7 @@ class OmsorgspengerMdlertidigAleneSøknad(
         .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
         .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
         .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
-        .setAnnetData(dataBruktTilUtledning)
+        .medAnnetData(dataBruktTilUtledning)
 
     override fun somKomplettSøknad(søker: Søker, k9Format: no.nav.k9.søknad.Innsending?, titler: List<String>): OmsorgspengerMdlertidigAleneKomplettSøknad {
         requireNotNull(k9Format)

@@ -241,9 +241,7 @@ class PilsSøknadTest {
                     "harBekreftetOpplysninger": true,
                     "harForståttRettigheterOgPlikter": true,
                     "soknadDialogCommitSha": "abc-123",
-                    "annetData": {
-                      "key 1": "value 1"
-                  }
+                    "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
                 }
               },
               "språk": "nb",

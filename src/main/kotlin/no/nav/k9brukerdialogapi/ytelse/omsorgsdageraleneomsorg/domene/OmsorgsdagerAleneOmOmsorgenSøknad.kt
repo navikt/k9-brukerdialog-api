@@ -29,7 +29,7 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
     private val barn: List<Barn> = listOf(),
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
-    private val dataBruktTilUtledning: MutableMap<String, Any>? = null
+    private val dataBruktTilUtledning: String? = null
 ) : Innsending {
     internal fun gjelderFlereBarn() = barn.size > 1
     internal fun manglerIdentifikatorPåBarn() = barn.any { it.manglerIdentifikator() }
@@ -72,7 +72,7 @@ class OmsorgsdagerAleneOmOmsorgenSøknad(
         .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
         .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
         .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
-        .setAnnetData(dataBruktTilUtledning)
+        .medAnnetData(dataBruktTilUtledning)
 
     override fun valider() = mutableListOf<String>().apply {
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
