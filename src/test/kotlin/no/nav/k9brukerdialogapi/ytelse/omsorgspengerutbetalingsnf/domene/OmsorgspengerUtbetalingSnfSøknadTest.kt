@@ -279,7 +279,6 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                     aktivitetFravær = listOf(AktivitetFravær.SELVSTENDIG_VIRKSOMHET)
                 )
             ),
-            andreUtbetalinger = null,
             erArbeidstakerOgså = false,
             barn = listOf(
                 Barn(

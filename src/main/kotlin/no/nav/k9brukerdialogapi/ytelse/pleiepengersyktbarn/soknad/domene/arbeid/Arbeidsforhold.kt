@@ -108,7 +108,7 @@ data class Arbeidsforhold(
 
     internal fun arbeidsukerUlikeTimer(
         fraOgMed: LocalDate,
-        tilOgMed: LocalDate,
+        tilOgMed: LocalDate
     ): ArbeidstidInfo {
         requireNotNull(arbeidIPeriode.arbeidsuker) { "For å regne ut arbeid fra arbeidsuker må den være satt." }
         val arbeidstidInfo = ArbeidstidInfo()
@@ -138,10 +138,12 @@ data class Arbeidsforhold(
         return arbeidstidInfo
     }
 
-    private fun ArbeidsUke.periodeUtenHelg() = periode.fraOgMed.datesUntil(periode.tilOgMed.plusDays(1))
-        .filter { it.ikkeErHelg() }
-        .toList()
-        .toSortedSet()
+    private fun ArbeidsUke.periodeUtenHelg(): SortedSet<LocalDate> {
+        return periode.fraOgMed.datesUntil(periode.tilOgMed.plusDays(1))
+            .filter { it.ikkeErHelg() }
+            .toList()
+            .toSortedSet()
+    }
 
     private fun LocalDate.erInnenforPerioden(fraOgMed: LocalDate, tilOgMed: LocalDate) =
         this.isEqual(fraOgMed) || this.isEqual(tilOgMed) || (this.isAfter(fraOgMed) && this.isBefore(tilOgMed))

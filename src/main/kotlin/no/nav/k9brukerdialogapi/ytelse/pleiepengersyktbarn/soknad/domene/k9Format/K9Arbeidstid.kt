@@ -8,14 +8,17 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-internal fun Søknad.byggK9Arbeidstid(): Arbeidstid = Arbeidstid().apply {
+internal fun Søknad.byggK9Arbeidstid(): Arbeidstid {
+    val arbeidstid = Arbeidstid().apply {
 
-    if(arbeidsgivere.isNotEmpty()) medArbeidstaker(arbeidsgivere.tilK9Arbeidstaker(fraOgMed, tilOgMed))
+        if(arbeidsgivere.isNotEmpty()) medArbeidstaker(arbeidsgivere.tilK9Arbeidstaker(fraOgMed, tilOgMed))
 
-    medFrilanserArbeidstid(frilans.k9ArbeidstidInfo(fraOgMed, tilOgMed))
-    selvstendigNæringsdrivende.arbeidsforhold?.let {
-        medSelvstendigNæringsdrivendeArbeidstidInfo(selvstendigNæringsdrivende.somK9ArbeidstidInfo(fraOgMed, tilOgMed))
+        medFrilanserArbeidstid(frilans.k9ArbeidstidInfo(fraOgMed, tilOgMed))
+        selvstendigNæringsdrivende.arbeidsforhold?.let {
+            medSelvstendigNæringsdrivendeArbeidstidInfo(selvstendigNæringsdrivende.k9ArbeidstidInfo(fraOgMed, tilOgMed))
+        }
     }
+    return arbeidstid
 }
 
 fun List<Arbeidsgiver>.tilK9Arbeidstaker(

@@ -62,7 +62,6 @@ internal fun genererSøknadForOmsUtSnf(
     ),
     bekreftelser = bekreftelser,
     utbetalingsperioder = utbetalingsperiode,
-    andreUtbetalinger = null,
     erArbeidstakerOgså = false,
     barn = barn,
     frilans = frilans,
