@@ -88,7 +88,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
                 sammeAdresse = true,
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true,
-                dataBruktTilUtledning = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+                dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("harBekreftetOpplysninger må være true") }
@@ -111,7 +111,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
             kroniskEllerFunksjonshemming = true,
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true,
-            dataBruktTilUtledning = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
         val faktiskK9Format = JSONObject(søknad.somK9Format(SøknadUtils.søker, metadata).somJson())
         //language=json

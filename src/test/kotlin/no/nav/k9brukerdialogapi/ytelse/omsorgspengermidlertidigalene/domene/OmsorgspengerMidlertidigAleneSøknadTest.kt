@@ -120,7 +120,7 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
             ),
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true,
-            dataBruktTilUtledning = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
         val faktiskK9Format = søknad.somK9Format(søker, metadata).somJson()
         val forventetK9Format =

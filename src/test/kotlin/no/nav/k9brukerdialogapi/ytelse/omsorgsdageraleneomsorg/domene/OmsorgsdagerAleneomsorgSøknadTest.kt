@@ -105,7 +105,7 @@ class OmsorgsdagerAleneomsorgSøknadTest {
             språk = "nb",
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true,
-            dataBruktTilUtledning = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
 
         val faktiskK9Format = søknad.somK9Format(søker, metadata).somJson()

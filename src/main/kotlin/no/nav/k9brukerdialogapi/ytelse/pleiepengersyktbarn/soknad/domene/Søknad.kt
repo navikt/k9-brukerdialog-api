@@ -69,7 +69,7 @@ data class Søknad(
     val barnRelasjon: BarnRelasjon? = null,
     val barnRelasjonBeskrivelse: String? = null,
     val harVærtEllerErVernepliktig: Boolean? = null,
-    val dataBruktTilUtledning: String? = null
+    val dataBruktTilUtledningAnnetData: String? = null
 ) : Innsending {
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
@@ -200,7 +200,7 @@ data class Søknad(
         .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
         .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
         .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
-        .medAnnetData(dataBruktTilUtledning)
+        .medAnnetData(dataBruktTilUtledningAnnetData)
 
     fun byggK9Omsorg() = Omsorg()
         .medRelasjonTilBarnet(

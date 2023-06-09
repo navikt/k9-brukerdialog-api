@@ -43,7 +43,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     private val arbeidsgivere: List<Arbeidsgiver>,
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null,
-    private val dataBruktTilUtledning: String? = null
+    private val dataBruktTilUtledningAnnetData: String? = null
 ): Innsending {
     override fun valider() = mutableListOf<String>().apply {
         krever(arbeidsgivere.isNotEmpty(), "Må ha minst en arbeidsgiver satt.")
@@ -99,7 +99,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         .medHarBekreftetOpplysninger(bekreftelser.harBekreftetOpplysninger)
         .medHarForståttRettigheterOgPlikter(bekreftelser.harForståttRettigheterOgPlikter)
         .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
-        .medAnnetData(dataBruktTilUtledning)
+        .medAnnetData(dataBruktTilUtledningAnnetData)
 
     override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = OmsorgspengerUtbetalingSøknadValidator()
     override fun ytelse(): Ytelse = Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER

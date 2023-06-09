@@ -50,7 +50,7 @@ class OmsorgspengerutbetalingSnfSøknad(
     private val frilans: Frilans? = null,
     private val selvstendigNæringsdrivende: Virksomhet? = null,
     internal val vedlegg: List<URL> = listOf(),
-    private val dataBruktTilUtledning: String? = null
+    private val dataBruktTilUtledningAnnetData: String? = null
 ): Innsending {
 
     companion object {
@@ -108,7 +108,7 @@ class OmsorgspengerutbetalingSnfSøknad(
         .medHarBekreftetOpplysninger(bekreftelser.harBekreftetOpplysninger)
         .medHarForståttRettigheterOgPlikter(bekreftelser.harForståttRettigheterOgPlikter)
         .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
-        .medAnnetData(dataBruktTilUtledning)
+        .medAnnetData(dataBruktTilUtledningAnnetData)
 
     private fun byggK9OpptjeningAktivitet() = OpptjeningAktivitet().apply {
         frilans?.let { medFrilanser(it.somK9Frilanser()) }

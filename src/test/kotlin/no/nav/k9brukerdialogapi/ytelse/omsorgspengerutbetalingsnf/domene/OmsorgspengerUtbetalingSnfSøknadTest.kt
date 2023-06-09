@@ -320,7 +320,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                 harFlereAktiveVirksomheter = true
             ),
             vedlegg = listOf(),
-            dataBruktTilUtledning = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
         val k9Format = søknad.somK9Format(SøknadUtils.søker, metadata).somJson()
         val forventetK9Format = """

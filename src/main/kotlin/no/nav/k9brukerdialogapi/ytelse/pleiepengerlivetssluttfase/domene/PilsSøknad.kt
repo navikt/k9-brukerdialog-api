@@ -56,7 +56,7 @@ class PilsSøknad(
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
     private val flereSokere: FlereSokereSvar? = null,
-    private val dataBruktTilUtledning: String? = null
+    private val dataBruktTilUtledningAnnetData: String? = null
 ): Innsending {
     companion object{
         private val K9_SØKNAD_VERSJON = Versjon.of("1.0.0")
@@ -141,7 +141,7 @@ class PilsSøknad(
         .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
         .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
         .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
-        .medAnnetData(dataBruktTilUtledning)
+        .medAnnetData(dataBruktTilUtledningAnnetData)
 
     private fun byggK9Uttak() = Uttak().medPerioder(mapOf(Periode(fraOgMed, tilOgMed) to UttakPeriodeInfo(SYV_OG_EN_HALV_TIME)))
 
