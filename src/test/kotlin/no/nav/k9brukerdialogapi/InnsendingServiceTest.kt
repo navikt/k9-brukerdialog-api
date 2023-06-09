@@ -239,7 +239,6 @@ internal class InnsendingServiceTest{
                                 )
                             )
                         ),
-                        andreUtbetalinger = null,
                         erArbeidstakerOgså = false,
                         barn = listOf(
                             no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn(

@@ -15,20 +15,20 @@ import java.time.LocalDate
 import no.nav.k9.søknad.felles.opptjening.SelvstendigNæringsdrivende as K9SelvstendigNæringsdrivende
 
 data class Virksomhet(
-    @JsonFormat(pattern = "yyyy-MM-dd") private val fraOgMed: LocalDate,
-    @JsonFormat(pattern = "yyyy-MM-dd") private val tilOgMed: LocalDate? = null,
-    private val næringstype: Næringstype,
-    private val fiskerErPåBladB: Boolean? = null,
-    private val næringsinntekt: Int? = null,
-    private val navnPåVirksomheten: String,
-    private val organisasjonsnummer: String? = null,
-    private val registrertINorge: Boolean? = null,
-    private val registrertIUtlandet: Land? = null,
-    private val yrkesaktivSisteTreFerdigliknedeÅrene: YrkesaktivSisteTreFerdigliknedeArene? = null,
-    private val varigEndring: VarigEndring? = null,
-    private val regnskapsfører: Regnskapsfører? = null,
-    private val erNyoppstartet: Boolean,
-    private val harFlereAktiveVirksomheter: Boolean? = null
+    @JsonFormat(pattern = "yyyy-MM-dd") val fraOgMed: LocalDate,
+    @JsonFormat(pattern = "yyyy-MM-dd") val tilOgMed: LocalDate? = null,
+    val næringstype: Næringstype,
+    val fiskerErPåBladB: Boolean? = null,
+    val næringsinntekt: Int? = null,
+    val navnPåVirksomheten: String,
+    val organisasjonsnummer: String? = null,
+    val registrertINorge: Boolean? = null,
+    val registrertIUtlandet: Land? = null,
+    val yrkesaktivSisteTreFerdigliknedeÅrene: YrkesaktivSisteTreFerdigliknedeArene? = null,
+    val varigEndring: VarigEndring? = null,
+    val regnskapsfører: Regnskapsfører? = null,
+    val erNyoppstartet: Boolean,
+    val harFlereAktiveVirksomheter: Boolean? = null
 ) {
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
