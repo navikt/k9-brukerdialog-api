@@ -12,6 +12,7 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.KafkaWrapper
 import no.nav.k9brukerdialogapi.OMSORGSPENGER_MIDLERTIDIG_ALENE_URL
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.TestConfiguration
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
@@ -125,7 +126,7 @@ class OmsorgspengerMidlertidigAleneTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE)
         assertEquals(
-            søknad.somKomplettSøknad(søker, søknad.somK9Format(søker)),
+            søknad.somKomplettSøknad(søker, søknad.somK9Format(søker, metadata)),
             hentet.data.somOmsorgspengerMidlertidigAleneKomplettSøknad()
         )
     }

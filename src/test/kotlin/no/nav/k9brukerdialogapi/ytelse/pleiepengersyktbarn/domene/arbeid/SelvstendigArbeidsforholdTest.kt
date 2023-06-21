@@ -4,6 +4,7 @@ import no.nav.k9.søknad.Søknad
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarn
 import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarnSøknadValidator
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Næringstype
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Regnskapsfører
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
@@ -309,7 +310,7 @@ class SelvstendigArbeidsforholdTest {
                 fornavn = "Ole",
                 mellomnavn = null,
                 etternavn = "Doffen"
-            )
+            ), metadata
         ) as Søknad
 
         PleiepengerSyktBarnSøknadValidator().forsikreValidert(psbK9FormatSøknad)

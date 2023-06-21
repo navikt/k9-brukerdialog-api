@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgspengermidlertidigalene.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
@@ -118,9 +119,10 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                     aktørId = null)
             ),
             harBekreftetOpplysninger = true,
-            harForståttRettigheterOgPlikter = true
+            harForståttRettigheterOgPlikter = true,
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
-        val faktiskK9Format = søknad.somK9Format(søker).somJson()
+        val faktiskK9Format = søknad.somK9Format(søker, metadata).somJson()
         val forventetK9Format =
             //language=json
             """
@@ -147,7 +149,12 @@ class OmsorgspengerMidlertidigAleneSøknadTest {
                   "periode": "2020-01-01/2020-10-01"
                 },
                 "begrunnelse": null,
-                "dataBruktTilUtledning": null
+                "dataBruktTilUtledning": {
+                    "harBekreftetOpplysninger": true,
+                    "harForståttRettigheterOgPlikter": true,
+                    "soknadDialogCommitSha": "abc-123",
+                    "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+                }
               },
               "begrunnelseForInnsending" : {
                 "tekst" : null

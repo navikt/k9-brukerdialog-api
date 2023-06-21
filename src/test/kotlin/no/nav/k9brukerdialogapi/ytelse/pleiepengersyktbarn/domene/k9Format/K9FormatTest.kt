@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.k9Format
 
 import no.nav.k9.søknad.JsonUtils
 import no.nav.k9.søknad.felles.type.Periode
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Enkeltdag
@@ -60,7 +61,7 @@ class K9FormatTest {
             fødselsdato = LocalDate.parse("2000-01-01"),
             fødselsnummer = "123456789"
         )
-        val k9Format = søknad.somK9Format(søker)
+        val k9Format = søknad.somK9Format(søker, metadata)
         val forventetK9FormatJsonV2 =
             //language=json
             """
@@ -126,15 +127,7 @@ class K9FormatTest {
                     "sluttdato": null
                   }
                 },
-                "dataBruktTilUtledning": {
-                  "harForståttRettigheterOgPlikter": true,
-                  "harBekreftetOpplysninger": true,
-                  "samtidigHjemme": null,
-                  "harMedsøker": null,
-                  "soknadDialogCommitSha": null,
-                  "bekrefterPeriodeOver8Uker": null,
-                  "ukjenteArbeidsforhold": null
-                },
+                "dataBruktTilUtledning": null,
                 "infoFraPunsj": null,
                 "bosteder": {
                   "perioder": {
@@ -262,7 +255,12 @@ class K9FormatTest {
                   "relasjonTilBarnet": "ANNET",
                   "beskrivelseAvOmsorgsrollen": "Gudfar til barnet"
                 },
-                "annetDataBruktTilUtledning": null
+                "annetDataBruktTilUtledning": {
+                    "harBekreftetOpplysninger": true,
+                    "harForståttRettigheterOgPlikter": true,
+                    "soknadDialogCommitSha": "abc-123",
+                    "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+                }
               },
               "språk": "nb",
               "journalposter": [],

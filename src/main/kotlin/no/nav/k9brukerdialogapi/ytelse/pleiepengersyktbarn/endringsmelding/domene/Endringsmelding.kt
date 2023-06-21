@@ -13,6 +13,7 @@ import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarnSøknadValidator
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
 import no.nav.k9brukerdialogapi.innsending.KomplettInnsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import java.net.URL
@@ -44,7 +45,7 @@ data class Endringsmelding(
 
     override fun søknadValidator(): SøknadValidator<Søknad> = PleiepengerSyktBarnSøknadValidator()
 
-    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Innsending {
+    override fun somK9Format(søker: Søker, metadata: Metadata): no.nav.k9.søknad.Innsending {
         return Søknad(
             SøknadId(søknadId),
             Versjon("1.0.0"),

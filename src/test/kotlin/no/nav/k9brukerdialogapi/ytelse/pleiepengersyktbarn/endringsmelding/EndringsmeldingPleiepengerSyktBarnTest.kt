@@ -158,6 +158,12 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                       "etablertTilsynTimerPerDag": "PT2H0M"
                     }
                   }
+                },
+                "annetDataBruktTilUtledning": {
+                    "harBekreftetOpplysninger": true,
+                    "harForståttRettigheterOgPlikter": true,
+                    "soknadDialogCommitSha": "abc-123",
+                    "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
                 }
               }
             }
@@ -262,7 +268,12 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                    "perioder": {}
                  },
                  "opptjeningAktivitet": {},
-                 "annetDataBruktTilUtledning": null
+                  "annetDataBruktTilUtledning": {
+                   "harBekreftetOpplysninger": true,
+                   "harForståttRettigheterOgPlikter": true,
+                   "soknadDialogCommitSha": "abc-123",
+                   "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+                 }
                },
                "journalposter": [],
                "begrunnelseForInnsending": {

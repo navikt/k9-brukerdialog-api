@@ -2,6 +2,7 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.AktivitetFravær
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bekreftelser
@@ -318,9 +319,10 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                 erNyoppstartet = true,
                 harFlereAktiveVirksomheter = true
             ),
-            vedlegg = listOf()
+            vedlegg = listOf(),
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
-        val k9Format = søknad.somK9Format(SøknadUtils.søker).somJson()
+        val k9Format = søknad.somK9Format(SøknadUtils.søker, metadata).somJson()
         val forventetK9Format = """
             {
               "søknadId": "${søknad.søknadId.id}",
@@ -413,7 +415,12 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                   },
                   "perioderSomSkalSlettes": {}
                 },
-                "dataBruktTilUtledning": null
+                "dataBruktTilUtledning": {
+                    "harBekreftetOpplysninger": true,
+                    "harForståttRettigheterOgPlikter": true,
+                    "soknadDialogCommitSha": "abc-123",
+                    "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+                }
               },
               "språk": "nb",
               "journalposter": [],

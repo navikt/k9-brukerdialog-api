@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.somJson
@@ -74,12 +75,12 @@ class OmsorgsdagerAleneomsorgSøknadTest {
         )
 
         //Mapping til k9Format skal ikke fungerer før split pga flere barn i lista
-        assertThrows<IllegalArgumentException> { søknad.somK9Format(søker) }
+        assertThrows<IllegalArgumentException> { søknad.somK9Format(søker, metadata) }
 
         val split = søknad.splittTilEgenSøknadPerBarn()
         assertTrue(split.size == 2)
 
-        val k9FormatSplit = split.map { it.somK9Format(søker).somJson() }
+        val k9FormatSplit = split.map { it.somK9Format(søker, metadata).somJson() }
         assertTrue(k9FormatSplit.first().contains(barn1.somK9Barn().somJson()))
         assertFalse(k9FormatSplit.first().contains(barn2.somK9Barn().somJson()))
 
@@ -103,10 +104,11 @@ class OmsorgsdagerAleneomsorgSøknadTest {
             ),
             språk = "nb",
             harForståttRettigheterOgPlikter = true,
-            harBekreftetOpplysninger = true
+            harBekreftetOpplysninger = true,
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
 
-        val faktiskK9Format = søknad.somK9Format(søker).somJson()
+        val faktiskK9Format = søknad.somK9Format(søker, metadata).somJson()
         val forventetK9Format =
             //language=json
             """
@@ -124,7 +126,12 @@ class OmsorgsdagerAleneomsorgSøknadTest {
                       "fødselsdato": null
                     },
                     "periode": "2022-01-01/..",
-                    "dataBruktTilUtledning": null
+                    "dataBruktTilUtledning": {
+                        "harBekreftetOpplysninger": true,
+                        "harForståttRettigheterOgPlikter": true,
+                        "soknadDialogCommitSha": "abc-123",
+                        "annetData": "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
+                    }
                   },
                   "språk": "nb",
                   "journalposter": [],

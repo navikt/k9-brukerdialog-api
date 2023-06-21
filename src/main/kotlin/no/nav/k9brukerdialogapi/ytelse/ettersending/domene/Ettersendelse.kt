@@ -8,6 +8,7 @@ import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -52,7 +53,7 @@ class Ettersendelse(
         )
     }
 
-    override fun somK9Format(søker: Søker) = Ettersendelse.builder()
+    override fun somK9Format(søker: Søker, metadata: Metadata) = Ettersendelse.builder()
         .søknadId(SøknadId(søknadId))
         .mottattDato(mottatt)
         .søker(søker.somK9Søker())

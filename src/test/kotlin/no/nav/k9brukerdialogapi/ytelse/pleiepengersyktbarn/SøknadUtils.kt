@@ -268,7 +268,8 @@ class SøknadUtils {
                 )
             ),
             utenlandskNæring = listOf(),
-            harVærtEllerErVernepliktig = true
+            harVærtEllerErVernepliktig = true,
+            dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
         )
     }
 }

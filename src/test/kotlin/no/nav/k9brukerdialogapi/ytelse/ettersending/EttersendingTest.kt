@@ -13,6 +13,7 @@ import no.nav.k9brukerdialogapi.ETTERSENDING_URL
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.KafkaWrapper
 import no.nav.k9brukerdialogapi.SøknadUtils
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.TestConfiguration
 import no.nav.k9brukerdialogapi.TestUtils
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
@@ -116,7 +117,7 @@ class EttersendingTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.ETTERSENDING)
         assertEquals(
-            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker), listOf("nav-logo.png")),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker, metadata), listOf("nav-logo.png")),
             hentet.data.somEttersendingKomplettSøknad()
         )
     }

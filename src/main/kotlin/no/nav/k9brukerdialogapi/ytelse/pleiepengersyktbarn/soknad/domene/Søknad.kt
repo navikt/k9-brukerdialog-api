@@ -7,7 +7,7 @@ import no.nav.k9.søknad.SøknadValidator
 import no.nav.k9.søknad.felles.Kildesystem
 import no.nav.k9.søknad.felles.Versjon
 import no.nav.k9.søknad.felles.type.SøknadId
-import no.nav.k9.søknad.ytelse.psb.v1.DataBruktTilUtledning
+import no.nav.k9.søknad.ytelse.DataBruktTilUtledning
 import no.nav.k9.søknad.ytelse.psb.v1.Omsorg
 import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarn
 import no.nav.k9.søknad.ytelse.psb.v1.PleiepengerSyktBarnSøknadValidator
@@ -17,6 +17,7 @@ import no.nav.k9.søknad.ytelse.psb.v1.tilsyn.Tilsynsordning
 import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
+import no.nav.k9brukerdialogapi.kafka.Metadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.utils.StringUtils
@@ -68,6 +69,7 @@ data class Søknad(
     val barnRelasjon: BarnRelasjon? = null,
     val barnRelasjonBeskrivelse: String? = null,
     val harVærtEllerErVernepliktig: Boolean? = null,
+    val dataBruktTilUtledningAnnetData: String? = null
 ) : Innsending {
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
@@ -152,7 +154,7 @@ data class Søknad(
 
     override fun søknadValidator(): SøknadValidator<no.nav.k9.søknad.Søknad> = PleiepengerSyktBarnSøknadValidator()
 
-    override fun somK9Format(søker: Søker): no.nav.k9.søknad.Innsending {
+    override fun somK9Format(søker: Søker, metadata: Metadata): no.nav.k9.søknad.Innsending {
         val søknadsperiode = K9Periode(fraOgMed, tilOgMed)
         val psb = PleiepengerSyktBarn()
             .medSøknadsperiode(søknadsperiode)
@@ -161,7 +163,7 @@ data class Søknad(
             .medArbeidstid(byggK9Arbeidstid())
             .medUttak(byggK9Uttak(søknadsperiode))
             .medBosteder(medlemskap.tilK9Bosteder())
-            .medSøknadInfo(byggK9DataBruktTilUtledning())
+            .medDataBruktTilUtledning(byggK9DataBruktTilUtledning(metadata)) as PleiepengerSyktBarn
 
         barnRelasjon?.let { psb.medOmsorg(byggK9Omsorg()) }
         beredskap?.let { if (it.beredskap) psb.medBeredskap(beredskap.tilK9Beredskap(søknadsperiode)) }
@@ -194,15 +196,11 @@ data class Søknad(
         return Uttak().medPerioder(perioder)
     }
 
-    fun byggK9DataBruktTilUtledning(): DataBruktTilUtledning = DataBruktTilUtledning(
-        harForståttRettigheterOgPlikter,
-        harBekreftetOpplysninger,
-        null,
-        null,
-        null,
-        null,
-        null
-    )
+    fun byggK9DataBruktTilUtledning(metadata: Metadata): DataBruktTilUtledning = DataBruktTilUtledning()
+        .medHarBekreftetOpplysninger(harBekreftetOpplysninger)
+        .medHarForståttRettigheterOgPlikter(harForståttRettigheterOgPlikter)
+        .medSoknadDialogCommitSha(metadata.soknadDialogCommitSha)
+        .medAnnetData(dataBruktTilUtledningAnnetData)
 
     fun byggK9Omsorg() = Omsorg()
         .medRelasjonTilBarnet(

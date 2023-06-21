@@ -13,6 +13,7 @@ import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.KafkaWrapper
 import no.nav.k9brukerdialogapi.OMSORGSPENGER_UTBETALING_SNF_URL
 import no.nav.k9brukerdialogapi.SøknadUtils
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.TestConfiguration
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
 import no.nav.k9brukerdialogapi.TestUtils.Companion.requestAndAssert
@@ -113,7 +114,7 @@ class OmsorgspengerUtbetalingSnfTest {
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId.id, Ytelse.OMSORGSPENGER_UTBETALING_SNF)
         assertEquals(
-            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker)),
+            søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker, metadata)),
             hentet.data.somOmsorgspengerUtbetalingSnfKomplettSøknad()
         )
     }

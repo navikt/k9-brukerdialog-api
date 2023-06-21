@@ -1,6 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending
 
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.somJson
@@ -38,7 +39,7 @@ class EttersendingSøknadTest {
               "ytelse": "PLEIEPENGER_LIVETS_SLUTTFASE"
             }
         """.trimIndent()
-        val faktiskK9Format = søknad.somK9Format(søker).somJson()
+        val faktiskK9Format = søknad.somK9Format(søker, metadata).somJson()
         JSONAssert.assertEquals(forventetK9Format, faktiskK9Format, true)
 
     }

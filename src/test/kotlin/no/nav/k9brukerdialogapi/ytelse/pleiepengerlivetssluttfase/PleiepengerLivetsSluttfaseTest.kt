@@ -12,6 +12,7 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.KafkaWrapper
 import no.nav.k9brukerdialogapi.PLEIEPENGER_LIVETS_SLUTTFASE_URL
+import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.søker
 import no.nav.k9brukerdialogapi.TestConfiguration
 import no.nav.k9brukerdialogapi.TestUtils.Companion.issueToken
@@ -110,7 +111,7 @@ class PleiepengerLivetsSluttfaseTest {
         )
         kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE).also {
             assertEquals(
-                søknad.somKomplettSøknad(søker, søknad.somK9Format(søker)),
+                søknad.somKomplettSøknad(søker, søknad.somK9Format(søker, metadata)),
                 it.data.somPleiepengerLivetsSluttfaseKomplettSøknad()
             )
         }
