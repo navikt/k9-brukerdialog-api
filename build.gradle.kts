@@ -74,7 +74,7 @@ repositories {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/navikt/dusseldorf-ktor")
         credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
+            username = project.findProperty("gpr.user") as String? ?: "k9-brukerdialog-api"
             password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
         }
     }
@@ -110,7 +110,7 @@ tasks.withType<ShadowJar> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "8.0.2"
+    gradleVersion = "8.2.1"
 }
 
 tasks.withType<Test> {
