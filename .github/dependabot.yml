@@ -10,18 +10,12 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-    open-pull-requests-limit: 15
     registries:
       - dusseldorf
     groups:
-      kontrakt:
-        patterns:
-          - "no.nav.k9*"
-      maven:
+      gradle:
         patterns:
           - "*"
-        exclude-patterns:
-          - "no.nav.k9*"
 
   - package-ecosystem: github-actions
     directory: "/"
