@@ -3,15 +3,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
 val dusseldorfKtorVersion = "4.0.2"
-val ktorVersion = "2.3.2"
+val ktorVersion = "2.3.3"
 val kafkaTestcontainerVersion = "1.18.3"
 val kafkaVersion = "3.5.1"
-val k9FormatVersion = "8.3.4"
+val k9FormatVersion = "9.0.0"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.1.0"
 val mockOauth2ServerVersion = "1.0.0"
 val junitVersion = "5.10.0"
-val jakartaElVersion = "3.0.4"
+val jakartaElVersion = "4.0.2"
 
 plugins {
     kotlin("jvm") version "1.9.0"
