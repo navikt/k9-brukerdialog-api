@@ -11,7 +11,7 @@ val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.1.2"
 val mockOauth2ServerVersion = "1.0.0"
 val junitVersion = "5.10.0"
-val jakartaElVersion = "4.0.2"
+val jakartaElVersion = "3.0.4"
 
 plugins {
     kotlin("jvm") version "1.9.0"
