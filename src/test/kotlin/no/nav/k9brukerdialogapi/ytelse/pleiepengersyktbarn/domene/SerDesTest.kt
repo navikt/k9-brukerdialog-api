@@ -11,8 +11,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Arbeidsgiver
@@ -37,6 +36,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandskNæring
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Utenlandsopphold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Årsak
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.Duration
@@ -102,11 +102,8 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                    "type": "SOM_VANLIG",
+                    "redusertArbeid": null
                   }
                 }
                 },
@@ -179,11 +176,8 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                    "type": "SOM_VANLIG",
+                    "redusertArbeid": null
                   }
                 }
               },
@@ -273,11 +267,8 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                   "type": "SOM_VANLIG",
+                    "redusertArbeid": null
                   }
                 }
               },
@@ -357,11 +348,8 @@ internal class SerDesTest {
                         "timerPerUkeISnitt": "PT37H30M"
                       },
                       "arbeidIPeriode": {
-                        "type": "ARBEIDER_VANLIG",
-                        "arbeiderIPerioden": "SOM_VANLIG",
-                        "prosentAvNormalt": null,
-                        "timerPerUke": null,
-                        "arbeidsuker": null
+                        "type": "SOM_VANLIG",
+                        "redusertArbeid": null
                       }
                     }
                 }
@@ -423,11 +411,8 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                    "type": "SOM_VANLIG",
+                    "redusertArbeid": null
                   }
                 }
               },
@@ -544,11 +529,8 @@ internal class SerDesTest {
                       "timerPerUkeISnitt": "PT37H30M"
                     },
                     "arbeidIPeriode": {
-                      "type": "ARBEIDER_VANLIG",
-                      "arbeiderIPerioden": "SOM_VANLIG",
-                      "prosentAvNormalt": null,
-                      "timerPerUke": null,
-                      "arbeidsuker": null
+                      "type": "SOM_VANLIG",
+                      "redusertArbeid": null
                     }
                   }
                 },
@@ -597,8 +579,7 @@ internal class SerDesTest {
                             timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                         ),
                         arbeidIPeriode = ArbeidIPeriode(
-                            type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                            arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                            type = ArbeidIPeriodeType.SOM_VANLIG
                         )
                     )
                 )
@@ -642,8 +623,7 @@ internal class SerDesTest {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.SOM_VANLIG
                     )
                 )
             ),
@@ -772,8 +752,7 @@ internal class SerDesTest {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.SOM_VANLIG
                     )
                 )
             ),

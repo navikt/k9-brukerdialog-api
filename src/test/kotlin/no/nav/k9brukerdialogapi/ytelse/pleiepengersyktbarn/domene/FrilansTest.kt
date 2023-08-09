@@ -3,25 +3,19 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.HonorarerIPerioden
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Format.byggK9OpptjeningAktivitet
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.k9Format.tilK9Frilanser
 import java.time.Duration
 import java.time.LocalDate
-import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 class FrilansTest {
 
@@ -37,8 +31,7 @@ class FrilansTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                type = ArbeidIPeriodeType.SOM_VANLIG
             )
         )
     }
@@ -56,14 +49,16 @@ class FrilansTest {
                     timerPerUkeISnitt = syvOgEnHalvTime
                 ),
                 arbeidIPeriode = ArbeidIPeriode(
-                    type = ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT,
-                    arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG,
-                   prosentAvNormalt = null
+                    type = ArbeidIPeriodeType.REDUSERT,
+                    redusertArbeid = ArbeidsRedusert(
+                        type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
+                        prosentAvNormalt = null
+                    )
                 )
             )
         )
             .valider("test")
-            .verifiserFeil(1, listOf("test.arbeidsforhold.arbeidIPeriode.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT"))
+            .verifiserFeil(1, listOf("test.arbeidsforhold.arbeidIPeriode.redusertArbeid.prosentAvNormalt må være satt dersom type=PROSENT_AV_NORMALT"))
     }
 
     @Test

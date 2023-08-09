@@ -4,7 +4,8 @@ import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Periode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsUke
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
@@ -17,7 +18,7 @@ import no.nav.k9.søknad.felles.type.Periode as K9Periode
 
 class ArbeidsforholdTest {
 
-    companion object{
+    companion object {
         val syvOgEnHalvTime = Duration.ofHours(7).plusMinutes(30)
         val femTimer = Duration.ofHours(5)
         val halvArbeidsdag = Duration.ofHours(3).plusMinutes(45)
@@ -31,30 +32,34 @@ class ArbeidsforholdTest {
     }
 
     @Test
-    fun `Skal gi valideringsfeil dersom arbeidIPeriode er feil`(){
+    fun `Skal gi valideringsfeil dersom arbeidIPeriode er feil`() {
         Arbeidsforhold(
             normalarbeidstid = NormalArbeidstid(
                 timerPerUkeISnitt = Duration.ofHours(32)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG,
-                prosentAvNormalt = null
+                type = ArbeidIPeriodeType.REDUSERT,
+                redusertArbeid = ArbeidsRedusert(
+                    type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
+                    prosentAvNormalt = null
+                )
             )
         )
             .valider("test")
-            .verifiserFeil(1, listOf("test.arbeidIPeriode.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT"))
+            .verifiserFeil(
+                1,
+                listOf("test.arbeidIPeriode.redusertArbeid.prosentAvNormalt må være satt dersom type=PROSENT_AV_NORMALT")
+            )
     }
 
     @Test
-    fun `Jobber som vanlig med normal arbeidstid oppgitt som snitt per uke`(){
+    fun `Jobber som vanlig med normal arbeidstid oppgitt som snitt per uke`() {
         val arbeidsforhold = Arbeidsforhold(
             normalarbeidstid = NormalArbeidstid(
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                type = ArbeidIPeriodeType.SOM_VANLIG
             )
         )
         val k9Arbeid = arbeidsforhold.tilK9ArbeidstidInfo(mandag, fredag)
@@ -66,14 +71,13 @@ class ArbeidsforholdTest {
     }
 
     @Test
-    fun `Jobber ikke med normal arbeidstid oppgitt som snitt per uke`(){
+    fun `Jobber ikke med normal arbeidstid oppgitt som snitt per uke`() {
         val arbeidsforhold = Arbeidsforhold(
             normalarbeidstid = NormalArbeidstid(
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_IKKE,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.HELT_FRAVÆR
+                type = ArbeidIPeriodeType.HELT_FRAVÆR
             )
         )
 
@@ -86,15 +90,17 @@ class ArbeidsforholdTest {
     }
 
     @Test
-    fun `Jobber prosent av normalt`(){
+    fun `Jobber prosent av normalt`() {
         val arbeidsforhold = Arbeidsforhold(
             normalarbeidstid = NormalArbeidstid(
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-                prosentAvNormalt = 50.0
+                type = ArbeidIPeriodeType.REDUSERT,
+                redusertArbeid = ArbeidsRedusert(
+                    type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
+                    prosentAvNormalt = 50.0
+                )
             )
         )
 
@@ -107,15 +113,17 @@ class ArbeidsforholdTest {
     }
 
     @Test
-    fun `Jobber timer i snitt per uke`(){
+    fun `Jobber timer i snitt per uke`() {
         val arbeidsforhold = Arbeidsforhold(
             normalarbeidstid = NormalArbeidstid(
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_TIMER_I_SNITT_PER_UKE,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-                timerPerUke = Duration.ofHours(25)
+                type = ArbeidIPeriodeType.REDUSERT,
+                redusertArbeid = ArbeidsRedusert(
+                    type = RedusertArbeidstidType.TIMER_I_SNITT_PER_UKE,
+                    timerPerUke = Duration.ofHours(25)
+                )
             )
         )
 
@@ -128,17 +136,19 @@ class ArbeidsforholdTest {
     }
 
     @Test
-    fun `Jobber ulike timer per uke`(){
+    fun `Jobber ulike timer per uke`() {
         val arbeidsforhold = Arbeidsforhold(
             normalarbeidstid = NormalArbeidstid(
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ), arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_ULIKE_UKER_TIMER,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-                arbeidsuker = listOf(
-                    ArbeidsUke(
-                        periode = Periode(mandag, søndag),
-                        timer = Duration.ofHours(18).plusMinutes(45), // 50% av normal arbeidstid.
+                type = ArbeidIPeriodeType.REDUSERT,
+                redusertArbeid = ArbeidsRedusert(
+                    type = RedusertArbeidstidType.ULIKE_UKER_TIMER,
+                    arbeidsuker = listOf(
+                        ArbeidsUke(
+                            periode = Periode(mandag, søndag),
+                            timer = Duration.ofHours(18).plusMinutes(45), // 50% av normal arbeidstid.
+                        )
                     )
                 )
             )

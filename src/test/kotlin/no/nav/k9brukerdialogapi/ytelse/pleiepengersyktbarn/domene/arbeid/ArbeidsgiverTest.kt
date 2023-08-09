@@ -5,7 +5,8 @@ import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Arbeidsgiver
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
@@ -36,14 +37,16 @@ class ArbeidsgiverTest {
                     timerPerUkeISnitt = syvOgEnHalvTime
                 ),
                 arbeidIPeriode = ArbeidIPeriode(
-                    type = ArbeidIPeriodeType.ARBEIDER_ULIKE_UKER_TIMER,
-                    arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG,
-                    arbeidsuker = null
+                    type = ArbeidIPeriodeType.REDUSERT,
+                    redusertArbeid = ArbeidsRedusert(
+                        type = RedusertArbeidstidType.ULIKE_UKER_TIMER,
+                        arbeidsuker = null
+                    )
                 )
             )
         )
             .valider("test")
-            .verifiserFeil(1, listOf("test.arbeidsforhold.arbeidIPeriode.arbeidsuker må være satt dersom type=ARBEIDER_ULIKE_UKER_TIMER"))
+            .verifiserFeil(1, listOf("test.arbeidsforhold.arbeidIPeriode.redusertArbeid.arbeidsuker må være satt dersom type=ULIKE_UKER_TIMER"))
     }
 
     @Test
@@ -57,8 +60,7 @@ class ArbeidsgiverTest {
                     timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                 ),
                 arbeidIPeriode = ArbeidIPeriode(
-                    type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                    arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                    type = ArbeidIPeriodeType.SOM_VANLIG
                 )
             )
         )

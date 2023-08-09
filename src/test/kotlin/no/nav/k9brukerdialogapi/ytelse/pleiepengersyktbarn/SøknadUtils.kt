@@ -33,7 +33,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Utenlan
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Årsak
@@ -78,8 +78,7 @@ class SøknadUtils {
                             timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                         ),
                         arbeidIPeriode = ArbeidIPeriode(
-                            type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                            arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                            type = ArbeidIPeriodeType.SOM_VANLIG
                         )
                     )
                 ),
@@ -129,8 +128,7 @@ class SøknadUtils {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.SOM_VANLIG
                     )
                 )
             ),
@@ -245,8 +243,7 @@ class SøknadUtils {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.SOM_VANLIG
                     )
                 )
             ),

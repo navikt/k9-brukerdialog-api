@@ -16,7 +16,8 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Selvste
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsUke
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
@@ -42,8 +43,7 @@ class SelvstendigArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                type = ArbeidIPeriodeType.SOM_VANLIG
             )
         )
 
@@ -52,15 +52,17 @@ class SelvstendigArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.ARBEIDER_ULIKE_UKER_TIMER,
-                arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-                arbeidsuker = listOf(
-                    ArbeidsUke(
-                        periode = no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Periode(
-                            fraOgMed = fraOgMed,
-                            tilOgMed = tilOgMed
-                        ),
-                        timer = Duration.ofHours(15)
+                type = ArbeidIPeriodeType.REDUSERT,
+                redusertArbeid = ArbeidsRedusert(
+                    type = RedusertArbeidstidType.ULIKE_UKER_TIMER,
+                    arbeidsuker = listOf(
+                        ArbeidsUke(
+                            periode = no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Periode(
+                                fraOgMed = fraOgMed,
+                                tilOgMed = tilOgMed
+                            ),
+                            timer = Duration.ofHours(15)
+                        )
                     )
                 )
             )
@@ -92,8 +94,7 @@ class SelvstendigArbeidsforholdTest {
                     timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                 ),
                 arbeidIPeriode = ArbeidIPeriode(
-                    type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                    arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                    type = ArbeidIPeriodeType.SOM_VANLIG
                 )
             )
         )

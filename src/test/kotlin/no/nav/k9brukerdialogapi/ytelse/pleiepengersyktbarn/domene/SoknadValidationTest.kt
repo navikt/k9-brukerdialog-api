@@ -3,8 +3,7 @@ package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene
 import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Land
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Arbeidsgiver
@@ -20,6 +19,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Selvste
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Språk
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import org.junit.jupiter.api.Assertions
 import java.net.URL
 import java.time.Duration
@@ -126,8 +126,7 @@ class SoknadValidationTest {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.SOM_VANLIG
                     )
                 )
             )
