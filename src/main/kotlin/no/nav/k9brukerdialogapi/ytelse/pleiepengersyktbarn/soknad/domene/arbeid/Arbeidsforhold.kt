@@ -31,8 +31,8 @@ data class Arbeidsforhold(
 
     }
 
-    internal fun valider(felt: String, harKunStyreverv: Boolean = false) = mutableListOf<String>().apply {
-        addAll(arbeidIPeriode.valider(felt = "$felt.arbeidIPeriode", harKunStyreverv = harKunStyreverv))
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        addAll(arbeidIPeriode.valider(felt = "$felt.arbeidIPeriode"))
     }
 
     fun tilK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate) = when (arbeidIPeriode.type) {

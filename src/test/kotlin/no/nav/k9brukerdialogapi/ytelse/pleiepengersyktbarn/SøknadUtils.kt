@@ -239,7 +239,7 @@ class SøknadUtils {
                 startdato = LocalDate.parse("2018-01-01"),
                 misterHonorarer = true,
                 misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER,
-                frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
+                type = FrilansType.FRILANS,
                 arbeidsforhold = Arbeidsforhold(
                     normalarbeidstid = NormalArbeidstid(
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)

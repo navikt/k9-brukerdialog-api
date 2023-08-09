@@ -15,7 +15,7 @@ internal fun Søknad.byggK9OpptjeningAktivitet(): OpptjeningAktivitet {
         opptjeningAktivitet.medSelvstendigNæringsdrivende(selvstendigNæringsdrivende.tilK9SelvstendigNæringsdrivende())
     }
 
-    val erFrilanserMedInntenkt = frilans.harInntektSomFrilanser && !frilans.frilansTyper.isNullOrEmpty() && frilans.frilansTyper.contains(FrilansType.FRILANS)
+    val erFrilanserMedInntenkt = frilans.harInntektSomFrilanser && frilans.type == FrilansType.FRILANS
     if (erFrilanserMedInntenkt) {
         opptjeningAktivitet.medFrilanser(frilans.tilK9Frilanser())
     }

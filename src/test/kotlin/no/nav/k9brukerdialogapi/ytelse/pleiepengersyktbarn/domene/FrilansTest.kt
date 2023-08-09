@@ -50,7 +50,7 @@ class FrilansTest {
             sluttdato = null,
             jobberFortsattSomFrilans = true,
             harInntektSomFrilanser = true,
-            frilansTyper = listOf(FrilansType.FRILANS),
+            type = FrilansType.FRILANS,
             arbeidsforhold = Arbeidsforhold(
                 normalarbeidstid = NormalArbeidstid(
                     timerPerUkeISnitt = syvOgEnHalvTime
@@ -73,7 +73,7 @@ class FrilansTest {
             sluttdato = LocalDate.parse("2019-01-01"),
             jobberFortsattSomFrilans = true,
             harInntektSomFrilanser = true,
-            frilansTyper = listOf(FrilansType.FRILANS),
+            type = FrilansType.FRILANS,
             arbeidsforhold = null
         )
             .valider("test")
@@ -87,7 +87,7 @@ class FrilansTest {
             sluttdato = LocalDate.parse("2020-01-01"),
             jobberFortsattSomFrilans = true,
             harInntektSomFrilanser = true,
-            frilansTyper = listOf(FrilansType.FRILANS),
+            type = FrilansType.FRILANS,
             arbeidsforhold = null
         ).valider("test").verifiserIngenFeil()
     }
@@ -99,7 +99,7 @@ class FrilansTest {
             sluttdato = LocalDate.parse("2021-01-01"),
             jobberFortsattSomFrilans = true,
             harInntektSomFrilanser = true,
-            frilansTyper = listOf(FrilansType.FRILANS),
+            type = FrilansType.FRILANS,
             arbeidsforhold = null
         ).valider("test").verifiserIngenFeil()
     }
@@ -110,35 +110,17 @@ class FrilansTest {
             startdato = null,
             jobberFortsattSomFrilans = null,
             sluttdato = LocalDate.parse("2029-01-01"),
-            frilansTyper = listOf(FrilansType.FRILANS),
+            type = FrilansType.FRILANS,
             harInntektSomFrilanser = true,
             arbeidsforhold = null
         )
             .valider("test")
             .verifiserFeil(2, listOf(
-                "test.startdato kan ikke være null dersom søker har frilans",
-                "test.jobberFortsattSomFrilans kan ikke være null dersom frilanstyper inneholder FRILANS"
+                "test.startdato kan ikke være null dersom test.type er FRILANS",
+                "test.jobberFortsattSomFrilans kan ikke være null dersom test.type er FRILANS"
             ))
     }
 
-    @Test
-    fun `Frilans hvor frilansyper inneholder STYREVERV og mister honorarer krever startdato og jobberFortsattSomFrilans`(){
-        Frilans(
-            startdato = null,
-            jobberFortsattSomFrilans = null,
-            sluttdato = LocalDate.parse("2029-01-01"),
-            frilansTyper = listOf(FrilansType.STYREVERV),
-            misterHonorarer = true,
-            misterHonorarerIPerioden = HonorarerIPerioden.MISTER_ALLE_HONORARER,
-            harInntektSomFrilanser = true,
-            arbeidsforhold = null
-        )
-            .valider("test")
-            .verifiserFeil(2, listOf(
-                "test.startdato kan ikke være null dersom søker kun har styreverv og mister honorarer",
-                "test.jobberFortsattSomFrilans kan ikke være null dersom søker kun har styreverv og mister honorarer"
-            ))
-    }
 
     @Test
     fun `Frilans jobber som vanlig i hele søknadsperioden`(){
@@ -286,105 +268,18 @@ class FrilansTest {
     }
 
     @Test
-    fun `Frilans med tom frilansTyper gir valideringsfeil`(){
+    fun `Frilans med tom type lik null gir valideringsfeil`(){
         Frilans(
             startdato = LocalDate.now(),
             sluttdato = LocalDate.parse("2029-01-01"),
             jobberFortsattSomFrilans = true,
             harInntektSomFrilanser = true,
             arbeidsforhold = null,
-            frilansTyper = listOf()
+            type = null
         )
             .valider("test")
             .verifiserFeil(1, listOf(
-                "test.frilansTyper kan ikke være tom dersom den er ulik null",
+                "test.type kan ikke være null dersom søker har inntekt som frilanser",
             ))
-    }
-    @Test
-    fun `Frilans med styreverv som mister honorarer, men misterHonorarerIPerioden er null, gir valideringsfeil`(){
-        Frilans(
-            startdato = LocalDate.now(),
-            sluttdato = LocalDate.parse("2029-01-01"),
-            jobberFortsattSomFrilans = true,
-            harInntektSomFrilanser = true,
-            arbeidsforhold = null,
-            frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
-            misterHonorarer = true,
-            misterHonorarerIPerioden = null
-        )
-            .valider("test")
-            .verifiserFeil(1, listOf(
-                "test.misterHonorarerIPerioden kan ikke være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er true",
-            ))
-    }
-    @Test
-    fun `Frilans med styreverv som ikke mister honorarer, men misterHonorarerIPerioden er ulik null, gir valideringsfeil`(){
-        Frilans(
-            startdato = LocalDate.now(),
-            sluttdato = LocalDate.parse("2029-01-01"),
-            jobberFortsattSomFrilans = true,
-            harInntektSomFrilanser = true,
-            arbeidsforhold = null,
-            frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
-            misterHonorarer = false,
-            misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
-        )
-            .valider("test")
-            .verifiserFeil(1, listOf(
-                "test.misterHonorarerIPerioden må være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er false",
-            ))
-    }
-    @Test
-    fun `Frilans uten styreverv som oppgir å miste honorarer gir valideringsfeil`(){
-        Frilans(
-            startdato = LocalDate.now(),
-            sluttdato = LocalDate.parse("2029-01-01"),
-            jobberFortsattSomFrilans = true,
-            harInntektSomFrilanser = true,
-            arbeidsforhold = null,
-            frilansTyper = listOf(FrilansType.FRILANS),
-            misterHonorarer = true,
-            misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
-        )
-            .valider("test")
-            .verifiserFeil(2, listOf(
-                "test.misterHonorarer må være null dersom frilansTyper ikke inneholder STYREVERV",
-                "test.misterHonorarerIPerioden må være null dersom frilansTyper ikke inneholder STYREVERV",
-            ))
-    }
-    @Test
-    fun `Frilans som kun har styreverv skal ikke mappes til k9Format`(){
-        val frilans = Frilans(
-            startdato = null,
-            sluttdato = null,
-            harInntektSomFrilanser = true,
-            frilansTyper = listOf(FrilansType.STYREVERV),
-            misterHonorarer = true,
-            misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
-        )
-
-        val opptjeningAktivitet = SøknadUtils.defaultSøknad()
-            .copy(frilans = frilans)
-            .byggK9OpptjeningAktivitet()
-
-        assertNull(opptjeningAktivitet.frilanser)
-    }
-    @Test
-    fun `Frilans som også har styreverv skal mappes til k9Format`(){
-        val frilans = Frilans(
-            startdato = LocalDate.now(),
-            sluttdato = null,
-            harInntektSomFrilanser = true,
-            jobberFortsattSomFrilans = true,
-            frilansTyper = listOf(FrilansType.STYREVERV, FrilansType.FRILANS),
-            misterHonorarer = true,
-            misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER
-        )
-
-        val opptjeningAktivitet = SøknadUtils.defaultSøknad()
-            .copy(frilans = frilans)
-            .byggK9OpptjeningAktivitet()
-
-        assertNotNull(opptjeningAktivitet.frilanser)
     }
 }
