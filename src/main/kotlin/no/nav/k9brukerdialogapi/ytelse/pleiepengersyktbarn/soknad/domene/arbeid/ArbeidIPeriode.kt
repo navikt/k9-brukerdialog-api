@@ -29,11 +29,11 @@ data class ArbeidIPeriode(
 
     internal fun valider(felt: String) = mutableListOf<String>().apply {
         when(type){
-            ArbeidIPeriodeType.REDUSERT -> {
-                kreverIkkeNull(redusertArbeid, "$felt.redusertArbeid må være satt dersom type=REDUSERT")
+            ArbeidIPeriodeType.ARBEIDER_REDUSERT -> {
+                kreverIkkeNull(redusertArbeid, "$felt.redusertArbeid må være satt dersom type=ARBEIDER_REDUSERT")
                 redusertArbeid?.valider("$felt.redusertArbeid")?.forEach { add(it) }
             }
-            ArbeidIPeriodeType.SOM_VANLIG, ArbeidIPeriodeType.HELT_FRAVÆR -> {} // Ikke noe å validere
+            ArbeidIPeriodeType.ARBEIDER_VANLIG, ArbeidIPeriodeType.ARBEIDER_IKKE -> {} // Ikke noe å validere
         }
     }
 

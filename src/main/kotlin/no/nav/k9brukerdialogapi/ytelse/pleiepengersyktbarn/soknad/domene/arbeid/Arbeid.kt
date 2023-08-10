@@ -6,9 +6,9 @@ internal val NULL_TIMER = Duration.ZERO
 internal const val DAGER_PER_UKE = 5L
 
 enum class ArbeidIPeriodeType {
-    SOM_VANLIG,
-    REDUSERT,
-    HELT_FRAVÆR
+    ARBEIDER_VANLIG,
+    ARBEIDER_REDUSERT,
+    ARBEIDER_IKKE
 }
 
 enum class RedusertArbeidstidType {

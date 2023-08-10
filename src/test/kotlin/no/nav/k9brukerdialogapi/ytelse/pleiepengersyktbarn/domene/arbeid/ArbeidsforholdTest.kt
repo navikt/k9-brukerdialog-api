@@ -38,7 +38,7 @@ class ArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(32)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.REDUSERT,
+                type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
                 redusertArbeid = ArbeidsRedusert(
                     type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
                     prosentAvNormalt = null
@@ -59,7 +59,7 @@ class ArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.SOM_VANLIG
+                type = ArbeidIPeriodeType.ARBEIDER_VANLIG
             )
         )
         val k9Arbeid = arbeidsforhold.tilK9ArbeidstidInfo(mandag, fredag)
@@ -77,7 +77,7 @@ class ArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.HELT_FRAVÆR
+                type = ArbeidIPeriodeType.ARBEIDER_IKKE
             )
         )
 
@@ -96,7 +96,7 @@ class ArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.REDUSERT,
+                type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
                 redusertArbeid = ArbeidsRedusert(
                     type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
                     prosentAvNormalt = 50.0
@@ -119,7 +119,7 @@ class ArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.REDUSERT,
+                type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
                 redusertArbeid = ArbeidsRedusert(
                     type = RedusertArbeidstidType.TIMER_I_SNITT_PER_UKE,
                     timerPerUke = Duration.ofHours(25)
@@ -141,7 +141,7 @@ class ArbeidsforholdTest {
             normalarbeidstid = NormalArbeidstid(
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ), arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.REDUSERT,
+                type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
                 redusertArbeid = ArbeidsRedusert(
                     type = RedusertArbeidstidType.ULIKE_UKER_TIMER,
                     arbeidsuker = listOf(

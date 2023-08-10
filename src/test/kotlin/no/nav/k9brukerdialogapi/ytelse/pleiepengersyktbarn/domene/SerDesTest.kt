@@ -11,7 +11,6 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Arbeidsgiver
@@ -22,7 +21,6 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Ferieut
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FerieuttakIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.HonorarerIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.KomplettSøknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Medlemskap
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Nattevåk
@@ -102,7 +100,7 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "SOM_VANLIG",
+                    "type": "ARBEIDER_VANLIG",
                     "redusertArbeid": null
                   }
                 }
@@ -176,7 +174,7 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "SOM_VANLIG",
+                    "type": "ARBEIDER_VANLIG",
                     "redusertArbeid": null
                   }
                 }
@@ -265,7 +263,7 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                   "type": "SOM_VANLIG",
+                   "type": "ARBEIDER_VANLIG",
                     "redusertArbeid": null
                   }
                 }
@@ -346,7 +344,7 @@ internal class SerDesTest {
                         "timerPerUkeISnitt": "PT37H30M"
                       },
                       "arbeidIPeriode": {
-                        "type": "SOM_VANLIG",
+                        "type": "ARBEIDER_VANLIG",
                         "redusertArbeid": null
                       }
                     }
@@ -409,7 +407,7 @@ internal class SerDesTest {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "SOM_VANLIG",
+                    "type": "ARBEIDER_VANLIG",
                     "redusertArbeid": null
                   }
                 }
@@ -525,7 +523,7 @@ internal class SerDesTest {
                       "timerPerUkeISnitt": "PT37H30M"
                     },
                     "arbeidIPeriode": {
-                      "type": "SOM_VANLIG",
+                      "type": "ARBEIDER_VANLIG",
                       "redusertArbeid": null
                     }
                   }
@@ -575,7 +573,7 @@ internal class SerDesTest {
                             timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                         ),
                         arbeidIPeriode = ArbeidIPeriode(
-                            type = ArbeidIPeriodeType.SOM_VANLIG
+                            type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                         )
                     )
                 )
@@ -619,7 +617,7 @@ internal class SerDesTest {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.SOM_VANLIG
+                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                     )
                 )
             ),
@@ -747,7 +745,7 @@ internal class SerDesTest {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.SOM_VANLIG
+                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                     )
                 )
             ),

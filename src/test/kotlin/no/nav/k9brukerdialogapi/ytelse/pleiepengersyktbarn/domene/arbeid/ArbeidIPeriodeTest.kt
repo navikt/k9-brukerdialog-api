@@ -1,7 +1,6 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid
 
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
-import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
@@ -19,7 +18,7 @@ class ArbeidIPeriodeTest {
     @Test
     fun `Skal gi feil dersom type=PROSENT_AV_NORMALT og prosentAvNormalt er null`() {
         ArbeidIPeriode(
-            type = ArbeidIPeriodeType.REDUSERT,
+            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
             redusertArbeid = ArbeidsRedusert(
                 type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
                 prosentAvNormalt = null
@@ -32,7 +31,7 @@ class ArbeidIPeriodeTest {
     @Test
     fun `Skal gi feil dersom type=TIMER_I_SNITT_PER_UKE og timerPerUke er null`() {
         ArbeidIPeriode(
-            type = ArbeidIPeriodeType.REDUSERT,
+            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
             redusertArbeid = ArbeidsRedusert(
                 type = RedusertArbeidstidType.TIMER_I_SNITT_PER_UKE,
                 timerPerUke = null
@@ -44,7 +43,7 @@ class ArbeidIPeriodeTest {
     @Test
     fun `Skal gi feil dersom type=ULIKE_UKER_TIMER og arbeidsuker er null eller tom`() {
         ArbeidIPeriode(
-            type = ArbeidIPeriodeType.REDUSERT,
+            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
             redusertArbeid = ArbeidsRedusert(
                 type = RedusertArbeidstidType.ULIKE_UKER_TIMER,
                 arbeidsuker = null

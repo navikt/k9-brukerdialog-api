@@ -240,7 +240,7 @@ class PleiepengerSyktBarnTest {
                             timerPerUkeISnitt = Duration.ZERO
                         ),
                         arbeidIPeriode = ArbeidIPeriode(
-                            type = ArbeidIPeriodeType.REDUSERT,
+                            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
                             redusertArbeid = ArbeidsRedusert(
                                 type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
                                 prosentAvNormalt = null

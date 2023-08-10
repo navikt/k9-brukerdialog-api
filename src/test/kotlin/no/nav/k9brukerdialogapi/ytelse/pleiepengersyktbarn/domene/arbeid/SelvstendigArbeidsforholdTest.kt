@@ -43,7 +43,7 @@ class SelvstendigArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.SOM_VANLIG
+                type = ArbeidIPeriodeType.ARBEIDER_VANLIG
             )
         )
 
@@ -52,7 +52,7 @@ class SelvstendigArbeidsforholdTest {
                 timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
             ),
             arbeidIPeriode = ArbeidIPeriode(
-                type = ArbeidIPeriodeType.REDUSERT,
+                type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
                 redusertArbeid = ArbeidsRedusert(
                     type = RedusertArbeidstidType.ULIKE_UKER_TIMER,
                     arbeidsuker = listOf(
@@ -94,7 +94,7 @@ class SelvstendigArbeidsforholdTest {
                     timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                 ),
                 arbeidIPeriode = ArbeidIPeriode(
-                    type = ArbeidIPeriodeType.SOM_VANLIG
+                    type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                 )
             )
         )

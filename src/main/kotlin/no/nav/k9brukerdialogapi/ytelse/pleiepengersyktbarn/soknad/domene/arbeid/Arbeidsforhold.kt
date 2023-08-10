@@ -35,9 +35,9 @@ data class Arbeidsforhold(
 
     fun tilK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
         return when (arbeidIPeriode.type) {
-            ArbeidIPeriodeType.SOM_VANLIG -> arbeiderVanlig(fraOgMed, tilOgMed)
-            ArbeidIPeriodeType.HELT_FRAVÆR -> arbeiderIkke(fraOgMed, tilOgMed)
-            ArbeidIPeriodeType.REDUSERT -> arbeiderRedusert(fraOgMed, tilOgMed)
+            ArbeidIPeriodeType.ARBEIDER_VANLIG -> arbeiderVanlig(fraOgMed, tilOgMed)
+            ArbeidIPeriodeType.ARBEIDER_IKKE -> arbeiderIkke(fraOgMed, tilOgMed)
+            ArbeidIPeriodeType.ARBEIDER_REDUSERT -> arbeiderRedusert(fraOgMed, tilOgMed)
         }
     }
 
