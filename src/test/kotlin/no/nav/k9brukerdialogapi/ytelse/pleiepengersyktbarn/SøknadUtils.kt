@@ -236,7 +236,6 @@ class SøknadUtils {
                 harInntektSomFrilanser = true,
                 startdato = LocalDate.parse("2018-01-01"),
                 misterHonorarer = true,
-                misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER,
                 type = FrilansType.FRILANS,
                 arbeidsforhold = Arbeidsforhold(
                     normalarbeidstid = NormalArbeidstid(

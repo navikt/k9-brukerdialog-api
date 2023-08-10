@@ -16,8 +16,6 @@ data class Frilans(
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
     val misterHonorarer: Boolean? = null,
-    val misterHonorarerIPerioden: HonorarerIPerioden? = null,
-    @Deprecated("Bruk type") val frilansTyper: List<FrilansType>? = null,
     val type: FrilansType? = null,
     val jobberFortsattSomFrilans: Boolean? = null,
     val arbeidsforhold: Arbeidsforhold? = null,
