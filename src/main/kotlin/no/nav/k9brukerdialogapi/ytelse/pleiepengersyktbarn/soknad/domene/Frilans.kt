@@ -15,7 +15,7 @@ data class Frilans(
     val startdato: LocalDate? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
-    val misterHonorarer: Boolean? = null,
+    val misterHonorar: Boolean? = null,
     val type: FrilansType? = null,
     val jobberFortsattSomFrilans: Boolean? = null,
     val arbeidsforhold: Arbeidsforhold? = null,
@@ -38,8 +38,8 @@ data class Frilans(
             when (type) {
                 FrilansType.HONORAR -> {
                     kreverIkkeNull(
-                        misterHonorarer,
-                        "$felt.misterHonorarer kan ikke være null dersom $felt.type er $type"
+                        misterHonorar,
+                        "$felt.misterHonorar kan ikke være null dersom $felt.type er $type"
                     )
 
                     kreverIkkeNull(
