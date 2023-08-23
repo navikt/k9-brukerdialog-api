@@ -43,6 +43,10 @@ data class Virksomhet(
             kreverIkkeNull(organisasjonsnummer, "$felt.organisasjonsnummer kan ikke være når $felt.registrertINorge er true")
         }
 
+        if (næringstype == Næringstype.FISKE) {
+            krever(fiskerErPåBladB != null, "$felt.fiskerErPåBladB kan ikke være null når $felt.næringstype er FISKE")
+        }
+
         registrertIUtlandet?.let { addAll(it.valider("$felt.registrertIUtlandet")) }
         organisasjonsnummer?.let {
             krever(it.all { tall -> tall.isDigit() }, "$felt.organisasjonsnummer kan kun bestå av tall.")
