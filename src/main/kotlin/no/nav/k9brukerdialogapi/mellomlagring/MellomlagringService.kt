@@ -31,6 +31,7 @@ class MellomlagringService(
         cacheRequest = CacheRequest(
             nøkkelPrefiks = genererNøkkelPrefix(ytelse),
             verdi = mellomlagring,
+            ytelse = ytelse,
             utløpsdato = ZonedDateTime.now(ZoneOffset.UTC).plusHours(mellomlagretTidTimer.toLong()),
             opprettet = ZonedDateTime.now(ZoneOffset.UTC),
             endret = null
