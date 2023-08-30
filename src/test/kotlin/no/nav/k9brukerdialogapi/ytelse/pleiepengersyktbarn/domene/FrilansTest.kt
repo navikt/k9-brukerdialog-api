@@ -292,8 +292,8 @@ class FrilansTest {
 
     @Test
     fun `Frilans med startdato etter søknadsperiodens start oppgir å ha startet før opptjeningsperiode får validerignsfeil`() {
-        val søknadsperiodeStartdato = LocalDate.parse("2023-01-29")
-        val frilansStart = LocalDate.parse("2023-01-05")
+        val søknadsperiodeStartdato = LocalDate.parse("2023-08-30")
+        val frilansStart = LocalDate.parse("2023-08-05")
         Frilans(
             startetFørOpptjeningsperiode = true,
             startdato = frilansStart,
@@ -306,8 +306,25 @@ class FrilansTest {
             .valider("test", søknadsperiodeStartdato)
             .verifiserFeil(
                 1, listOf(
-                    "Når frilanser har startet før opptjeningsperiode, må test.startdato (2023-01-05) må være før opptjeningsperiode (2023-01-01)"
+                    "Når frilanser har startet før opptjeningsperiode, må test.startdato (2023-08-05) må være før opptjeningsperiode (2023-08-02)"
                 )
             )
+    }
+
+    @Test
+    fun `Frilans med startdato før søknadsperiodens start oppgir å ha startet før opptjeningsperiode får ikke validerignsfeil`() {
+        val søknadsperiodeStartdato = LocalDate.parse("2023-08-30")
+        val frilansStart = LocalDate.parse("2023-08-01")
+        Frilans(
+            startetFørOpptjeningsperiode = true,
+            startdato = frilansStart,
+            sluttdato = LocalDate.parse("2029-01-01"),
+            jobberFortsattSomFrilans = true,
+            harInntektSomFrilanser = true,
+            arbeidsforhold = null,
+            type = FrilansType.FRILANS
+        )
+            .valider("test", søknadsperiodeStartdato)
+            .verifiserIngenFeil()
     }
 }

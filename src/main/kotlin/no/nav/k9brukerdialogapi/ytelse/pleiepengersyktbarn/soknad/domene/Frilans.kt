@@ -38,7 +38,7 @@ data class Frilans(
         val opptjeningsperiode = søknadsperiodeStart.minusDays(28)
         if (startetFørOpptjeningsperiode == true) {
             kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom $felt.startetFørOpptjeningsperiode er true")
-            krever(startdato == opptjeningsperiode, "Når frilanser har startet før opptjeningsperiode, må $felt.startdato ($startdato) må være før opptjeningsperiode ($opptjeningsperiode)")
+            krever(startdato == opptjeningsperiode.minusDays(1), "Når frilanser har startet før opptjeningsperiode, må $felt.startdato ($startdato) må være før opptjeningsperiode ($opptjeningsperiode)")
         }
 
         if (type != null) {
