@@ -232,6 +232,7 @@ class SøknadUtils {
             frilans = Frilans(
                 jobberFortsattSomFrilans = true,
                 harInntektSomFrilanser = true,
+                startetFørOpptjeningsperiode = false,
                 startdato = LocalDate.parse("2018-01-01"),
                 misterHonorar = true,
                 type = FrilansType.FRILANS,

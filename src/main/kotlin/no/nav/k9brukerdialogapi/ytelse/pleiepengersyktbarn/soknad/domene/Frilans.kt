@@ -1,17 +1,18 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
 import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import java.time.LocalDate
 
 data class Frilans(
     val harInntektSomFrilanser: Boolean,
     @JsonFormat(pattern = "yyyy-MM-dd")
+    val startetFørOpptjeningsperiode: Boolean? = null,
     val startdato: LocalDate? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
@@ -21,7 +22,7 @@ data class Frilans(
     val arbeidsforhold: Arbeidsforhold? = null,
 ) {
 
-    internal fun valider(felt: String) = mutableListOf<String>().apply {
+    internal fun valider(felt: String, søknadsperiodeStart: LocalDate) = mutableListOf<String>().apply {
         if (arbeidsforhold != null) addAll(
             arbeidsforhold.valider(felt = "$felt.arbeidsforhold")
         )
@@ -32,6 +33,12 @@ data class Frilans(
 
         if (harInntektSomFrilanser) {
             kreverIkkeNull(type, "$felt.type kan ikke være null dersom søker har inntekt som frilanser")
+        }
+
+        val opptjeningsperiode = søknadsperiodeStart.minusDays(28)
+        if (startetFørOpptjeningsperiode == true) {
+            kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom $felt.startetFørOpptjeningsperiode er true")
+            krever(startdato == opptjeningsperiode, "Når frilanser har startet før opptjeningsperiode, må $felt.startdato ($startdato) må være før opptjeningsperiode ($opptjeningsperiode)")
         }
 
         if (type != null) {

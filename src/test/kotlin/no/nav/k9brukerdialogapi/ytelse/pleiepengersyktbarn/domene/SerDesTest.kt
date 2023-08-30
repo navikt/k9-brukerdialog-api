@@ -253,6 +253,7 @@ internal class SerDesTest {
               },
               "frilans": {
                 "startdato": "2018-01-01",
+                "startetFørOpptjeningsperiode": false,
                 "sluttdato": null,
                 "jobberFortsattSomFrilans": true,
                 "harInntektSomFrilanser": true,
@@ -515,6 +516,7 @@ internal class SerDesTest {
                   "jobberFortsattSomFrilans": true,
                   "harInntektSomFrilanser": true,
                   "startdato": "2018-01-01",
+                  "startetFørOpptjeningsperiode": false,
                   "sluttdato": null,
                   "type": "FRILANS",
                   "misterHonorar": true,
@@ -737,6 +739,7 @@ internal class SerDesTest {
             frilans = Frilans(
                 harInntektSomFrilanser = true,
                 jobberFortsattSomFrilans = true,
+                startetFørOpptjeningsperiode = false,
                 startdato = LocalDate.parse("2018-01-01"),
                 misterHonorar = true,
                 type = FrilansType.FRILANS,
