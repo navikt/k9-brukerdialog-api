@@ -12,7 +12,7 @@ import java.time.LocalDate
 data class Frilans(
     val harInntektSomFrilanser: Boolean,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    val startetFørOpptjeningsperiode: Boolean? = null,
+    val startetFørSisteTreHeleMåneder: Boolean? = null,
     val startdato: LocalDate? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
@@ -35,10 +35,11 @@ data class Frilans(
             kreverIkkeNull(type, "$felt.type kan ikke være null dersom søker har inntekt som frilanser")
         }
 
-        val opptjeningsperiode = søknadsperiodeStart.minusDays(28)
-        if (startetFørOpptjeningsperiode == true) {
+        val sisteTreMånederFørSøknadsperioden = søknadsperiodeStart.minusMonths(3)
+        if (startetFørSisteTreHeleMåneder == true) {
             kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom $felt.startetFørOpptjeningsperiode er true")
-            krever(startdato == opptjeningsperiode.minusDays(1), "Når frilanser har startet før opptjeningsperiode, må $felt.startdato ($startdato) må være før opptjeningsperiode ($opptjeningsperiode)")
+            val dagenFørDeSisteTreMånderFørSøknadsperiodeStart = sisteTreMånederFørSøknadsperioden.minusDays(1)
+            krever(startdato == dagenFørDeSisteTreMånderFørSøknadsperiodeStart, "Når $felt.startetFørSisteTreHeleMåneder er true, må $felt.startdato ($startdato) må være 3 mnd før søknadsperioden ($sisteTreMånederFørSøknadsperioden)")
         }
 
         if (type != null) {
