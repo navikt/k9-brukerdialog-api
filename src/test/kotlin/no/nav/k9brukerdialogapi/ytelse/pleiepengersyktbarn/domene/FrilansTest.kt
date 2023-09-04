@@ -305,7 +305,7 @@ class FrilansTest {
             .valider("test", søknadsperiodeStartdato)
             .verifiserFeil(
                 1, listOf(
-                    "Når test.startetFørSisteTreHeleMåneder er true, må test.startdato (2023-05-05) må være 3 mnd før søknadsperioden (2023-05-31)"
+                    "Når test.startetFørSisteTreHeleMåneder er true, må test.startdato (2023-05-05) må være 3 mnd før søknadsperioden (2023-05-01)"
                 )
             )
     }
@@ -313,7 +313,7 @@ class FrilansTest {
     @Test
     fun `Frilans med startdato før søknadsperiodens start oppgir å ha startet før opptjeningsperiode får ikke validerignsfeil`() {
         val søknadsperiodeStartdato = LocalDate.parse("2023-08-31")
-        val frilansStart = LocalDate.parse("2023-05-30")
+        val frilansStart = LocalDate.parse("2023-04-30")
         Frilans(
             startetFørSisteTreHeleMåneder = true,
             startdato = frilansStart,

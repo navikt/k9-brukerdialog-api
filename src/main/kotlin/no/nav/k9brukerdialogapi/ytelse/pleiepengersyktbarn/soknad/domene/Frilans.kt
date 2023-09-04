@@ -6,6 +6,7 @@ import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
 import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.utils.månedStart
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import java.time.LocalDate
 
@@ -35,7 +36,7 @@ data class Frilans(
             kreverIkkeNull(type, "$felt.type kan ikke være null dersom søker har inntekt som frilanser")
         }
 
-        val sisteTreMånederFørSøknadsperioden = søknadsperiodeStart.minusMonths(3)
+        val sisteTreMånederFørSøknadsperioden = søknadsperiodeStart.månedStart().minusMonths(3)
         if (startetFørSisteTreHeleMåneder == true) {
             kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom $felt.startetFørOpptjeningsperiode er true")
             val dagenFørDeSisteTreMånderFørSøknadsperiodeStart = sisteTreMånederFørSøknadsperioden.minusDays(1)
