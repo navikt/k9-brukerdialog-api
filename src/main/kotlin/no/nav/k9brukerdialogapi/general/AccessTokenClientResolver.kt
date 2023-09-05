@@ -38,6 +38,7 @@ internal class AccessTokenClientResolver(
         clientId = client.clientId(),
         tokenEndpoint = client.tokenEndpoint(),
         privateKeyProvider = FromJwk(client.privateKeyJwk),
-        keyIdProvider = DirectKeyId(resolveKeyId(client))
+        keyIdProvider = DirectKeyId(resolveKeyId(client)),
+        // TODO: Konfigurer onBehalfOfGrantType istedefor å bruke tokenEndpoint.grantType()
     )
 }
