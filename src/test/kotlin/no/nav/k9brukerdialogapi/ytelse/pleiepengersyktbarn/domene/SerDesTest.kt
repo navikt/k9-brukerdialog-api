@@ -11,8 +11,6 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.SøknadUtils
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Arbeidsgiver
@@ -23,7 +21,6 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Ferieut
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FerieuttakIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.HonorarerIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.KomplettSøknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Medlemskap
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Nattevåk
@@ -37,6 +34,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandskNæring
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Utenlandsopphold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Årsak
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.Duration
@@ -103,10 +101,7 @@ internal class SerDesTest {
                   },
                   "arbeidIPeriode": {
                     "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                    "redusertArbeid": null
                   }
                 }
                 },
@@ -180,10 +175,7 @@ internal class SerDesTest {
                   },
                   "arbeidIPeriode": {
                     "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                    "redusertArbeid": null
                   }
                 }
               },
@@ -261,22 +253,19 @@ internal class SerDesTest {
               },
               "frilans": {
                 "startdato": "2018-01-01",
+                "startetFørSisteTreHeleMåneder": false,
                 "sluttdato": null,
                 "jobberFortsattSomFrilans": true,
                 "harInntektSomFrilanser": true,
-                "frilansTyper": ["FRILANS", "STYREVERV"],
-                "misterHonorarer": true,
-                "misterHonorarerIPerioden": "MISTER_DELER_AV_HONORARER",
+                "type": "FRILANS",
+                "misterHonorar": true,
                 "arbeidsforhold": {
                   "normalarbeidstid": {
                     "timerPerUkeISnitt": "PT37H30M"
                   },
                   "arbeidIPeriode": {
-                    "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                   "type": "ARBEIDER_VANLIG",
+                    "redusertArbeid": null
                   }
                 }
               },
@@ -357,10 +346,7 @@ internal class SerDesTest {
                       },
                       "arbeidIPeriode": {
                         "type": "ARBEIDER_VANLIG",
-                        "arbeiderIPerioden": "SOM_VANLIG",
-                        "prosentAvNormalt": null,
-                        "timerPerUke": null,
-                        "arbeidsuker": null
+                        "redusertArbeid": null
                       }
                     }
                 }
@@ -423,10 +409,7 @@ internal class SerDesTest {
                   },
                   "arbeidIPeriode": {
                     "type": "ARBEIDER_VANLIG",
-                    "arbeiderIPerioden": "SOM_VANLIG",
-                    "prosentAvNormalt": null,
-                    "timerPerUke": null,
-                    "arbeidsuker": null
+                    "redusertArbeid": null
                   }
                 }
               },
@@ -533,20 +516,17 @@ internal class SerDesTest {
                   "jobberFortsattSomFrilans": true,
                   "harInntektSomFrilanser": true,
                   "startdato": "2018-01-01",
+                  "startetFørSisteTreHeleMåneder": false,
                   "sluttdato": null,
-                  "frilansTyper": ["FRILANS", "STYREVERV"],
-                  "misterHonorarer": true,
-                  "misterHonorarerIPerioden": "MISTER_DELER_AV_HONORARER",
+                  "type": "FRILANS",
+                  "misterHonorar": true,
                   "arbeidsforhold": {
                     "normalarbeidstid": {
                       "timerPerUkeISnitt": "PT37H30M"
                     },
                     "arbeidIPeriode": {
                       "type": "ARBEIDER_VANLIG",
-                      "arbeiderIPerioden": "SOM_VANLIG",
-                      "prosentAvNormalt": null,
-                      "timerPerUke": null,
-                      "arbeidsuker": null
+                      "redusertArbeid": null
                     }
                   }
                 },
@@ -595,8 +575,7 @@ internal class SerDesTest {
                             timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                         ),
                         arbeidIPeriode = ArbeidIPeriode(
-                            type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                            arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                            type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                         )
                     )
                 )
@@ -640,8 +619,7 @@ internal class SerDesTest {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                     )
                 )
             ),
@@ -761,17 +739,16 @@ internal class SerDesTest {
             frilans = Frilans(
                 harInntektSomFrilanser = true,
                 jobberFortsattSomFrilans = true,
+                startetFørSisteTreHeleMåneder = false,
                 startdato = LocalDate.parse("2018-01-01"),
-                misterHonorarer = true,
-                misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER,
-                frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
+                misterHonorar = true,
+                type = FrilansType.FRILANS,
                 arbeidsforhold = Arbeidsforhold(
                     normalarbeidstid = NormalArbeidstid(
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                     )
                 )
             ),

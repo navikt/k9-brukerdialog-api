@@ -1,14 +1,12 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid
 
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_IKKE
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_TIMER_I_SNITT_PER_UKE
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_ULIKE_UKER_TIMER
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType.ARBEIDER_VANLIG
 import no.nav.k9.søknad.felles.type.Periode
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
 import no.nav.k9brukerdialogapi.utils.ikkeErHelg
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType.PROSENT_AV_NORMALT
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType.TIMER_I_SNITT_PER_UKE
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType.ULIKE_UKER_TIMER
 import java.time.LocalDate
 import java.util.*
 import kotlin.time.toJavaDuration
@@ -31,16 +29,25 @@ data class Arbeidsforhold(
 
     }
 
-    internal fun valider(felt: String, harKunStyreverv: Boolean = false) = mutableListOf<String>().apply {
-        addAll(arbeidIPeriode.valider(felt = "$felt.arbeidIPeriode", harKunStyreverv = harKunStyreverv))
+    internal fun valider(felt: String) = mutableListOf<String>().apply {
+        addAll(arbeidIPeriode.valider(felt = "$felt.arbeidIPeriode"))
     }
 
-    fun tilK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate) = when (arbeidIPeriode.type) {
-        ARBEIDER_VANLIG -> arbeiderVanlig(fraOgMed, tilOgMed)
-        ARBEIDER_IKKE -> arbeiderIkke(fraOgMed, tilOgMed)
-        ARBEIDER_TIMER_I_SNITT_PER_UKE -> arbeiderTimerISnittPerUke(fraOgMed, tilOgMed)
-        ARBEIDER_PROSENT_AV_NORMALT -> arbeiderProsentAvNormalt(fraOgMed, tilOgMed)
-        ARBEIDER_ULIKE_UKER_TIMER -> arbeidsukerUlikeTimer(fraOgMed, tilOgMed)
+    fun tilK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
+        return when (arbeidIPeriode.type) {
+            ArbeidIPeriodeType.ARBEIDER_VANLIG -> arbeiderVanlig(fraOgMed, tilOgMed)
+            ArbeidIPeriodeType.ARBEIDER_IKKE -> arbeiderIkke(fraOgMed, tilOgMed)
+            ArbeidIPeriodeType.ARBEIDER_REDUSERT -> arbeiderRedusert(fraOgMed, tilOgMed)
+        }
+    }
+
+    fun arbeiderRedusert(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
+        requireNotNull(arbeidIPeriode.redusertArbeid) { "For å regne ut redusert arbeid må den være satt." }
+        return when(arbeidIPeriode.redusertArbeid.type) {
+            PROSENT_AV_NORMALT -> arbeiderProsentAvNormalt(fraOgMed, tilOgMed)
+            TIMER_I_SNITT_PER_UKE -> arbeiderTimerISnittPerUke(fraOgMed, tilOgMed)
+            ULIKE_UKER_TIMER -> arbeidsukerUlikeTimer(fraOgMed, tilOgMed)
+        }
     }
 
     private fun arbeiderVanlig(fraOgMed: LocalDate, tilOgMed: LocalDate) =
@@ -76,11 +83,12 @@ data class Arbeidsforhold(
     }
 
     private fun arbeiderProsentAvNormalt(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
-        requireNotNull(arbeidIPeriode.prosentAvNormalt) { "For å regne ut arbeid fra prosentAvNormalt må den være satt." }
+        requireNotNull(arbeidIPeriode.redusertArbeid) { "For å regne ut redusert arbeid må den være satt." }
+        requireNotNull(arbeidIPeriode.redusertArbeid.prosentAvNormalt) { "For å regne ut arbeid fra prosentAvNormalt må den være satt." }
         val normaltTimerPerdag = normalarbeidstid.timerPerDagFraSnitt()
         val faktiskTimerPerDag = normaltTimerPerdag.toKotlinDuration()
             .div(100)
-            .times(arbeidIPeriode.prosentAvNormalt)
+            .times(arbeidIPeriode.redusertArbeid.prosentAvNormalt)
             .toJavaDuration()
 
         val arbeidstidPeriodeInfo = ArbeidstidPeriodeInfo()
@@ -93,9 +101,10 @@ data class Arbeidsforhold(
     }
 
     private fun arbeiderTimerISnittPerUke(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
-        requireNotNull(arbeidIPeriode.timerPerUke) { "For å regne ut arbeid fra timerPerUke må den være satt." }
+        requireNotNull(arbeidIPeriode.redusertArbeid) { "For å regne ut redusert arbeid må den være satt." }
+        requireNotNull(arbeidIPeriode.redusertArbeid.timerPerUke) { "For å regne ut arbeid fra timerPerUke må den være satt." }
         val normaltTimerPerDag = normalarbeidstid.timerPerDagFraSnitt()
-        val faktiskTimerPerDag = arbeidIPeriode.timerPerUke.dividedBy(DAGER_PER_UKE)
+        val faktiskTimerPerDag = arbeidIPeriode.redusertArbeid.timerPerUke.dividedBy(DAGER_PER_UKE)
 
         val arbeidstidPeriodeInfo = ArbeidstidPeriodeInfo()
             .medJobberNormaltTimerPerDag(normaltTimerPerDag)
@@ -110,10 +119,11 @@ data class Arbeidsforhold(
         fraOgMed: LocalDate,
         tilOgMed: LocalDate
     ): ArbeidstidInfo {
-        requireNotNull(arbeidIPeriode.arbeidsuker) { "For å regne ut arbeid fra arbeidsuker må den være satt." }
+        requireNotNull(arbeidIPeriode.redusertArbeid) { "For å regne ut redusert arbeid må den være satt." }
+        requireNotNull(arbeidIPeriode.redusertArbeid.arbeidsuker) { "For å regne ut arbeid fra arbeidsuker må den være satt." }
         val arbeidstidInfo = ArbeidstidInfo()
 
-        arbeidIPeriode.arbeidsuker.map { arbeidsuke: ArbeidsUke ->
+        arbeidIPeriode.redusertArbeid.arbeidsuker.map { arbeidsuke: ArbeidsUke ->
             requireNotNull(normalarbeidstid.timerPerUkeISnitt) { "normalarbeidstid.timerPerUkeISnitt må være satt." }
             val periodeUtenHelg: SortedSet<LocalDate> = arbeidsuke.periodeUtenHelg()
             val k9Periode = Periode(periodeUtenHelg.first(), periodeUtenHelg.last())

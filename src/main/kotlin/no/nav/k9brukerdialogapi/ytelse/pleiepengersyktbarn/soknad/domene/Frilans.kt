@@ -1,74 +1,72 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidInfo
 import no.nav.k9.søknad.ytelse.psb.v1.arbeidstid.ArbeidstidPeriodeInfo
 import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.kreverIkkeNull
+import no.nav.k9brukerdialogapi.utils.månedStart
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import java.time.LocalDate
 
 data class Frilans(
     val harInntektSomFrilanser: Boolean,
     @JsonFormat(pattern = "yyyy-MM-dd")
+    val startetFørSisteTreHeleMåneder: Boolean? = null,
     val startdato: LocalDate? = null,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sluttdato: LocalDate? = null,
-    val misterHonorarer: Boolean? = null,
-    val misterHonorarerIPerioden: HonorarerIPerioden? = null,
-    val frilansTyper: List<FrilansType>? = null,
+    val misterHonorar: Boolean? = null,
+    val type: FrilansType? = null,
     val jobberFortsattSomFrilans: Boolean? = null,
-    val arbeidsforhold: Arbeidsforhold? = null
+    val arbeidsforhold: Arbeidsforhold? = null,
 ) {
 
-    internal fun valider(felt: String) = mutableListOf<String>().apply {
-        val harKunStyreverv = frilansTyper?.all { it == FrilansType.STYREVERV} ?: false
-        if(arbeidsforhold != null) addAll(arbeidsforhold.valider(felt = "$felt.arbeidsforhold", harKunStyreverv = harKunStyreverv))
-        if(sluttdato != null && startdato != null){
+    internal fun valider(felt: String, søknadsperiodeStart: LocalDate) = mutableListOf<String>().apply {
+        if (arbeidsforhold != null) addAll(
+            arbeidsforhold.valider(felt = "$felt.arbeidsforhold")
+        )
+
+        if (sluttdato != null && startdato != null) {
             krever(startdato.erFørEllerLik(sluttdato), "$felt.sluttdato kan ikke være etter startdato")
         }
 
-        if(harInntektSomFrilanser) {
-            kreverIkkeNull(frilansTyper, "$felt.frilansTyper kan ikke være null dersom søker har inntekt som frilanser")
+        if (harInntektSomFrilanser) {
+            kreverIkkeNull(type, "$felt.type kan ikke være null dersom søker har inntekt som frilanser")
         }
 
-        if (harKunStyreverv && misterHonorarer == true) {
-            kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom søker kun har styreverv og mister honorarer")
-            kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom søker kun har styreverv og mister honorarer")
+        val sisteTreMånederFørSøknadsperioden = søknadsperiodeStart.månedStart().minusMonths(3)
+        if (startetFørSisteTreHeleMåneder == true) {
+            kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom $felt.startetFørOpptjeningsperiode er true")
+            val dagenFørDeSisteTreMånderFørSøknadsperiodeStart = sisteTreMånederFørSøknadsperioden.minusDays(1)
+            krever(startdato == dagenFørDeSisteTreMånderFørSøknadsperiodeStart, "Når $felt.startetFørSisteTreHeleMåneder er true, må $felt.startdato ($startdato) må være 3 mnd før søknadsperioden ($sisteTreMånederFørSøknadsperioden)")
         }
 
-        if (!frilansTyper.isNullOrEmpty() && frilansTyper.contains(FrilansType.FRILANS)) {
-            kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom søker har frilans")
-            kreverIkkeNull(jobberFortsattSomFrilans, "$felt.jobberFortsattSomFrilans kan ikke være null dersom frilanstyper inneholder FRILANS")
-        }
-
-        if (frilansTyper != null) {
-            krever(frilansTyper.isNotEmpty(), "$felt.frilansTyper kan ikke være tom dersom den er ulik null")
-
-            if (frilansTyper.isNotEmpty()) {
-                val harStyreverv = frilansTyper.contains(FrilansType.STYREVERV)
-
-                if (harStyreverv) {
-                    if (misterHonorarer == true) {
-                        kreverIkkeNull(
-                            misterHonorarerIPerioden,
-                            "$felt.misterHonorarerIPerioden kan ikke være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er true"
-                        )
-                    } else {
-                        krever(
-                            misterHonorarerIPerioden == null,
-                            "$felt.misterHonorarerIPerioden må være null dersom frilansTyper inneholder STYREVERV og misterHonorarer er false"
-                        )
-                    }
-                } else {
-                    krever(
-                        misterHonorarer == null,
-                        "$felt.misterHonorarer må være null dersom frilansTyper ikke inneholder STYREVERV"
+        if (type != null) {
+            when (type) {
+                FrilansType.HONORAR -> {
+                    kreverIkkeNull(
+                        misterHonorar,
+                        "$felt.misterHonorar kan ikke være null dersom $felt.type er $type"
                     )
-                    krever(
-                        misterHonorarerIPerioden == null,
-                        "$felt.misterHonorarerIPerioden må være null dersom frilansTyper ikke inneholder STYREVERV"
+
+                    kreverIkkeNull(
+                        startdato,
+                        "$felt.startdato kan ikke være null dersom $felt.type er $type"
+                    )
+
+                    kreverIkkeNull(
+                        jobberFortsattSomFrilans,
+                        "$felt.jobberFortsattSomFrilans kan ikke være null dersom $felt.type er $type"
+                    )
+                }
+
+                FrilansType.FRILANS, FrilansType.FRILANS_HONORAR -> {
+                    kreverIkkeNull(startdato, "$felt.startdato kan ikke være null dersom $felt.type er $type")
+                    kreverIkkeNull(
+                        jobberFortsattSomFrilans,
+                        "$felt.jobberFortsattSomFrilans kan ikke være null dersom $felt.type er $type"
                     )
                 }
             }
@@ -76,9 +74,13 @@ data class Frilans(
     }
 
     fun k9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate): ArbeidstidInfo {
-        return when{
+        return when {
             (arbeidsforhold == null) -> Arbeidsforhold.k9ArbeidstidInfoMedNullTimer(fraOgMed, tilOgMed)
-            startetOgSluttetISøknadsperioden(fraOgMed, tilOgMed) -> k9ArbeidstidInfoMedStartOgSluttIPerioden(fraOgMed, tilOgMed)
+            startetOgSluttetISøknadsperioden(fraOgMed, tilOgMed) -> k9ArbeidstidInfoMedStartOgSluttIPerioden(
+                fraOgMed,
+                tilOgMed
+            )
+
             sluttetISøknadsperioden(tilOgMed) -> k9ArbeidstidInfoMedSluttIPerioden(fraOgMed, tilOgMed)
             startetISøknadsperioden(fraOgMed) -> k9ArbeidstidInfoMedStartIPerioden(fraOgMed, tilOgMed)
             else -> arbeidsforhold.tilK9ArbeidstidInfo(fraOgMed, tilOgMed)
@@ -128,11 +130,12 @@ data class Frilans(
 
     private fun sluttetISøknadsperioden(tilOgMed: LocalDate?) = (sluttdato != null && sluttdato.isBefore(tilOgMed))
     private fun startetISøknadsperioden(fraOgMed: LocalDate) = startdato?.isAfter(fraOgMed) ?: false
-    private fun startetOgSluttetISøknadsperioden(fraOgMed: LocalDate, tilOgMed: LocalDate?) = sluttetISøknadsperioden(tilOgMed) && startetISøknadsperioden(fraOgMed)
+    private fun startetOgSluttetISøknadsperioden(fraOgMed: LocalDate, tilOgMed: LocalDate?) =
+        sluttetISøknadsperioden(tilOgMed) && startetISøknadsperioden(fraOgMed)
 }
 
 enum class FrilansType {
-    FRILANS, STYREVERV
+    FRILANS, FRILANS_HONORAR, HONORAR
 }
 
 enum class HonorarerIPerioden {

@@ -34,7 +34,8 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Ferieut
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.SelvstendigNæringsdrivende
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.ÅrsakManglerIdentitetsnummer
@@ -203,7 +204,7 @@ class PleiepengerSyktBarnTest {
                   "detail": "Requesten inneholder ugyldige paramtere.",
                   "instance": "about:blank",
                   "invalid_parameters": [
-                    "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT",
+                    "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.redusertArbeid.prosentAvNormalt må være satt dersom type=PROSENT_AV_NORMALT",
                     "selvstendigNæringsdrivende.virksomhet.nyOppstartet er false. selvstendigNæringsdrivende.virksomhet.fraOgMed må være over 4 år siden",
                     "selvstendigNæringsdrivende.virksomhet.registrertIUtlandet kan ikke være null når selvstendigNæringsdrivende.virksomhet.registrertINorge er false"
                   ]
@@ -239,9 +240,11 @@ class PleiepengerSyktBarnTest {
                             timerPerUkeISnitt = Duration.ZERO
                         ),
                         arbeidIPeriode = ArbeidIPeriode(
-                            type = ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT,
-                            arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-                            prosentAvNormalt = null
+                            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
+                            redusertArbeid = ArbeidsRedusert(
+                                type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
+                                prosentAvNormalt = null
+                            )
                         )
                     )
                 )

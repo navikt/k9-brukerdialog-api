@@ -1,10 +1,10 @@
 package no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.domene.arbeid
 
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
-import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import java.time.Duration
 import kotlin.test.Test
@@ -16,40 +16,39 @@ class ArbeidIPeriodeTest {
     }
 
     @Test
-    fun `Skal gi feil dersom type=ARBEIDER_PROSENT_AV_NORMALT og prosentAvNormalt er null`() {
+    fun `Skal gi feil dersom type=PROSENT_AV_NORMALT og prosentAvNormalt er null`() {
         ArbeidIPeriode(
-            type = ArbeidIPeriodeType.ARBEIDER_PROSENT_AV_NORMALT,
-            arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-            prosentAvNormalt = null
+            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
+            redusertArbeid = ArbeidsRedusert(
+                type = RedusertArbeidstidType.PROSENT_AV_NORMALT,
+                prosentAvNormalt = null
+            )
         )
             .valider("test")
-            .verifiserFeil(1, listOf("test.prosentAvNormalt må være satt dersom type=ARBEIDER_PROSENT_AV_NORMALT"))
+            .verifiserFeil(1, listOf("test.redusertArbeid.prosentAvNormalt må være satt dersom type=PROSENT_AV_NORMALT"))
     }
 
     @Test
-    fun `Skal gi feil dersom type=ARBEIDER_TIMER_I_SNITT_PER_UKE og timerPerUke er null`() {
+    fun `Skal gi feil dersom type=TIMER_I_SNITT_PER_UKE og timerPerUke er null`() {
         ArbeidIPeriode(
-            type = ArbeidIPeriodeType.ARBEIDER_TIMER_I_SNITT_PER_UKE,
-            arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-            timerPerUke = null
-        ).valider("test").verifiserFeil(1, listOf("test.timerPerUke må være satt dersom type=ARBEIDER_TIMER_I_SNITT_PER_UKE"))
+            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
+            redusertArbeid = ArbeidsRedusert(
+                type = RedusertArbeidstidType.TIMER_I_SNITT_PER_UKE,
+                timerPerUke = null
+            )
+        ).valider("test")
+            .verifiserFeil(1, listOf("test.redusertArbeid.timerPerUke må være satt dersom type=TIMER_I_SNITT_PER_UKE"))
     }
 
     @Test
-    fun `Skal gi feil dersom type=ARBEIDER_ULIKE_UKER_TIMER og arbeidsuker er null eller tom`() {
+    fun `Skal gi feil dersom type=ULIKE_UKER_TIMER og arbeidsuker er null eller tom`() {
         ArbeidIPeriode(
-            type = ArbeidIPeriodeType.ARBEIDER_ULIKE_UKER_TIMER,
-            arbeiderIPerioden = ArbeiderIPeriodenSvar.REDUSERT,
-            arbeidsuker = null
-        ).valider("test").verifiserFeil(1, listOf("test.arbeidsuker må være satt dersom type=ARBEIDER_ULIKE_UKER_TIMER"))
-    }
-
-    @Test
-    fun `Skal ikke gi feil dersom arbeiderIPerioden er null, og søker har kun styreverv`() {
-        ArbeidIPeriode(
-            type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-            arbeiderIPerioden = null,
-            arbeidsuker = null
-        ).valider("test", harKunStyreverv = true).verifiserIngenFeil()
+            type = ArbeidIPeriodeType.ARBEIDER_REDUSERT,
+            redusertArbeid = ArbeidsRedusert(
+                type = RedusertArbeidstidType.ULIKE_UKER_TIMER,
+                arbeidsuker = null
+            )
+        ).valider("test")
+            .verifiserFeil(1, listOf("test.redusertArbeid.arbeidsuker må være satt dersom type=ULIKE_UKER_TIMER"))
     }
 }

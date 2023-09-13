@@ -131,7 +131,7 @@ data class Søknad(
         addAll(selvstendigNæringsdrivende.valider())
         addAll(opptjeningIUtlandet.valider())
         addAll(utenlandskNæring.valider("utenlandskNæring"))
-        addAll(frilans.valider("frilans"))
+        addAll(frilans.valider("frilans", fraOgMed))
         addAll(medlemskap.valider("medlemskap"))
         addAll(utenlandsoppholdIPerioden.valider("utenlandsoppholdIPerioden"))
         krever(harBekreftetOpplysninger, "Opplysningene må bekreftes for å sende inn søknad")

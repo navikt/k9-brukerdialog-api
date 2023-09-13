@@ -17,7 +17,6 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Ferieut
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FerieuttakIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Frilans
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.FrilansType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.HonorarerIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Medlemskap
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Nattevåk
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Omsorgstilbud
@@ -33,7 +32,6 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Utenlan
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.UtenlandsoppholdIPerioden
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeiderIPeriodenSvar
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Årsak
@@ -78,8 +76,7 @@ class SøknadUtils {
                             timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                         ),
                         arbeidIPeriode = ArbeidIPeriode(
-                            type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                            arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                            type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                         )
                     )
                 ),
@@ -129,8 +126,7 @@ class SøknadUtils {
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                     )
                 )
             ),
@@ -236,17 +232,16 @@ class SøknadUtils {
             frilans = Frilans(
                 jobberFortsattSomFrilans = true,
                 harInntektSomFrilanser = true,
+                startetFørSisteTreHeleMåneder = false,
                 startdato = LocalDate.parse("2018-01-01"),
-                misterHonorarer = true,
-                misterHonorarerIPerioden = HonorarerIPerioden.MISTER_DELER_AV_HONORARER,
-                frilansTyper = listOf(FrilansType.FRILANS, FrilansType.STYREVERV),
+                misterHonorar = true,
+                type = FrilansType.FRILANS,
                 arbeidsforhold = Arbeidsforhold(
                     normalarbeidstid = NormalArbeidstid(
                         timerPerUkeISnitt = Duration.ofHours(37).plusMinutes(30)
                     ),
                     arbeidIPeriode = ArbeidIPeriode(
-                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG,
-                        arbeiderIPerioden = ArbeiderIPeriodenSvar.SOM_VANLIG
+                        type = ArbeidIPeriodeType.ARBEIDER_VANLIG
                     )
                 )
             ),
