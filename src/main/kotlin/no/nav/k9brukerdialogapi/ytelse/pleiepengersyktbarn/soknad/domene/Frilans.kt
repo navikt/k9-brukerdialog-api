@@ -51,15 +51,16 @@ data class Frilans(
                         "$felt.misterHonorar kan ikke være null dersom $felt.type er $type"
                     )
 
-                    kreverIkkeNull(
-                        startdato,
-                        "$felt.startdato kan ikke være null dersom $felt.type er $type"
-                    )
-
-                    kreverIkkeNull(
-                        jobberFortsattSomFrilans,
-                        "$felt.jobberFortsattSomFrilans kan ikke være null dersom $felt.type er $type"
-                    )
+                    if (misterHonorar == true) {
+                        kreverIkkeNull(
+                            startdato,
+                            "$felt.startdato kan ikke være null dersom $felt.type er $type"
+                        )
+                        kreverIkkeNull(
+                            jobberFortsattSomFrilans,
+                            "$felt.jobberFortsattSomFrilans kan ikke være null dersom $felt.type er $type"
+                        )
+                    }
                 }
 
                 FrilansType.FRILANS, FrilansType.FRILANS_HONORAR -> {
