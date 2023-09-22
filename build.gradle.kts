@@ -2,20 +2,20 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "4.0.8"
-val ktorVersion = "2.3.3"
-val kafkaTestcontainerVersion = "1.18.3"
+val dusseldorfKtorVersion = "4.0.10"
+val ktorVersion = "2.3.4"
+val kafkaTestcontainerVersion = "1.19.0"
 val kafkaVersion = "3.5.1"
-val k9FormatVersion = "9.0.0"
+val k9FormatVersion = "9.0.4"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.1.5"
-val mockOauth2ServerVersion = "1.0.0"
+val mockOauth2ServerVersion = "2.0.1"
 val junitVersion = "5.10.0"
-val jakartaElVersion = "3.0.4"
+val jakartaElVersion = "4.0.2"
 
 plugins {
-    kotlin("jvm") version "1.9.0"
-    id("org.sonarqube") version "4.3.0.3225"
+    kotlin("jvm") version "1.9.10"
+    id("org.sonarqube") version "4.3.1.3277"
     id("jacoco")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -65,7 +65,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
     testImplementation("org.skyscreamer:jsonassert:1.5.1")
-    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 }
 
