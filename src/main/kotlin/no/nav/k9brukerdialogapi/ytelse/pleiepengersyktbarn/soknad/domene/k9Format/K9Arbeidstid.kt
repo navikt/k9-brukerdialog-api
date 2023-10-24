@@ -32,7 +32,3 @@ fun List<Arbeidsgiver>.tilK9Arbeidstaker(
                 .medArbeidstidInfo(it.k9ArbeidstidInfo(fraOgMed, tilOgMed))
     }
 }
-
-fun LocalDate.ukedagerTilOgMed(tilOgMed: LocalDate): List<LocalDate> = datesUntil(tilOgMed.plusDays(1))
-    .toList()
-    .filterNot { it.dayOfWeek == DayOfWeek.SUNDAY || it.dayOfWeek == DayOfWeek.SATURDAY }

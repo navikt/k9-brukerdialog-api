@@ -9,6 +9,9 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.VarigEndring
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.YrkesaktivSisteTreFerdigliknedeArene
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.enkeltDagerMedFulltFravær
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.fredag
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.mandag
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
@@ -74,8 +77,8 @@ class SelvstendigNæringsdrivendeTest {
 
     @Test
     fun `Mapping til K9Arbeidstid blir som forventet`(){
-        val mandag = LocalDate.parse("2022-08-01")
-        val fredag = mandag.plusDays(5)
+        val mandag = mandag
+        val fredag = fredag
         val arbeidstidInfo = SelvstendigNæringsdrivende(
             virksomhet = no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet(
                 fraOgMed = LocalDate.parse("2022-01-01"),
@@ -84,12 +87,29 @@ class SelvstendigNæringsdrivendeTest {
                 navnPåVirksomheten = "Kiwi ASA",
                 erNyoppstartet = true,
             ),
-            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, emptyList()))
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, enkeltDagerMedFulltFravær))
         ).somK9ArbeidstidInfo(mandag, fredag)
+        // language=json
         val forventet = """
             {
               "perioder": {
-                "2022-08-01/2022-08-06": {
+                "2022-08-01/2022-08-01": {
+                  "jobberNormaltTimerPerDag": "PT7H30M",
+                  "faktiskArbeidTimerPerDag": "PT0S"
+                },
+                "2022-08-02/2022-08-02": {
+                  "jobberNormaltTimerPerDag": "PT7H30M",
+                  "faktiskArbeidTimerPerDag": "PT0S"
+                },
+                "2022-08-03/2022-08-03": {
+                  "jobberNormaltTimerPerDag": "PT7H30M",
+                  "faktiskArbeidTimerPerDag": "PT0S"
+                },
+                "2022-08-04/2022-08-04": {
+                  "jobberNormaltTimerPerDag": "PT7H30M",
+                  "faktiskArbeidTimerPerDag": "PT0S"
+                },
+                "2022-08-05/2022-08-05": {
                   "jobberNormaltTimerPerDag": "PT7H30M",
                   "faktiskArbeidTimerPerDag": "PT0S"
                 }
@@ -126,7 +146,7 @@ class SelvstendigNæringsdrivendeTest {
                 erNyoppstartet = true,
                 harFlereAktiveVirksomheter = true
             ),
-            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, emptyList()))
+            arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(HELT_FRAVÆR, enkeltDagerMedFulltFravær))
         ).valider().verifiserIngenFeil()
     }
 
@@ -151,7 +171,7 @@ class SelvstendigNæringsdrivendeTest {
             arbeidsforhold = Arbeidsforhold(37.5, ArbeidIPeriode(REDUSERT, emptyList()))
         ).valider().verifiserFeil(2, listOf(
             "selvstendigNæringsdrivende.virksomhet.organisasjonsnummer kan kun bestå av tall.",
-            "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT."
+            "selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være tom liste."
         ))
     }
 }
