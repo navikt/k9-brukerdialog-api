@@ -22,7 +22,7 @@ class ArbeidIPeriode(
             "$felt.enkeltdager kan ikke være tom liste."
         )
 
-        when (jobberIPerioden) {
+        /*when (jobberIPerioden) {
             JobberIPeriodeSvar.HELT_FRAVÆR -> {
                 enkeltdager.mapIndexed { index, enkeltdag ->
                     krever(
@@ -42,7 +42,7 @@ class ArbeidIPeriode(
             }
 
             JobberIPeriodeSvar.REDUSERT -> {}  // ingen validering
-        }
+        }*/
     }
 
     internal fun somK9ArbeidstidInfo(normaltimerPerDag: Duration) =

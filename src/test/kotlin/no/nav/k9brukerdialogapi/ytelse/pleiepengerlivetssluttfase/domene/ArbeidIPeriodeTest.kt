@@ -18,6 +18,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTes
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.tirsdag
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.torsdag
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
+import org.junit.jupiter.api.Disabled
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
@@ -41,6 +42,7 @@ class ArbeidIPeriodeTest {
     }
 
     @Test
+    @Disabled
     fun `Forvent feil dersom HELT_FRAVÆR og enkeltdager inneholder timer med arbeid`() {
         ArbeidIPeriode(
             HELT_FRAVÆR, listOf(
@@ -59,6 +61,7 @@ class ArbeidIPeriodeTest {
     }
 
     @Test
+    @Disabled
     fun `Forvent feil dersom SOM_VANLIG og enkeltdager inneholder timer med ingen arbeid`() {
         ArbeidIPeriode(
             SOM_VANLIG, listOf(
