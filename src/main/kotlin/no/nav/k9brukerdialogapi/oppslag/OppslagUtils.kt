@@ -29,6 +29,6 @@ fun genererOppslagHttpRequest(
             HttpHeaders.Authorization to "Bearer ${idToken.value}",
             HttpHeaders.Accept to MediaTypeUtils.APPLICATION_JSON,
             HttpHeaders.XCorrelationId to callId.value,
-            "X-K9-YTELSE" to ytelse
+            "X-K9-Ytelse" to ytelse
         )
 }
