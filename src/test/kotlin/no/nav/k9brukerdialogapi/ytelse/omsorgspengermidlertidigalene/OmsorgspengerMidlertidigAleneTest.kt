@@ -122,7 +122,8 @@ class OmsorgspengerMidlertidigAleneTest {
             jwtToken = tokenXToken,
             requestEntity = søknad.somJson(),
             engine = engine,
-            logger = logger
+            logger = logger,
+            ytelse = Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE)
         assertEquals(
@@ -179,7 +180,8 @@ class OmsorgspengerMidlertidigAleneTest {
                   ],
                   "status": 400
                 }
-                """.trimIndent()
+                """.trimIndent(),
+            ytelse = Ytelse.OMSORGSPENGER_MIDLERTIDIG_ALENE
         )
     }
 }

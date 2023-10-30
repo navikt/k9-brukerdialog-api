@@ -142,7 +142,8 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
             path = OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
-            requestEntity = søknad.somJson()
+            requestEntity = søknad.somJson(),
+            ytelse = Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER)
         assertEquals(
@@ -229,7 +230,8 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                 }
             """.trimIndent(),
             jwtToken = tokenXToken,
-            requestEntity = søknad.somJson()
+            requestEntity = søknad.somJson(),
+            ytelse = Ytelse.OMSORGSPENGER_UTBETALING_ARBEIDSTAKER
         )
     }
 

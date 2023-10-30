@@ -105,6 +105,7 @@ class EttersendingTest {
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
         )
+        val ytelse = Ytelse.ETTERSENDING
         TestUtils.requestAndAssert(
             engine = engine,
             logger = logger,
@@ -113,9 +114,10 @@ class EttersendingTest {
             expectedCode = HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
             expectedResponse = null,
-            requestEntity = søknad.somJson()
+            requestEntity = søknad.somJson(),
+            ytelse = ytelse
         )
-        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.ETTERSENDING)
+        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, ytelse)
         assertEquals(
             søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker, metadata), listOf("nav-logo.png")),
             hentet.data.somEttersendingKomplettSøknad()
@@ -155,7 +157,8 @@ class EttersendingTest {
                   "status": 400
                 }
             """.trimIndent(),
-            requestEntity = søknad.somJson()
+            requestEntity = søknad.somJson(),
+            ytelse = Ytelse.ETTERSENDING
         )
     }
 

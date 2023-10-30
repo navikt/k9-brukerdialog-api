@@ -12,6 +12,7 @@ import no.nav.k9brukerdialogapi.k9SelvbetjeningOppslagKonfigurert
 import no.nav.k9brukerdialogapi.oppslag.genererOppslagHttpRequest
 import no.nav.k9brukerdialogapi.utils.LoggingUtils.logTokenExchange
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -30,14 +31,16 @@ class ArbeidsgiverGateway(
     internal suspend fun hentArbeidsgivere(
         idToken: IdToken,
         callId: CallId,
-        attributter: List<Pair<String, List<String>>>
+        attributter: List<Pair<String, List<String>>>,
+        ytelse: Ytelse
     ): Arbeidsgivere {
         val exchangeToken = IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
         logger.logTokenExchange(idToken, exchangeToken)
 
         val httpRequest = genererOppslagHttpRequest(
-            baseUrl = baseUrl, idToken = exchangeToken, callId = callId, pathParts = "meg",
-            attributter = attributter
+            pathParts = "meg", baseUrl = baseUrl, attributter = attributter, idToken = exchangeToken,
+            callId = callId,
+            ytelse = ytelse
         )
 
         val arbeidsgivereOppslagRespons = Retry.retry(
