@@ -115,7 +115,8 @@ class OmsorgsdagerAleneomsorgTest {
             jwtToken = tokenXToken,
             requestEntity = søknad.somJson(),
             engine = engine,
-            logger = logger
+            logger = logger,
+            ytelse = Ytelse.OMSORGSDAGER_ALENEOMSORG
         )
         val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSDAGER_ALENEOMSORG)
         assertEquals(
@@ -164,7 +165,8 @@ class OmsorgsdagerAleneomsorgTest {
                   ],
                   "status": 400
                 }
-                """.trimIndent()
+                """.trimIndent(),
+            ytelse = Ytelse.OMSORGSDAGER_ALENEOMSORG
         )
     }
 }

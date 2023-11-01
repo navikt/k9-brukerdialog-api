@@ -22,6 +22,7 @@ import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.endringsmelding.domene.Endringsmelding
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -42,8 +43,9 @@ fun Route.endringsmeldingApis(
             val idToken = idTokenProvider.getIdToken(call)
             val metadata = call.getMetadata()
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${endringsmelding.ytelse()}"
+            val ytelseFraHeader = call.ytelseFraHeader()
 
-            val barn: BarnOppslag = barnFraEndringsmelding(barnService.hentBarn(idToken, callId), endringsmelding)
+            val barn: BarnOppslag = barnFraEndringsmelding(barnService.hentBarn(idToken, callId, ytelseFraHeader), endringsmelding)
 
             logger.info(formaterStatuslogging(endringsmelding.ytelse(), endringsmelding.søknadId, "mottatt."))
 
@@ -53,7 +55,7 @@ fun Route.endringsmeldingApis(
             endringsmelding.gyldigeEndringsPerioder = ytelse.søknadsperiodeList
             endringsmelding.pleietrengendeNavn = barn.navn()
 
-            innsendingService.registrer(endringsmelding, callId, idToken, metadata)
+            innsendingService.registrer(endringsmelding, callId, idToken, metadata, ytelseFraHeader)
             innsendingCache.put(cacheKey)
             registrerMottattSøknad(endringsmelding.ytelse())
             call.respond(HttpStatusCode.Accepted)

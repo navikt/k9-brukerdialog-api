@@ -17,6 +17,7 @@ import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -32,12 +33,12 @@ fun Route.ettersendingApis(
             val ettersendelse =  call.receive<Ettersendelse>()
             val idToken = idTokenProvider.getIdToken(call)
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${ettersendelse.ytelse()}"
-
+            val ytelse = call.ytelseFraHeader()
 
             logger.info(formaterStatuslogging(ettersendelse.ytelse(), ettersendelse.søknadId, "mottatt."))
             logger.info("Ettersending for ytelse ${ettersendelse.søknadstype}")
             innsendingCache.put(cacheKey)
-            innsendingService.registrer(ettersendelse, call.getCallId(), idToken, call.getMetadata())
+            innsendingService.registrer(ettersendelse, call.getCallId(), idToken, call.getMetadata(), ytelse)
             registrerMottattSøknad(ettersendelse.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }

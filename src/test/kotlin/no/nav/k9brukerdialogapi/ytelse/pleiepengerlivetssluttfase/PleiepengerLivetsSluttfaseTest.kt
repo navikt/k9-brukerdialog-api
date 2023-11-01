@@ -99,6 +99,7 @@ class PleiepengerLivetsSluttfaseTest {
             vedleggUrls = listOf(vedlegg),
             opplastetIdVedleggUrls = listOf(vedlegg)
         )
+        val ytelse = Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
         requestAndAssert(
             HttpMethod.Post,
             PLEIEPENGER_LIVETS_SLUTTFASE_URL+ INNSENDING_URL,
@@ -107,9 +108,10 @@ class PleiepengerLivetsSluttfaseTest {
             HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
             engine = engine,
-            logger = logger
+            logger = logger,
+            ytelse = ytelse
         )
-        kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE).also {
+        kafkaKonsumer.hentSøknad(søknad.søknadId, ytelse).also {
             assertEquals(
                 søknad.somKomplettSøknad(søker, søknad.somK9Format(søker, metadata)),
                 it.data.somPleiepengerLivetsSluttfaseKomplettSøknad()
@@ -147,7 +149,8 @@ class PleiepengerLivetsSluttfaseTest {
             HttpStatusCode.BadRequest,
             jwtToken = tokenXToken,
             engine = engine,
-            logger = logger
+            logger = logger,
+            ytelse = Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE
         )
     }
 }

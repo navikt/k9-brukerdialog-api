@@ -18,6 +18,7 @@ import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Søknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -34,13 +35,14 @@ fun Route.pleiepengerSyktBarnApi(
             val søknad = call.receive<Søknad>()
             val idToken = idTokenProvider.getIdToken(call)
             val callId = call.getCallId()
+            val ytelse = call.ytelseFraHeader()
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${søknad.ytelse()}"
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
-            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId, ytelse))
 
             innsendingCache.put(cacheKey)
-            innsendingService.registrer(søknad, callId, idToken, call.getMetadata())
+            innsendingService.registrer(søknad, callId, idToken, call.getMetadata(), ytelse)
             registrerMottattSøknad(søknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }

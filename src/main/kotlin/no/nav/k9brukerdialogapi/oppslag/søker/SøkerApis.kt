@@ -9,6 +9,7 @@ import no.nav.k9brukerdialogapi.SØKER_URL
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.oppslag.TilgangNektetException
 import no.nav.k9brukerdialogapi.oppslag.respondTilgangNektetProblemDetail
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger("no.nav.k9brukerdialogapi.oppslag.søker.SøkerApis")
@@ -21,7 +22,8 @@ fun Route.søkerApis(
         try {
             val søker = søkerService.hentSøker(
                 idToken = idTokenProvider.getIdToken(call),
-                callId = call.getCallId()
+                callId = call.getCallId(),
+                ytelse = call.ytelseFraHeader()
             )
             call.respond(søker)
         } catch (e: Exception) {

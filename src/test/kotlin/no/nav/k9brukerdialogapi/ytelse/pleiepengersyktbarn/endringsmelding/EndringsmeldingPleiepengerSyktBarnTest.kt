@@ -177,7 +177,8 @@ class EndringsmeldingPleiepengerSyktBarnTest {
             expectedResponse = null,
             requestEntity = endringsmelding,
             engine = engine,
-            logger = logger
+            logger = logger,
+            ytelse = Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
         )
 
         hentOgAsserEndringsmelding(
@@ -350,7 +351,8 @@ class EndringsmeldingPleiepengerSyktBarnTest {
             """.trimIndent(),
             requestEntity = endringsmelding,
             engine = engine,
-            logger = logger
+            logger = logger,
+            ytelse = Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
         )
     }
 
@@ -463,7 +465,8 @@ class EndringsmeldingPleiepengerSyktBarnTest {
             """.trimIndent(),
             requestEntity = endringsmelding,
             engine = engine,
-            logger = logger
+            logger = logger,
+            ytelse = Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
         )
 
         wireMockServer.stubSifInnsynApi(

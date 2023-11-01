@@ -103,6 +103,7 @@ class OmsorgspengerUtbetalingSnfTest {
     fun `Innsending av gyldig søknad`() {
         val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
         val søknad = genererSøknadForOmsUtSnf(vedlegg = listOf(vedlegg))
+        val ytelse = Ytelse.OMSORGSPENGER_UTBETALING_SNF
         requestAndAssert(
             engine = engine,
             logger = logger,
@@ -110,9 +111,10 @@ class OmsorgspengerUtbetalingSnfTest {
             path = OMSORGSPENGER_UTBETALING_SNF_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
-            requestEntity = søknad.somJson()
+            requestEntity = søknad.somJson(),
+            ytelse = ytelse
         )
-        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId.id, Ytelse.OMSORGSPENGER_UTBETALING_SNF)
+        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId.id, ytelse)
         assertEquals(
             søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker, metadata)),
             hentet.data.somOmsorgspengerUtbetalingSnfKomplettSøknad()
@@ -181,7 +183,8 @@ class OmsorgspengerUtbetalingSnfTest {
                 }
             """.trimIndent(),
             jwtToken = tokenXToken,
-            requestEntity = søknad.somJson()
+            requestEntity = søknad.somJson(),
+            ytelse = Ytelse.OMSORGSPENGER_UTBETALING_SNF
         )
     }
 

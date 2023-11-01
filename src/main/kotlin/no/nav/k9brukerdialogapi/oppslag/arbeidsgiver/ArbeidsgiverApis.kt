@@ -11,6 +11,7 @@ import no.nav.k9brukerdialogapi.ARBEIDSGIVER_URL
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.oppslag.TilgangNektetException
 import no.nav.k9brukerdialogapi.oppslag.respondTilgangNektetProblemDetail
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 
@@ -39,7 +40,8 @@ fun Route.arbeidsgiverApis(
                 fraOgMed = LocalDate.parse(fraOgMed),
                 tilOgMed = LocalDate.parse(tilOgMed),
                 skalHentePrivateArbeidsgivere = call.request.queryParameters[privateArbeidsgivereQueryName].toBoolean(),
-                skalHenteFrilansoppdrag  = call.request.queryParameters[frilansoppdragQueryName].toBoolean()
+                skalHenteFrilansoppdrag  = call.request.queryParameters[frilansoppdragQueryName].toBoolean(),
+                ytelse = call.ytelseFraHeader()
             )
 
             call.respond(arbeidsgivere)
