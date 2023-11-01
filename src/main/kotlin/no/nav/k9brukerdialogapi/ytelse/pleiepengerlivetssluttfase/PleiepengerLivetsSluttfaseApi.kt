@@ -17,6 +17,7 @@ import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PilsSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -32,10 +33,11 @@ fun Route.pleiepengerLivetsSluttfaseApi(
             val pilsSøknad = call.receive<PilsSøknad>()
             val idToken = idTokenProvider.getIdToken(call)
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${pilsSøknad.ytelse()}"
+            val ytelse = call.ytelseFraHeader()
 
             logger.info(formaterStatuslogging(pilsSøknad.ytelse(), pilsSøknad.søknadId, "mottatt."))
             innsendingCache.put(cacheKey)
-            innsendingService.registrer(pilsSøknad, call.getCallId(), idToken, call.getMetadata())
+            innsendingService.registrer(pilsSøknad, call.getCallId(), idToken, call.getMetadata(), ytelse)
             registrerMottattSøknad(pilsSøknad.ytelse())
             call.respond(HttpStatusCode.Accepted)
         }

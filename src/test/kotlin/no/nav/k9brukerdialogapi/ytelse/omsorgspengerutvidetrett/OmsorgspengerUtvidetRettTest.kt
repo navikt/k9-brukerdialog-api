@@ -107,6 +107,7 @@ class OmsorgspengerUtvidetRettTest {
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
         )
+        val ytelse = Ytelse.OMSORGSPENGER_UTVIDET_RETT
         requestAndAssert(
             engine = engine,
             logger = logger,
@@ -114,9 +115,10 @@ class OmsorgspengerUtvidetRettTest {
             path = OMSORGSPENGER_UTVIDET_RETT_URL + INNSENDING_URL,
             expectedCode = HttpStatusCode.Accepted,
             jwtToken = tokenXToken,
-            requestEntity = søknad.somJson()
+            requestEntity = søknad.somJson(),
+            ytelse = ytelse
         )
-        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, Ytelse.OMSORGSPENGER_UTVIDET_RETT)
+        val hentet = kafkaKonsumer.hentSøknad(søknad.søknadId, ytelse)
         assertEquals(
             søknad.somKomplettSøknad(SøknadUtils.søker, søknad.somK9Format(SøknadUtils.søker, metadata)),
             hentet.data.somOmsorgspengerUtvidetRettKomplettSøknad()
@@ -161,7 +163,8 @@ class OmsorgspengerUtvidetRettTest {
                   "status": 400
                 }
             """.trimIndent(),
-            requestEntity = søknad
+            requestEntity = søknad,
+            ytelse = Ytelse.OMSORGSPENGER_UTVIDET_RETT
         )
     }
 

@@ -9,6 +9,7 @@ import no.nav.k9brukerdialogapi.BARN_URL
 import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.oppslag.TilgangNektetException
 import no.nav.k9brukerdialogapi.oppslag.respondTilgangNektetProblemDetail
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger("no.nav.k9brukerdialogapi.oppslag.barn.barnApis")
@@ -22,7 +23,8 @@ fun Route.barnApis(
         try {
             val barn = barnService.hentBarn(
                 idToken = idTokenProvider.getIdToken(call),
-                callId = call.getCallId()
+                callId = call.getCallId(),
+                ytelse = call.ytelseFraHeader()
             )
             call.respond(BarnOppslagListe(barn))
         } catch (e: Exception) {

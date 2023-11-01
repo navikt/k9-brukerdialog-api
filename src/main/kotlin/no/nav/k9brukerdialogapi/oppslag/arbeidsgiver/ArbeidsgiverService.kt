@@ -3,6 +3,7 @@ package no.nav.k9brukerdialogapi.oppslag.arbeidsgiver
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.oppslag.TilgangNektetException
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
@@ -29,7 +30,8 @@ class ArbeidsgiverService(
         fraOgMed: LocalDate,
         tilOgMed: LocalDate,
         skalHentePrivateArbeidsgivere: Boolean,
-        skalHenteFrilansoppdrag: Boolean
+        skalHenteFrilansoppdrag: Boolean,
+        ytelse: Ytelse
     ): Arbeidsgivere = try {
         arbeidsgivereGateway.hentArbeidsgivere(
             idToken,
@@ -38,7 +40,8 @@ class ArbeidsgiverService(
                 Pair("a", genererAttributter(skalHentePrivateArbeidsgivere, skalHenteFrilansoppdrag)),
                 Pair("fom", listOf(DateTimeFormatter.ISO_LOCAL_DATE.format(fraOgMed))),
                 Pair("tom", listOf(DateTimeFormatter.ISO_LOCAL_DATE.format(tilOgMed)))
-            )
+            ),
+            ytelse = ytelse
         )
     } catch (cause: Throwable) {
         when (cause) {

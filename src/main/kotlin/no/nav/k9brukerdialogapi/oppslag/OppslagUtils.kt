@@ -8,6 +8,7 @@ import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import java.net.URI
 
 fun genererOppslagHttpRequest(
@@ -15,7 +16,8 @@ fun genererOppslagHttpRequest(
     baseUrl: URI,
     attributter: List<Pair<String, List<String>>>,
     idToken: IdToken,
-    callId: CallId
+    callId: CallId,
+    ytelse: Ytelse
 ): Request {
     return Url.buildURL(
         baseUrl = baseUrl,
@@ -26,6 +28,7 @@ fun genererOppslagHttpRequest(
         .header(
             HttpHeaders.Authorization to "Bearer ${idToken.value}",
             HttpHeaders.Accept to MediaTypeUtils.APPLICATION_JSON,
-            HttpHeaders.XCorrelationId to callId.value
+            HttpHeaders.XCorrelationId to callId.value,
+            "X-K9-Ytelse" to ytelse
         )
 }

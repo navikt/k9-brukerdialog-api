@@ -31,8 +31,8 @@ class InnsendingService(
     private val vedleggService: VedleggService,
 ) {
 
-    internal suspend fun registrer(innsending: Innsending, callId: CallId, idToken: IdToken, metadata: Metadata) {
-        val søker = søkerService.hentSøker(idToken, callId)
+    internal suspend fun registrer(innsending: Innsending, callId: CallId, idToken: IdToken, metadata: Metadata, ytelse: Ytelse) {
+        val søker = søkerService.hentSøker(idToken, callId, ytelse)
 
         logger.info(formaterStatuslogging(innsending.ytelse(), innsending.søknadId(), "registreres."))
 

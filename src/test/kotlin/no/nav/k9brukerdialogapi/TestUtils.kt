@@ -9,6 +9,7 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -61,7 +62,8 @@ class TestUtils {
             jwtToken: String? = null,
             cookie: String? = null,
             logger: Logger,
-            engine: TestApplicationEngine
+            engine: TestApplicationEngine,
+            ytelse: Ytelse = Ytelse.PLEIEPENGER_SYKT_BARN
         ): String? {
             val respons: String?
             with(engine) {
@@ -71,7 +73,7 @@ class TestUtils {
                     logger.info("Request Entity = $requestEntity")
                     addHeader(HttpHeaders.Accept, APPLICATION_JSON)
                     addHeader(HttpHeaders.XCorrelationId, UUID.randomUUID().toString())
-                    addHeader("X-K9-Brukerdialog", "søknads-dialog")
+                    addHeader("X-K9-Brukerdialog", ytelse.dialog)
                     addHeader("X-Brukerdialog-Git-Sha", "abc-123")
                     if (requestEntity != null) addHeader(HttpHeaders.ContentType, APPLICATION_JSON)
                     if (requestEntity != null) setBody(requestEntity)

@@ -18,6 +18,7 @@ import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.omsorgsdageraleneomsorg.domene.OmsorgsdagerAleneOmOmsorgenSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
+import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -36,20 +37,20 @@ fun Route.omsorgsdagerAleneomsorgApis(
             val metadata = call.getMetadata()
             val idToken = idTokenProvider.getIdToken(call)
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${søknad.ytelse()}"
-
+            val ytelse = call.ytelseFraHeader()
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
 
-            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId))
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId, ytelse))
 
             if (søknad.gjelderFlereBarn()) {
                 val søknader = søknad.splittTilEgenSøknadPerBarn()
                 logger.info("SøknadId:${søknad.søknadId} splittet ut til ${søknader.map { it.søknadId }}")
                 søknader.forEach {
-                    innsendingService.registrer(it, callId, idToken, metadata)
+                    innsendingService.registrer(it, callId, idToken, metadata, ytelse)
                 }
             } else {
-                innsendingService.registrer(søknad, callId, idToken, metadata)
+                innsendingService.registrer(søknad, callId, idToken, metadata, ytelse)
             }
             innsendingCache.put(cacheKey)
             registrerMottattSøknad(søknad.ytelse())

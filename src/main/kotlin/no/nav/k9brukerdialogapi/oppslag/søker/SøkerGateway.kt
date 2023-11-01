@@ -12,6 +12,7 @@ import no.nav.k9brukerdialogapi.k9SelvbetjeningOppslagKonfigurert
 import no.nav.k9brukerdialogapi.oppslag.genererOppslagHttpRequest
 import no.nav.k9brukerdialogapi.oppslag.throwable
 import no.nav.k9brukerdialogapi.utils.LoggingUtils.logTokenExchange
+import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -29,7 +30,8 @@ class SøkerGateway(
 
     suspend fun hentSøker(
         idToken: IdToken,
-        callId: CallId
+        callId: CallId,
+        ytelse: Ytelse
     ): Søker {
         val exchangeToken = IdToken(accessTokenClient.getAccessToken(k9SelvbetjeningOppslagTokenxAudience, idToken.value).token)
         logger.logTokenExchange(idToken, exchangeToken)
@@ -39,7 +41,8 @@ class SøkerGateway(
             pathParts = "meg",
             attributter = listOf(attributter),
             idToken = exchangeToken,
-            callId = callId
+            callId = callId,
+            ytelse = ytelse
         )
 
         val oppslagRespons = Retry.retry(
