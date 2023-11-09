@@ -12,6 +12,8 @@ class PilsKomplettSøknad(
     private val språk: String,
     private val fraOgMed: LocalDate,
     private val tilOgMed: LocalDate,
+    private val skalJobbeOgPleieSammeDag: Boolean,
+    private val dagerMedPleie: List<LocalDate>,
     private val mottatt: ZonedDateTime,
     private val vedleggId: List<String>,
     private val opplastetIdVedleggId: List<String>,
