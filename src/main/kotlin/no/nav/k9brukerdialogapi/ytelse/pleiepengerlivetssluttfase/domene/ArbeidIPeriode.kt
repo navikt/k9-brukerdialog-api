@@ -14,33 +14,53 @@ enum class JobberIPeriodeSvar { SOM_VANLIG, REDUSERT, HELT_FRAVÆR }
 
 class ArbeidIPeriode(
     private val jobberIPerioden: JobberIPeriodeSvar,
-    private val enkeltdager: List<Enkeltdag>? = null
+    private val enkeltdager: List<Enkeltdag>,
 ) {
-    internal fun valider(felt: String = "arbeidIPeriode") = mutableListOf<String>().apply {
-        when(jobberIPerioden){
-            JobberIPeriodeSvar.REDUSERT -> krever(!enkeltdager.isNullOrEmpty(), "$felt.enkeltdager kan ikke være null/tom når jobberIPerioden=${jobberIPerioden.name}.")
-            JobberIPeriodeSvar.HELT_FRAVÆR, JobberIPeriodeSvar.SOM_VANLIG -> krever(enkeltdager.isNullOrEmpty(), "$felt.enkeltdager må være null/tom når jobberIPerioden=${jobberIPerioden.name}.")
-        }
+    internal fun valider(felt: String = "arbeidIPeriode", normaltimerPerDag: Duration) = mutableListOf<String>().apply {
+        krever(
+            enkeltdager.isNotEmpty(),
+            "$felt.enkeltdager kan ikke være tom liste."
+        )
+
+        /*when (jobberIPerioden) {
+            JobberIPeriodeSvar.HELT_FRAVÆR -> {
+                enkeltdager.mapIndexed { index, enkeltdag ->
+                    krever(
+                        enkeltdag.tid == NULL_ARBEIDSTIMER,
+                        "Dersom $felt.jobberIPerioden er $jobberIPerioden, så kreves det at $felt.enkeltdager[$index].tid er 0 timer."
+                    )
+                }
+            }
+
+            JobberIPeriodeSvar.SOM_VANLIG -> {
+                enkeltdager.mapIndexed { index, enkeltdag ->
+                    krever(
+                        enkeltdag.tid == normaltimerPerDag,
+                        "Dersom $felt.jobberIPerioden er $jobberIPerioden, så kreves det at $felt.enkeltdager[$index].tid er $normaltimerPerDag timer per dag."
+                    )
+                }
+            }
+
+            JobberIPeriodeSvar.REDUSERT -> {}  // ingen validering
+        }*/
     }
 
-    internal fun somK9ArbeidstidInfo(fraOgMed: LocalDate, tilOgMed: LocalDate, normaltimerPerDag: Duration) = ArbeidstidInfo().apply {
-        when (jobberIPerioden) {
-            JobberIPeriodeSvar.HELT_FRAVÆR -> leggTilPeriode(fraOgMed, tilOgMed, normaltimerPerDag, NULL_ARBEIDSTIMER)
-            JobberIPeriodeSvar.REDUSERT -> leggTilPerioderFraEnkeltdager(fraOgMed, tilOgMed, normaltimerPerDag, enkeltdager)
-            JobberIPeriodeSvar.SOM_VANLIG -> leggTilPeriode(fraOgMed, tilOgMed, normaltimerPerDag, normaltimerPerDag)
-        }
-    }
+    internal fun somK9ArbeidstidInfo(normaltimerPerDag: Duration) =
+        ArbeidstidInfo().apply { leggTilPerioderFraEnkeltdager(normaltimerPerDag, enkeltdager) }
 }
 
 private fun ArbeidstidInfo.leggTilPerioderFraEnkeltdager(
-    fraOgMed: LocalDate,
-    tilOgMed: LocalDate,
     normaltimerPerDag: Duration,
-    enkeltdager: List<Enkeltdag>?
+    enkeltdager: List<Enkeltdag>,
 ) {
-    fraOgMed.ukedagerTilOgMed(tilOgMed).forEach { dato ->
-        val faktiskTimerPerDag = enkeltdager?.finnTidForGittDato(dato) ?: NULL_ARBEIDSTIMER
-        leggTilPeriode(dato, dato, normaltimerPerDag, faktiskTimerPerDag)
+
+    enkeltdager.forEach { enkeltdag ->
+        leggTilPeriode(
+            fraOgMed = enkeltdag.dato,
+            tilOgMed = enkeltdag.dato,
+            normalTimerPerDag = normaltimerPerDag,
+            faktiskTimerPerDag = enkeltdag.tid
+        )
     }
 }
 
@@ -48,7 +68,7 @@ private fun ArbeidstidInfo.leggTilPeriode(
     fraOgMed: LocalDate,
     tilOgMed: LocalDate,
     normalTimerPerDag: Duration,
-    faktiskTimerPerDag: Duration
+    faktiskTimerPerDag: Duration,
 ) {
     leggeTilPeriode(
         Periode(fraOgMed, tilOgMed),
@@ -57,7 +77,3 @@ private fun ArbeidstidInfo.leggTilPeriode(
             .medJobberNormaltTimerPerDag(normalTimerPerDag)
     )
 }
-
-fun LocalDate.ukedagerTilOgMed(tilOgMed: LocalDate): List<LocalDate> = datesUntil(tilOgMed.plusDays(1))
-    .toList()
-    .filterNot { it.dayOfWeek == DayOfWeek.SUNDAY || it.dayOfWeek == DayOfWeek.SATURDAY }

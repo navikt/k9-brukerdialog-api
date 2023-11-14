@@ -39,13 +39,14 @@ class PilsSøknad(
     private val språk: String,
     private val fraOgMed: LocalDate,
     private val tilOgMed: LocalDate,
+    private val skalJobbeOgPleieSammeDag: Boolean,
+    private val dagerMedPleie: List<LocalDate>,
     private val mottatt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
     internal val vedleggUrls: List<URL> = listOf(),
     internal val opplastetIdVedleggUrls: List<URL> = listOf(),
     private val pleietrengende: Pleietrengende,
     private val medlemskap: Medlemskap,
     private val utenlandsoppholdIPerioden: UtenlandsoppholdIPerioden,
-    private val ferieuttakIPerioden: FerieuttakIPerioden? = null,
     private val arbeidsgivere: List<Arbeidsgiver>,
     private val frilans: Frilans? = null,
     private val selvstendigNæringsdrivende: SelvstendigNæringsdrivende? = null,
@@ -70,13 +71,14 @@ class PilsSøknad(
             språk = språk,
             fraOgMed = fraOgMed,
             tilOgMed = tilOgMed,
+            skalJobbeOgPleieSammeDag = skalJobbeOgPleieSammeDag,
+            dagerMedPleie = dagerMedPleie,
             mottatt = mottatt,
             vedleggId = vedleggUrls.map { it.vedleggId() },
             opplastetIdVedleggId = opplastetIdVedleggUrls.map { it.vedleggId() },
             medlemskap = medlemskap,
             pleietrengende = pleietrengende,
             utenlandsoppholdIPerioden = utenlandsoppholdIPerioden,
-            ferieuttakIPerioden = ferieuttakIPerioden,
             frilans = frilans,
             arbeidsgivere = arbeidsgivere,
             opptjeningIUtlandet = opptjeningIUtlandet,
@@ -122,12 +124,6 @@ class PilsSøknad(
             ytelse.medUtenlandsopphold(utenlandsoppholdIPerioden.somK9Utenlandsopphold())
         }
 
-        ferieuttakIPerioden?.let {
-            if (it.ferieuttak.isNotEmpty() && it.skalTaUtFerieIPerioden) {
-                ytelse.medLovbestemtFerie(ferieuttakIPerioden.tilK9LovbestemtFerie())
-            }
-        }
-
         return K9Søknad()
             .medVersjon(K9_SØKNAD_VERSJON)
             .medMottattDato(mottatt)
@@ -159,18 +155,6 @@ class PilsSøknad(
             null -> medFrilanserArbeidstid(arbeidstidInfoMedNullTimer(fraOgMed, tilOgMed))
             else -> medFrilanserArbeidstid(frilans.somK9Arbeidstid(fraOgMed, tilOgMed))
         }
-    }
-
-    private fun FerieuttakIPerioden.tilK9LovbestemtFerie(): LovbestemtFerie {
-        if (!skalTaUtFerieIPerioden) return LovbestemtFerie()
-
-        val perioder = mutableMapOf<Periode, LovbestemtFerie.LovbestemtFeriePeriodeInfo>()
-
-        ferieuttak.forEach { ferieuttak ->
-            perioder[Periode(ferieuttak.fraOgMed, ferieuttak.tilOgMed)] = LovbestemtFerie.LovbestemtFeriePeriodeInfo()
-        }
-
-        return LovbestemtFerie().medPerioder(perioder)
     }
 
     override fun ytelse(): Ytelse = Ytelse.PLEIEPENGER_LIVETS_SLUTTFASE

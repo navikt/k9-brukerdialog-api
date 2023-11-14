@@ -6,72 +6,118 @@ import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.HELT_FRAVÆR
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.REDUSERT
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.JobberIPeriodeSvar.SOM_VANLIG
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.INGEN_ARBEIDSDAG
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.FULL_ARBEIDSDAG
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.HALV_ARBEIDSDAG
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.enkeltDagerMedFulltFravær
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.enkeltDagerMedJobbSomVanlig
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.enkeltDagerMedRedusertArbeid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.fredag
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.mandag
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.onsdag
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.tirsdag
+import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.PILSTestUtils.torsdag
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NULL_TIMER
+import org.junit.jupiter.api.Disabled
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ArbeidIPeriodeTest {
-    private val NULL_TIMER = Duration.ZERO
-    private val SYV_OG_HALV_TIME = Duration.ofHours(7).plusMinutes(30)
-    private val TRE_TIMER = Duration.ofHours(3)
-
-    private val mandag = LocalDate.parse("2022-08-01")
-    private val tirsdag = mandag.plusDays(1)
-    private val onsdag = tirsdag.plusDays(1)
-    private val torsdag = onsdag.plusDays(1)
-    private val fredag = torsdag.plusDays(1)
-
     @Test
     fun `Gyldig ArbeidIPeriode gir ingen valideringsfeil`() {
-        ArbeidIPeriode(HELT_FRAVÆR, null).valider().verifiserIngenFeil()
-        ArbeidIPeriode(REDUSERT, listOf(Enkeltdag(LocalDate.now(), Duration.ofHours(3)))).valider().verifiserIngenFeil()
-    }
-    
-    @Test
-    fun `Hvis man oppgir at man jobber men ikke sender med dager skal det gi valideringsfeil`(){
-        ArbeidIPeriode(REDUSERT, emptyList()).valider("arbeidIPeriode")
-            .verifiserFeil(1, listOf("arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT."))
+        ArbeidIPeriode(HELT_FRAVÆR, enkeltDagerMedFulltFravær).valider(normaltimerPerDag = FULL_ARBEIDSDAG)
+            .verifiserIngenFeil()
+        ArbeidIPeriode(SOM_VANLIG, enkeltDagerMedJobbSomVanlig).valider(normaltimerPerDag = FULL_ARBEIDSDAG)
+            .verifiserIngenFeil()
+        ArbeidIPeriode(REDUSERT, enkeltDagerMedRedusertArbeid).valider(normaltimerPerDag = FULL_ARBEIDSDAG)
+            .verifiserIngenFeil()
     }
 
     @Test
-    fun `Hvis man oppgir at man ikke jobber men sender med dager skal det gi valideringsfeil`(){
-        ArbeidIPeriode(HELT_FRAVÆR, listOf(Enkeltdag(LocalDate.now(), Duration.ofHours(3)))).valider("arbeidIPeriode")
-            .verifiserFeil(1, listOf("arbeidIPeriode.enkeltdager må være null/tom når jobberIPerioden=HELT_FRAVÆR."))
-    }
-    
-    @Test
-    fun `Mapping til K9Arbeidstid når man ikke jobber i perioden skal gi null faktiskTimer`(){
-        val k9Arbeidstid = ArbeidIPeriode(HELT_FRAVÆR).somK9ArbeidstidInfo(mandag, fredag, SYV_OG_HALV_TIME)
-
-        assertEquals(SYV_OG_HALV_TIME, k9Arbeidstid.perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
-        assertEquals(NULL_TIMER, k9Arbeidstid.perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
+    fun `Forvent feil derom det sendes tom liste med enkeltdager`() {
+        ArbeidIPeriode(HELT_FRAVÆR, emptyList()).valider(normaltimerPerDag = FULL_ARBEIDSDAG)
+            .verifiserFeil(1, listOf("arbeidIPeriode.enkeltdager kan ikke være tom liste."))
     }
 
     @Test
-    fun `Mapping til K9Arbeidstid når man jobber redusert - enkeltdager man ikke har oppgitt blir satt til 0 timer faktisk`(){
-        val k9Arbeidstid = ArbeidIPeriode(REDUSERT,
-            listOf(
-                Enkeltdag(mandag, TRE_TIMER),
-                Enkeltdag(tirsdag, TRE_TIMER),
+    @Disabled
+    fun `Forvent feil dersom HELT_FRAVÆR og enkeltdager inneholder timer med arbeid`() {
+        ArbeidIPeriode(
+            HELT_FRAVÆR, listOf(
+                Enkeltdag(mandag, NULL_TIMER),
+                Enkeltdag(tirsdag, NULL_TIMER),
+                Enkeltdag(onsdag, HALV_ARBEIDSDAG),
+                Enkeltdag(torsdag, NULL_TIMER),
+                Enkeltdag(fredag, NULL_TIMER),
             )
-        ).somK9ArbeidstidInfo(mandag, fredag, SYV_OG_HALV_TIME)
-        listOf(mandag, tirsdag).forEach {
-            assertEquals(SYV_OG_HALV_TIME, k9Arbeidstid.perioder[Periode(it, it)]!!.jobberNormaltTimerPerDag)
-            assertEquals(TRE_TIMER, k9Arbeidstid.perioder[Periode(it, it)]!!.faktiskArbeidTimerPerDag)
-        }
-        listOf(onsdag, torsdag, fredag).forEach {
-            assertEquals(SYV_OG_HALV_TIME, k9Arbeidstid.perioder[Periode(it, it)]!!.jobberNormaltTimerPerDag)
-            assertEquals(NULL_TIMER, k9Arbeidstid.perioder[Periode(it, it)]!!.faktiskArbeidTimerPerDag)
+        )
+            .valider(normaltimerPerDag = FULL_ARBEIDSDAG)
+            .verifiserFeil(
+                1,
+                listOf("Dersom arbeidIPeriode.jobberIPerioden er HELT_FRAVÆR, så kreves det at arbeidIPeriode.enkeltdager[2].tid er 0 timer.")
+            )
+    }
+
+    @Test
+    @Disabled
+    fun `Forvent feil dersom SOM_VANLIG og enkeltdager inneholder timer med ingen arbeid`() {
+        ArbeidIPeriode(
+            SOM_VANLIG, listOf(
+                Enkeltdag(mandag, FULL_ARBEIDSDAG),
+                Enkeltdag(tirsdag, FULL_ARBEIDSDAG),
+                Enkeltdag(onsdag, HALV_ARBEIDSDAG),
+                Enkeltdag(torsdag, FULL_ARBEIDSDAG),
+                Enkeltdag(fredag, INGEN_ARBEIDSDAG),
+            )
+        )
+            .valider(normaltimerPerDag = FULL_ARBEIDSDAG)
+            .verifiserFeil(
+                2,
+                listOf(
+                    "Dersom arbeidIPeriode.jobberIPerioden er SOM_VANLIG, så kreves det at arbeidIPeriode.enkeltdager[2].tid er $FULL_ARBEIDSDAG timer per dag.",
+                    "Dersom arbeidIPeriode.jobberIPerioden er SOM_VANLIG, så kreves det at arbeidIPeriode.enkeltdager[4].tid er $FULL_ARBEIDSDAG timer per dag.",
+                )
+            )
+    }
+
+    @Test
+    fun `Mapping til K9Arbeidstid når man ikke jobber i perioden skal gi null faktiskTimer`() {
+        val k9Arbeidstid = ArbeidIPeriode(HELT_FRAVÆR, enkeltDagerMedFulltFravær).somK9ArbeidstidInfo(FULL_ARBEIDSDAG)
+
+        assertEquals(k9Arbeidstid.perioder.size, enkeltDagerMedFulltFravær.size)
+        k9Arbeidstid.perioder.forEach { _, arbeidstidPeriodeInfo ->
+            assertEquals(FULL_ARBEIDSDAG, arbeidstidPeriodeInfo.jobberNormaltTimerPerDag)
+            assertEquals(INGEN_ARBEIDSDAG, arbeidstidPeriodeInfo.faktiskArbeidTimerPerDag)
+
         }
     }
 
     @Test
-    fun `Mapping til K9Arbeidtid når man jobber som vanlig`(){
-        ArbeidIPeriode(SOM_VANLIG,).somK9ArbeidstidInfo(mandag, fredag, SYV_OG_HALV_TIME).also {
-            assertEquals(SYV_OG_HALV_TIME, it.perioder[Periode(mandag, fredag)]!!.jobberNormaltTimerPerDag)
-            assertEquals(SYV_OG_HALV_TIME, it.perioder[Periode(mandag, fredag)]!!.faktiskArbeidTimerPerDag)
+    fun `Mapping av redusert arbeidstid blir mappet til k9format som forventet`() {
+        val k9Arbeidstid = ArbeidIPeriode(
+            REDUSERT,
+            listOf(
+                Enkeltdag(mandag, HALV_ARBEIDSDAG),
+                Enkeltdag(tirsdag, HALV_ARBEIDSDAG),
+            )
+        ).somK9ArbeidstidInfo(FULL_ARBEIDSDAG)
+        assertEquals(k9Arbeidstid.perioder.size, 2)
+        listOf(mandag, tirsdag).forEach {
+            assertEquals(FULL_ARBEIDSDAG, k9Arbeidstid.perioder[Periode(it, it)]!!.jobberNormaltTimerPerDag)
+            assertEquals(HALV_ARBEIDSDAG, k9Arbeidstid.perioder[Periode(it, it)]!!.faktiskArbeidTimerPerDag)
         }
     }
 
+    @Test
+    fun `Mapping til K9Arbeidtid når man jobber som vanlig`() {
+        val k9ArbeidstidInfo = ArbeidIPeriode(SOM_VANLIG, enkeltDagerMedJobbSomVanlig).somK9ArbeidstidInfo(FULL_ARBEIDSDAG)
+        assertEquals(k9ArbeidstidInfo.perioder.size, enkeltDagerMedJobbSomVanlig.size)
+
+        k9ArbeidstidInfo.perioder.forEach { _, u ->
+            assertEquals(FULL_ARBEIDSDAG, u.jobberNormaltTimerPerDag)
+            assertEquals(FULL_ARBEIDSDAG, u.faktiskArbeidTimerPerDag)
+        }
+    }
 }

@@ -94,7 +94,7 @@ class PilsSøknadTest {
             assertTrue { it.message.toString().contains("utenlandskNæring[0].land.landnavn kan ikke være tomt eller blankt.")}
             assertTrue { it.message.toString().contains("opptjeningIUtlandet[0].tilOgMed må være lik eller etter fraOgMed.")}
             assertTrue { it.message.toString().contains("utenlandsoppholdIPerioden.opphold[0].landkode/landnavn.landkode 'UGYLDIG' er ikke en gyldig ISO 3166-1 alpha-3 kode.")}
-            assertTrue { it.message.toString().contains("selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være null/tom når jobberIPerioden=REDUSERT.")}
+            assertTrue { it.message.toString().contains("selvstendigNæringsdrivende.arbeidsforhold.arbeidIPeriode.enkeltdager kan ikke være tom liste.")}
         }
     }
 
@@ -223,7 +223,43 @@ class PilsSøknadTest {
                   },
                   "selvstendigNæringsdrivendeArbeidstidInfo": {
                     "perioder": {
-                      "2021-01-01/2021-01-10": {
+                      "2021-01-01/2021-01-01": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-02/2021-01-02": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-03/2021-01-03": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-04/2021-01-04": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-05/2021-01-05": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-06/2021-01-06": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-07/2021-01-07": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-08/2021-01-08": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-09/2021-01-09": {
+                        "jobberNormaltTimerPerDag": "PT7H30M",
+                        "faktiskArbeidTimerPerDag": "PT0S"
+                      },
+                      "2021-01-10/2021-01-10": {
                         "jobberNormaltTimerPerDag": "PT7H30M",
                         "faktiskArbeidTimerPerDag": "PT0S"
                       }

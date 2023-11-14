@@ -44,8 +44,6 @@ spec:
     application:
       enabled: true
       tenant: {{tenant}}
-  idporten:
-    enabled: true
   tokenx:
     enabled: true
   accessPolicy:
