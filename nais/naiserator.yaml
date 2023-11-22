@@ -46,6 +46,10 @@ spec:
       tenant: {{tenant}}
   tokenx:
     enabled: true
+  idporten:
+    enabled: true
+    sidecar:
+      enabled: true
   accessPolicy:
     inbound:
       rules:
