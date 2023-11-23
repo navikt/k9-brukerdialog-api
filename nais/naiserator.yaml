@@ -59,6 +59,7 @@ spec:
         - application: pleiepengesoknad
         - application: sif-innsyn
         - application: endringsmelding-pleiepenger
+        - application: dine-pleiepenger
     outbound:
       rules:
         - application: k9-mellomlagring
