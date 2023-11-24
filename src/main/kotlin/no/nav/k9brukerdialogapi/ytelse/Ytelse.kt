@@ -14,7 +14,8 @@ enum class Ytelse(val dialog: String) {
     ETTERSENDING_PLEIEPENGER_LIVETS_SLUTTFASE("sif-ettersending"),
     ETTERSENDING_OMP("sif-ettersending"),
     PLEIEPENGER_SYKT_BARN("pleiepengesoknad"),
-    ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN("endringsmelding-pleiepenger");
+    ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN("endringsmelding-pleiepenger"),
+    DINE_PLEIEPENGER("dine-pleiepenger");
 }
 
 fun ApplicationCall.ytelseFraHeader(): Ytelse {

@@ -10,6 +10,7 @@ import no.nav.k9brukerdialogapi.kafka.Topics.OMSORGSPENGER_UTVIDET_RETT_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_LIVETS_SLUTTFASE_TOPIC
 import no.nav.k9brukerdialogapi.kafka.Topics.PLEIEPENGER_SYKT_BARN_TOPIC
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
+import no.nav.k9brukerdialogapi.ytelse.Ytelse.DINE_PLEIEPENGER
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING
 import no.nav.k9brukerdialogapi.ytelse.Ytelse.ETTERSENDING_OMP
@@ -53,6 +54,7 @@ internal fun hentTopicForYtelse(ytelse: Ytelse) = when (ytelse) {
     OMSORGSPENGER_UTBETALING_SNF -> OMSORGSPENGER_UTBETALING_SNF_TOPIC
     PLEIEPENGER_SYKT_BARN -> PLEIEPENGER_SYKT_BARN_TOPIC
     ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN -> MOTTATT_ENDRINGSMELDING_PLEIEPENGER_SYKT_BARN_TOPIC
+    DINE_PLEIEPENGER -> throw IllegalArgumentException("$ytelse er ikke en gyldig ytelse for denne operasjonen")
 }
 
 internal class SøknadSerializer : Serializer<TopicEntry<JSONObject>> {
