@@ -27,6 +27,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode.Companion.somK9FraværPeriode
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Virksomhet
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn.Companion.kunFosterbarn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn.Companion.somK9BarnListe
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.Barn.Companion.valider
 import java.net.URL
@@ -133,7 +134,7 @@ class OmsorgspengerutbetalingSnfSøknad(
             bekreftelser = bekreftelser,
             utbetalingsperioder = utbetalingsperioder,
             erArbeidstakerOgså = erArbeidstakerOgså,
-            barn = barn,
+            barn = barn.kunFosterbarn(),
             frilans = frilans,
             selvstendigNæringsdrivende = selvstendigNæringsdrivende,
             vedleggId = vedlegg.map { it.vedleggId() },

@@ -18,7 +18,7 @@ class Barn(
 ) {
     companion object{
         internal fun List<Barn>.somK9BarnListe() = kunFosterbarn().map { it.somK9Barn() }
-        private fun List<Barn>.kunFosterbarn() = this.filter { it.type == FOSTERBARN }
+        fun List<Barn>.kunFosterbarn() = this.filter { it.type == FOSTERBARN }
         internal fun List<Barn>.valider(felt: String) = this.flatMapIndexed { index, barn ->
             barn.valider("$felt[$index]")
         }
