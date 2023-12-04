@@ -284,7 +284,7 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                 Barn(
                     navn = "Barnesen",
                     fødselsdato = LocalDate.parse("2022-01-01"),
-                    type = TypeBarn.FRA_OPPSLAG,
+                    type = TypeBarn.FOSTERBARN,
                     aktørId = null,
                     utvidetRett = null,
                     identitetsnummer = "26104500284"
