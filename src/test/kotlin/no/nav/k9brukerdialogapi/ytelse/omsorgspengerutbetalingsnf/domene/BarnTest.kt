@@ -37,13 +37,13 @@ class BarnTest {
             Barn(
                 navn = "Barnesen",
                 fødselsdato = LocalDate.parse("2022-01-01"),
-                type = TypeBarn.FRA_OPPSLAG,
+                type = TypeBarn.FOSTERBARN,
                 identitetsnummer = "26104500284"
             ),
             Barn(
                 navn = "Barnesen v2",
                 fødselsdato = LocalDate.parse("2022-01-01"),
-                type = TypeBarn.FRA_OPPSLAG,
+                type = TypeBarn.FOSTERBARN,
                 identitetsnummer = "15121670744"
             ),
             Barn(

@@ -4,7 +4,7 @@ import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn.FRA_OPPSLAG
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn.FOSTERBARN
 import java.time.LocalDate
 import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
 
@@ -17,8 +17,8 @@ class Barn(
     private var identitetsnummer: String? = null
 ) {
     companion object{
-        internal fun List<Barn>.somK9BarnListe() = kunBarnFraOppslag().map { it.somK9Barn() }
-        private fun List<Barn>.kunBarnFraOppslag() = this.filter { it.type == FRA_OPPSLAG }
+        internal fun List<Barn>.somK9BarnListe() = kunFosterbarn().map { it.somK9Barn() }
+        fun List<Barn>.kunFosterbarn() = this.filter { it.type == FOSTERBARN }
         internal fun List<Barn>.valider(felt: String) = this.flatMapIndexed { index, barn ->
             barn.valider("$felt[$index]")
         }
