@@ -38,7 +38,7 @@ class OmsorgspengerKroniskSyktBarnSøknad(
     private val harForståttRettigheterOgPlikter: Boolean,
     private val harBekreftetOpplysninger: Boolean,
     private val sammeAdresse: BarnSammeAdresse?,
-    private val høyereRisikoForFravær: Boolean? = null, // TODO: Fjern nullable når lansert
+    private val høyereRisikoForFravær: Boolean? = null,
     private val høyereRisikoForFraværBeskrivelse: String? = null, // skal valideres hvis høyereRisikoForFravær er true
     private val dataBruktTilUtledningAnnetData: String? = null,
 ) : Innsending {
