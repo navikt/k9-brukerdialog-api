@@ -10,7 +10,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 import java.time.LocalDate
 import kotlin.test.Test
 
-class BarnTest {
+class FosterbarnTest {
 
     @Test
     fun `Barn blir til forventet K9Barn`() {

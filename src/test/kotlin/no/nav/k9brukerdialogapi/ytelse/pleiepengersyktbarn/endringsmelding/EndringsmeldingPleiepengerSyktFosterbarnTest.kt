@@ -48,10 +48,10 @@ import java.time.ZonedDateTime
 import java.util.*
 import kotlin.test.Test
 
-class EndringsmeldingPleiepengerSyktBarnTest {
+class EndringsmeldingPleiepengerSyktFosterbarnTest {
 
     private companion object {
-        private val logger: Logger = LoggerFactory.getLogger(EndringsmeldingPleiepengerSyktBarnTest::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(EndringsmeldingPleiepengerSyktFosterbarnTest::class.java)
         private val søkerMedBarn = "02119970078"
         private val barnIdentitetsnummer = "18909798651"
 
