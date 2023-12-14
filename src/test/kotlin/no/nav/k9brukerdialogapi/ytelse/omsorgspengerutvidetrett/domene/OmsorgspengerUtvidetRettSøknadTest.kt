@@ -35,27 +35,6 @@ class OmsorgspengerUtvidetRettSøknadTest {
     }
 
     @Test
-    fun `Forvent valideringsfeil dersom sammeAdresse er NEI og mangler samværsavtale`(){
-        assertThrows<Throwblem> {
-            OmsorgspengerKroniskSyktBarnSøknad(
-                språk = "nb",
-                kroniskEllerFunksjonshemming = true,
-                barn = Barn(
-                    norskIdentifikator = "02119970078",
-                    navn = "Barn Barnesen"
-                ),
-                relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-                sammeAdresse = BarnSammeAdresse.NEI,
-                samværsavtale = listOf(),
-                harBekreftetOpplysninger = true,
-                harForståttRettigheterOgPlikter = true
-            ).valider()
-        }.also {
-            assertTrue { it.message.toString().contains("Dersom sammeAdresse er NEI kan ikke samværsavtale være tom.") }
-        }
-    }
-
-    @Test
     fun `Forvent valideringsfeil dersom høyereRisikoForFravær er true, men høyereRisikoForFraværBeskrivelse mangler`(){
         assertThrows<Throwblem> {
             OmsorgspengerKroniskSyktBarnSøknad(

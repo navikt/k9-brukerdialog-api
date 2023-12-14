@@ -101,10 +101,6 @@ class OmsorgspengerKroniskSyktBarnSøknad(
         krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true")
         kreverIkkeNull(sammeAdresse, "sammeAdresse må være satt.")
 
-        if (sammeAdresse != null && sammeAdresse == BarnSammeAdresse.NEI) {
-            krever(samværsavtale?.isNotEmpty(), "Dersom sammeAdresse er NEI kan ikke samværsavtale være tom.")
-        }
-
         if (høyereRisikoForFravær == true) {
             krever(
                 !høyereRisikoForFraværBeskrivelse.isNullOrBlank(),
