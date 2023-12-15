@@ -397,7 +397,7 @@ class ApplicationTest {
     }
 
     @Nested
-    inner class FosterbarnOppslagTest {
+    inner class BarnOppslagTest {
         @Test
         fun `Hente barn og eksplisit sjekke at identitetsnummer ikke blir med ved get kall`() {
             val respons = requestAndAssert(
