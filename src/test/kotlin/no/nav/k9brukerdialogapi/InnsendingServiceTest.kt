@@ -30,6 +30,7 @@ import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domen
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.TypeBarn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.BarnSammeAdresse
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.gyldigPILSSøknad
@@ -127,7 +128,7 @@ internal class InnsendingServiceTest{
                             navn = "Barn Barnesen"
                         ),
                         relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-                        sammeAdresse = true,
+                        sammeAdresse = BarnSammeAdresse.JA,
                         legeerklæring = listOf(URL("http://localhost:8080/vedlegg/1")),
                         samværsavtale = listOf(),
                         harBekreftetOpplysninger = true,
