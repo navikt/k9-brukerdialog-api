@@ -24,6 +24,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.somK9Fraværsperiode
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.valider
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Fosterbarn.Companion.somK9BarnListe
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -41,16 +42,23 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     private val opphold: List<Opphold>,
     private val bekreftelser: Bekreftelser,
     private val arbeidsgivere: List<Arbeidsgiver>,
+    private val fosterbarn: List<Fosterbarn>? = null, // TODO: Fjern nullable når lansert
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null,
-    private val dataBruktTilUtledningAnnetData: String? = null
-): Innsending {
+    private val dataBruktTilUtledningAnnetData: String? = null,
+) : Innsending {
     override fun valider() = mutableListOf<String>().apply {
         krever(arbeidsgivere.isNotEmpty(), "Må ha minst en arbeidsgiver satt.")
         addAll(bosteder.valider("bosteder"))
         addAll(opphold.valider("opphold"))
         addAll(bekreftelser.valider("bekreftelser"))
         addAll(arbeidsgivere.valider("arbeidsgivere"))
+        if (fosterbarn != null && fosterbarn.all { it.trettenÅrEllerEldre() }) {
+            krever(
+                fosterbarn.any { it.utvidetRett == true },
+                "Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett."
+            )
+        }
 
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
@@ -58,7 +66,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     override fun somKomplettSøknad(
         søker: Søker,
         k9Format: no.nav.k9.søknad.Innsending?,
-        titler: List<String>
+        titler: List<String>,
     ): OmsorgspengerutbetalingArbeidstakerKomplettSøknad {
         requireNotNull(k9Format)
         return OmsorgspengerutbetalingArbeidstakerKomplettSøknad(
@@ -69,6 +77,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
             bosteder = bosteder,
             opphold = opphold,
             arbeidsgivere = arbeidsgivere,
+            fosterbarn = fosterbarn,
             bekreftelser = bekreftelser,
             vedleggId = vedlegg.map { it.vedleggId() },
             titler = titler,
@@ -85,7 +94,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
             mottatt,
             søker.somK9Søker(),
             OmsorgspengerUtbetaling(
-                null,
+                fosterbarn?.somK9BarnListe(),
                 OpptjeningAktivitet(),
                 arbeidsgivere.somK9Fraværsperiode(),
                 null,
