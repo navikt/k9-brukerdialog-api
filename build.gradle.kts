@@ -9,7 +9,7 @@ val kafkaVersion = "3.6.1"
 val k9FormatVersion = "9.0.6"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "3.2.0"
-val mockOauth2ServerVersion = "2.0.1"
+val mockOauth2ServerVersion = "2.1.0"
 val junitVersion = "5.10.1"
 val jakartaElVersion = "4.0.2"
 
