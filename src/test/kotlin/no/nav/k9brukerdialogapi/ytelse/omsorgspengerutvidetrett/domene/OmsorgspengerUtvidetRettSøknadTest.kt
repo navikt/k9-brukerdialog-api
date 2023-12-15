@@ -4,6 +4,7 @@ import no.nav.helse.dusseldorf.ktor.core.Throwblem
 import no.nav.k9brukerdialogapi.SøknadUtils
 import no.nav.k9brukerdialogapi.SøknadUtils.Companion.metadata
 import no.nav.k9brukerdialogapi.somJson
+import no.nav.k9brukerdialogapi.utils.StringUtils.FritekstPattern
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
 import org.json.JSONObject
 import org.junit.jupiter.api.assertThrows
@@ -25,7 +26,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
                 navn = "Barn Barnesen"
             ),
             relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-            sammeAdresse = true,
+            sammeAdresse = BarnSammeAdresse.JA,
             legeerklæring = listOf(),
             samværsavtale = listOf(),
             harBekreftetOpplysninger = true,
@@ -34,7 +35,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
     }
 
     @Test
-    fun `Forvent valideringsfeil dersom sammeAdresse er false og mangler samværsavtale`(){
+    fun `Forvent valideringsfeil dersom høyereRisikoForFravær er true, men høyereRisikoForFraværBeskrivelse mangler`(){
         assertThrows<Throwblem> {
             OmsorgspengerKroniskSyktBarnSøknad(
                 språk = "nb",
@@ -44,13 +45,38 @@ class OmsorgspengerUtvidetRettSøknadTest {
                     navn = "Barn Barnesen"
                 ),
                 relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-                sammeAdresse = false,
+                sammeAdresse = BarnSammeAdresse.JA,
                 samværsavtale = listOf(),
+                høyereRisikoForFravær = true,
+                høyereRisikoForFraværBeskrivelse = null,
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ).valider()
         }.also {
-            assertTrue { it.message.toString().contains("Dersom sammeAdresse er false kan ikke samværsavtale være tom.") }
+            assertTrue { it.message.toString().contains("høyereRisikoForFraværBeskrivelse må være satt når høyereRisikoForFravær er true") }
+        }
+    }
+
+    @Test
+    fun `Forvent valideringsfeil dersom høyereRisikoForFraværBeskrivelse ikke matcher tillat regex mønster`(){
+        assertThrows<Throwblem> {
+            OmsorgspengerKroniskSyktBarnSøknad(
+                språk = "nb",
+                kroniskEllerFunksjonshemming = true,
+                barn = Barn(
+                    norskIdentifikator = "02119970078",
+                    navn = "Barn Barnesen"
+                ),
+                relasjonTilBarnet = SøkerBarnRelasjon.FAR,
+                sammeAdresse = BarnSammeAdresse.JA,
+                samværsavtale = listOf(),
+                høyereRisikoForFravær = true,
+                høyereRisikoForFraværBeskrivelse = "¨ er ikke tillatt",
+                harBekreftetOpplysninger = true,
+                harForståttRettigheterOgPlikter = true
+            ).valider()
+        }.also {
+            assertTrue { it.message.toString().contains("høyereRisikoForFraværBeskrivelse matcher ikke tilatt møønster: $FritekstPattern") }
         }
     }
 
@@ -65,7 +91,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
                     navn = "Barn Barnesen"
                 ),
                 relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-                sammeAdresse = true,
+                sammeAdresse = BarnSammeAdresse.JA,
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = false
             ).valider()
@@ -85,7 +111,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
                     navn = "Barn Barnesen"
                 ),
                 relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-                sammeAdresse = true,
+                sammeAdresse = BarnSammeAdresse.JA,
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true,
                 dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
@@ -106,7 +132,7 @@ class OmsorgspengerUtvidetRettSøknadTest {
                 aktørId = null,
                 navn = "Barn Barnsen"
             ),
-            sammeAdresse = true,
+            sammeAdresse = BarnSammeAdresse.JA,
             relasjonTilBarnet = SøkerBarnRelasjon.FOSTERFORELDER,
             kroniskEllerFunksjonshemming = true,
             harForståttRettigheterOgPlikter = true,

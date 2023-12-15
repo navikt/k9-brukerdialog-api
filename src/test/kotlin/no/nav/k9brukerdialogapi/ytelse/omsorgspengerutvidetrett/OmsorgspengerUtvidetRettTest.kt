@@ -26,6 +26,7 @@ import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Barn
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.BarnSammeAdresse
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.OmsorgspengerKroniskSyktBarnSøknad
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutvidetrett.domene.SøkerBarnRelasjon
 import no.nav.security.mock.oauth2.MockOAuth2Server
@@ -101,7 +102,7 @@ class OmsorgspengerUtvidetRettTest {
                 navn = "Barn Barnesen"
             ),
             relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-            sammeAdresse = true,
+            sammeAdresse = BarnSammeAdresse.JA,
             legeerklæring = listOf(),
             samværsavtale = listOf(),
             harBekreftetOpplysninger = true,
@@ -135,7 +136,7 @@ class OmsorgspengerUtvidetRettTest {
                 navn = "Barn Barnesen"
             ),
             relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-            sammeAdresse = true,
+            sammeAdresse = BarnSammeAdresse.JA,
             legeerklæring = listOf(),
             samværsavtale = listOf(),
             harBekreftetOpplysninger = false,
