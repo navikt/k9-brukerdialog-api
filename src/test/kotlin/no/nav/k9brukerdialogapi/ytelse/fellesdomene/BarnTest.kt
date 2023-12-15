@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class FosterbarnTest {
+class BarnTest {
 
     @Test
     fun `Barn equals test`(){

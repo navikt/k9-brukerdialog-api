@@ -53,10 +53,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PleiepengerSyktFosterbarnTest {
+class PleiepengerSyktBarnTest {
 
     private companion object{
-        private val logger: Logger = LoggerFactory.getLogger(PleiepengerSyktFosterbarnTest::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(PleiepengerSyktBarnTest::class.java)
         val mockOAuth2Server = MockOAuth2Server().apply { start() }
         val wireMockServer = WireMockBuilder()
             .withAzureSupport()

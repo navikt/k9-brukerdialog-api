@@ -6,7 +6,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.ÅrsakM
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-class FosterbarnValidationTest {
+class BarnValidationTest {
     private companion object {
         val felt = "barn"
         val gyldigBarn = BarnDetaljer(
