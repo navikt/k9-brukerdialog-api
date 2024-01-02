@@ -144,7 +144,7 @@ internal class SerDesTest {
                 "virksomhet": {
                   "næringstype":"ANNEN",
                   "fiskerErPåBladB": false,
-                  "fraOgMed": "2020-01-01",
+                  "fraOgMed": "2021-01-01",
                   "tilOgMed": null,
                   "næringsinntekt": 1111,
                   "navnPåVirksomheten": "TullOgTøys",

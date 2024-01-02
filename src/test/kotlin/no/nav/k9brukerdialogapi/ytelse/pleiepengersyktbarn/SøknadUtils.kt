@@ -100,7 +100,7 @@ class SøknadUtils {
                 virksomhet = Virksomhet(
                     næringstype = Næringstype.ANNEN,
                     fiskerErPåBladB = false,
-                    fraOgMed = LocalDate.parse("2020-01-01"),
+                    fraOgMed = LocalDate.parse("2021-01-01"),
                     næringsinntekt = 1111,
                     navnPåVirksomheten = "TullOgTøys",
                     registrertINorge = false,

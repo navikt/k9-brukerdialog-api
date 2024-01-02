@@ -183,7 +183,7 @@ internal class InnsendingServiceTest{
                                     arbeidsgiverHarUtbetaltLønn = true,
                                     perioder = listOf(
                                         Utbetalingsperiode(
-                                            fraOgMed = LocalDate.now().minusDays(2),
+                                            fraOgMed = LocalDate.now().minusDays(1),
                                             tilOgMed = LocalDate.now(),
                                             årsak = FraværÅrsak.ORDINÆRT_FRAVÆR,
                                             aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
