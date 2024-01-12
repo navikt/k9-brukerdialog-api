@@ -6,7 +6,8 @@ import no.nav.helse.dusseldorf.ktor.core.ValidationProblemDetails
 import no.nav.helse.dusseldorf.ktor.core.Violation
 import java.net.URL
 
-private const val MAX_VEDLEGG_SIZE = 24 * 1024 * 1024 // 3 vedlegg på 8 MB
+const val MAX_TOTAL_VEDLEGG_SIZE = 24 * 1024 * 1024 // 3 vedlegg på 25 MB
+const val MAX_VEDLEGG_SIZE = 10 * 1024 * 1024 // Enkeltfil 10 MB
 
 internal fun List<Vedlegg>.valider(path: String, vedleggUrler: List<URL>) {
     validerTotalStørresle()
@@ -28,7 +29,7 @@ internal fun List<Vedlegg>.valider(path: String, vedleggUrler: List<URL>) {
 
 fun List<Vedlegg>.validerTotalStørresle() {
     val totalSize = sumOf { it.content.size }
-    if (totalSize > MAX_VEDLEGG_SIZE) {
+    if (totalSize > MAX_TOTAL_VEDLEGG_SIZE) {
         throw Throwblem(vedleggTooLargeProblemDetails)
     }
 }

@@ -24,7 +24,7 @@ val vedleggNotAttachedProblemDetails = DefaultProblemDetails(
 val vedleggTooLargeProblemDetails = DefaultProblemDetails(
     title = "attachment-too-large",
     status = 413,
-    detail = "vedlegget var over maks tillatt størrelse på 8MB."
+    detail = "vedlegget var over maks tillatt størrelse på $MAX_VEDLEGG_SIZE MB."
 )
 val vedleggContentTypeNotSupportedProblemDetails = DefaultProblemDetails(
     title = "attachment-content-type-not-supported",
