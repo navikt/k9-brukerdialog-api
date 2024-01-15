@@ -53,12 +53,6 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         addAll(opphold.valider("opphold"))
         addAll(bekreftelser.valider("bekreftelser"))
         addAll(arbeidsgivere.valider("arbeidsgivere"))
-        if (fosterbarn != null && fosterbarn.all { it.trettenÅrEllerEldre() }) {
-            krever(
-                fosterbarn.any { it.utvidetRett == true },
-                "Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett."
-            )
-        }
 
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }
