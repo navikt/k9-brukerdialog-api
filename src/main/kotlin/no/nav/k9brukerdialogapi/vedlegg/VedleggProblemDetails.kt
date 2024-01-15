@@ -21,11 +21,25 @@ val vedleggNotAttachedProblemDetails = DefaultProblemDetails(
     status = 400,
     detail = "Fant ingen 'part' som er en fil, har 'name=vedlegg' og har Content-Type header satt."
 )
-val vedleggTooLargeProblemDetails = DefaultProblemDetails(
-    title = "attachment-too-large",
-    status = 413,
-    detail = "vedlegget var over maks tillatt størrelse på $MAX_VEDLEGG_SIZE MB."
-)
+
+fun vedleggTooLargeProblemDetails(vedlegg: List<Vedlegg>, tillattStørrelseIMB: Int): DefaultProblemDetails {
+    val antallVedlegg = vedlegg.size
+    val faktiskStørrelseIMB = vedlegg.sumOf { it.content.size }.div(1024).div(1024).toDouble()
+    return DefaultProblemDetails(
+        title = "attachment-too-large",
+        status = 413,
+        detail = "De $antallVedlegg vedleggene overstiger grensen på $tillattStørrelseIMB MB (faktisk størrelse: $faktiskStørrelseIMB MB)"
+    )
+}
+fun vedleggTooLargeProblemDetails(vedlegg: Vedlegg, tillattStørrelseIMB: Int): DefaultProblemDetails {
+    val faktiskStørrelseIMB = vedlegg.content.size.div(1024).div(1024).toDouble()
+    return DefaultProblemDetails(
+        title = "attachment-too-large",
+        status = 413,
+        detail = "Vedlegget overstiger grensen på $tillattStørrelseIMB MB (faktisk størrelse: $faktiskStørrelseIMB MB)"
+    )
+}
+
 val vedleggContentTypeNotSupportedProblemDetails = DefaultProblemDetails(
     title = "attachment-content-type-not-supported",
     status = 400,

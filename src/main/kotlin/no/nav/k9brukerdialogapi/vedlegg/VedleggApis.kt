@@ -55,7 +55,7 @@ fun Route.vedleggApis(
                     vedleggContentTypeNotSupportedProblemDetails
                 )
                 vedlegg.content.size > MAX_VEDLEGG_SIZE -> return@post call.respondProblemDetails(
-                    vedleggTooLargeProblemDetails
+                    vedleggTooLargeProblemDetails(vedlegg, MAX_VEDLEGG_SIZE_IN_MB)
                 )
                 else -> {
                     val vedleggId = vedleggService.lagreVedlegg(
