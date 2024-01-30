@@ -39,7 +39,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.net.URL
+import java.net.URI
 import java.time.Duration
 import java.time.LocalDate
 import kotlin.test.Test
@@ -101,7 +101,7 @@ class OmsorgspengerUtbetalingSnfTest {
 
     @Test
     fun `Innsending av gyldig søknad`() {
-        val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
+        val vedlegg = URI.create(engine.jpegUrl(jwtToken = tokenXToken)).toURL()
         val søknad = genererSøknadForOmsUtSnf(vedlegg = listOf(vedlegg))
         val ytelse = Ytelse.OMSORGSPENGER_UTBETALING_SNF
         requestAndAssert(

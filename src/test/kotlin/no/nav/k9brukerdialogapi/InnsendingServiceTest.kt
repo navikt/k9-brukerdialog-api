@@ -37,7 +37,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengerlivetssluttfase.domene.gyldigP
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import java.net.URL
+import java.net.URI
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -84,7 +84,7 @@ internal class InnsendingServiceTest{
                     innsending = no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse(
                         språk = "nb",
                         mottatt = ZonedDateTime.of(2020, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
-                        vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+                        vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
                         søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
                         beskrivelse = "Pleiepenger .....",
                         harBekreftetOpplysninger = true,
@@ -129,7 +129,7 @@ internal class InnsendingServiceTest{
                         ),
                         relasjonTilBarnet = SøkerBarnRelasjon.FAR,
                         sammeAdresse = BarnSammeAdresse.JA,
-                        legeerklæring = listOf(URL("http://localhost:8080/vedlegg/1")),
+                        legeerklæring = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
                         samværsavtale = listOf(),
                         harBekreftetOpplysninger = true,
                         harForståttRettigheterOgPlikter = true
@@ -166,7 +166,7 @@ internal class InnsendingServiceTest{
                 innsendingService.registrer(
                     innsending = OmsorgspengerutbetalingArbeidstakerSøknad(
                             språk = "nb",
-                            vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+                            vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
                             bosteder = listOf(),
                             opphold = listOf(),
                             bekreftelser = Bekreftelser(
@@ -254,7 +254,7 @@ internal class InnsendingServiceTest{
                                 identitetsnummer = "26104500284"
                             )
                         ),
-                        vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+                        vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
                     ),
                     metadata = Metadata(
                         version = 1,

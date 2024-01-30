@@ -35,9 +35,9 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Selvste
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriode
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidIPeriodeType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.ArbeidsRedusert
-import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
+import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.RedusertArbeidstidType
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.ÅrsakManglerIdentitetsnummer
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.json.JSONObject
@@ -45,7 +45,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.net.URL
+import java.net.URI
 import java.time.Duration
 import java.time.LocalDate
 import java.util.*
@@ -112,8 +112,8 @@ class PleiepengerSyktBarnTest {
 
     @Test
     fun `Sende søknad`() {
-        val jpegUrl = URL(engine.jpegUrl(jwtToken = tokenXToken))
-        val opplastetIdVedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
+        val jpegUrl = URI.create(engine.jpegUrl(jwtToken = tokenXToken)).toURL()
+        val opplastetIdVedlegg = URI.create(engine.jpegUrl(jwtToken = tokenXToken)).toURL()
 
         val søknad = SøknadUtils.defaultSøknad().copy(
             fraOgMed = LocalDate.parse("2022-01-01"),
@@ -154,8 +154,8 @@ class PleiepengerSyktBarnTest {
             tilOgMed = LocalDate.now().plusDays(4),
             selvstendigNæringsdrivende = SelvstendigNæringsdrivende(harInntektSomSelvstendig = false),
             omsorgstilbud = null,
-            vedlegg = listOf(URL(jpegUrl)),
-            fødselsattestVedleggUrls = listOf(URL(opplastetIdVedlegg)),
+            vedlegg = listOf(URI.create(jpegUrl).toURL()),
+            fødselsattestVedleggUrls = listOf(URI.create(opplastetIdVedlegg).toURL()),
             ferieuttakIPerioden = FerieuttakIPerioden(
                 skalTaUtFerieIPerioden = true,
                 ferieuttak = listOf(
@@ -373,7 +373,10 @@ class PleiepengerSyktBarnTest {
                 fraOgMed = LocalDate.parse("2022-01-01"),
                 tilOgMed = LocalDate.parse("2022-01-10"),
                 ferieuttakIPerioden = null,
-                vedlegg = listOf(URL(jpegUrl), URL(finnesIkkeUrl)),
+                vedlegg = listOf(
+                    URI.create(jpegUrl).toURL(),
+                    URI.create(finnesIkkeUrl).toURL()
+                ),
                 fødselsattestVedleggUrls = listOf()
             ).somJson(),
             engine = engine,

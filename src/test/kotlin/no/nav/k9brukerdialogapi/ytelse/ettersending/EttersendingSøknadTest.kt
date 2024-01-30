@@ -9,6 +9,7 @@ import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
+import java.net.URI
 import java.net.URL
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -48,7 +49,7 @@ class EttersendingSøknadTest {
     fun `Gyldig søknad gir ingen valideringsfeil`() {
         Ettersendelse(
             språk = "nb",
-            vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+            vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
             søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
             beskrivelse = "Pleiepenger .....",
             harBekreftetOpplysninger = true,
@@ -92,7 +93,7 @@ class EttersendingSøknadTest {
         assertThrows<Throwblem> {
             Ettersendelse(
                 språk = "nb",
-                vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+                vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
                 søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = false
@@ -107,7 +108,7 @@ class EttersendingSøknadTest {
         assertThrows<Throwblem>{
             Ettersendelse(
                 språk = "nb",
-                vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
+                vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
                 søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
                 harBekreftetOpplysninger = false,
                 harForståttRettigheterOgPlikter = true

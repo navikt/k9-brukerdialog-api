@@ -3,14 +3,13 @@ package no.nav.k9brukerdialogapi.wiremock
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.tomakehurst.wiremock.common.FileSource
-import com.github.tomakehurst.wiremock.extension.Parameters
-import com.github.tomakehurst.wiremock.extension.ResponseTransformer
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.http.HttpHeaders
 import com.github.tomakehurst.wiremock.http.Request
 import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.github.tomakehurst.wiremock.http.Response
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent
 import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.http.HttpStatusCode
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
@@ -20,10 +19,9 @@ import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 
-class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
+class K9BrukerdialogCacheResponseTransformer() : ResponseTransformerV2 {
 
     internal companion object {
         private val logger = LoggerFactory.getLogger(K9BrukerdialogCacheResponseTransformer::class.java)
@@ -35,16 +33,8 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
         return "K9BrukerdialogCacheResponseTransformer"
     }
 
-    override fun applyGlobally(): Boolean {
-        return false
-    }
-
-    override fun transform(
-        request: Request?,
-        response: Response?,
-        files: FileSource?,
-        parameters: Parameters?
-    ): Response {
+    override fun transform(response: Response, event: ServeEvent): Response {
+        val request = event.request
         return when {
             request == null -> throw IllegalStateException("request == null")
             request.erHealthCheck() -> Response.Builder.like(response).status(200).build()
@@ -135,6 +125,10 @@ class K9BrukerdialogCacheResponseTransformer() : ResponseTransformer() {
             }
             else -> throw IllegalStateException("Uventet request.")
         }
+    }
+
+    override fun applyGlobally(): Boolean {
+        return false
     }
 
     data class Cache(
