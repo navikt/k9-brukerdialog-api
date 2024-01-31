@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
 val dusseldorfKtorVersion = "4.2.0"
-val ktorVersion = "2.3.7"
+val ktorVersion = "2.3.8"
 val kafkaTestcontainerVersion = "1.19.4"
 val kafkaVersion = "3.6.1"
-val k9FormatVersion = "9.0.6"
+val k9FormatVersion = "9.1.2"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "4.1.0"
 val mockOauth2ServerVersion = "2.1.1"
