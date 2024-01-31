@@ -35,6 +35,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URI
 import java.net.URL
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -96,7 +97,7 @@ class EttersendingTest {
 
     @Test
     fun `Innsending av gyldig søknad`() {
-        val vedlegg = URL(engine.jpegUrl(jwtToken = tokenXToken))
+        val vedlegg = URI.create(engine.jpegUrl(jwtToken = tokenXToken)).toURL()
         val søknad = Ettersendelse(
             språk = "nb",
             vedlegg = setOf<URL>(vedlegg).toList(),

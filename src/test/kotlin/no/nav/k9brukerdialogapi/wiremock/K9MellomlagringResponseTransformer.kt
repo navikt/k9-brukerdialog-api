@@ -2,21 +2,20 @@ package no.nav.k9brukerdialogapi.wiremock
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.tomakehurst.wiremock.common.FileSource
-import com.github.tomakehurst.wiremock.extension.Parameters
-import com.github.tomakehurst.wiremock.extension.ResponseTransformer
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.http.HttpHeaders
 import com.github.tomakehurst.wiremock.http.Request
 import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.github.tomakehurst.wiremock.http.Response
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent
 import no.nav.k9brukerdialogapi.k9MellomlagringKonfigurert
 import no.nav.k9brukerdialogapi.utils.MediaTypeUtils.APPLICATION_JSON
 import no.nav.k9brukerdialogapi.vedlegg.Vedlegg
 import no.nav.k9brukerdialogapi.vedlegg.VedleggId
 import java.util.*
 
-class K9MellomlagringResponseTransformer() : ResponseTransformer() {
+class K9MellomlagringResponseTransformer() : ResponseTransformerV2 {
 
     val storage = mutableMapOf<VedleggId, Vedlegg>()
     val objectMapper = jacksonObjectMapper().k9MellomlagringKonfigurert()
@@ -25,16 +24,8 @@ class K9MellomlagringResponseTransformer() : ResponseTransformer() {
         return "K9MellomlagringResponseTransformer"
     }
 
-    override fun applyGlobally(): Boolean {
-        return false
-    }
-
-    override fun transform(
-        request: Request?,
-        response: Response?,
-        files: FileSource?,
-        parameters: Parameters?
-    ): Response {
+    override fun transform(response: Response, event: ServeEvent): Response {
+        val request = event.request
         return when {
             request == null -> throw IllegalStateException("request == null")
             request.erHealthCheck() -> Response.Builder.like(response).status(200).build()
@@ -119,6 +110,10 @@ class K9MellomlagringResponseTransformer() : ResponseTransformer() {
             }
             else -> throw IllegalStateException("Uventet request.")
         }
+    }
+
+    override fun applyGlobally(): Boolean {
+        return false
     }
 }
 

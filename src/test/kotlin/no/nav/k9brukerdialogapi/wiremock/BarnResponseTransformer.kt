@@ -1,28 +1,21 @@
 package no.nav.k9brukerdialogapi.wiremock
 
-import com.github.tomakehurst.wiremock.common.FileSource
-import com.github.tomakehurst.wiremock.extension.Parameters
-import com.github.tomakehurst.wiremock.extension.ResponseTransformer
-import com.github.tomakehurst.wiremock.http.Request
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2
 import com.github.tomakehurst.wiremock.http.Response
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent
 import no.nav.k9brukerdialogapi.TestUtils
 
-class BarnResponseTransformer : ResponseTransformer() {
-    override fun transform(
-        request: Request?,
-        response: Response?,
-        files: FileSource?,
-        parameters: Parameters?
-    ): Response {
-        return Response.Builder.like(response)
-            .body(getResponse(
-                ident = TestUtils.getIdentFromIdToken(request)
-            ))
-            .build()
-    }
-
+class BarnResponseTransformer : ResponseTransformerV2 {
     override fun getName(): String {
         return "k9-oppslag-barn"
+    }
+
+    override fun transform(response: Response, event: ServeEvent): Response {
+        return Response.Builder.like(response)
+            .body(getResponse(
+                ident = TestUtils.getIdentFromIdToken(event.request)
+            ))
+            .build()
     }
 
     override fun applyGlobally(): Boolean {

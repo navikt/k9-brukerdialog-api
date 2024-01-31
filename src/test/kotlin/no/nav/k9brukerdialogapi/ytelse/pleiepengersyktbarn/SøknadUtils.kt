@@ -35,7 +35,7 @@ import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.Arbeidsforhold
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.arbeid.NormalArbeidstid
 import no.nav.k9brukerdialogapi.ytelse.pleiepengersyktbarn.soknad.domene.Årsak
-import java.net.URL
+import java.net.URI
 import java.time.Duration
 import java.time.LocalDate
 import java.time.ZoneId
@@ -87,8 +87,8 @@ class SøknadUtils {
                     sluttetFørSøknadsperiode = false
                 )
             ),
-            vedlegg = listOf(URL("http://localhost:8080/vedlegg/1")),
-            fødselsattestVedleggUrls = listOf(URL("http://localhost:8080/vedlegg/2")),
+            vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
+            fødselsattestVedleggUrls = listOf(URI.create("http://localhost:8080/vedlegg/2").toURL()),
             fraOgMed = LocalDate.parse("2021-01-01"),
             tilOgMed = LocalDate.parse("2021-10-01"),
             nattevåk = Nattevåk(

@@ -38,7 +38,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.net.URL
+import java.net.URI
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -608,13 +608,13 @@ class ApplicationTest {
         @Test
         fun `Validerer liste med vedlegg hvor et ikke eksisterer`() {
             with(engine) {
-                val vedleggSomIkkeFinnes = URL("http://localhost:8085/vedlegg/finnesIkke.jpg")
-                val vedleggSomFinnes = URL(
+                val vedleggSomIkkeFinnes = URI.create("http://localhost:8085/vedlegg/finnesIkke.jpg").toURL()
+                val vedleggSomFinnes = URI.create(
                     handleRequestUploadImage(
                         jwtToken = tokenXToken,
                         vedlegg = "vedlegg/iPhone_6.jpg".fromResources().readBytes()
                     )
-                )
+                ).toURL()
                 val vedleggListe = VedleggListe(listOf(vedleggSomFinnes, vedleggSomIkkeFinnes))
 
                 handleRequest(
