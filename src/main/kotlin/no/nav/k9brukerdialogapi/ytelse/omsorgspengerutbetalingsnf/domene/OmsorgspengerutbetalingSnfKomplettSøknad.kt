@@ -22,6 +22,8 @@ class OmsorgspengerutbetalingSnfKomplettSøknad(
     private val opphold: List<Opphold>,
     private val spørsmål: List<SpørsmålOgSvar>,
     private val harDekketTiFørsteDagerSelv: Boolean? = null,
+    private val harSyktBarn: Boolean? = null,
+    private val harAleneomsorg: Boolean? = null,
     private val bekreftelser: Bekreftelser,
     private val utbetalingsperioder: List<Utbetalingsperiode>,
     private val erArbeidstakerOgså: Boolean,

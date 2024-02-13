@@ -57,6 +57,8 @@ internal fun genererSøknadForOmsUtSnf(
     bosteder = bosteder,
     opphold = opphold,
     harDekketTiFørsteDagerSelv = harDekketTiFørsteDagerSelv,
+    harSyktBarn = true,
+    harAleneomsorg = true,
     spørsmål = listOf(
         SpørsmålOgSvar("Har du hund?", true)
     ),

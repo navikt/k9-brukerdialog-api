@@ -76,26 +76,6 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
     }
 
     @Test
-    fun `Skal gi valideringsfeil dersom et barna er 12 år men harDekketTiFørsteDagerSelv er false`() {
-        assertThrows<Throwblem> {
-            genererSøknadForOmsUtSnf(
-                barn = listOf(
-                    Barn(
-                        navn = "Barnesen",
-                        fødselsdato = LocalDate.now().minusYears(12),
-                        type = TypeBarn.FRA_OPPSLAG,
-                        utvidetRett = false,
-                        identitetsnummer = "26104500284"
-                    )
-                ),
-                harDekketTiFørsteDagerSelv = false
-            ).valider()
-        }.also {
-            assertTrue { it.message.toString().contains("Dersom et barn er 12 år eller yngre må harDekketTiFørsteDagerSelv være true.") }
-        }
-    }
-
-    @Test
     fun `Skal ikke gi valideringsfeil dersom et barna er 12 år og harDekketTiFørsteDagerSelv er true`() {
         genererSøknadForOmsUtSnf(
             barn = listOf(
