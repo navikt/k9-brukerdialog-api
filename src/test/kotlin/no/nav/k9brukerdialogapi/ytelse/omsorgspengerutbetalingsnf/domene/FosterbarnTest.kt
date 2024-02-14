@@ -75,7 +75,6 @@ class FosterbarnTest {
             fødselsdato = LocalDate.parse("2022-01-01"),
             type = TypeBarn.FRA_OPPSLAG,
             aktørId = null,
-            utvidetRett = null,
             identitetsnummer = "26104500284"
         ).valider("barn").verifiserIngenFeil()
     }
@@ -87,7 +86,6 @@ class FosterbarnTest {
             fødselsdato = LocalDate.parse("2022-01-01"),
             type = TypeBarn.FRA_OPPSLAG,
             aktørId = null,
-            utvidetRett = null,
             identitetsnummer = null
         ).valider("barn").verifiserFeil(1, listOf("barn.identitetsnummer kan ikke være null eller blank."))
     }
@@ -99,7 +97,6 @@ class FosterbarnTest {
             fødselsdato = LocalDate.parse("2022-01-01"),
             type = TypeBarn.FRA_OPPSLAG,
             aktørId = null,
-            utvidetRett = null,
             identitetsnummer = "26104500284"
         ).valider("barn").verifiserFeil(1, listOf("barn.navn kan ikke være tomt eller blankt."))
     }

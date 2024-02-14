@@ -28,32 +28,6 @@ import kotlin.test.assertTrue
 class OmsorgspengerUtbetalingSnfSøknadTest {
 
     @Test
-    fun `Skal gi valideringsfeil dersom alle barna er over 13 år men ingen har utvidet rett`() {
-        assertThrows<Throwblem> {
-            genererSøknadForOmsUtSnf(
-                barn = listOf(
-                    Barn(
-                        navn = "Barnesen",
-                        fødselsdato = LocalDate.now().minusYears(14),
-                        type = TypeBarn.FRA_OPPSLAG,
-                        utvidetRett = false,
-                        identitetsnummer = "26104500284"
-                    ),
-                    Barn(
-                        navn = "Barnesen",
-                        fødselsdato = LocalDate.now().minusYears(13).minusDays(1),
-                        type = TypeBarn.FRA_OPPSLAG,
-                        utvidetRett = false,
-                        identitetsnummer = "11880898304"
-                    )
-                )
-            ).valider()
-        }.also {
-            assertTrue { it.message.toString().contains("Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett.") }
-        }
-    }
-
-    @Test
     fun `Skal ikke gi valideringsfeil dersom alle barna er over 13 år og minst et barn har utvidet rett`() {
         genererSøknadForOmsUtSnf(
             barn = listOf(
@@ -61,14 +35,12 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                     navn = "Barnesen",
                     fødselsdato = LocalDate.now().minusYears(14),
                     type = TypeBarn.FRA_OPPSLAG,
-                    utvidetRett = false,
                     identitetsnummer = "26104500284"
                 ),
                 Barn(
                     navn = "Barnesen",
                     fødselsdato = LocalDate.now().minusYears(13).minusDays(1),
                     type = TypeBarn.FRA_OPPSLAG,
-                    utvidetRett = true,
                     identitetsnummer = "11880898304"
                 )
             )
@@ -168,7 +140,6 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                         navn = "Barnesen",
                         fødselsdato = LocalDate.now().minusYears(14),
                         type = TypeBarn.FRA_OPPSLAG,
-                        utvidetRett = true,
                         identitetsnummer = "123"
                     )
                 )
@@ -266,7 +237,6 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                     fødselsdato = LocalDate.parse("2022-01-01"),
                     type = TypeBarn.FOSTERBARN,
                     aktørId = null,
-                    utvidetRett = null,
                     identitetsnummer = "26104500284"
                 )
             ),

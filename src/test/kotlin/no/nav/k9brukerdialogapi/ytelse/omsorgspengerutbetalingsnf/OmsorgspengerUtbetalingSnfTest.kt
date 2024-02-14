@@ -153,7 +153,6 @@ class OmsorgspengerUtbetalingSnfTest {
                     navn = "Barnesen",
                     fødselsdato = LocalDate.now().minusYears(14),
                     type = TypeBarn.FRA_OPPSLAG,
-                    utvidetRett = false,
                     identitetsnummer = "26104500284"
                 )
             )
@@ -171,7 +170,6 @@ class OmsorgspengerUtbetalingSnfTest {
                   "type": "/problem-details/invalid-request-parameters",
                   "title": "invalid-request-parameters",
                   "invalid_parameters": [
-                    "Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett.",
                     "opphold[0].erEØSLand må være satt",
                     "opphold[0].fraOgMed kan ikke være etter tilOgMed",
                     "opphold[0].landkode kan ikke være blankt eller tomt. landkode=' '",

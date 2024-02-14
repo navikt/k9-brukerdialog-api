@@ -61,7 +61,6 @@ class OmsorgspengerutbetalingSnfSøknad(
     }
 
     override fun valider() = mutableListOf<String>().apply {
-        addAll(validerUtvidetRett())
         addAll(bosteder.valider("bosteder"))
         addAll(opphold.valider("opphold"))
         addAll(bekreftelser.valider("bekreftelser"))
@@ -71,12 +70,6 @@ class OmsorgspengerutbetalingSnfSøknad(
         selvstendigNæringsdrivende?.let { addAll(it.valider("selvstendigNæringsdrivende")) }
 
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
-    }
-
-    private fun validerUtvidetRett() = mutableListOf<String>().apply {
-        if(barn.all { it.trettenÅrEllerEldre() }){
-            krever(barn.any{ it.utvidetRett == true}, "Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett.")
-        }
     }
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
