@@ -250,7 +250,6 @@ internal class InnsendingServiceTest{
                                 navn = "Barnesen",
                                 fødselsdato = LocalDate.now().minusYears(14),
                                 type = TypeBarn.FRA_OPPSLAG,
-                                utvidetRett = true,
                                 identitetsnummer = "26104500284"
                             )
                         ),

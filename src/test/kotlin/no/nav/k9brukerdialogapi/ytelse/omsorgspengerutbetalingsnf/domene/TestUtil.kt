@@ -18,7 +18,6 @@ internal fun genererSøknadForOmsUtSnf(
             navn = "Barnesen",
             fødselsdato = LocalDate.now().minusYears(14),
             type = TypeBarn.FRA_OPPSLAG,
-            utvidetRett = true,
             identitetsnummer = "26104500284"
         )
     ),
@@ -57,6 +56,8 @@ internal fun genererSøknadForOmsUtSnf(
     bosteder = bosteder,
     opphold = opphold,
     harDekketTiFørsteDagerSelv = harDekketTiFørsteDagerSelv,
+    harSyktBarn = true,
+    harAleneomsorg = true,
     spørsmål = listOf(
         SpørsmålOgSvar("Har du hund?", true)
     ),

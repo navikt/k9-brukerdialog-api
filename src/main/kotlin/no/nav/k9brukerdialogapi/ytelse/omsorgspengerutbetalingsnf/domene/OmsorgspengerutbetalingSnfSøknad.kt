@@ -44,6 +44,8 @@ class OmsorgspengerutbetalingSnfSøknad(
     private val opphold: List<Opphold>,
     private val spørsmål: List<SpørsmålOgSvar>,
     private val harDekketTiFørsteDagerSelv: Boolean? = null,
+    private val harSyktBarn: Boolean? = null,
+    private val harAleneomsorg: Boolean? = null,
     private val bekreftelser: Bekreftelser,
     private val utbetalingsperioder: List<Utbetalingsperiode>,
     private val erArbeidstakerOgså: Boolean,
@@ -59,8 +61,6 @@ class OmsorgspengerutbetalingSnfSøknad(
     }
 
     override fun valider() = mutableListOf<String>().apply {
-        addAll(validerUtvidetRett())
-        addAll(validerHarDekketTiFørsteDagerSelv())
         addAll(bosteder.valider("bosteder"))
         addAll(opphold.valider("opphold"))
         addAll(bekreftelser.valider("bekreftelser"))
@@ -70,18 +70,6 @@ class OmsorgspengerutbetalingSnfSøknad(
         selvstendigNæringsdrivende?.let { addAll(it.valider("selvstendigNæringsdrivende")) }
 
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
-    }
-
-    private fun validerUtvidetRett() = mutableListOf<String>().apply {
-        if(barn.all { it.trettenÅrEllerEldre() }){
-            krever(barn.any{ it.utvidetRett == true}, "Hvis alle barna er 13 år eller eldre må minst et barn ha utvidet rett.")
-        }
-    }
-
-    private fun validerHarDekketTiFørsteDagerSelv() = mutableListOf<String>().apply {
-        if(barn.any { it.tolvÅrEllerYngre() }){
-            krever(harDekketTiFørsteDagerSelv, "Dersom et barn er 12 år eller yngre må harDekketTiFørsteDagerSelv være true.")
-        }
     }
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
@@ -131,6 +119,8 @@ class OmsorgspengerutbetalingSnfSøknad(
             opphold = opphold,
             spørsmål = spørsmål,
             harDekketTiFørsteDagerSelv = harDekketTiFørsteDagerSelv,
+            harSyktBarn = harSyktBarn,
+            harAleneomsorg = harAleneomsorg,
             bekreftelser = bekreftelser,
             utbetalingsperioder = utbetalingsperioder,
             erArbeidstakerOgså = erArbeidstakerOgså,
