@@ -69,7 +69,7 @@ data class Søknad(
     val barnRelasjon: BarnRelasjon? = null,
     val barnRelasjonBeskrivelse: String? = null,
     val harVærtEllerErVernepliktig: Boolean? = null,
-    val dataBruktTilUtledningAnnetData: String? = null
+    val dataBruktTilUtledningAnnetData: String? = null,
 ) : Innsending {
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
@@ -233,7 +233,7 @@ private fun Søknad.validerBarnRelasjon() = mutableListOf<String>().apply {
     }
 }
 
-private fun List<BarnOppslag>.hentIdentitetsnummerForBarn(aktørId: String?): String? {
+fun List<BarnOppslag>.hentIdentitetsnummerForBarn(aktørId: String?): String? {
     return this.firstOrNull() { it.aktørId == aktørId }?.identitetsnummer
 }
 

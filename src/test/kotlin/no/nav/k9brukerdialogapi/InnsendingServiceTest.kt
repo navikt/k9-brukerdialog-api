@@ -8,6 +8,7 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.dusseldorf.ktor.auth.IdToken
 import no.nav.helse.dusseldorf.testsupport.jws.Azure
+import no.nav.k9.ettersendelse.EttersendelseType
 import no.nav.k9brukerdialogapi.general.CallId
 import no.nav.k9brukerdialogapi.general.MeldingRegistreringFeiletException
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
@@ -87,6 +88,7 @@ internal class InnsendingServiceTest{
                         vedlegg = listOf(URI.create("http://localhost:8080/vedlegg/1").toURL()),
                         søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
                         beskrivelse = "Pleiepenger .....",
+                        ettersendelsesType = EttersendelseType.ANNET,
                         harBekreftetOpplysninger = true,
                         harForståttRettigheterOgPlikter = true
                     ),

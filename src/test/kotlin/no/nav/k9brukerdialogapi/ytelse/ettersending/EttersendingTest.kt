@@ -9,6 +9,7 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.createTestEnvironment
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
+import no.nav.k9.ettersendelse.EttersendelseType
 import no.nav.k9brukerdialogapi.ETTERSENDING_URL
 import no.nav.k9brukerdialogapi.INNSENDING_URL
 import no.nav.k9brukerdialogapi.KafkaWrapper
@@ -29,6 +30,7 @@ import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagBarn
 import no.nav.k9brukerdialogapi.wiremock.stubK9OppslagSoker
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse
+import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Pleietrengende
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
@@ -103,6 +105,8 @@ class EttersendingTest {
             vedlegg = setOf<URL>(vedlegg).toList(),
             beskrivelse = "Sykt barn...",
             søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,
+            ettersendelsesType = EttersendelseType.LEGEERKLÆRING,
+            pleietrengende = Pleietrengende(norskIdentitetsnummer = "02119970078"),
             harBekreftetOpplysninger = true,
             harForståttRettigheterOgPlikter = true
         )
@@ -132,6 +136,8 @@ class EttersendingTest {
             vedlegg = listOf(),
             søknadstype = Søknadstype.PLEIEPENGER_SYKT_BARN,
             beskrivelse = null,
+            ettersendelsesType = EttersendelseType.LEGEERKLÆRING,
+            pleietrengende = null,
             harBekreftetOpplysninger = false,
             harForståttRettigheterOgPlikter = false
         )
@@ -150,6 +156,7 @@ class EttersendingTest {
                   "type": "/problem-details/invalid-request-parameters",
                   "title": "invalid-request-parameters",
                   "invalid_parameters": [
+                    "Pleietrengende må være satt dersom ettersendelsen gjelder legeerklæring",
                     "harForståttRettigheterOgPlikter må være true",
                     "harBekreftetOpplysninger må være true",
                     "Liste over vedlegg kan ikke være tom",
