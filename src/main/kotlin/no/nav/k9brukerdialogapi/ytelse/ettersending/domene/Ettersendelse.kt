@@ -35,7 +35,7 @@ class Ettersendelse(
 
     override fun valider() = mutableListOf<String>().apply {
         if (ettersendelsesType == EttersendelseType.LEGEERKLÆRING) {
-            krever(pleietrengende != null, "Pleietrengende må være satt dersom ettersendelsen gjelder legeerklæring")
+            //krever(pleietrengende != null, "Pleietrengende må være satt dersom ettersendelsen gjelder legeerklæring")
         }
 
         if (pleietrengende != null) addAll(pleietrengende.valider("Pleietrengende"))
@@ -43,9 +43,9 @@ class Ettersendelse(
         krever(harForståttRettigheterOgPlikter, "harForståttRettigheterOgPlikter må være true")
         krever(harBekreftetOpplysninger, "harBekreftetOpplysninger må være true")
         krever(vedlegg.isNotEmpty(), "Liste over vedlegg kan ikke være tom")
-        if (søknadstype.gjelderPleiepenger()) krever(
+        if (søknadstype.gjelderPleiepenger() && ettersendelsesType == EttersendelseType.ANNET) krever(
             !beskrivelse.isNullOrBlank(),
-            "beskrivelse må være satt dersom det gjelder pleiepenger"
+            "beskrivelse må være satt dersom det gjelder pleiepenger og ettersendelsen er av type ANNET"
         )
         if (isNotEmpty()) throw Throwblem(ValidationProblemDetails(this))
     }

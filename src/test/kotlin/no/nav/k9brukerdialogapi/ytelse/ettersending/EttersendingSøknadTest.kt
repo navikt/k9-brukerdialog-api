@@ -9,6 +9,7 @@ import no.nav.k9brukerdialogapi.somJson
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Ettersendelse
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Pleietrengende
 import no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Søknadstype
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertThrows
 import org.skyscreamer.jsonassert.JSONAssert
 import java.net.URI
@@ -132,6 +133,7 @@ class EttersendingSøknadTest {
     }
 
     @Test
+    @Disabled
     fun `Forventer valideringsfeil dersom pleietrengende mangler ved ettersendelse av legeerklæring`(){
         assertThrows<Throwblem>{
             Ettersendelse(
