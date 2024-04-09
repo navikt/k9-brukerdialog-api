@@ -52,7 +52,7 @@ data class Endringsmelding(
             mottattDato,
             K9Søker(NorskIdentitetsnummer.of(søker.fødselsnummer)),
             Språk.of(språk),
-            ytelse
+            ytelse.ignorerOpplysningerOmOpptjening() // Setter opptjeningsaktivitet til null for å ikke overstyre eksisterende data.
         )
             .medKildesystem(Kildesystem.ENDRINGSDIALOG)
     }
