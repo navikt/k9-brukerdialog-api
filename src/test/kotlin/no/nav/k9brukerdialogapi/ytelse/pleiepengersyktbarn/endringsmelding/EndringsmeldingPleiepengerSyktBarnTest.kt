@@ -268,7 +268,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                  "uttak": {
                    "perioder": {}
                  },
-                 "opptjeningAktivitet": null,
+                 "opptjeningAktivitet": {},
                   "annetDataBruktTilUtledning": {
                    "harBekreftetOpplysninger": true,
                    "harForståttRettigheterOgPlikter": true,
