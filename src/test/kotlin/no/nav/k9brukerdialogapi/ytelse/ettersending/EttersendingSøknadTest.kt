@@ -133,7 +133,6 @@ class EttersendingSøknadTest {
     }
 
     @Test
-    @Disabled
     fun `Forventer valideringsfeil dersom pleietrengende mangler ved ettersendelse av legeerklæring`(){
         assertThrows<Throwblem>{
             Ettersendelse(

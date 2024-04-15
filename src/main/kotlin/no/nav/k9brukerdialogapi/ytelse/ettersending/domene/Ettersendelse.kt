@@ -35,7 +35,7 @@ class Ettersendelse(
 
     override fun valider() = mutableListOf<String>().apply {
         if (ettersendelsesType == EttersendelseType.LEGEERKLÆRING) {
-            //krever(pleietrengende != null, "Pleietrengende må være satt dersom ettersendelsen gjelder legeerklæring")
+            krever(pleietrengende != null, "Pleietrengende må være satt dersom ettersendelsen gjelder legeerklæring")
         }
 
         if (pleietrengende != null) addAll(pleietrengende.valider("Pleietrengende"))

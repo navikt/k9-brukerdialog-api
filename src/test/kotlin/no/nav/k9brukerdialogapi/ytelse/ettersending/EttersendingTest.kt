@@ -156,6 +156,7 @@ class EttersendingTest {
                   "type": "/problem-details/invalid-request-parameters",
                   "title": "invalid-request-parameters",
                   "invalid_parameters": [
+                    "Pleietrengende må være satt dersom ettersendelsen gjelder legeerklæring",
                     "harForståttRettigheterOgPlikter må være true",
                     "harBekreftetOpplysninger må være true",
                     "Liste over vedlegg kan ikke være tom"
