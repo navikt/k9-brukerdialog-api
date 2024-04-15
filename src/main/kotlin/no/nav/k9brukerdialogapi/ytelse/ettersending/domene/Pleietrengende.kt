@@ -1,7 +1,7 @@
 package no.nav.k9brukerdialogapi.ytelse.ettersending.domene
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.k9.ettersendelse.Pleietrengende
+import no.nav.k9.ettersendelse.Pleietrengende as K9Pleietrengende
 import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
 import java.time.LocalDate
@@ -22,13 +22,13 @@ data class Pleietrengende(
         this.norskIdentitetsnummer = fødselsnummer
     }
 
-    fun tilK9Pleietrengende(): Pleietrengende = when {
-        norskIdentitetsnummer != null -> Pleietrengende(NorskIdentitetsnummer.of(norskIdentitetsnummer))
+    fun tilK9Pleietrengende(): K9Pleietrengende = when {
+        norskIdentitetsnummer != null -> K9Pleietrengende(NorskIdentitetsnummer.of(norskIdentitetsnummer))
         else -> error("Mangler identitetsnummer")
     }
 }
 
-internal fun no.nav.k9brukerdialogapi.ytelse.ettersending.domene.Pleietrengende.valider(felt: String) =
+internal fun Pleietrengende.valider(felt: String) =
     mutableListOf<String>().apply {
         validerIdentifikator(norskIdentitetsnummer, "$felt.fødselsnummer")
     }
