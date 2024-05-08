@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
 val dusseldorfKtorVersion = "4.2.4"
-val ktorVersion = "2.3.10"
+val ktorVersion = "2.3.11"
 val kafkaTestcontainerVersion = "1.19.7"
 val kafkaVersion = "3.7.0"
 val k9FormatVersion = "9.2.15"
@@ -14,7 +14,7 @@ val junitVersion = "5.10.2"
 val jakartaElVersion = "4.0.2"
 
 plugins {
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "1.9.24"
     id("org.sonarqube") version "5.0.0.4638"
     id("jacoco")
     id("com.github.johnrengelman.shadow") version "8.1.1"
