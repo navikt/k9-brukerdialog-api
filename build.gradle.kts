@@ -2,13 +2,13 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "4.2.4"
+val dusseldorfKtorVersion = "4.2.5"
 val ktorVersion = "2.3.11"
 val kafkaTestcontainerVersion = "1.19.8"
 val kafkaVersion = "3.7.0"
-val k9FormatVersion = "9.2.15"
+val k9FormatVersion = "9.3.0"
 val fuelVersion = "2.3.1"
-val tokenSupportVersion = "4.1.4"
+val tokenSupportVersion = "4.1.5"
 val mockOauth2ServerVersion = "2.1.5"
 val junitVersion = "5.10.2"
 val jakartaElVersion = "4.0.2"
