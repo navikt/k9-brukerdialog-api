@@ -20,6 +20,7 @@ class OmsorgspengerutbetalingArbeidstakerKomplettSøknad(
     private val bekreftelser: Bekreftelser,
     private val arbeidsgivere: List<Arbeidsgiver>,
     private val fosterbarn: List<Fosterbarn>? = null, // TODO: Fjern nullable når lansert
+    private val dineBarn: DineBarn? = null, // TODO: Fjern nullable når lansert
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null,
     private val k9Format: Søknad

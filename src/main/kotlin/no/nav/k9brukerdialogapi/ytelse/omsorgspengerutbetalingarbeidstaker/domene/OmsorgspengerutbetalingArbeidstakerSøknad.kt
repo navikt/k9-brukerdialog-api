@@ -24,6 +24,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.somK9Fraværsperiode
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.valider
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Barn.Companion.somK9BarnListe
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Fosterbarn.Companion.somK9BarnListe
 import java.net.URL
 import java.time.ZoneOffset
@@ -43,6 +44,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     private val bekreftelser: Bekreftelser,
     private val arbeidsgivere: List<Arbeidsgiver>,
     private val fosterbarn: List<Fosterbarn>? = null, // TODO: Fjern nullable når lansert
+    private val dineBarn: DineBarn? = null,
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null,
     private val dataBruktTilUtledningAnnetData: String? = null,
@@ -71,6 +73,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
             bosteder = bosteder,
             opphold = opphold,
             arbeidsgivere = arbeidsgivere,
+            dineBarn = dineBarn,
             fosterbarn = fosterbarn,
             bekreftelser = bekreftelser,
             vedleggId = vedlegg.map { it.vedleggId() },
@@ -88,7 +91,8 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
             mottatt,
             søker.somK9Søker(),
             OmsorgspengerUtbetaling(
-                fosterbarn?.somK9BarnListe(),
+                // TODO: Forenkle denne koden man har fjernet støtte for fosterbarn
+                if (!dineBarn?.barn.isNullOrEmpty()) dineBarn?.barn?.somK9BarnListe() else fosterbarn?.somK9BarnListe(),
                 OpptjeningAktivitet(),
                 arbeidsgivere.somK9Fraværsperiode(),
                 null,

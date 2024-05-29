@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
 class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
 
     @Test
-    fun `K9Format blir som forventet`(){
+    fun `K9Format blir som forventet`() {
         val mottatt = ZonedDateTime.of(2022, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC"))
         val søknadId = UUID.randomUUID().toString()
         val søknad = OmsorgspengerutbetalingArbeidstakerSøknad(
@@ -147,6 +147,18 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                 harBekreftetOpplysninger = true,
                 harForståttRettigheterOgPlikter = true
             ),
+            dineBarn = DineBarn(
+                harDeltOmsorg = false,
+                barn = listOf(
+                    Barn(
+                        identitetsnummer = "11223344567",
+                        aktørId = "1234567890",
+                        LocalDate.now(),
+                        "Barn Barnesen",
+                        TypeBarn.FRA_OPPSLAG
+                    )
+                ),
+            ),
             arbeidsgivere = listOf(
                 Arbeidsgiver(
                     navn = "Kiwi AS",
@@ -189,5 +201,51 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
         }.also {
             assertTrue { it.message.toString().contains("Må ha minst en arbeidsgiver satt.") }
         }
+    }
+
+    @Test
+    fun `Gyldig søknad med dineBarn gir ingen feil`() {
+        OmsorgspengerutbetalingArbeidstakerSøknad(
+            språk = "nb",
+            vedlegg = listOf(),
+            bosteder = listOf(),
+            opphold = listOf(),
+            bekreftelser = Bekreftelser(
+                harBekreftetOpplysninger = true,
+                harForståttRettigheterOgPlikter = true
+            ),
+            dineBarn = DineBarn(
+                harDeltOmsorg = false,
+                barn = listOf(
+                    Barn(
+                        identitetsnummer = "11223344567",
+                        aktørId = "1234567890",
+                        LocalDate.now(),
+                        "Barn Barnesen",
+                        TypeBarn.FRA_OPPSLAG
+                    )
+                ),
+            ),
+            arbeidsgivere = listOf(
+                Arbeidsgiver(
+                    navn = "Kiwi AS",
+                    organisasjonsnummer = "825905162",
+                    utbetalingsårsak = Utbetalingsårsak.KONFLIKT_MED_ARBEIDSGIVER,
+                    konfliktForklaring = "Fordi blablabla",
+                    harHattFraværHosArbeidsgiver = true,
+                    arbeidsgiverHarUtbetaltLønn = true,
+                    perioder = listOf(
+                        Utbetalingsperiode(
+                            fraOgMed = LocalDate.parse("2022-01-25"),
+                            tilOgMed = LocalDate.parse("2022-01-28"),
+                            årsak = FraværÅrsak.SMITTEVERNHENSYN,
+                            aktivitetFravær = listOf(AktivitetFravær.ARBEIDSTAKER)
+                        )
+                    )
+                )
+            ),
+            hjemmePgaSmittevernhensyn = true,
+            hjemmePgaStengtBhgSkole = true
+        ).valider()
     }
 }
