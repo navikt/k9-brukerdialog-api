@@ -12,7 +12,7 @@ import java.time.LocalDate
 
 class Barn(
     private var identitetsnummer: String? = null,
-    private val aktørId: String,
+    private val aktørId: String? = null,
     @JsonFormat(pattern = "yyyy-MM-dd") private val fødselsdato: LocalDate,
     private val navn: String,
     private val type: TypeBarn
