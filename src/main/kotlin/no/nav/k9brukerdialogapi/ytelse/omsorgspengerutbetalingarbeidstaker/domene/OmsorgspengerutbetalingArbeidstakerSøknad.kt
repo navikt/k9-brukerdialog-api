@@ -89,6 +89,20 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
         dineBarn?.barn?.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
+    internal fun leggTilRegistrerteBarn(barnFraOppslag: List<BarnOppslag>) {
+        if (dineBarn != null) {
+            dineBarn.barn += barnFraOppslag.map {
+                Barn(
+                    identitetsnummer = it.identitetsnummer,
+                    aktørId = it.aktørId,
+                    fødselsdato = it.fødselsdato,
+                    navn = it.navn(),
+                    type = TypeBarn.FRA_OPPSLAG
+                )
+            }
+        }
+    }
+
     override fun somK9Format(søker: Søker, metadata: Metadata): no.nav.k9.søknad.Søknad {
         return K9Søknad(
             SøknadId.of(søknadId),

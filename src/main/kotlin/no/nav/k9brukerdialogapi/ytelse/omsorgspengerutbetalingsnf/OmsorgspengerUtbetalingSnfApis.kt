@@ -16,6 +16,7 @@ import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
 import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Barn
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingsnf.domene.OmsorgspengerutbetalingSnfSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
@@ -40,7 +41,9 @@ fun Route.omsorgspengerUtbetalingSnfApis(
             val ytelse = call.ytelseFraHeader()
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId.id, "mottatt."))
-            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId, ytelse))
+            val registrerteBarn = barnService.hentBarn(idToken, callId, ytelse)
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(registrerteBarn)
+
 
             innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, callId, idToken, metadata, ytelse)

@@ -40,7 +40,10 @@ fun Route.omsorgspengerUtbetalingArbeidstakerApi(
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
 
-            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId, ytelse))
+            val registrerteBarn = barnService.hentBarn(idToken, callId, ytelse)
+
+            søknad.leggTilRegistrerteBarn(registrerteBarn)
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(registrerteBarn)
 
             innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, call.getCallId(), idToken, call.getMetadata(), ytelse)
