@@ -15,6 +15,7 @@ import no.nav.k9brukerdialogapi.general.getCallId
 import no.nav.k9brukerdialogapi.innsending.InnsendingCache
 import no.nav.k9brukerdialogapi.innsending.InnsendingService
 import no.nav.k9brukerdialogapi.kafka.getMetadata
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnService
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerSøknad
 import no.nav.k9brukerdialogapi.ytelse.registrerMottattSøknad
 import no.nav.k9brukerdialogapi.ytelse.ytelseFraHeader
@@ -25,17 +26,21 @@ private val logger: Logger = LoggerFactory.getLogger("ytelse.omsorgspengerutbeta
 
 fun Route.omsorgspengerUtbetalingArbeidstakerApi(
     innsendingService: InnsendingService,
+    barnService: BarnService,
     innsendingCache: InnsendingCache,
     idTokenProvider: IdTokenProvider,
 ) {
     route(OMSORGSPENGER_UTBETALING_ARBEIDSTAKER_URL){
         post(INNSENDING_URL){
             val søknad =  call.receive<OmsorgspengerutbetalingArbeidstakerSøknad>()
+            val callId = call.getCallId()
             val idToken = idTokenProvider.getIdToken(call)
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${søknad.ytelse()}"
             val ytelse = call.ytelseFraHeader()
 
             logger.info(formaterStatuslogging(søknad.ytelse(), søknad.søknadId, "mottatt."))
+
+            søknad.leggTilIdentifikatorPåBarnHvisMangler(barnService.hentBarn(idToken, callId, ytelse))
 
             innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, call.getCallId(), idToken, call.getMetadata(), ytelse)

@@ -13,6 +13,7 @@ import no.nav.k9brukerdialogapi.general.ValidationProblemDetails
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.innsending.Innsending
 import no.nav.k9brukerdialogapi.kafka.Metadata
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9brukerdialogapi.oppslag.søker.Søker
 import no.nav.k9brukerdialogapi.vedlegg.vedleggId
 import no.nav.k9brukerdialogapi.ytelse.Ytelse
@@ -82,6 +83,10 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
             hjemmePgaStengtBhgSkole = hjemmePgaStengtBhgSkole,
             k9Format = k9Format as no.nav.k9.søknad.Søknad
         )
+    }
+
+    internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
+        dineBarn?.barn?.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
     override fun somK9Format(søker: Søker, metadata: Metadata): no.nav.k9.søknad.Søknad {

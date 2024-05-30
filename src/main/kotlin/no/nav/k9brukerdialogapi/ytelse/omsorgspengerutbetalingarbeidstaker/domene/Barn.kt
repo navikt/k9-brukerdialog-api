@@ -6,8 +6,9 @@ import no.nav.k9brukerdialogapi.general.erFørEllerLik
 import no.nav.k9brukerdialogapi.general.erLikEllerEtter
 import no.nav.k9brukerdialogapi.general.krever
 import no.nav.k9brukerdialogapi.general.validerIdentifikator
-import java.time.LocalDate
+import no.nav.k9brukerdialogapi.oppslag.barn.BarnOppslag
 import no.nav.k9.søknad.felles.personopplysninger.Barn as K9Barn
+import java.time.LocalDate
 
 class Barn(
     private var identitetsnummer: String? = null,
@@ -17,7 +18,8 @@ class Barn(
     private val type: TypeBarn
 ) {
     companion object {
-        internal fun List<Barn>.somK9BarnListe() = map { it.somK9Barn() }
+        internal fun List<Barn>.somK9BarnListe() = kunFosterbarn().map { it.somK9Barn() }
+        private fun List<Barn>.kunFosterbarn() = this.filter { it.type == TypeBarn.FOSTERBARN }
         internal fun List<Barn>.valider(felt: String) = this.flatMapIndexed { index, barn ->
             barn.valider("$felt[$index]")
         }
@@ -34,6 +36,10 @@ class Barn(
             fødselsdato.erFørEllerLik(LocalDate.now()),
             "$felt.fødselsdato kan ikke være i fremtiden."
         )
+    }
+
+    internal fun leggTilIdentifikatorHvisMangler(barnFraOppslag: List<BarnOppslag>){
+        if(identitetsnummer == null) identitetsnummer = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
     internal fun somK9Barn() =
