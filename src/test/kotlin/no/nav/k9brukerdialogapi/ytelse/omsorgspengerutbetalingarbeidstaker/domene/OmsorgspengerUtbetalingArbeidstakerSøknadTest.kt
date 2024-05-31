@@ -148,7 +148,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                 harForståttRettigheterOgPlikter = true
             ),
             dineBarn = DineBarn(
-                harDeltOmsorg = false,
+                harDeltBosted = false,
                 barn = listOf(
                     Barn(
                         identitetsnummer = "11223344567",
@@ -215,7 +215,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                 harForståttRettigheterOgPlikter = true
             ),
             dineBarn = DineBarn(
-                harDeltOmsorg = false,
+                harDeltBosted = false,
                 barn = listOf(
                     Barn(
                         identitetsnummer = "11223344567",
