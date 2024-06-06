@@ -26,7 +26,6 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.somK9Fraværsperiode
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Barn.Companion.somK9BarnListe
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Fosterbarn.Companion.somK9BarnListe
 import java.net.URL
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -44,8 +43,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     private val opphold: List<Opphold>,
     private val bekreftelser: Bekreftelser,
     private val arbeidsgivere: List<Arbeidsgiver>,
-    private val fosterbarn: List<Fosterbarn>? = null, // TODO: Fjern nullable når lansert
-    private val dineBarn: DineBarn? = null,
+    private val dineBarn: DineBarn,
     private val hjemmePgaSmittevernhensyn: Boolean,
     private val hjemmePgaStengtBhgSkole: Boolean? = null,
     private val dataBruktTilUtledningAnnetData: String? = null,
@@ -75,7 +73,6 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
             opphold = opphold,
             arbeidsgivere = arbeidsgivere,
             dineBarn = dineBarn,
-            fosterbarn = fosterbarn,
             bekreftelser = bekreftelser,
             vedleggId = vedlegg.map { it.vedleggId() },
             titler = titler,
@@ -86,20 +83,18 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     }
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
-        dineBarn?.barn?.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
+        dineBarn.barn?.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
     internal fun leggTilRegistrerteBarn(barnFraOppslag: List<BarnOppslag>) {
-        if (dineBarn != null) {
-            dineBarn.barn += barnFraOppslag.map {
-                Barn(
-                    identitetsnummer = it.identitetsnummer,
-                    aktørId = it.aktørId,
-                    fødselsdato = it.fødselsdato,
-                    navn = it.navn(),
-                    type = TypeBarn.FRA_OPPSLAG
-                )
-            }
+        dineBarn.barn += barnFraOppslag.map {
+            Barn(
+                identitetsnummer = it.identitetsnummer,
+                aktørId = it.aktørId,
+                fødselsdato = it.fødselsdato,
+                navn = it.navn(),
+                type = TypeBarn.FRA_OPPSLAG
+            )
         }
     }
 
@@ -110,8 +105,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
             mottatt,
             søker.somK9Søker(),
             OmsorgspengerUtbetaling(
-                // TODO: Forenkle denne koden man har fjernet støtte for fosterbarn
-                if (!dineBarn?.barn.isNullOrEmpty()) dineBarn?.barn?.somK9BarnListe() else fosterbarn?.somK9BarnListe(),
+                dineBarn.barn.somK9BarnListe(),
                 OpptjeningAktivitet(),
                 arbeidsgivere.somK9Fraværsperiode(),
                 null,
