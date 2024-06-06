@@ -31,5 +31,5 @@ fun Route.ytelseRoutes(
     omsorgspengerMidlertidigAleneApis(innsendingService, barnService, innsendingCache, idTokenProvider)
     omsorgsdagerAleneomsorgApis(innsendingService, barnService, innsendingCache, idTokenProvider)
     pleiepengerSyktBarnApi(innsendingService, barnService, innsendingCache, idTokenProvider)
-    endringsmeldingApis(innsendingService, barnService, innsendingCache, innsynService, idTokenProvider)
+    endringsmeldingApis(innsendingService, innsendingCache, innsynService, idTokenProvider)
 }

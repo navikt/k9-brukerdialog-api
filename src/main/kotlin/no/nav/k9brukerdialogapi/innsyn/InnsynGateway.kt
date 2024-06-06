@@ -95,7 +95,12 @@ data class InnsynBarn(
     val etternavn: String,
     val aktørId: String,
     val identitetsnummer: String? = null
-)
+) {
+    fun navn(): String = when (mellomnavn) {
+        null -> "$fornavn $etternavn"
+        else -> "$fornavn $mellomnavn $etternavn"
+    }
+}
 
 data class K9SakInnsynSøknad(
     val barn: InnsynBarn,
