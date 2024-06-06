@@ -42,10 +42,15 @@ class Barn(
         if(identitetsnummer == null) identitetsnummer = barnFraOppslag.find { it.aktørId == this.aktørId }?.identitetsnummer
     }
 
-    internal fun somK9Barn() =
-        K9Barn()
-            .medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
-            .medFødselsdato(fødselsdato)
+    internal fun somK9Barn(): K9Barn {
+        val barn = K9Barn()
+        if (identitetsnummer != null) {
+            barn.medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer));
+        } else {
+            barn.medFødselsdato(fødselsdato)
+        }
+        return barn
+    }
 
 }
 
