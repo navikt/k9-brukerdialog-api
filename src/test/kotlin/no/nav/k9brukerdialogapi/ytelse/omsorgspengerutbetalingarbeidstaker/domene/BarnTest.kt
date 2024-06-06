@@ -2,7 +2,6 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
-import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.FraOgMedTilOgMedValidator.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Barn.Companion.somK9BarnListe
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Barn.Companion.valider
 import org.junit.jupiter.api.Assertions.*
@@ -90,21 +89,21 @@ class BarnTest {
     fun `K9Barn-listen skal kun inkludere fosterbarn`() {
         val listeMedBarn = listOf(
             Barn(
-                identitetsnummer = "02119970078",
+                identitetsnummer = "01010100000",
                 fødselsdato = LocalDate.parse("2020-01-01"),
                 aktørId = "12345",
                 navn = "Van Li Barnesen",
                 type = TypeBarn.FRA_OPPSLAG
             ),
             Barn(
-                identitetsnummer = "02119970078",
+                identitetsnummer = "02020200000",
                 fødselsdato = LocalDate.parse("2021-01-01"),
                 aktørId = "12345",
                 navn = "Foster Barnesen",
                 type = TypeBarn.FOSTERBARN
             ),
             Barn(
-                identitetsnummer = "02119970078",
+                identitetsnummer = "03030300000",
                 fødselsdato = LocalDate.parse("2022-01-01"),
                 aktørId = "12345",
                 navn = "Anna Barnesen",
@@ -113,6 +112,29 @@ class BarnTest {
         )
         val k9BarnListe = listeMedBarn.somK9BarnListe()
         assertEquals(k9BarnListe.size, 1);
-        assertEquals(k9BarnListe.get(0).fødselsdato, LocalDate.parse("2021-01-01"))
+        assertEquals(k9BarnListe.get(0).personIdent.verdi, "02020200000")
+    }
+
+    @Test
+    fun `K9Barn skal kun ha enten fødselsnummer eller fødselsdato`() {
+        val barnMedAlt = Barn(
+            identitetsnummer = "03030300000",
+            fødselsdato = LocalDate.parse("2022-01-01"),
+            aktørId = "12345",
+            navn = "Anna Barnesen",
+            type = TypeBarn.ANNET
+        )
+        assertNull(barnMedAlt.somK9Barn().fødselsdato)
+        assertNotNull(barnMedAlt.somK9Barn().personIdent)
+
+        val barnMedKunFødselsnummer = Barn(
+            fødselsdato = LocalDate.parse("2022-01-01"),
+            aktørId = "12345",
+            navn = "Anna Barnesen",
+            type = TypeBarn.ANNET
+        )
+
+        assertNotNull(barnMedKunFødselsnummer.somK9Barn().fødselsdato)
+        assertNull(barnMedKunFødselsnummer.somK9Barn().personIdent)
     }
 }
