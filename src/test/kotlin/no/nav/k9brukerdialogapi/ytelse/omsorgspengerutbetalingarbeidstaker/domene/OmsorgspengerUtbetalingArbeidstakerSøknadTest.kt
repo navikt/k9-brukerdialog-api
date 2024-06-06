@@ -69,6 +69,18 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                     )
                 )
             ),
+            dineBarn = DineBarn(
+                harDeltBosted = false,
+                barn = listOf(
+                    Barn(
+                        identitetsnummer = "11223344567",
+                        aktørId = "1234567890",
+                        LocalDate.now(),
+                        "Barn Barnesen",
+                        TypeBarn.FRA_OPPSLAG
+                    )
+                ),
+            ),
             hjemmePgaSmittevernhensyn = true,
             hjemmePgaStengtBhgSkole = true,
             dataBruktTilUtledningAnnetData = "{\"string\": \"tekst\", \"boolean\": false, \"number\": 1, \"array\": [1,2,3], \"object\": {\"key\": \"value\"}}"
@@ -84,7 +96,7 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
               },
               "ytelse": {
                 "type": "OMP_UT",
-                "fosterbarn": null,
+                "fosterbarn": [],
                 "aktivitet": {},
                 "fraværsperioder": [
                   {
@@ -196,7 +208,19 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                 ),
                 arbeidsgivere = listOf(),
                 hjemmePgaSmittevernhensyn = true,
-                hjemmePgaStengtBhgSkole = true
+                hjemmePgaStengtBhgSkole = true,
+                dineBarn = DineBarn(
+                    harDeltBosted = false,
+                    barn = listOf(
+                        Barn(
+                            identitetsnummer = "11223344567",
+                            aktørId = "1234567890",
+                            LocalDate.now(),
+                            "Barn Barnesen",
+                            TypeBarn.FRA_OPPSLAG
+                        )
+                    ),
+                ),
             ).valider()
         }.also {
             assertTrue { it.message.toString().contains("Må ha minst en arbeidsgiver satt.") }

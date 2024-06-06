@@ -33,9 +33,7 @@ import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Bosted
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.FraværÅrsak
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Opphold
 import no.nav.k9brukerdialogapi.ytelse.fellesdomene.Utbetalingsperiode
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Arbeidsgiver
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.OmsorgspengerutbetalingArbeidstakerSøknad
-import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Utbetalingsårsak
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.*
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -132,6 +130,18 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                     )
                 )
             ),
+            dineBarn = DineBarn(
+                harDeltBosted = false,
+                barn = listOf(
+                    Barn(
+                        identitetsnummer = "11223344567",
+                        aktørId = "1234567890",
+                        LocalDate.now(),
+                        "Barn Barnesen",
+                        TypeBarn.FRA_OPPSLAG
+                    )
+                ),
+            ),
             hjemmePgaSmittevernhensyn = true,
             hjemmePgaStengtBhgSkole = true
         )
@@ -196,6 +206,18 @@ class OmsorgspengerUtbetalingArbeidstakerTest {
                         )
                     )
                 )
+            ),
+            dineBarn = DineBarn(
+                harDeltBosted = false,
+                barn = listOf(
+                    Barn(
+                        identitetsnummer = "11223344567",
+                        aktørId = "1234567890",
+                        LocalDate.now(),
+                        "Barn Barnesen",
+                        TypeBarn.FRA_OPPSLAG
+                    )
+                ),
             ),
             hjemmePgaSmittevernhensyn = true,
             hjemmePgaStengtBhgSkole = true
