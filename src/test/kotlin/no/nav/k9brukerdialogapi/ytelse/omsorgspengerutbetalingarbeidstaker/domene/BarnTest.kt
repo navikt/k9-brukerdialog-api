@@ -2,7 +2,9 @@ package no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.dome
 
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserFeil
 import no.nav.k9brukerdialogapi.TestUtils.Companion.verifiserIngenFeil
+import no.nav.k9brukerdialogapi.oppslag.arbeidsgiver.FraOgMedTilOgMedValidator.Companion.valider
 import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Barn.Companion.somK9BarnListe
+import no.nav.k9brukerdialogapi.ytelse.omsorgspengerutbetalingarbeidstaker.domene.Barn.Companion.valider
 import org.junit.jupiter.api.Assertions.*
 import java.time.LocalDate
 import kotlin.test.Test
@@ -55,6 +57,33 @@ class BarnTest {
             type = TypeBarn.FRA_OPPSLAG
         )
         voksen.valider("barn").verifiserFeil(1, listOf("barn.fødselsdato kan ikke være mer enn 19 år siden."))
+    }
+
+    @Test
+    fun `Det går an å kjøre valideringer på lister av barn`() {
+        val flereBarn = listOf(
+            Barn(
+                identitetsnummer = "02119970078",
+                fødselsdato = LocalDate.parse("2999-01-01"),
+                aktørId = "12345",
+                navn = "Barn Barnesen",
+                type = TypeBarn.FRA_OPPSLAG
+            ), Barn(
+                identitetsnummer = "02119970078",
+                fødselsdato = LocalDate.parse("1987-01-01"),
+                aktørId = "12345",
+                navn = "Indre Barnesen",
+                type = TypeBarn.FRA_OPPSLAG
+            )
+        )
+        flereBarn.valider("barn")
+            .verifiserFeil(
+                2,
+                listOf(
+                    "barn[0].fødselsdato kan ikke være i fremtiden.",
+                    "barn[1].fødselsdato kan ikke være mer enn 19 år siden.",
+                )
+            )
     }
 
     @Test
