@@ -83,7 +83,7 @@ class OmsorgspengerutbetalingArbeidstakerSøknad(
     }
 
     internal fun leggTilIdentifikatorPåBarnHvisMangler(barnFraOppslag: List<BarnOppslag>) {
-        dineBarn.barn?.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
+        dineBarn.barn.forEach { it.leggTilIdentifikatorHvisMangler(barnFraOppslag) }
     }
 
     internal fun leggTilRegistrerteBarn(barnFraOppslag: List<BarnOppslag>) {

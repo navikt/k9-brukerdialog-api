@@ -43,7 +43,9 @@ class Barn(
     }
 
     internal fun somK9Barn() =
-        K9Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer)).medFødselsdato(fødselsdato)
+        K9Barn()
+            .medNorskIdentitetsnummer(NorskIdentitetsnummer.of(identitetsnummer))
+            .medFødselsdato(fødselsdato)
 
 }
 

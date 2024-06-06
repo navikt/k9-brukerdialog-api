@@ -42,8 +42,8 @@ fun Route.omsorgspengerUtbetalingArbeidstakerApi(
 
             val registrerteBarn = barnService.hentBarn(idToken, callId, ytelse)
 
-            søknad.leggTilRegistrerteBarn(registrerteBarn)
             søknad.leggTilIdentifikatorPåBarnHvisMangler(registrerteBarn)
+            søknad.leggTilRegistrerteBarn(registrerteBarn)
 
             innsendingCache.put(cacheKey)
             innsendingService.registrer(søknad, call.getCallId(), idToken, call.getMetadata(), ytelse)
