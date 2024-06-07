@@ -30,7 +30,6 @@ private val logger: Logger = LoggerFactory.getLogger("no.nav.helse.endringsmeldi
 
 fun Route.endringsmeldingApis(
     innsendingService: InnsendingService,
-    barnService: BarnService,
     innsendingCache: InnsendingCache,
     innsynService: InnsynService,
     idTokenProvider: IdTokenProvider,
@@ -45,15 +44,13 @@ fun Route.endringsmeldingApis(
             val cacheKey = "${idToken.getNorskIdentifikasjonsnummer()}_${endringsmelding.ytelse()}"
             val ytelseFraHeader = call.ytelseFraHeader()
 
-            val barn: BarnOppslag = barnFraEndringsmelding(barnService.hentBarn(idToken, callId, ytelseFraHeader), endringsmelding)
-
             logger.info(formaterStatuslogging(endringsmelding.ytelse(), endringsmelding.søknadId, "mottatt."))
 
-            val søknadsopplysninger = innsynService.hentSøknadsopplysningerForBarn(idToken, callId, barn.aktørId)
+            val søknadsopplysninger = innsynService.hentSøknadsopplysningerForBarn(idToken, callId, endringsmelding)
 
             val ytelse = søknadsopplysninger.søknad.getYtelse<PleiepengerSyktBarn>()
             endringsmelding.gyldigeEndringsPerioder = ytelse.søknadsperiodeList
-            endringsmelding.pleietrengendeNavn = barn.navn()
+            endringsmelding.pleietrengendeNavn = søknadsopplysninger.barn.navn()
 
             innsendingService.registrer(endringsmelding, callId, idToken, metadata, ytelseFraHeader)
             innsendingCache.put(cacheKey)

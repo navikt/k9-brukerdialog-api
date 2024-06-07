@@ -194,7 +194,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                "fornavn": "MOR",
                "fødselsnummer": "$søkerMedBarn"
              },
-             "pleietrengendeNavn": "BARN EN BARNESEN",
+             "pleietrengendeNavn": "BARNESEN EN BARNESEN",
              "harBekreftetOpplysninger": true,
              "harForståttRettigheterOgPlikter": true,
              "k9Format": {
