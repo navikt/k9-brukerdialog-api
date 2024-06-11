@@ -68,23 +68,6 @@ class EttersendingSøknadTest {
     }
 
     @Test
-    fun `Forventer valideringsfeil dersom søknadstype er PP og beskrivelse er null`() {
-        assertThrows<Throwblem> {
-            Ettersendelse(
-                språk = "nb",
-                vedlegg = listOf(),
-                søknadstype = Søknadstype.PLEIEPENGER_LIVETS_SLUTTFASE,
-                ettersendelsesType = EttersendelseType.ANNET,
-                beskrivelse = null,
-                harBekreftetOpplysninger = false,
-                harForståttRettigheterOgPlikter = true
-            ).valider()
-        }.also {
-            assertTrue { it.message.toString().contains("beskrivelse må være satt dersom det gjelder pleiepenger") }
-        }
-    }
-
-    @Test
     fun `Forventer valideringsfeil dersom vedlegg er tom liste`(){
         assertThrows<Throwblem>{
             Ettersendelse(

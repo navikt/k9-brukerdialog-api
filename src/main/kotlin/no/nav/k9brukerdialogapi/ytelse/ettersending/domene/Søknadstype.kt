@@ -11,9 +11,7 @@ enum class Søknadstype {
     OMP_UTV_MA, // Omsorgspenger utvidet rett - midlertidig alene
     OMP_UTV_AO;
 
-    fun gjelderPleiepenger(): Boolean = this == PLEIEPENGER_SYKT_BARN || this == PLEIEPENGER_LIVETS_SLUTTFASE
-
-    fun somK9Ytelse() = when(this){
+    fun somK9Ytelse() = when (this) {
         OMP_UTV_KS -> Ytelse.OMP_UTV_KS
         OMP_UTV_MA -> Ytelse.OMP_UTV_MA
         PLEIEPENGER_SYKT_BARN -> Ytelse.PLEIEPENGER_SYKT_BARN
