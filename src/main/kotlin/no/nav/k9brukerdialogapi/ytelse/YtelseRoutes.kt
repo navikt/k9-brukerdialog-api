@@ -24,7 +24,7 @@ fun Route.ytelseRoutes(
     innsynService: InnsynService
 ){
     pleiepengerLivetsSluttfaseApi(innsendingService, innsendingCache, idTokenProvider)
-    omsorgspengerUtbetalingArbeidstakerApi(innsendingService, innsendingCache, idTokenProvider)
+    omsorgspengerUtbetalingArbeidstakerApi(innsendingService, barnService, innsendingCache, idTokenProvider)
     ettersendingApis(innsendingService, barnService, innsendingCache, idTokenProvider)
     omsorgspengerUtvidetRettApis(innsendingService, barnService, innsendingCache, idTokenProvider)
     omsorgspengerUtbetalingSnfApis(innsendingService, barnService, innsendingCache, idTokenProvider)
