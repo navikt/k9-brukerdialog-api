@@ -193,6 +193,7 @@ class SøknadUtils {
                             )
                         ),
                         erUtenforEøs = false,
+                        erSammenMedBarnet = false,
                         årsak = Årsak.BARNET_INNLAGT_I_HELSEINSTITUSJON_DEKKET_ETTER_AVTALE_MED_ET_ANNET_LAND_OM_TRYGD
                     ),
                     Utenlandsopphold(
@@ -208,6 +209,7 @@ class SøknadUtils {
                             )
                         ),
                         erUtenforEøs = false,
+                        erSammenMedBarnet = false,
                         årsak = Årsak.BARNET_INNLAGT_I_HELSEINSTITUSJON_FOR_NORSK_OFFENTLIG_REGNING
                     ),
                     Utenlandsopphold(
@@ -217,6 +219,7 @@ class SøknadUtils {
                         landnavn = "Sverige",
                         erBarnetInnlagt = false,
                         erUtenforEøs = false,
+                        erSammenMedBarnet = false,
                         årsak = null
                     )
                 )
