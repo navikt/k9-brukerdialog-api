@@ -189,6 +189,7 @@ internal class SerDesTest {
                     "landnavn": "Sverige",
                     "erUtenforEøs": false,
                     "erBarnetInnlagt": true,
+                    "erSammenMedBarnet":  false,
                     "perioderBarnetErInnlagt" : [
                       {
                         "fraOgMed" : "2019-10-15",
@@ -204,6 +205,7 @@ internal class SerDesTest {
                     "tilOgMed": "2020-11-15",
                     "erUtenforEøs": false,
                     "erBarnetInnlagt": true,
+                    "erSammenMedBarnet":  false,
                     "perioderBarnetErInnlagt" : [
                       {
                         "fraOgMed" : "2020-11-10",
@@ -218,6 +220,7 @@ internal class SerDesTest {
                     "tilOgMed": "2022-12-20",
                     "erUtenforEøs": false,
                     "erBarnetInnlagt": false,
+                    "erSammenMedBarnet": false,
                     "perioderBarnetErInnlagt" : [],
                     "årsak": null
                   }
@@ -423,6 +426,7 @@ internal class SerDesTest {
                     "landnavn": "Sverige",
                     "erUtenforEøs": false,
                     "erBarnetInnlagt": true,
+                    "erSammenMedBarnet":  false,
                     "perioderBarnetErInnlagt" : [
                       {
                         "fraOgMed" : "2020-01-01",
@@ -438,6 +442,7 @@ internal class SerDesTest {
                     "tilOgMed": "2019-11-10",
                     "erUtenforEøs": false,
                     "erBarnetInnlagt": true,
+                    "erSammenMedBarnet":  false,
                     "perioderBarnetErInnlagt" : [
                       {
                         "fraOgMed" : "2020-01-01",
@@ -453,6 +458,7 @@ internal class SerDesTest {
                     "tilOgMed": "2019-11-10",
                     "erUtenforEøs": false,
                     "erBarnetInnlagt": true,
+                    "erSammenMedBarnet":  false,
                     "perioderBarnetErInnlagt" : [
                       {
                         "fraOgMed" : "2020-01-01",
@@ -467,6 +473,7 @@ internal class SerDesTest {
                     "tilOgMed": "2019-11-10",
                     "erUtenforEøs": false,
                     "erBarnetInnlagt": false,
+                    "erSammenMedBarnet":  false,
                     "perioderBarnetErInnlagt" : [],
                     "årsak": null
                   }
@@ -685,6 +692,7 @@ internal class SerDesTest {
                             )
                         ),
                         erUtenforEøs = false,
+                        erSammenMedBarnet = false,
                         årsak = Årsak.ANNET
                     ),
                     Utenlandsopphold(
@@ -700,6 +708,7 @@ internal class SerDesTest {
                             )
                         ),
                         erUtenforEøs = false,
+                        erSammenMedBarnet = false,
                         årsak = Årsak.BARNET_INNLAGT_I_HELSEINSTITUSJON_FOR_NORSK_OFFENTLIG_REGNING
                     ),
                     Utenlandsopphold(
@@ -715,6 +724,7 @@ internal class SerDesTest {
                             )
                         ),
                         erUtenforEøs = false,
+                        erSammenMedBarnet = false,
                         årsak = Årsak.BARNET_INNLAGT_I_HELSEINSTITUSJON_DEKKET_ETTER_AVTALE_MED_ET_ANNET_LAND_OM_TRYGD
                     ),
                     Utenlandsopphold(
@@ -724,6 +734,7 @@ internal class SerDesTest {
                         landnavn = "Sverige",
                         erBarnetInnlagt = false,
                         erUtenforEøs = false,
+                        erSammenMedBarnet = false,
                         årsak = null
                     )
                 )

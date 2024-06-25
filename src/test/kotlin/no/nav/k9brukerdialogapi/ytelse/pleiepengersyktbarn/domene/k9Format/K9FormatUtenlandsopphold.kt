@@ -23,6 +23,7 @@ class K9FormatUtenlandsopphold {
                     landnavn = "Tyskland",
                     erUtenforEøs = false,
                     erBarnetInnlagt = true,
+                    erSammenMedBarnet = false,
                     perioderBarnetErInnlagt = listOf(
                         Periode(
                             fraOgMed = LocalDate.parse("2022-01-05"),
@@ -69,6 +70,7 @@ class K9FormatUtenlandsopphold {
                     landnavn = "Tyskland",
                     erUtenforEøs = false,
                     erBarnetInnlagt = true,
+                    erSammenMedBarnet = false,
                     perioderBarnetErInnlagt = listOf(
                         Periode(
                             fraOgMed = LocalDate.parse("2022-01-01"),
@@ -107,6 +109,7 @@ class K9FormatUtenlandsopphold {
                     landnavn = "Tyskland",
                     erUtenforEøs = false,
                     erBarnetInnlagt = true,
+                    erSammenMedBarnet = false,
                     perioderBarnetErInnlagt = listOf(
                         Periode(
                             fraOgMed = LocalDate.parse("2022-01-01"),
@@ -157,6 +160,7 @@ class K9FormatUtenlandsopphold {
                     landnavn = "Tyskland",
                     erUtenforEøs = false,
                     erBarnetInnlagt = true,
+                    erSammenMedBarnet = false,
                     perioderBarnetErInnlagt = listOf(
                         Periode(
                             fraOgMed = LocalDate.parse("2022-01-03"),
