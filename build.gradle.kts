@@ -9,8 +9,8 @@ val kafkaVersion = "3.7.0"
 val k9FormatVersion = "9.3.1"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "5.0.1"
-val mockOauth2ServerVersion = "2.1.7"
-val junitVersion = "5.10.2"
+val mockOauth2ServerVersion = "2.1.8"
+val junitVersion = "5.10.3"
 val jakartaElVersion = "4.0.2"
 
 plugins {
