@@ -60,7 +60,8 @@ class UtenlandsoppholdIPeriodenTest {
               "perioder": {
                 "2022-01-01/2022-01-10": {
                   "land": "NLD",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 }
               },
               "perioderSomSkalSlettes": {}

@@ -125,7 +125,8 @@ class OmsorgspengerUtbetalingArbeidstakerSøknadTest {
                   "perioder": {
                     "2022-01-20/2022-01-25": {
                       "land": "BE",
-                      "årsak": null
+                      "årsak": null,
+                      "erSammenMedBarnet": true
                     }
                   },
                   "perioderSomSkalSlettes": {}

@@ -23,7 +23,7 @@ class K9FormatUtenlandsopphold {
                     landnavn = "Tyskland",
                     erUtenforEøs = false,
                     erBarnetInnlagt = true,
-                    erSammenMedBarnet = false,
+                    erSammenMedBarnet = true,
                     perioderBarnetErInnlagt = listOf(
                         Periode(
                             fraOgMed = LocalDate.parse("2022-01-05"),
@@ -40,15 +40,18 @@ class K9FormatUtenlandsopphold {
               "perioder": {
                 "2022-01-01/2022-01-04": {
                   "land": "DE",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 },
                 "2022-01-05/2022-01-06": {
                   "land": "DE",
-                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                  "erSammenMedBarnet": true
                 },
                 "2022-01-07/2022-01-10": {
                   "land": "DE",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 }
               },
               "perioderSomSkalSlettes": {}
@@ -87,7 +90,8 @@ class K9FormatUtenlandsopphold {
               "perioder": {
                 "2022-01-01/2022-01-10": {
                   "land": "DE",
-                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                  "erSammenMedBarnet":  false
                 }
               },
               "perioderSomSkalSlettes": {}
@@ -109,7 +113,7 @@ class K9FormatUtenlandsopphold {
                     landnavn = "Tyskland",
                     erUtenforEøs = false,
                     erBarnetInnlagt = true,
-                    erSammenMedBarnet = false,
+                    erSammenMedBarnet = true,
                     perioderBarnetErInnlagt = listOf(
                         Periode(
                             fraOgMed = LocalDate.parse("2022-01-01"),
@@ -130,15 +134,18 @@ class K9FormatUtenlandsopphold {
               "perioder": {
                 "2022-01-01/2022-01-03": {
                   "land": "DE",
-                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                  "erSammenMedBarnet":  true
                 },
                 "2022-01-04/2022-01-07": {
                   "land": "DE",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 },
                 "2022-01-08/2022-01-10": {
                   "land": "DE",
-                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                  "erSammenMedBarnet":  true
                 }
               },
               "perioderSomSkalSlettes": {}
@@ -160,7 +167,7 @@ class K9FormatUtenlandsopphold {
                     landnavn = "Tyskland",
                     erUtenforEøs = false,
                     erBarnetInnlagt = true,
-                    erSammenMedBarnet = false,
+                    erSammenMedBarnet = true,
                     perioderBarnetErInnlagt = listOf(
                         Periode(
                             fraOgMed = LocalDate.parse("2022-01-03"),
@@ -185,27 +192,33 @@ class K9FormatUtenlandsopphold {
               "perioder": {
                 "2022-01-01/2022-01-02": {
                   "land": "DE",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 },
                 "2022-01-03/2022-01-04": {
                   "land": "DE",
-                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                  "erSammenMedBarnet":  true
                 },
                 "2022-01-05/2022-01-05": {
                   "land": "DE",
-                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                  "erSammenMedBarnet":  true
                 },
                 "2022-01-06/2022-01-06": {
                   "land": "DE",
-                  "årsak": null
+                  "årsak": null,
+                    "erSammenMedBarnet": true
                 },
                 "2022-01-07/2022-01-07": {
                   "land": "DE",
-                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                  "årsak": "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                  "erSammenMedBarnet":  true
                 },
                 "2022-01-08/2022-01-10": {
                   "land": "DE",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 }
               },
               "perioderSomSkalSlettes": {}

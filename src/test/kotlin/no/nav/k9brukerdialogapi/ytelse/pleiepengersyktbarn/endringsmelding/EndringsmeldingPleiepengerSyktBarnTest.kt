@@ -214,6 +214,7 @@ class EndringsmeldingPleiepengerSyktBarnTest {
                    "norskIdentitetsnummer": "$barnIdentitetsnummer",
                    "fødselsdato": null
                  },
+                 "erSammenMedBarnet": null,
                  "tilsynsordning": {
                    "perioder": {
                      "2021-01-01/2021-01-01": {

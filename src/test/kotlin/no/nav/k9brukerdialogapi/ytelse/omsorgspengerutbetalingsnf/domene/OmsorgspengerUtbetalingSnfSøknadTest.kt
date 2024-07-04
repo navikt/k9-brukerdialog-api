@@ -360,7 +360,8 @@ class OmsorgspengerUtbetalingSnfSøknadTest {
                   "perioder": {
                     "2022-02-01/2022-02-10": {
                       "land": "BE",
-                      "årsak": null
+                      "årsak": null,
+                      "erSammenMedBarnet": true
                     }
                   },
                   "perioderSomSkalSlettes": {}
