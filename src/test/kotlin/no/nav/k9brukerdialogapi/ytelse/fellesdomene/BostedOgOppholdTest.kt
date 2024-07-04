@@ -156,11 +156,13 @@ class BostedOgOppholdTest {
               "perioder": {
                 "2022-01-01/2022-01-05": {
                   "land": "BE",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 },
                 "2022-01-15/2022-01-20": {
                   "land": "FJ",
-                  "årsak": null
+                  "årsak": null,
+                  "erSammenMedBarnet": true
                 }
               },
               "perioderSomSkalSlettes": {}

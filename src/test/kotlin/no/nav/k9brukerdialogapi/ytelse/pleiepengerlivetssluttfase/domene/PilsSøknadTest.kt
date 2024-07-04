@@ -156,7 +156,8 @@ class PilsSøknadTest {
                   "perioder": {
                     "2020-02-01/2020-02-09": {
                       "land": "CUB",
-                      "årsak": null
+                      "årsak": null,
+                      "erSammenMedBarnet": true
                     }
                   },
                   "perioderSomSkalSlettes": {}
