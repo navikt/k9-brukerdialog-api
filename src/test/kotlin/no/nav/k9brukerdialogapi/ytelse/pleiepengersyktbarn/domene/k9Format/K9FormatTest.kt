@@ -78,6 +78,7 @@ class K9FormatTest {
                   "norskIdentitetsnummer": "03028104560",
                   "fødselsdato": null
                 },
+                "erSammenMedBarnet": null,
                 "søknadsperiode": [
                   "2021-01-01/2021-01-10"
                 ],
@@ -144,27 +145,33 @@ class K9FormatTest {
                   "perioder" : {
                     "2019-10-10/2019-10-14" : {
                       "land" : "SE",
-                      "årsak" : null
+                      "årsak" : null,
+                      "erSammenMedBarnet": false
                     },
                     "2019-10-15/2019-10-20" : {
                       "land" : "SE",
-                      "årsak" : "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd"
+                      "årsak" : "barnetInnlagtIHelseinstitusjonDekketEtterAvtaleMedEtAnnetLandOmTrygd",
+                      "erSammenMedBarnet": false
                     },
                     "2019-10-21/2019-11-10" : {
                       "land" : "SE",
-                      "årsak" : null
+                      "årsak" : null,
+                      "erSammenMedBarnet": false
                     },
                     "2020-11-10/2020-11-12" : {
                       "land" : "SE",
-                      "årsak" : "barnetInnlagtIHelseinstitusjonForNorskOffentligRegning"
+                      "årsak" : "barnetInnlagtIHelseinstitusjonForNorskOffentligRegning",
+                      "erSammenMedBarnet": false
                     },
                     "2020-11-13/2020-11-15" : {
                       "land" : "SE",
-                      "årsak" : null
+                      "årsak" : null,
+                      "erSammenMedBarnet": false
                     },
                     "2022-12-10/2022-12-20" : {
                       "land" : "SE",
-                      "årsak" : null
+                      "årsak" : null,
+                      "erSammenMedBarnet": false
                     }
                   },
                   "perioderSomSkalSlettes" : { }
