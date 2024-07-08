@@ -2,10 +2,10 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.k9brukerdialogapi.AppKt"
-val dusseldorfKtorVersion = "5.0.1"
+val dusseldorfKtorVersion = "5.0.3"
 val ktorVersion = "2.3.12"
 val kafkaTestcontainerVersion = "1.19.8"
-val kafkaVersion = "3.7.0"
+val kafkaVersion = "3.7.1"
 val k9FormatVersion = "9.4.0"
 val fuelVersion = "2.3.1"
 val tokenSupportVersion = "5.0.1"
@@ -15,7 +15,7 @@ val jakartaElVersion = "4.0.2"
 
 plugins {
     kotlin("jvm") version "2.0.0"
-    id("org.sonarqube") version "5.0.0.4638"
+    id("org.sonarqube") version "5.1.0.4882"
     id("jacoco")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
